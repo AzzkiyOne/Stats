@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <TargetFramework>net48</TargetFramework>
+        <AssemblyTitle>Stats</AssemblyTitle>
+        <Copyright>Copyright © Dmitry "Azzkiy" 2024</Copyright>
+        <DebugType>none</DebugType>
+        <LangVersion>latest</LangVersion>
+        <OutputPath>..\Assemblies\</OutputPath>
+        <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    </PropertyGroup>
+    <ItemGroup>
+        <PackageReference Include="Krafs.Rimworld.Ref" Version="1.5.*" />
+    </ItemGroup>
+</Project>

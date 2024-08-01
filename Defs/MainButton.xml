@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+    <MainButtonDef>
+        <defName>StatsTab</defName>
+        <label>Stats</label>
+        <description>Open stats browser.</description>
+        <tabWindowClass>Stats.StatsMainTabWindow</tabWindowClass>
+        <order>21</order>
+    </MainButtonDef>
+</Defs>

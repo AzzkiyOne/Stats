@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ModMetaData>
+    <packageId>Azzkiy.Stats</packageId>
+    <name>Stats</name>
+    <author>Azzkiy</author>
+    <description>Explore defs database with ease.</description>
+    <supportedVersions>
+        <li>1.5</li>
+    </supportedVersions>
+</ModMetaData>
