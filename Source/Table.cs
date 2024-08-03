@@ -2,6 +2,7 @@
 using RimWorld;
 using UnityEngine;
 using Verse;
+using Verse.Noise;
 
 // Rows/Cells culling can be potentially optimized.
 // If our columns witdhs and rows heights are static we can precalculate start/end index from which to start/end draw rows/columns.
@@ -14,16 +15,16 @@ class Table
     public const float rowHeight = 30f;
     public const float headersRowHeight = rowHeight;
     public const float cellPaddingHor = 10f;
-    public const float minColumnWidth = 100f;
     public static Color columnSeparatorLineColor = new(1f, 1f, 1f, 0.04f);
     public Vector2 scrollPosition = new();
-    public readonly List<Column> columns = new();
-    public readonly List<Column> pinnedColumns = new();
+    public readonly List<Column> columns = [];
+    public readonly List<Column> pinnedColumns = [];
     readonly List<Row> rows;
     readonly float columnsWidth = 0f;
     readonly float pinnedColumnsWidth = 0f;
-    readonly float totalColumnsWidth = 0f;
+    readonly float minRowWidth = 0f;
     readonly float totalRowsHeight = 0f;
+    int? mouseOverRowIndex = null;
     public Table(List<Column> columns, List<Row> rows)
     {
         this.rows = rows;
@@ -33,15 +34,15 @@ class Table
             if (column.isPinned)
             {
                 pinnedColumns.Add(column);
-                pinnedColumnsWidth += column.width;
+                pinnedColumnsWidth += column.minWidth;
             }
             else
             {
                 this.columns.Add(column);
-                columnsWidth += column.width;
+                columnsWidth += column.minWidth;
             }
 
-            totalColumnsWidth += column.width;
+            minRowWidth += column.minWidth;
         }
 
         totalRowsHeight = rowHeight * rows.Count;
@@ -52,10 +53,7 @@ class Table
         TextAnchor prevTextAnchor = Text.Anchor;
         Text.Anchor = TextAnchor.MiddleLeft;
 
-        var contentRect = new Rect(targetRect.x, targetRect.y, totalColumnsWidth, totalRowsHeight + headersRowHeight);
-
-        Utils.DrawLineVertical(pinnedColumnsWidth, 0f, targetRect.height, new(1f, 1f, 1f, 0.4f));
-        Widgets.DrawLineHorizontal(0f, headersRowHeight, targetRect.width, new(1f, 1f, 1f, 0.4f));
+        var contentRect = new Rect(0f, 0f, minRowWidth, totalRowsHeight + headersRowHeight);
 
         Widgets.BeginScrollView(targetRect, ref scrollPosition, contentRect, true);
 
@@ -68,13 +66,23 @@ class Table
         DrawHeaders(headersRowRect, columns, scrollPosition);
 
         // Draw pinned rows
-        var pinnedTableBodyRect = new Rect(scrollPosition.x, scrollPosition.y + headersRowHeight, pinnedColumnsWidth, contentRect.height - headersRowHeight);
+        var pinnedTableBodyRect = new Rect(scrollPosition.x, scrollPosition.y + headersRowHeight, pinnedColumnsWidth, targetRect.height - headersRowHeight);
         DrawRows(pinnedTableBodyRect, pinnedColumns, new Vector2(0, scrollPosition.y));
 
         // Draw rows
         //var tableBodyRect = new Rect(scrollPosition.x + pinnedColumnsWidth, scrollPosition.y + headersRowHeight, totalColumnsWidth, contentRect.height - headersRowHeight);
         var tableBodyRect = new Rect(scrollPosition.x + pinnedColumnsWidth, scrollPosition.y + headersRowHeight, targetRect.width - pinnedColumnsWidth, targetRect.height - headersRowHeight);
         DrawRows(tableBodyRect, columns, scrollPosition);
+
+        // Separators
+        Utils.DrawLineVertical(scrollPosition.x, 0f, contentRect.height, new(1f, 1f, 1f, 0.4f));
+        Widgets.DrawLineHorizontal(0f, headersRowHeight + scrollPosition.y, contentRect.width, new(1f, 1f, 1f, 0.4f));
+        Utils.DrawLineVertical(pinnedColumnsWidth + scrollPosition.x, 0f, contentRect.height, new(1f, 1f, 1f, 0.4f));
+
+        if (!Mouse.IsOver(pinnedTableBodyRect.Union(tableBodyRect)))
+        {
+            mouseOverRowIndex = null;
+        }
 
         Widgets.EndScrollView();
 
@@ -88,10 +96,10 @@ class Table
 
         foreach (var column in columns)
         {
-            var cellRect = new Rect(currX, 0, column.width, targetRect.height);
+            var cellRect = AdjustLastColumnWidth(targetRect, new Rect(currX, 0, column.minWidth, targetRect.height), columns, column);
             column.DrawHeaderCell(cellRect);
 
-            currX += column.width;
+            currX += column.minWidth;
         }
 
         Widgets.EndGroup();
@@ -102,6 +110,7 @@ class Table
 
         float currY = -scrollPosition.y;
         int renderedRowsCount = 0;
+        int renderedColumnsCount = 0;
 
         // Rows
         for (int i = 0; i < rows.Count; i++)
@@ -117,6 +126,8 @@ class Table
                 break;
             }
 
+            renderedColumnsCount = 0;
+
             var row = rows[i];
             float currX = -scrollPosition.x;
 
@@ -124,25 +135,36 @@ class Table
             foreach (var column in columns)
             {
                 // Culling
-                //if (scrollPosition.x > currX + column.width)
-                //{
-                //    currX += column.width;
-                //    continue;
-                //}
-                //else if (currX > targetRect.width + scrollPosition.x)
-                //{
-                //    break;
-                //}
+                if (currX + column.minWidth <= 0)
+                {
+                    currX += column.minWidth;
+                    continue;
+                }
+                else if (currX > targetRect.width)
+                {
+                    break;
+                }
 
-                var cellRect = new Rect(currX, currY, column.width, rowHeight);
+                var cellRect = AdjustLastColumnWidth(targetRect, new Rect(currX, currY, column.minWidth, rowHeight), columns, column);
                 column.DrawCell(cellRect, row);
 
-                currX += column.width;
+                currX += cellRect.width;
+                renderedColumnsCount++;
             }
 
-            if (i % 2 == 0)
+            var rowRect = new Rect(0, currY, currX, rowHeight);
+
+            if (Mouse.IsOver(rowRect))
             {
-                var rowRect = new Rect(0, currY, totalColumnsWidth, rowHeight);
+                mouseOverRowIndex = i;
+            }
+
+            if (mouseOverRowIndex == i)
+            {
+                Widgets.DrawHighlight(rowRect);
+            }
+            else if (i % 2 == 0)
+            {
                 Widgets.DrawLightHighlight(rowRect);
             }
 
@@ -150,23 +172,32 @@ class Table
             renderedRowsCount++;
         }
 
-        Widgets.Label(new Rect(targetRect.width / 2, targetRect.height / 2, 300f, 30f), "Rendered rows: " + renderedRowsCount);
+        Widgets.Label(new Rect(targetRect.width / 2, targetRect.height / 2, 300f, 30f), renderedRowsCount + "/" + renderedColumnsCount);
 
         Widgets.EndGroup();
+    }
+    Rect AdjustLastColumnWidth(Rect parentRect, Rect targetRect, List<Column> columns, Column column)
+    {
+        if (column == columns[columns.Count - 1] && targetRect.xMax < parentRect.width)
+        {
+            return new Rect(targetRect.x, targetRect.y, parentRect.width - targetRect.x, targetRect.height);
+        }
+
+        return targetRect;
     }
 }
 
 class Column
 {
-    public readonly string label;
-    public readonly string description;
-    public readonly float width;
+    public readonly string? label;
+    public readonly string? description;
+    public readonly float minWidth = 100f;
     public readonly bool isPinned;
-    public Column(string label = null, string description = null, float width = Table.minColumnWidth, bool isPinned = false)
+    public Column(string? label = null, string? description = null, float? minWidth = null, bool isPinned = false)
     {
         this.label = label;
         this.description = description;
-        this.width = width >= Table.minColumnWidth ? width : Table.minColumnWidth;
+        if (minWidth is float _minWidth) this.minWidth = _minWidth;
         this.isPinned = isPinned;
     }
     public virtual void DrawCell(Rect targetRect, Row row)
@@ -176,8 +207,12 @@ class Column
     }
     public virtual void DrawHeaderCell(Rect targetRect)
     {
-        Widgets.DrawHighlight(targetRect);
-        Widgets.LabelEllipses(targetRect.ContractedBy(Table.cellPaddingHor, 0), label);
+        if (label != null)
+        {
+            Widgets.DrawHighlight(targetRect);
+            Widgets.LabelEllipses(targetRect.ContractedBy(Table.cellPaddingHor, 0), label);
+        }
+
         Utils.DrawLineVertical(targetRect.xMax, targetRect.y, targetRect.height, Table.columnSeparatorLineColor);
 
         if (Mouse.IsOver(targetRect) && description != null)
@@ -190,7 +225,7 @@ class Column
 class StatColumn : Column
 {
     public readonly string key;
-    public StatColumn(string key, string label = null, string description = null, float width = 100f, bool isPinned = false) : base(label, description, width, isPinned)
+    public StatColumn(string key, string? label = null, string? description = null, float? minWidth = null, bool isPinned = false) : base(label, description, minWidth, isPinned)
     {
         this.key = key;
     }
@@ -213,7 +248,7 @@ class StatColumn : Column
         {
             cellExplanation = cellExplanation.Replace(description, "").TrimStart();
         }
-        if (Mouse.IsOver(targetRect) && !string.IsNullOrEmpty(cellExplanation))
+        if (Mouse.IsOver(targetRect) && !string.IsNullOrEmpty(cellExplanation) && Event.current.control)
         {
             TooltipHandler.TipRegion(targetRect, new TipSignal(cellExplanation));
         }
@@ -222,7 +257,7 @@ class StatColumn : Column
 
 class LabelColumn : Column
 {
-    public LabelColumn(string label = null, string description = null, float width = 250f, bool isPinned = true) : base(label, description, width, isPinned)
+    public LabelColumn(string? label = "Name", string? description = null, float minWidth = 250f, bool isPinned = true) : base(label, description, minWidth, isPinned)
     {
     }
     public override void DrawCell(Rect targetRect, Row row)
@@ -235,13 +270,16 @@ class LabelColumn : Column
         Widgets.DefIcon(iconRect, row.def);
 
         var textRect = new Rect(iconRect.xMax + Table.cellPaddingHor, contentRect.y, contentRect.width - iconRect.width - Table.cellPaddingHor, contentRect.height);
-        Widgets.LabelEllipses(textRect, row.def.LabelCap);
+        Widgets.LabelEllipses(textRect, row.def.LabelCap == null ? row.def.ToString() : row.def.LabelCap);
 
         if (Mouse.IsOver(targetRect))
         {
             Widgets.DrawHighlight(targetRect);
 
-            TooltipHandler.TipRegion(targetRect, new TipSignal(row.def.LabelCap + "\n\n" + row.def.description));
+            if (Event.current.control)
+            {
+                TooltipHandler.TipRegion(targetRect, new TipSignal(row.def.LabelCap + "\n\n" + row.def.description));
+            }
         }
 
         if (Widgets.ButtonInvisible(targetRect))
