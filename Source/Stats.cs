@@ -81,66 +81,111 @@ public class StatsMainTabWindow : MainTabWindow
 class CategoryPicker
 {
     const float rowHeight = 22f;
-    const float cellPadding = 5f;
+    const float labelPadding = 5f;
     const float indentSize = 20f;
     Vector2 scrollPosition;
     readonly ThingCategoryDef rootCatDef;
     public ThingCategoryDef selectedCatDef;
     private readonly int categoriesCount;
+    private int debug_rowsDrawn = 0;
+    private int totalRowsDisplayed = 0;
+    private List<ThingCategoryDef> openedCategories = [];
     public CategoryPicker()
     {
         selectedCatDef = rootCatDef = DefDatabase<ThingCategoryDef>.GetNamed("Root");
         categoriesCount = DefDatabase<ThingCategoryDef>.AllDefs.Count();
+        openedCategories.Add(rootCatDef);
     }
     public void Draw(Rect targetRect, Action<ThingCategoryDef> onCategoryChange)
     {
-        var contentRect = new Rect(0f, 0f, targetRect.width, rowHeight * categoriesCount);
+        // Scroll area size correction only works because of how rows are "culled" at the top.
+        // We don't render them, but still counting.
+        var displayedRowsHeight = rowHeight * totalRowsDisplayed;
+        var contentRect = new Rect(0f, 0f, targetRect.width, displayedRowsHeight > targetRect.height ? displayedRowsHeight + targetRect.height : displayedRowsHeight);
 
         Widgets.BeginScrollView(targetRect, ref scrollPosition, contentRect);
 
         TextAnchor prevTextAnchor = Text.Anchor;
         Text.Anchor = TextAnchor.MiddleLeft;
 
+        debug_rowsDrawn = 0;
+        totalRowsDisplayed = 0;
+
         var currY = 0f;
-        DrawRows(targetRect.width, ref currY, rootCatDef, onCategoryChange);
+        DrawRows(targetRect, ref currY, rootCatDef, onCategoryChange);
 
         Text.Anchor = prevTextAnchor;
 
         Widgets.EndScrollView();
+
+        Widgets.Label(new Rect(targetRect.width / 2, targetRect.height / 2, 20f, 20f), debug_rowsDrawn + "");
     }
-    // TODO: Add culling.
-    void DrawRows(float rowWidth, ref float currY, ThingCategoryDef catDef, Action<ThingCategoryDef> onCategoryChange)
+    private void DrawRows(Rect parentRect, ref float currY, ThingCategoryDef catDef, Action<ThingCategoryDef> onCategoryChange)
     {
+        totalRowsDisplayed++;
+
+        var indentAmount = (catDef.Parents.Count() - 1) * indentSize;
         var rowRect = new Rect(
             // Skipping root category indent. This is clearly a crutch.
             catDef.defName == "Root"
             ? 0f
-            : (catDef.Parents.Count() - 1) * indentSize,
+            : indentAmount,
             currY,
-            rowWidth,
+            parentRect.width - indentAmount,
             rowHeight
         );
 
-        Text.Font = GameFont.Tiny;
+        // Culling
+        if (rowRect.y - scrollPosition.y > parentRect.height)
+        {
+            return;
+        }
+        if (rowRect.yMax - scrollPosition.y > 0)
+        {
+            Text.Font = GameFont.Tiny;
 
-        if (Widgets.ButtonInvisible(rowRect) && catDef != selectedCatDef)
-        {
-            selectedCatDef = catDef;
-            onCategoryChange(catDef);
+            var collapseControlRect = rowRect.LeftPartPixels(rowHeight);
+            var contentRect = rowRect.RightPartPixels(rowRect.width - collapseControlRect.width);
+            if (
+                catDef.childCategories.Count != 0
+                && Widgets.ButtonImage(collapseControlRect, openedCategories.Contains(catDef) ? TexButton.Collapse : TexButton.Reveal)
+            )
+            {
+                if (openedCategories.Contains(catDef))
+                {
+                    openedCategories.Remove(catDef);
+                }
+                else
+                {
+                    openedCategories.Add(catDef);
+                }
+            }
+            Widgets.DrawHighlightIfMouseover(contentRect);
+            var iconRect = contentRect.LeftPartPixels(rowHeight);
+            Widgets.DrawTextureFitted(iconRect, catDef.icon, 0.9f);
+            var labelRect = contentRect.RightPartPixels(contentRect.width - iconRect.width).ContractedBy(labelPadding, 0);
+            Widgets.LabelEllipses(labelRect, catDef.defName);
+            if (Widgets.ButtonInvisible(contentRect) && catDef != selectedCatDef)
+            {
+                selectedCatDef = catDef;
+                onCategoryChange(catDef);
+            }
+            if (selectedCatDef == catDef)
+            {
+                Widgets.DrawHighlight(contentRect);
+            }
+
+            debug_rowsDrawn++;
         }
-        if (selectedCatDef == catDef)
-        {
-            Widgets.DrawHighlight(rowRect);
-        }
-        Widgets.DrawHighlightIfMouseover(rowRect);
-        Widgets.DrawTextureFitted(rowRect.LeftPartPixels(rowHeight), catDef.icon, 0.9f);
-        Widgets.LabelEllipses(rowRect.RightPartPixels(rowRect.width - rowHeight).ContractedBy(cellPadding, 0), catDef.defName);
 
         currY += rowHeight;
 
-        foreach (var childCat in catDef.childCategories)
+        if (openedCategories.Contains(catDef))
         {
-            DrawRows(rowWidth, ref currY, childCat, onCategoryChange);
+            foreach (var childCat in catDef.childCategories)
+            {
+                DrawRows(parentRect, ref currY, childCat, onCategoryChange);
+            }
         }
     }
 }

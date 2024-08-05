@@ -108,8 +108,8 @@ class Table
         Widgets.BeginGroup(targetRect);
 
         float currY = -scrollPosition.y;
-        int renderedRowsCount = 0;
-        int renderedColumnsCount = 0;
+        int debug_rowsDrawn = 0;
+        int debug_columnsDrawn = 0;
 
         // Rows
         for (int i = 0; i < rows.Count; i++)
@@ -125,7 +125,7 @@ class Table
                 break;
             }
 
-            renderedColumnsCount = 0;
+            debug_columnsDrawn = 0;
 
             var row = rows[i];
             float currX = -scrollPosition.x;
@@ -148,7 +148,7 @@ class Table
                 column.DrawCell(cellRect, row);
 
                 currX += cellRect.width;
-                renderedColumnsCount++;
+                debug_columnsDrawn++;
             }
 
             var rowRect = new Rect(0, currY, currX, rowHeight);
@@ -168,10 +168,10 @@ class Table
             }
 
             currY += rowHeight;
-            renderedRowsCount++;
+            debug_rowsDrawn++;
         }
 
-        Widgets.Label(new Rect(targetRect.width / 2, targetRect.height / 2, 300f, 30f), renderedRowsCount + "/" + renderedColumnsCount);
+        Widgets.Label(new Rect(targetRect.width / 2, targetRect.height / 2, 300f, 30f), debug_rowsDrawn + "/" + debug_columnsDrawn);
 
         Widgets.EndGroup();
     }
