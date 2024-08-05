@@ -10,6 +10,7 @@
         <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
         <Nullable>enable</Nullable>
         <WarningLevel>5</WarningLevel>
+        <Optimize>true</Optimize>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'" />
     <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'" />

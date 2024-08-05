@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Patch>
+
+    <Operation Class="PatchOperationAdd">
+        <xpath>Defs/ThingCategoryDef[defName="Weapons"]</xpath>
+        <value>
+            <iconPath>Things/Item/Equipment/WeaponRanged/DoomsdayLauncher</iconPath>
+        </value>
+    </Operation>
+
+    <Operation Class="PatchOperationAdd">
+        <xpath>Defs/ThingCategoryDef[defName="WeaponsRanged"]</xpath>
+        <value>
+            <iconPath>Things/Item/Equipment/WeaponRanged/BoltActionRifle</iconPath>
+        </value>
+    </Operation>
+
+    <Operation Class="PatchOperationAdd">
+        <xpath>Defs/ThingCategoryDef[defName="Grenades"]</xpath>
+        <value>
+            <iconPath>Things/Item/Equipment/WeaponRanged/Grenades</iconPath>
+        </value>
+    </Operation>
+
+    <Operation Class="PatchOperationAdd">
+        <xpath>Defs/ThingCategoryDef[defName="WeaponsMelee"]</xpath>
+        <value>
+            <iconPath>Things/Item/Equipment/WeaponMelee/Knife</iconPath>
+        </value>
+    </Operation>
+
+</Patch>

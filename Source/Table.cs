@@ -2,7 +2,6 @@
 using RimWorld;
 using UnityEngine;
 using Verse;
-using Verse.Noise;
 
 // Rows/Cells culling can be potentially optimized.
 // If our columns witdhs and rows heights are static we can precalculate start/end index from which to start/end draw rows/columns.
@@ -17,15 +16,15 @@ class Table
     public const float cellPaddingHor = 10f;
     public static Color columnSeparatorLineColor = new(1f, 1f, 1f, 0.04f);
     public Vector2 scrollPosition = new();
-    public readonly List<Column> columns = [];
-    public readonly List<Column> pinnedColumns = [];
+    public readonly List<ColumnDef> columns = [];
+    public readonly List<ColumnDef> pinnedColumns = [];
     readonly List<Row> rows;
     readonly float columnsWidth = 0f;
     readonly float pinnedColumnsWidth = 0f;
     readonly float minRowWidth = 0f;
     readonly float totalRowsHeight = 0f;
     int? mouseOverRowIndex = null;
-    public Table(List<Column> columns, List<Row> rows)
+    public Table(List<ColumnDef> columns, List<Row> rows)
     {
         this.rows = rows;
 
@@ -88,7 +87,7 @@ class Table
 
         Text.Anchor = prevTextAnchor;
     }
-    void DrawHeaders(Rect targetRect, List<Column> columns, Vector2? scrollPosition = null)
+    void DrawHeaders(Rect targetRect, List<ColumnDef> columns, Vector2? scrollPosition = null)
     {
         Widgets.BeginGroup(targetRect);
 
@@ -104,7 +103,7 @@ class Table
 
         Widgets.EndGroup();
     }
-    void DrawRows(Rect targetRect, List<Column> columns, Vector2 scrollPosition)
+    void DrawRows(Rect targetRect, List<ColumnDef> columns, Vector2 scrollPosition)
     {
         Widgets.BeginGroup(targetRect);
 
@@ -176,7 +175,7 @@ class Table
 
         Widgets.EndGroup();
     }
-    Rect AdjustLastColumnWidth(Rect parentRect, Rect targetRect, List<Column> columns, Column column)
+    Rect AdjustLastColumnWidth(Rect parentRect, Rect targetRect, List<ColumnDef> columns, ColumnDef column)
     {
         if (column == columns[columns.Count - 1] && targetRect.xMax < parentRect.width)
         {
@@ -187,18 +186,26 @@ class Table
     }
 }
 
-class Column
+class ColumnDef
 {
     public readonly string? label;
     public readonly string? description;
     public readonly float minWidth = 100f;
     public readonly bool isPinned;
-    public Column(string? label = null, string? description = null, float? minWidth = null, bool isPinned = false)
+    public readonly List<string> categories;
+    public ColumnDef(
+        List<string> categories,
+        string? label = null,
+        string? description = null,
+        float? minWidth = null,
+        bool isPinned = false
+    )
     {
         this.label = label;
         this.description = description;
         if (minWidth is float _minWidth) this.minWidth = _minWidth;
         this.isPinned = isPinned;
+        this.categories = categories;
     }
     public virtual void DrawCell(Rect targetRect, Row row)
     {
@@ -222,42 +229,55 @@ class Column
     }
 }
 
-class StatColumn : Column
+class StatColumnDef : ColumnDef
 {
-    public readonly string key;
-    public StatColumn(string key, string? label = null, string? description = null, float? minWidth = null, bool isPinned = false) : base(label, description, minWidth, isPinned)
+    public readonly StatDef statDef;
+    public StatColumnDef(
+        string statDefName,
+        List<string> categories,
+        string? label = null,
+        float? minWidth = null,
+        bool isPinned = false
+    ) : base(
+        categories,
+        label ?? StatDef.Named(statDefName).LabelCap,
+        StatDef.Named(statDefName).description,
+        minWidth,
+        isPinned
+    )
     {
-        this.key = key;
+        statDef = StatDef.Named(statDefName);
     }
     public override void DrawCell(Rect targetRect, Row row)
     {
         base.DrawCell(targetRect, row);
 
-        row.stats.TryGetValue(key, out var statDrawEntry);
-        if (statDrawEntry == null)
-        {
-            return;
-        }
+        var cell = row.GetCell(statDef);
 
-        var cellValue = statDrawEntry.ValueString;
-        Widgets.LabelEllipses(targetRect.ContractedBy(Table.cellPaddingHor, 0), cellValue);
+        Widgets.LabelEllipses(targetRect.ContractedBy(Table.cellPaddingHor, 0), cell.valueDisplay ?? "");
 
-        var cellExplanation = statDrawEntry.GetExplanationText(statDrawEntry.optionalReq);
-        // This is dirty, but it does the job.
-        if (!string.IsNullOrEmpty(description) && !string.IsNullOrEmpty(cellExplanation))
+        if (Mouse.IsOver(targetRect) && !string.IsNullOrEmpty(cell.valueExplanation) && Event.current.control)
         {
-            cellExplanation = cellExplanation.Replace(description, "").TrimStart();
-        }
-        if (Mouse.IsOver(targetRect) && !string.IsNullOrEmpty(cellExplanation) && Event.current.control)
-        {
-            TooltipHandler.TipRegion(targetRect, new TipSignal(cellExplanation));
+            TooltipHandler.TipRegion(targetRect, new TipSignal(cell.valueExplanation));
         }
     }
 }
 
-class LabelColumn : Column
+class LabelColumnDef : ColumnDef
 {
-    public LabelColumn(string? label = "Name", string? description = null, float minWidth = 250f, bool isPinned = true) : base(label, description, minWidth, isPinned)
+    public LabelColumnDef(
+        List<string> categories,
+        string? label = "Name",
+        string? description = null,
+        float minWidth = 250f,
+        bool isPinned = true
+    ) : base(
+        categories,
+        label,
+        description,
+        minWidth,
+        isPinned
+    )
     {
     }
     public override void DrawCell(Rect targetRect, Row row)
@@ -267,10 +287,10 @@ class LabelColumn : Column
         var contentRect = targetRect.ContractedBy(Table.cellPaddingHor, 0);
 
         var iconRect = new Rect(contentRect.x, contentRect.y, contentRect.height, contentRect.height);
-        Widgets.DefIcon(iconRect, row.def);
+        Widgets.DefIcon(iconRect, row.thingDef);
 
         var textRect = new Rect(iconRect.xMax + Table.cellPaddingHor, contentRect.y, contentRect.width - iconRect.width - Table.cellPaddingHor, contentRect.height);
-        Widgets.LabelEllipses(textRect, row.def.LabelCap == null ? row.def.ToString() : row.def.LabelCap);
+        Widgets.LabelEllipses(textRect, row.thingDef.LabelCap == null ? row.thingDef.ToString() : row.thingDef.LabelCap);
 
         if (Mouse.IsOver(targetRect))
         {
@@ -278,13 +298,13 @@ class LabelColumn : Column
 
             if (Event.current.control)
             {
-                TooltipHandler.TipRegion(targetRect, new TipSignal(row.def.LabelCap + "\n\n" + row.def.description));
+                TooltipHandler.TipRegion(targetRect, new TipSignal(row.thingDef.LabelCap + "\n\n" + row.thingDef.description));
             }
         }
 
         if (Widgets.ButtonInvisible(targetRect))
         {
-            Find.WindowStack.Add(new Dialog_InfoCard(row.def));
+            Find.WindowStack.Add(new Dialog_InfoCard(row.thingDef));
         }
     }
     //public override void DrawHeaderCell(Rect targetRect)
@@ -294,18 +314,48 @@ class LabelColumn : Column
 
 class Row
 {
-    public readonly ThingDef def;
-    public readonly Dictionary<string, StatDrawEntry> stats = [];
-    public Row(ThingDef def)
+    public readonly ThingDef thingDef;
+    private readonly Dictionary<string, Cell> cells = [];
+    public Row(ThingDef thingDef)
     {
-        this.def = def;
+        this.thingDef = thingDef;
+    }
+    public Cell GetCell(StatDef statDef)
+    {
+        cells.TryGetValue(statDef.defName, out Cell cell);
 
-        foreach (var stat in Utils.GetAllDefDisplayStats(def, def.defaultStuff))
+        if (cell == null)
         {
-            if (!stats.ContainsKey(stat.LabelCap))
-            {
-                stats[stat.LabelCap] = stat;
-            }
+            return cells[statDef.defName] = new Cell(thingDef, statDef);
+        }
+        else
+        {
+            return cells[statDef.defName];
+        }
+    }
+}
+
+class Cell
+{
+    public readonly float valueRaw;
+    public readonly string valueDisplay;
+    public readonly string valueExplanation;
+    public Cell(ThingDef thingDef, StatDef statDef)
+    {
+        valueRaw = thingDef.GetStatValueAbstract(statDef);
+        var statReq = StatRequest.For(thingDef, thingDef.defaultStuff);
+        // Why valueRaw as final value?
+        valueExplanation = statDef.Worker.GetExplanationFull(statReq, ToStringNumberSense.Absolute, valueRaw);
+
+        // This is very expensive.
+        try
+        {
+            // Why ToStringNumberSense.Absolute?
+            valueDisplay = statDef.Worker.GetStatDrawEntryLabel(statDef, valueRaw, ToStringNumberSense.Absolute, statReq);
+        }
+        catch
+        {
+
         }
     }
 }
