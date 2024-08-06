@@ -15,23 +15,73 @@ public static class Stats
     }
 }
 
+static class ColumnSetDB
+{
+    static private readonly Dictionary<string, ColumnSet> columnSets = new() { ["Root"] = new ColumnSet() };
+    static public ColumnSet? GetColumnSetForCatDef(ThingCategoryDef catDef)
+    {
+        columnSets.TryGetValue(catDef.defName, out ColumnSet? columnSet);
+
+        if (columnSet == null)
+        {
+            foreach (var parentCatDef in catDef.Parents)
+            {
+                return GetColumnSetForCatDef(parentCatDef);
+            }
+        }
+
+        return columnSet;
+    }
+    static public void Add(ColumnSet columnSet)
+    {
+        foreach (string category in columnSet.categories)
+        {
+            columnSets.TryAdd(category, columnSet);
+        }
+    }
+}
+
+class ColumnSet
+{
+    public List<string> categories = ["Root"];
+    public List<ColumnDef> columns = [
+        new LabelColumnDef(),
+        new StatColumnDef("MaxHitPoints", "HP"),
+        new StatColumnDef("MarketValue", "$"),
+        new StatColumnDef("Mass"),
+        new StatColumnDef("Bulk"),
+        new StatColumnDef("Caliber", isSortable: false),
+    ];
+}
+
 public class StatsMainTabWindow : MainTabWindow
 {
     protected override float Margin { get => 1f; }
     private readonly CategoryPicker categoryPicker;
     private readonly Dictionary<string, Table> tablesCache = [];
-    private readonly List<ColumnDef> columnDefs = [
-        new LabelColumnDef(),
-        new StatColumnDef("MaxHitPoints", "HP", isSortable: true),
-        new StatColumnDef("MarketValue", "$", isSortable: true),
-        new StatColumnDef("Mass", isSortable: true),
-        new StatColumnDef("Bulk", isSortable: true),
-        new StatColumnDef("Caliber"),
-    ];
     public StatsMainTabWindow()
     {
         draggable = true;
         resizeable = true;
+
+        ColumnSetDB.Add(new ColumnSet
+        {
+            categories = ["WeaponsRanged"],
+            columns = [
+                new LabelColumnDef(),
+                new StatColumnDef("Recoil"),
+                new StatColumnDef("SwayFactor"),
+                new StatColumnDef("ShotSpread"),
+                new StatColumnDef("SightsEfficiency"),
+                new StatColumnDef("MagazineCapacity", drawRawValue: true),
+                new StatColumnDef("ReloadTime", drawRawValue: true),
+                new StatColumnDef("TicksBetweenBurstShots"),
+                new StatColumnDef("Caliber", isSortable: false),
+                new StatColumnDef("OneHandedness"),
+                new StatColumnDef("Mass"),
+                new StatColumnDef("Bulk"),
+            ],
+        });
 
         categoryPicker = new CategoryPicker();
         HandleCategoryChange(categoryPicker.selectedCatDef);
@@ -40,10 +90,15 @@ public class StatsMainTabWindow : MainTabWindow
     {
         if (catDef != null && !tablesCache.ContainsKey(catDef.defName))
         {
-            tablesCache[catDef.defName] = new Table(
-                columnDefs,
-                catDef.childThingDefs.Select(thingDef => new Row(thingDef)).ToList()
-            );
+            var columnSet = ColumnSetDB.GetColumnSetForCatDef(catDef);
+
+            if (columnSet != null)
+            {
+                tablesCache[catDef.defName] = new Table(
+                    columnSet.columns,
+                    catDef.childThingDefs.Select(thingDef => new Row(thingDef)).ToList()
+                );
+            }
         }
     }
     public override void DoWindowContents(Rect targetRect)

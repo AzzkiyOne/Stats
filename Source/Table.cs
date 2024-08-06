@@ -26,6 +26,7 @@ class Table
     private int? mouseOverRowIndex = null;
     private ColumnDef? sortColumnDef;
     private SortDirection sortDirection = SortDirection.Ascending;
+    private bool dragInProgress = false;
     public Table(List<ColumnDef> columns, List<Row> rows)
     {
         this.rows = rows;
@@ -61,6 +62,27 @@ class Table
         {
             var contentRect = new Rect(0f, 0f, minRowWidth, totalRowsHeight + headersRowHeight);
 
+            // If the table stops drawing while the user is dragging the mouse on the screen (for example the table is rendered in a window and the user pressed ESC)
+            // we end up in a state where dragInProgess == true. I'm not sure if the code below is a good way to fix this, but it looks harmless.
+            if (GUIUtility.hotControl == 0)
+            {
+                dragInProgress = false;
+            }
+
+            var id = GUIUtility.GetControlID(FocusType.Passive);
+
+            if (dragInProgress)
+            {
+                // Taking control over GUI events while dragging is in progress.
+                GUIUtility.hotControl = id;
+
+                // Catching "mouse up" event to stop drag.
+                if (Event.current.GetTypeForControl(id) == EventType.MouseUp)
+                {
+                    GUIUtility.hotControl = 0;
+                }
+            }
+
             Widgets.BeginScrollView(targetRect, ref scrollPosition, contentRect, true);
 
             // Draw pinned headers
@@ -76,7 +98,6 @@ class Table
             DrawRows(pinnedTableBodyRect, pinnedColumns, new Vector2(0, scrollPosition.y));
 
             // Draw rows
-            //var tableBodyRect = new Rect(scrollPosition.x + pinnedColumnsWidth, scrollPosition.y + headersRowHeight, totalColumnsWidth, contentRect.height - headersRowHeight);
             var tableBodyRect = new Rect(scrollPosition.x + pinnedColumnsWidth, scrollPosition.y + headersRowHeight, targetRect.width - pinnedColumnsWidth, targetRect.height - headersRowHeight);
             DrawRows(tableBodyRect, middleColumns, scrollPosition);
 
@@ -84,6 +105,25 @@ class Table
             GUIUtils.DrawLineVertical(scrollPosition.x, scrollPosition.y, targetRect.height, new(1f, 1f, 1f, 0.4f));
             Widgets.DrawLineHorizontal(scrollPosition.x, headersRowHeight + scrollPosition.y, targetRect.width, new(1f, 1f, 1f, 0.4f));
             GUIUtils.DrawLineVertical(pinnedColumnsWidth + scrollPosition.x, scrollPosition.y, targetRect.height, new(1f, 1f, 1f, 0.4f));
+
+            // Initiate drag when the user holds left mouse button down in the (not always) scrollable table area.
+            if (
+                !dragInProgress
+                && Mouse.IsOver(tableBodyRect)
+                && Event.current.type == EventType.MouseDown
+            )
+            {
+                dragInProgress = true;
+            }
+
+            // Adjust horizontal scroll position on drag event.
+            if (
+                dragInProgress
+                && Event.current.GetTypeForControl(id) == EventType.MouseDrag
+            )
+            {
+                scrollPosition.x = Mathf.Clamp(scrollPosition.x + Event.current.delta.x, 0, contentRect.width - targetRect.width + GUI.skin.verticalScrollbar.fixedWidth);
+            }
 
             if (!Mouse.IsOver(pinnedTableBodyRect.Union(tableBodyRect)))
             {
@@ -239,7 +279,7 @@ class ColumnDef
         string? description = null,
         float minWidth = 100f,
         bool isPinned = false,
-        bool isSortable = false
+        bool isSortable = true
     )
     {
         this.label = label;
@@ -293,12 +333,14 @@ class ColumnDef
 class StatColumnDef : ColumnDef
 {
     public readonly StatDef statDef;
+    private readonly bool drawRawValue;
     public StatColumnDef(
         string statDefName,
         string? label = null,
         float minWidth = 100f,
         bool isPinned = false,
-        bool isSortable = false
+        bool isSortable = true,
+        bool drawRawValue = false
     ) : base(
         label ?? StatDef.Named(statDefName).LabelCap,
         StatDef.Named(statDefName).description,
@@ -308,6 +350,7 @@ class StatColumnDef : ColumnDef
     )
     {
         statDef = StatDef.Named(statDefName);
+        this.drawRawValue = drawRawValue;
     }
     public override void DrawCell(Rect targetRect, Row row)
     {
@@ -315,7 +358,7 @@ class StatColumnDef : ColumnDef
 
         var cell = row.GetCell(statDef);
 
-        Widgets.LabelEllipses(targetRect.ContractedBy(Table.cellPaddingHor, 0), Debug.InDebugMode() ? cell.valueRaw + "" : cell.valueDisplay ?? "");
+        Widgets.LabelEllipses(targetRect.ContractedBy(Table.cellPaddingHor, 0), Debug.InDebugMode() || drawRawValue ? cell.valueRaw + "" : cell.valueDisplay + "");
 
         if (Mouse.IsOver(targetRect) && !string.IsNullOrEmpty(cell.valueExplanation) && Event.current.control)
         {
@@ -332,6 +375,10 @@ class StatColumnDef : ColumnDef
             if (val1 == val2)
             {
                 return 0;
+            }
+            else if (val1 == null || val2 == null)
+            {
+                return -1;
             }
             else if (direction == SortDirection.Ascending)
             {
@@ -437,25 +484,42 @@ class Row
 
 class Cell
 {
-    public readonly float valueRaw;
-    public readonly string valueDisplay;
-    public readonly string valueExplanation;
+    public readonly float? valueRaw;
+    public readonly string? valueDisplay;
+    public readonly string? valueExplanation;
     public Cell(ThingDef thingDef, StatDef statDef)
     {
-        valueRaw = thingDef.GetStatValueAbstract(statDef);
-        var statReq = StatRequest.For(thingDef, thingDef.defaultStuff);
-        // Why valueRaw as final value?
-        valueExplanation = statDef.Worker.GetExplanationFull(statReq, ToStringNumberSense.Absolute, valueRaw);
-
-        // This is very expensive.
+        // This is all very expensive.
+        // The good thing is that it all will be cached.
         try
         {
-            // Why ToStringNumberSense.Absolute?
-            valueDisplay = statDef.Worker.GetStatDrawEntryLabel(statDef, valueRaw, ToStringNumberSense.Absolute, statReq);
+            valueRaw = thingDef.GetStatValueAbstract(statDef);
         }
         catch
         {
-            valueDisplay = "";
+        }
+
+        if (valueRaw is float _valueRaw)
+        {
+            var statReq = StatRequest.For(thingDef, thingDef.defaultStuff);
+
+            try
+            {
+                // Why ToStringNumberSense.Absolute?
+                valueDisplay = statDef.Worker.GetStatDrawEntryLabel(statDef, _valueRaw, ToStringNumberSense.Absolute, statReq);
+            }
+            catch
+            {
+            }
+
+            try
+            {
+                // Why valueRaw as final value?
+                valueExplanation = statDef.Worker.GetExplanationFull(statReq, ToStringNumberSense.Absolute, _valueRaw);
+            }
+            catch
+            {
+            }
         }
     }
 }
