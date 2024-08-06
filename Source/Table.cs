@@ -16,17 +16,25 @@ class Table
     public const float cellPaddingHor = 10f;
     public static Color columnSeparatorLineColor = new(1f, 1f, 1f, 0.04f);
     public Vector2 scrollPosition = new();
-    public readonly List<ColumnDef> columns = [];
+    public readonly List<ColumnDef> middleColumns = [];
     public readonly List<ColumnDef> pinnedColumns = [];
     readonly List<Row> rows;
-    readonly float columnsWidth = 0f;
+    readonly float middleColumnsWidth = 0f;
     readonly float pinnedColumnsWidth = 0f;
     readonly float minRowWidth = 0f;
     readonly float totalRowsHeight = 0f;
     int? mouseOverRowIndex = null;
+    private ColumnDef? sortColumnDef;
+    private SortDirection sortDirection = SortDirection.Ascending;
     public Table(List<ColumnDef> columns, List<Row> rows)
     {
         this.rows = rows;
+
+        if (columns[0] != null)
+        {
+            sortColumnDef = columns[0];
+            sortColumnDef.SortRows(rows, sortDirection);
+        }
 
         foreach (var column in columns)
         {
@@ -37,8 +45,8 @@ class Table
             }
             else
             {
-                this.columns.Add(column);
-                columnsWidth += column.minWidth;
+                middleColumns.Add(column);
+                middleColumnsWidth += column.minWidth;
             }
 
             minRowWidth += column.minWidth;
@@ -48,44 +56,42 @@ class Table
     }
     public void Draw(Rect targetRect)
     {
-        Text.Font = GameFont.Small;
-        TextAnchor prevTextAnchor = Text.Anchor;
-        Text.Anchor = TextAnchor.MiddleLeft;
-
-        var contentRect = new Rect(0f, 0f, minRowWidth, totalRowsHeight + headersRowHeight);
-
-        Widgets.BeginScrollView(targetRect, ref scrollPosition, contentRect, true);
-
-        // Draw pinned headers
-        var pinnedHeadersRowRect = new Rect(scrollPosition.x, scrollPosition.y, pinnedColumnsWidth, headersRowHeight);
-        DrawHeaders(pinnedHeadersRowRect, pinnedColumns);
-
-        // Draw headers
-        var headersRowRect = new Rect(scrollPosition.x + pinnedColumnsWidth, scrollPosition.y, contentRect.xMax - pinnedColumnsWidth, rowHeight);
-        DrawHeaders(headersRowRect, columns, scrollPosition);
-
-        // Draw pinned rows
-        var pinnedTableBodyRect = new Rect(scrollPosition.x, scrollPosition.y + headersRowHeight, pinnedColumnsWidth, targetRect.height - headersRowHeight);
-        DrawRows(pinnedTableBodyRect, pinnedColumns, new Vector2(0, scrollPosition.y));
-
-        // Draw rows
-        //var tableBodyRect = new Rect(scrollPosition.x + pinnedColumnsWidth, scrollPosition.y + headersRowHeight, totalColumnsWidth, contentRect.height - headersRowHeight);
-        var tableBodyRect = new Rect(scrollPosition.x + pinnedColumnsWidth, scrollPosition.y + headersRowHeight, targetRect.width - pinnedColumnsWidth, targetRect.height - headersRowHeight);
-        DrawRows(tableBodyRect, columns, scrollPosition);
-
-        // Separators
-        Utils.DrawLineVertical(scrollPosition.x, 0f, contentRect.height, new(1f, 1f, 1f, 0.4f));
-        Widgets.DrawLineHorizontal(0f, headersRowHeight + scrollPosition.y, contentRect.width, new(1f, 1f, 1f, 0.4f));
-        Utils.DrawLineVertical(pinnedColumnsWidth + scrollPosition.x, 0f, contentRect.height, new(1f, 1f, 1f, 0.4f));
-
-        if (!Mouse.IsOver(pinnedTableBodyRect.Union(tableBodyRect)))
+        using (new GUIUtils.GameFontContext(GameFont.Small))
+        using (new GUIUtils.TextAnchorContext(TextAnchor.MiddleLeft))
         {
-            mouseOverRowIndex = null;
+            var contentRect = new Rect(0f, 0f, minRowWidth, totalRowsHeight + headersRowHeight);
+
+            Widgets.BeginScrollView(targetRect, ref scrollPosition, contentRect, true);
+
+            // Draw pinned headers
+            var pinnedHeadersRowRect = new Rect(scrollPosition.x, scrollPosition.y, pinnedColumnsWidth, headersRowHeight);
+            DrawHeaders(pinnedHeadersRowRect, pinnedColumns);
+
+            // Draw headers
+            var headersRowRect = new Rect(scrollPosition.x + pinnedColumnsWidth, scrollPosition.y, contentRect.xMax - pinnedColumnsWidth, rowHeight);
+            DrawHeaders(headersRowRect, middleColumns, scrollPosition);
+
+            // Draw pinned rows
+            var pinnedTableBodyRect = new Rect(scrollPosition.x, scrollPosition.y + headersRowHeight, pinnedColumnsWidth, targetRect.height - headersRowHeight);
+            DrawRows(pinnedTableBodyRect, pinnedColumns, new Vector2(0, scrollPosition.y));
+
+            // Draw rows
+            //var tableBodyRect = new Rect(scrollPosition.x + pinnedColumnsWidth, scrollPosition.y + headersRowHeight, totalColumnsWidth, contentRect.height - headersRowHeight);
+            var tableBodyRect = new Rect(scrollPosition.x + pinnedColumnsWidth, scrollPosition.y + headersRowHeight, targetRect.width - pinnedColumnsWidth, targetRect.height - headersRowHeight);
+            DrawRows(tableBodyRect, middleColumns, scrollPosition);
+
+            // Separators
+            GUIUtils.DrawLineVertical(scrollPosition.x, scrollPosition.y, targetRect.height, new(1f, 1f, 1f, 0.4f));
+            Widgets.DrawLineHorizontal(scrollPosition.x, headersRowHeight + scrollPosition.y, targetRect.width, new(1f, 1f, 1f, 0.4f));
+            GUIUtils.DrawLineVertical(pinnedColumnsWidth + scrollPosition.x, scrollPosition.y, targetRect.height, new(1f, 1f, 1f, 0.4f));
+
+            if (!Mouse.IsOver(pinnedTableBodyRect.Union(tableBodyRect)))
+            {
+                mouseOverRowIndex = null;
+            }
+
+            Widgets.EndScrollView();
         }
-
-        Widgets.EndScrollView();
-
-        Text.Anchor = prevTextAnchor;
     }
     void DrawHeaders(Rect targetRect, List<ColumnDef> columns, Vector2? scrollPosition = null)
     {
@@ -96,7 +102,10 @@ class Table
         foreach (var column in columns)
         {
             var cellRect = AdjustLastColumnWidth(targetRect, new Rect(currX, 0, column.minWidth, targetRect.height), columns, column);
-            column.DrawHeaderCell(cellRect);
+            if (column.DrawHeaderCell(cellRect, sortColumnDef == column ? sortDirection : null))
+            {
+                HandleHeaderRowCellClick(column);
+            }
 
             currX += column.minWidth;
         }
@@ -171,7 +180,7 @@ class Table
             debug_rowsDrawn++;
         }
 
-        Widgets.Label(new Rect(targetRect.width / 2, targetRect.height / 2, 300f, 30f), debug_rowsDrawn + "/" + debug_columnsDrawn);
+        Debug.TryDrawUIDebugInfo(targetRect, debug_rowsDrawn + "/" + debug_columnsDrawn);
 
         Widgets.EndGroup();
     }
@@ -184,35 +193,70 @@ class Table
 
         return targetRect;
     }
+    private void HandleHeaderRowCellClick(ColumnDef columnDef)
+    {
+        if (columnDef == null)
+        {
+            return;
+        }
+
+        if (sortColumnDef == columnDef)
+        {
+            if (sortDirection == SortDirection.Ascending)
+            {
+                sortDirection = SortDirection.Descending;
+            }
+            else
+            {
+                sortDirection = SortDirection.Ascending;
+            }
+        }
+        else
+        {
+            sortColumnDef = columnDef;
+            sortDirection = SortDirection.Ascending;
+        }
+
+        sortColumnDef.SortRows(rows, sortDirection);
+    }
+}
+
+enum SortDirection
+{
+    Ascending,
+    Descending,
 }
 
 class ColumnDef
 {
     public readonly string? label;
     public readonly string? description;
-    public readonly float minWidth = 100f;
+    public readonly float minWidth;
     public readonly bool isPinned;
     public readonly List<string> categories;
+    public readonly bool isSortable;
     public ColumnDef(
         List<string> categories,
         string? label = null,
         string? description = null,
-        float? minWidth = null,
-        bool isPinned = false
+        float minWidth = 100f,
+        bool isPinned = false,
+        bool isSortable = false
     )
     {
         this.label = label;
         this.description = description;
-        if (minWidth is float _minWidth) this.minWidth = _minWidth;
+        this.minWidth = minWidth;
         this.isPinned = isPinned;
         this.categories = categories;
+        this.isSortable = isSortable;
     }
     public virtual void DrawCell(Rect targetRect, Row row)
     {
         // Not very performant, because border will be rendered for each individual cell.
-        Utils.DrawLineVertical(targetRect.x + targetRect.width, targetRect.y, Table.rowHeight, Table.columnSeparatorLineColor);
+        GUIUtils.DrawLineVertical(targetRect.x + targetRect.width, targetRect.y, Table.rowHeight, Table.columnSeparatorLineColor);
     }
-    public virtual void DrawHeaderCell(Rect targetRect)
+    public virtual bool DrawHeaderCell(Rect targetRect, SortDirection? sortDirection = null)
     {
         if (label != null)
         {
@@ -220,12 +264,32 @@ class ColumnDef
             Widgets.LabelEllipses(targetRect.ContractedBy(Table.cellPaddingHor, 0), label);
         }
 
-        Utils.DrawLineVertical(targetRect.xMax, targetRect.y, targetRect.height, Table.columnSeparatorLineColor);
+        if (sortDirection != null)
+        {
+            var rotationAngle = sortDirection == SortDirection.Ascending ? -90f : 90f;
+            Widgets.DrawTextureRotated(targetRect.RightPartPixels(Table.headersRowHeight), TexButton.Reveal, rotationAngle);
+        }
+
+        GUIUtils.DrawLineVertical(targetRect.xMax, targetRect.y, targetRect.height, Table.columnSeparatorLineColor);
 
         if (Mouse.IsOver(targetRect) && description != null)
         {
             TooltipHandler.TipRegion(targetRect, new TipSignal(description));
         }
+
+        if (isSortable)
+        {
+            Widgets.DrawHighlightIfMouseover(targetRect);
+
+            return Widgets.ButtonInvisible(targetRect);
+        }
+        else
+        {
+            return false;
+        }
+    }
+    public virtual void SortRows(List<Row> rows, SortDirection direction)
+    {
     }
 }
 
@@ -236,14 +300,16 @@ class StatColumnDef : ColumnDef
         string statDefName,
         List<string> categories,
         string? label = null,
-        float? minWidth = null,
-        bool isPinned = false
+        float minWidth = 100f,
+        bool isPinned = false,
+        bool isSortable = false
     ) : base(
         categories,
         label ?? StatDef.Named(statDefName).LabelCap,
         StatDef.Named(statDefName).description,
         minWidth,
-        isPinned
+        isPinned,
+        isSortable
     )
     {
         statDef = StatDef.Named(statDefName);
@@ -254,12 +320,33 @@ class StatColumnDef : ColumnDef
 
         var cell = row.GetCell(statDef);
 
-        Widgets.LabelEllipses(targetRect.ContractedBy(Table.cellPaddingHor, 0), cell.valueDisplay ?? "");
+        Widgets.LabelEllipses(targetRect.ContractedBy(Table.cellPaddingHor, 0), Debug.InDebugMode() ? cell.valueRaw + "" : cell.valueDisplay ?? "");
 
         if (Mouse.IsOver(targetRect) && !string.IsNullOrEmpty(cell.valueExplanation) && Event.current.control)
         {
             TooltipHandler.TipRegion(targetRect, new TipSignal(cell.valueExplanation));
         }
+    }
+    public override void SortRows(List<Row> rows, SortDirection direction)
+    {
+        rows.Sort((r1, r2) =>
+        {
+            var val1 = r1.GetCell(statDef).valueRaw;
+            var val2 = r2.GetCell(statDef).valueRaw;
+
+            if (val1 == val2)
+            {
+                return 0;
+            }
+            else if (direction == SortDirection.Ascending)
+            {
+                return val1 > val2 ? 1 : -1;
+            }
+            else
+            {
+                return val1 < val2 ? 1 : -1;
+            }
+        });
     }
 }
 
@@ -270,13 +357,15 @@ class LabelColumnDef : ColumnDef
         string? label = "Name",
         string? description = null,
         float minWidth = 250f,
-        bool isPinned = true
+        bool isPinned = true,
+        bool isSortable = true
     ) : base(
         categories,
         label,
         description,
         minWidth,
-        isPinned
+        isPinned,
+        isSortable
     )
     {
     }
@@ -290,7 +379,14 @@ class LabelColumnDef : ColumnDef
         Widgets.DefIcon(iconRect, row.thingDef);
 
         var textRect = new Rect(iconRect.xMax + Table.cellPaddingHor, contentRect.y, contentRect.width - iconRect.width - Table.cellPaddingHor, contentRect.height);
-        Widgets.LabelEllipses(textRect, row.thingDef.LabelCap == null ? row.thingDef.ToString() : row.thingDef.LabelCap);
+        string labelText = row.thingDef.LabelCap == null ? row.thingDef.ToString() : row.thingDef.LabelCap;
+
+        if (Debug.InDebugMode())
+        {
+            labelText = row.thingDef.defName;
+        }
+
+        Widgets.LabelEllipses(textRect, labelText);
 
         if (Mouse.IsOver(targetRect))
         {
@@ -310,6 +406,17 @@ class LabelColumnDef : ColumnDef
     //public override void DrawHeaderCell(Rect targetRect)
     //{
     //}
+    public override void SortRows(List<Row> rows, SortDirection direction)
+    {
+        if (direction == SortDirection.Ascending)
+        {
+            rows.Sort((r1, r2) => r1.thingDef.LabelCap.RawText.CompareTo(r2.thingDef.LabelCap.RawText));
+        }
+        else
+        {
+            rows.Sort((r1, r2) => r2.thingDef.LabelCap.RawText.CompareTo(r1.thingDef.LabelCap.RawText));
+        }
+    }
 }
 
 class Row
@@ -355,7 +462,7 @@ class Cell
         }
         catch
         {
-
+            valueDisplay = "";
         }
     }
 }
