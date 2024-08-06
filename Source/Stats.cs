@@ -17,16 +17,16 @@ public static class Stats
 
 public class StatsMainTabWindow : MainTabWindow
 {
-    override protected float Margin { get => 1f; }
+    protected override float Margin { get => 1f; }
     private readonly CategoryPicker categoryPicker;
     private readonly Dictionary<string, Table> tablesCache = [];
     private readonly List<ColumnDef> columnDefs = [
-        new LabelColumnDef([]),
-        new StatColumnDef("MaxHitPoints", [], "HP", isSortable: true),
-        new StatColumnDef("MarketValue", [], "$$$$$$$$$$$$$$$$$$$$", isSortable: true),
-        new StatColumnDef("Mass", [], isSortable: true),
-        new StatColumnDef("Bulk", [], isSortable: true),
-        new StatColumnDef("Caliber", []),
+        new LabelColumnDef(),
+        new StatColumnDef("MaxHitPoints", "HP", isSortable: true),
+        new StatColumnDef("MarketValue", "$", isSortable: true),
+        new StatColumnDef("Mass", isSortable: true),
+        new StatColumnDef("Bulk", isSortable: true),
+        new StatColumnDef("Caliber"),
     ];
     public StatsMainTabWindow()
     {
@@ -36,34 +36,13 @@ public class StatsMainTabWindow : MainTabWindow
         categoryPicker = new CategoryPicker();
         HandleCategoryChange(categoryPicker.selectedCatDef);
     }
-    private IEnumerable<Row> GetTableRows(ThingCategoryDef catDef)
+    private void HandleCategoryChange(ThingCategoryDef? catDef)
     {
-        // Same thing can be in the category and in its descendants simultaneously.
-
-        // Self
-        foreach (var childThingDef in catDef.SortedChildThingDefs)
-        {
-            yield return new Row(childThingDef);
-        }
-
-        // Subcategories
-        foreach (var childCatDef in catDef.childCategories)
-        {
-            var rows = GetTableRows(childCatDef);
-
-            foreach (var row in rows)
-            {
-                yield return row;
-            }
-        }
-    }
-    private void HandleCategoryChange(ThingCategoryDef catDef)
-    {
-        if (!tablesCache.ContainsKey(catDef.defName))
+        if (catDef != null && !tablesCache.ContainsKey(catDef.defName))
         {
             tablesCache[catDef.defName] = new Table(
                 columnDefs,
-                GetTableRows(catDef).ToList()
+                catDef.childThingDefs.Select(thingDef => new Row(thingDef)).ToList()
             );
         }
     }
@@ -73,26 +52,28 @@ public class StatsMainTabWindow : MainTabWindow
         categoryPicker.Draw(categoryPickerTargetRect, HandleCategoryChange);
 
         var tableRect = new Rect(categoryPickerTargetRect.xMax, 0f, targetRect.width - categoryPickerTargetRect.width, targetRect.height);
-        tablesCache.TryGetValue(categoryPicker.selectedCatDef.defName, out Table table);
-        table?.Draw(tableRect);
+        if (categoryPicker.selectedCatDef is ThingCategoryDef selCatDef)
+        {
+            tablesCache.TryGetValue(selCatDef.defName, out Table table);
+            table?.Draw(tableRect);
+        }
     }
 }
 
 class CategoryPicker
 {
-    const float rowHeight = 22f;
-    const float labelPadding = 5f;
-    const float indentSize = 20f;
-    Vector2 scrollPosition;
-    readonly ThingCategoryDef rootCatDef;
-    public ThingCategoryDef selectedCatDef;
+    private const float rowHeight = 22f;
+    private const float labelPadding = 5f;
+    private const float indentSize = 20f;
+    private Vector2 scrollPosition;
+    private readonly ThingCategoryDef rootCatDef;
+    public ThingCategoryDef? selectedCatDef;
     private int debug_rowsDrawn = 0;
     private int totalRowsDisplayed = 0;
-    private List<ThingCategoryDef> openedCategories = [];
+    private readonly List<ThingCategoryDef> openedCategories = [];
     public CategoryPicker()
     {
-        selectedCatDef = rootCatDef = DefDatabase<ThingCategoryDef>.GetNamed("Root");
-        openedCategories.Add(rootCatDef);
+        rootCatDef = DefDatabase<ThingCategoryDef>.GetNamed("Root");
     }
     public void Draw(Rect targetRect, Action<ThingCategoryDef> onCategoryChange)
     {
@@ -110,7 +91,10 @@ class CategoryPicker
             totalRowsDisplayed = 0;
 
             var currY = 0f;
-            DrawRows(targetRect, ref currY, rootCatDef, onCategoryChange);
+            foreach (var catDef in rootCatDef.childCategories)
+            {
+                DrawRows(targetRect, ref currY, catDef, onCategoryChange);
+            }
 
             Widgets.EndScrollView();
 
@@ -119,14 +103,17 @@ class CategoryPicker
     }
     private void DrawRows(Rect parentRect, ref float currY, ThingCategoryDef catDef, Action<ThingCategoryDef> onCategoryChange)
     {
+        if (catDef.childThingDefs.Count == 0 && catDef.childCategories.Count == 0 && !Debug.InDebugMode())
+        {
+            return;
+        }
+
         totalRowsDisplayed++;
 
+        // "-1" is because we don't sraw root category entry.
         var indentAmount = (catDef.Parents.Count() - 1) * indentSize;
         var rowRect = new Rect(
-            // Skipping root category indent. This is clearly a crutch.
-            catDef.defName == "Root"
-            ? 0f
-            : indentAmount,
+            indentAmount,
             currY,
             parentRect.width - indentAmount,
             rowHeight
@@ -155,16 +142,38 @@ class CategoryPicker
                     openedCategories.Add(catDef);
                 }
             }
-            Widgets.DrawHighlightIfMouseover(contentRect);
+
             var iconRect = contentRect.LeftPartPixels(rowHeight);
             Widgets.DrawTextureFitted(iconRect, catDef.icon, 0.9f);
             var labelRect = contentRect.RightPartPixels(contentRect.width - iconRect.width).ContractedBy(labelPadding, 0);
-            Widgets.LabelEllipses(labelRect, Debug.InDebugMode() ? catDef.defName : catDef.LabelCap);
-            if (Widgets.ButtonInvisible(contentRect) && catDef != selectedCatDef)
+            string labelText = Debug.InDebugMode() ? catDef.defName : catDef.LabelCap;
+            if (string.IsNullOrEmpty(labelText))
             {
-                selectedCatDef = catDef;
-                onCategoryChange(catDef);
+                if (!string.IsNullOrEmpty(catDef.label))
+                {
+                    labelText = catDef.label;
+                }
+                else
+                {
+                    labelText = catDef.defName;
+                }
             }
+            Widgets.LabelEllipses(labelRect, labelText);
+
+            if (catDef.childThingDefs.Count > 0)
+            {
+                Widgets.DrawHighlightIfMouseover(contentRect);
+
+                if (
+                    Widgets.ButtonInvisible(contentRect)
+                    && catDef != selectedCatDef
+                )
+                {
+                    selectedCatDef = catDef;
+                    onCategoryChange(catDef);
+                }
+            }
+
             if (selectedCatDef == catDef)
             {
                 Widgets.DrawHighlight(contentRect);

@@ -18,12 +18,12 @@ class Table
     public Vector2 scrollPosition = new();
     public readonly List<ColumnDef> middleColumns = [];
     public readonly List<ColumnDef> pinnedColumns = [];
-    readonly List<Row> rows;
-    readonly float middleColumnsWidth = 0f;
-    readonly float pinnedColumnsWidth = 0f;
-    readonly float minRowWidth = 0f;
-    readonly float totalRowsHeight = 0f;
-    int? mouseOverRowIndex = null;
+    private readonly List<Row> rows;
+    private readonly float middleColumnsWidth = 0f;
+    private readonly float pinnedColumnsWidth = 0f;
+    private readonly float minRowWidth = 0f;
+    private readonly float totalRowsHeight = 0f;
+    private int? mouseOverRowIndex = null;
     private ColumnDef? sortColumnDef;
     private SortDirection sortDirection = SortDirection.Ascending;
     public Table(List<ColumnDef> columns, List<Row> rows)
@@ -233,10 +233,8 @@ class ColumnDef
     public readonly string? description;
     public readonly float minWidth;
     public readonly bool isPinned;
-    public readonly List<string> categories;
     public readonly bool isSortable;
     public ColumnDef(
-        List<string> categories,
         string? label = null,
         string? description = null,
         float minWidth = 100f,
@@ -248,7 +246,6 @@ class ColumnDef
         this.description = description;
         this.minWidth = minWidth;
         this.isPinned = isPinned;
-        this.categories = categories;
         this.isSortable = isSortable;
     }
     public virtual void DrawCell(Rect targetRect, Row row)
@@ -298,13 +295,11 @@ class StatColumnDef : ColumnDef
     public readonly StatDef statDef;
     public StatColumnDef(
         string statDefName,
-        List<string> categories,
         string? label = null,
         float minWidth = 100f,
         bool isPinned = false,
         bool isSortable = false
     ) : base(
-        categories,
         label ?? StatDef.Named(statDefName).LabelCap,
         StatDef.Named(statDefName).description,
         minWidth,
@@ -353,14 +348,12 @@ class StatColumnDef : ColumnDef
 class LabelColumnDef : ColumnDef
 {
     public LabelColumnDef(
-        List<string> categories,
         string? label = "Name",
         string? description = null,
         float minWidth = 250f,
         bool isPinned = true,
         bool isSortable = true
     ) : base(
-        categories,
         label,
         description,
         minWidth,
