@@ -58,7 +58,7 @@ static class Debug
 {
     static public void TryDrawUIDebugInfo(Rect targetRect, string text)
     {
-        if (!InDebugMode())
+        if (!InDebugMode)
         {
             return;
         }
@@ -67,18 +67,19 @@ static class Debug
         using (new GUIUtils.TextAnchorContext(TextAnchor.MiddleCenter))
         {
             var textSize = Text.CalcSize(text);
-            const float arbitraryTextSizeOffset = 10f;
             const float padding = 5f;
-            var rectWidth = textSize.x + padding + arbitraryTextSizeOffset;
+            var rectWidth = textSize.x + padding + 10f;
             var rectHeight = textSize.y + padding;
-            var rect = new Rect((targetRect.width - rectWidth) / 2, (targetRect.height - rectHeight) / 2, rectWidth, rectHeight);
+            var rect = new Rect(
+                (targetRect.width - rectWidth) / 2,
+                (targetRect.height - rectHeight) / 2,
+                rectWidth,
+                rectHeight
+            );
 
             Widgets.DrawWindowBackground(rect);
             Widgets.Label(rect.ContractedBy(padding), text);
         }
     }
-    static public bool InDebugMode()
-    {
-        return Event.current.alt;
-    }
+    static public bool InDebugMode => Event.current.alt;
 }

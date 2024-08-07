@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using RimWorld;
 using UnityEngine;
 using Verse;
 
@@ -18,25 +16,25 @@ class Table
     public const float cellPaddingHor = 10f;
     public static Color columnSeparatorLineColor = new(1f, 1f, 1f, 0.04f);
     public Vector2 scrollPosition = new();
-    public readonly List<ColumnDef> middleColumns = [];
-    public readonly List<ColumnDef> pinnedColumns = [];
+    public readonly List<Column> middleColumns = [];
+    public readonly List<Column> pinnedColumns = [];
     private readonly List<Row> rows;
     private readonly float middleColumnsWidth = 0f;
     private readonly float pinnedColumnsWidth = 0f;
     private readonly float minRowWidth = 0f;
     private readonly float totalRowsHeight = 0f;
     private int? mouseOverRowIndex = null;
-    private ColumnDef? sortColumnDef;
+    private Column? sortColumn;
     private SortDirection sortDirection = SortDirection.Ascending;
     private bool dragInProgress = false;
-    public Table(List<ColumnDef> columns, List<Row> rows)
+    public Table(List<Column> columns, List<Row> rows)
     {
         this.rows = rows;
 
         if (columns[0] != null)
         {
-            sortColumnDef = columns[0];
-            sortColumnDef.SortRows(rows, sortDirection);
+            sortColumn = columns[0];
+            sortColumn.SortRows(rows, sortDirection);
         }
 
         foreach (var column in columns)
@@ -62,24 +60,30 @@ class Table
         using (new GUIUtils.GameFontContext(GameFont.Small))
         using (new GUIUtils.TextAnchorContext(TextAnchor.MiddleLeft))
         {
-            var contentRect = new Rect(0f, 0f, minRowWidth, totalRowsHeight + headersRowHeight);
+            var contentRect = new Rect(
+                0f,
+                0f,
+                minRowWidth,
+                totalRowsHeight + headersRowHeight
+            );
+            var controlId = GUIUtility.GetControlID(FocusType.Passive);
 
-            // If the table stops drawing while the user is dragging the mouse on the screen (for example the table is rendered in a window and the user pressed ESC)
-            // we end up in a state where dragInProgess == true. I'm not sure if the code below is a good way to fix this, but it looks harmless.
+            // If the table stops drawing while the user is dragging the mouse on the screen
+            // (for example the table is rendered in a window and the user pressed ESC)
+            // we end up in a state where dragInProgess == true.
+            // I'm not sure if the code below is a good way to fix this, but it looks harmless.
             if (GUIUtility.hotControl == 0)
             {
                 dragInProgress = false;
             }
 
-            var id = GUIUtility.GetControlID(FocusType.Passive);
-
             if (dragInProgress)
             {
                 // Taking control over GUI events while dragging is in progress.
-                GUIUtility.hotControl = id;
+                GUIUtility.hotControl = controlId;
 
                 // Catching "mouse up" event to stop drag.
-                if (Event.current.GetTypeForControl(id) == EventType.MouseUp)
+                if (Event.current.GetTypeForControl(controlId) == EventType.MouseUp)
                 {
                     GUIUtility.hotControl = 0;
                 }
@@ -87,26 +91,58 @@ class Table
 
             Widgets.BeginScrollView(targetRect, ref scrollPosition, contentRect, true);
 
+            var pinnedHeadersRowRect = new Rect(
+                scrollPosition.x,
+                scrollPosition.y,
+                pinnedColumnsWidth,
+                headersRowHeight
+            );
+            var headersRowRect = new Rect(
+                scrollPosition.x + pinnedColumnsWidth,
+                scrollPosition.y,
+                targetRect.width - pinnedColumnsWidth,
+                rowHeight
+            );
+            var pinnedTableBodyRect = new Rect(
+                scrollPosition.x,
+                scrollPosition.y + headersRowHeight,
+                pinnedColumnsWidth,
+                targetRect.height - headersRowHeight
+            );
+            var tableBodyRect = new Rect(
+                scrollPosition.x + pinnedColumnsWidth,
+                scrollPosition.y + headersRowHeight,
+                targetRect.width - pinnedColumnsWidth,
+                targetRect.height - headersRowHeight
+            );
+
             // Draw pinned headers
-            var pinnedHeadersRowRect = new Rect(scrollPosition.x, scrollPosition.y, pinnedColumnsWidth, headersRowHeight);
             DrawHeaders(pinnedHeadersRowRect, pinnedColumns);
-
             // Draw headers
-            var headersRowRect = new Rect(scrollPosition.x + pinnedColumnsWidth, scrollPosition.y, targetRect.width - pinnedColumnsWidth, rowHeight);
             DrawHeaders(headersRowRect, middleColumns, scrollPosition);
-
             // Draw pinned rows
-            var pinnedTableBodyRect = new Rect(scrollPosition.x, scrollPosition.y + headersRowHeight, pinnedColumnsWidth, targetRect.height - headersRowHeight);
             DrawRows(pinnedTableBodyRect, pinnedColumns, new Vector2(0, scrollPosition.y));
-
             // Draw rows
-            var tableBodyRect = new Rect(scrollPosition.x + pinnedColumnsWidth, scrollPosition.y + headersRowHeight, targetRect.width - pinnedColumnsWidth, targetRect.height - headersRowHeight);
             DrawRows(tableBodyRect, middleColumns, scrollPosition);
-
             // Separators
-            GUIUtils.DrawLineVertical(scrollPosition.x, scrollPosition.y, targetRect.height, new(1f, 1f, 1f, 0.4f));
-            Widgets.DrawLineHorizontal(scrollPosition.x, headersRowHeight + scrollPosition.y, targetRect.width, new(1f, 1f, 1f, 0.4f));
-            GUIUtils.DrawLineVertical(pinnedColumnsWidth + scrollPosition.x, scrollPosition.y, targetRect.height, new(1f, 1f, 1f, 0.4f));
+            GUIUtils.DrawLineVertical(
+                scrollPosition.x,
+                scrollPosition.y,
+                targetRect.height,
+                new(1f, 1f, 1f, 0.4f)
+            );
+            Widgets.DrawLineHorizontal(
+                scrollPosition.x,
+                headersRowHeight + scrollPosition.y,
+                targetRect.width,
+                new(1f, 1f, 1f, 0.4f)
+            );
+            GUIUtils.DrawLineVertical(
+                pinnedColumnsWidth + scrollPosition.x,
+                scrollPosition.y,
+                targetRect.height,
+                new(1f, 1f, 1f, 0.4f)
+            );
 
             // Initiate drag when the user holds left mouse button down in the (not always) scrollable table area.
             if (
@@ -121,10 +157,14 @@ class Table
             // Adjust horizontal scroll position on drag event.
             if (
                 dragInProgress
-                && Event.current.GetTypeForControl(id) == EventType.MouseDrag
+                && Event.current.GetTypeForControl(controlId) == EventType.MouseDrag
             )
             {
-                scrollPosition.x = Mathf.Clamp(scrollPosition.x + Event.current.delta.x, 0, contentRect.width - targetRect.width + GUI.skin.verticalScrollbar.fixedWidth);
+                scrollPosition.x = Mathf.Clamp(
+                    scrollPosition.x + Event.current.delta.x,
+                    0,
+                    contentRect.width - targetRect.width + GUI.skin.verticalScrollbar.fixedWidth
+                );
             }
 
             if (!Mouse.IsOver(pinnedTableBodyRect.Union(tableBodyRect)))
@@ -135,7 +175,7 @@ class Table
             Widgets.EndScrollView();
         }
     }
-    void DrawHeaders(Rect targetRect, List<ColumnDef> columns, Vector2? scrollPosition = null)
+    void DrawHeaders(Rect targetRect, List<Column> columns, Vector2? scrollPosition = null)
     {
         Widgets.BeginGroup(targetRect);
 
@@ -144,7 +184,8 @@ class Table
         foreach (var column in columns)
         {
             var cellRect = AdjustLastColumnWidth(targetRect, new Rect(currX, 0, column.minWidth, targetRect.height), columns, column);
-            if (column.DrawHeaderCell(cellRect, sortColumnDef == column ? sortDirection : null))
+
+            if (column.DrawHeaderCell(cellRect, sortColumn == column ? sortDirection : null))
             {
                 HandleHeaderRowCellClick(column);
             }
@@ -154,7 +195,7 @@ class Table
 
         Widgets.EndGroup();
     }
-    void DrawRows(Rect targetRect, List<ColumnDef> columns, Vector2 scrollPosition)
+    void DrawRows(Rect targetRect, List<Column> columns, Vector2 scrollPosition)
     {
         Widgets.BeginGroup(targetRect);
 
@@ -195,7 +236,13 @@ class Table
                     break;
                 }
 
-                var cellRect = AdjustLastColumnWidth(targetRect, new Rect(currX, currY, column.minWidth, rowHeight), columns, column);
+                var cellRect = AdjustLastColumnWidth(
+                    targetRect,
+                    new Rect(currX, currY, column.minWidth, rowHeight),
+                    columns,
+                    column
+                );
+
                 column.DrawCell(cellRect, row);
 
                 currX += cellRect.width;
@@ -226,23 +273,31 @@ class Table
 
         Widgets.EndGroup();
     }
-    Rect AdjustLastColumnWidth(Rect parentRect, Rect targetRect, List<ColumnDef> columns, ColumnDef column)
+    Rect AdjustLastColumnWidth(Rect parentRect, Rect targetRect, List<Column> columns, Column column)
     {
-        if (column == columns[columns.Count - 1] && targetRect.xMax < parentRect.width)
+        if (
+            column == columns[columns.Count - 1]
+            && targetRect.xMax < parentRect.width
+        )
         {
-            return new Rect(targetRect.x, targetRect.y, parentRect.width - targetRect.x, targetRect.height);
+            return new Rect(
+                targetRect.x,
+                targetRect.y,
+                parentRect.width - targetRect.x,
+                targetRect.height
+            );
         }
 
         return targetRect;
     }
-    private void HandleHeaderRowCellClick(ColumnDef columnDef)
+    private void HandleHeaderRowCellClick(Column column)
     {
-        if (columnDef == null)
+        if (column == null)
         {
             return;
         }
 
-        if (sortColumnDef == columnDef)
+        if (sortColumn == column)
         {
             if (sortDirection == SortDirection.Ascending)
             {
@@ -255,11 +310,11 @@ class Table
         }
         else
         {
-            sortColumnDef = columnDef;
+            sortColumn = column;
             sortDirection = SortDirection.Ascending;
         }
 
-        sortColumnDef.SortRows(rows, sortDirection);
+        sortColumn.SortRows(rows, sortDirection);
     }
 }
 
@@ -267,296 +322,4 @@ enum SortDirection
 {
     Ascending,
     Descending,
-}
-
-class ColumnDef
-{
-    public string? label { get; init; }
-    public string? description { get; init; }
-    public float minWidth { get; init; } = 100f;
-    public bool isPinned { get; init; } = false;
-    public bool isSortable { get; init; } = true;
-    public virtual void DrawCell(Rect targetRect, Row row)
-    {
-        // Not very performant, because border will be rendered for each individual cell.
-        GUIUtils.DrawLineVertical(targetRect.x + targetRect.width, targetRect.y, Table.rowHeight, Table.columnSeparatorLineColor);
-    }
-    public virtual bool DrawHeaderCell(Rect targetRect, SortDirection? sortDirection = null)
-    {
-        if (label != null)
-        {
-            Widgets.DrawHighlight(targetRect);
-            Widgets.LabelEllipses(targetRect.ContractedBy(Table.cellPaddingHor, 0), label);
-        }
-
-        if (sortDirection != null)
-        {
-            var rotationAngle = sortDirection == SortDirection.Ascending ? -90f : 90f;
-            Widgets.DrawTextureRotated(targetRect.RightPartPixels(Table.headersRowHeight), TexButton.Reveal, rotationAngle);
-        }
-
-        GUIUtils.DrawLineVertical(targetRect.xMax, targetRect.y, targetRect.height, Table.columnSeparatorLineColor);
-
-        if (Mouse.IsOver(targetRect) && description != null)
-        {
-            TooltipHandler.TipRegion(targetRect, new TipSignal(description));
-        }
-
-        if (isSortable)
-        {
-            Widgets.DrawHighlightIfMouseover(targetRect);
-
-            return Widgets.ButtonInvisible(targetRect);
-        }
-        else
-        {
-            return false;
-        }
-    }
-    public virtual void SortRows(List<Row> rows, SortDirection direction)
-    {
-    }
-}
-
-class StatColumnDef : ColumnDef
-{
-    public StatDef statDef { get; }
-    public bool drawRawValue { get; init; } = false;
-    public StatColumnDef(string statDefName) : base()
-    {
-        statDef = StatDef.Named(statDefName);
-        label = statDef.LabelCap;
-        description = statDef.description;
-    }
-    public override void DrawCell(Rect targetRect, Row row)
-    {
-        base.DrawCell(targetRect, row);
-
-        var cell = row.GetCell(this, CreateCell);
-
-        Widgets.LabelEllipses(targetRect.ContractedBy(Table.cellPaddingHor, 0), Debug.InDebugMode() || drawRawValue ? cell.valueRaw + "" : cell.valueDisplay + "");
-
-        if (Mouse.IsOver(targetRect) && !string.IsNullOrEmpty(cell.valueExplanation) && Event.current.control)
-        {
-            TooltipHandler.TipRegion(targetRect, new TipSignal(cell.valueExplanation));
-        }
-    }
-    public override void SortRows(List<Row> rows, SortDirection direction)
-    {
-        rows.Sort((r1, r2) =>
-        {
-            var val1 = r1.GetCell(this, CreateCell).valueRaw;
-            var val2 = r2.GetCell(this, CreateCell).valueRaw;
-
-            if (val1 == val2)
-            {
-                return 0;
-            }
-            else if (val1 == null || val2 == null)
-            {
-                return -1;
-            }
-            else if (direction == SortDirection.Ascending)
-            {
-                return val1 > val2 ? 1 : -1;
-            }
-            else
-            {
-                return val1 < val2 ? 1 : -1;
-            }
-        });
-    }
-    private StatCell CreateCell(ThingDef thingDef)
-    {
-        return new StatCell(thingDef, statDef);
-    }
-}
-
-class LabelColumnDef : ColumnDef
-{
-    public LabelColumnDef() : base()
-    {
-        label = "Name";
-        minWidth = 250f;
-        isPinned = true;
-    }
-    public override void DrawCell(Rect targetRect, Row row)
-    {
-        base.DrawCell(targetRect, row);
-
-        var contentRect = targetRect.ContractedBy(Table.cellPaddingHor, 0);
-
-        var iconRect = new Rect(contentRect.x, contentRect.y, contentRect.height, contentRect.height);
-        Widgets.DefIcon(iconRect, row.thingDef);
-
-        var textRect = new Rect(iconRect.xMax + Table.cellPaddingHor, contentRect.y, contentRect.width - iconRect.width - Table.cellPaddingHor, contentRect.height);
-        string labelText = row.thingDef.LabelCap == null ? row.thingDef.ToString() : row.thingDef.LabelCap;
-
-        if (Debug.InDebugMode())
-        {
-            labelText = row.thingDef.defName;
-        }
-
-        Widgets.LabelEllipses(textRect, labelText);
-
-        if (Mouse.IsOver(targetRect))
-        {
-            Widgets.DrawHighlight(targetRect);
-
-            if (Event.current.control)
-            {
-                TooltipHandler.TipRegion(targetRect, new TipSignal(row.thingDef.LabelCap + "\n\n" + row.thingDef.description));
-            }
-        }
-
-        if (Widgets.ButtonInvisible(targetRect))
-        {
-            Find.WindowStack.Add(new Dialog_InfoCard(row.thingDef));
-        }
-    }
-    //public override void DrawHeaderCell(Rect targetRect)
-    //{
-    //}
-    public override void SortRows(List<Row> rows, SortDirection direction)
-    {
-        if (direction == SortDirection.Ascending)
-        {
-            rows.Sort((r1, r2) => r1.thingDef.LabelCap.RawText.CompareTo(r2.thingDef.LabelCap.RawText));
-        }
-        else
-        {
-            rows.Sort((r1, r2) => r2.thingDef.LabelCap.RawText.CompareTo(r1.thingDef.LabelCap.RawText));
-        }
-    }
-}
-
-class RangeColumnDef : ColumnDef
-{
-    public bool drawRawValue { get; init; } = true;
-    public RangeColumnDef() : base()
-    {
-        label = "Range".Translate();
-        description = "Stat_Thing_Weapon_Range_Desc".Translate();
-    }
-    public override void DrawCell(Rect targetRect, Row row)
-    {
-        base.DrawCell(targetRect, row);
-
-        var cell = row.GetCell(this, CreateCell);
-
-        Widgets.LabelEllipses(targetRect.ContractedBy(Table.cellPaddingHor, 0), Debug.InDebugMode() || drawRawValue ? cell.valueRaw + "" : cell.valueDisplay + "");
-
-        if (Mouse.IsOver(targetRect) && !string.IsNullOrEmpty(cell.valueExplanation) && Event.current.control)
-        {
-            TooltipHandler.TipRegion(targetRect, new TipSignal(cell.valueExplanation));
-        }
-    }
-    public override void SortRows(List<Row> rows, SortDirection direction)
-    {
-        rows.Sort((r1, r2) =>
-        {
-            var val1 = r1.GetCell(this, CreateCell).valueRaw;
-            var val2 = r2.GetCell(this, CreateCell).valueRaw;
-
-            if (val1 == val2)
-            {
-                return 0;
-            }
-            else if (val1 == null || val2 == null)
-            {
-                return -1;
-            }
-            else if (direction == SortDirection.Ascending)
-            {
-                return val1 > val2 ? 1 : -1;
-            }
-            else
-            {
-                return val1 < val2 ? 1 : -1;
-            }
-        });
-    }
-    private Cell CreateCell(ThingDef thingDef)
-    {
-        return new Cell()
-        {
-            valueRaw = thingDef.Verbs.First(v => v.isPrimary)?.range
-        };
-    }
-}
-
-class Row
-{
-    public readonly ThingDef thingDef;
-    private readonly Dictionary<ColumnDef, ICell> cells = [];
-    public Row(ThingDef thingDef)
-    {
-        this.thingDef = thingDef;
-    }
-    public ICell GetCell(ColumnDef column, Func<ThingDef, ICell> createCellIfNotFound)
-    {
-        cells.TryGetValue(column, out ICell cell);
-
-        if (cell == null)
-        {
-            return cells[column] = createCellIfNotFound(thingDef);
-        }
-        else
-        {
-            return cells[column];
-        }
-    }
-}
-
-interface ICell
-{
-    public float? valueRaw { get; init; }
-    public string? valueDisplay { get; init; }
-    public string? valueExplanation { get; init; }
-}
-
-class Cell : ICell
-{
-    public float? valueRaw { get; init; }
-    public string? valueDisplay { get; init; }
-    public string? valueExplanation { get; init; }
-}
-
-class StatCell : Cell
-{
-    public StatCell(ThingDef thingDef, StatDef statDef)
-    {
-        // This is all very expensive.
-        // The good thing is that it all will be cached.
-        try
-        {
-            valueRaw = thingDef.GetStatValueAbstract(statDef);
-        }
-        catch
-        {
-        }
-
-        if (valueRaw is float _valueRaw)
-        {
-            var statReq = StatRequest.For(thingDef, thingDef.defaultStuff);
-
-            try
-            {
-                // Why ToStringNumberSense.Absolute?
-                valueDisplay = statDef.Worker.GetStatDrawEntryLabel(statDef, _valueRaw, ToStringNumberSense.Absolute, statReq);
-            }
-            catch
-            {
-            }
-
-            try
-            {
-                // Why valueRaw as final value?
-                valueExplanation = statDef.Worker.GetExplanationFull(statReq, ToStringNumberSense.Absolute, _valueRaw);
-            }
-            catch
-            {
-            }
-        }
-    }
 }
