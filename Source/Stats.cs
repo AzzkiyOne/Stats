@@ -55,7 +55,7 @@ class ColumnSet
             label = "$",
         },
         new StatColumnDef("Mass"),
-        new StatColumnDef("Bulk"),
+        new StatColumnDef("Bulk"),// CE
     ];
 }
 
@@ -74,26 +74,27 @@ public class StatsMainTabWindow : MainTabWindow
             categories = ["WeaponsRanged"],
             columns = [
                 new LabelColumnDef(),
-                new StatColumnDef("Recoil"),
-                new StatColumnDef("SwayFactor"),
-                new StatColumnDef("ShotSpread"),
-                new StatColumnDef("SightsEfficiency"),
-                new StatColumnDef("MagazineCapacity")
+                new RangeColumnDef(),
+                new StatColumnDef("Recoil"),// CE
+                new StatColumnDef("SwayFactor"),// CE
+                new StatColumnDef("ShotSpread"),// CE
+                new StatColumnDef("SightsEfficiency"),// CE
+                new StatColumnDef("MagazineCapacity")// CE
                 {
                     drawRawValue = true,
                 },
-                new StatColumnDef("ReloadTime")
+                new StatColumnDef("ReloadTime")// CE
                 {
                     drawRawValue = true,
                 },
-                new StatColumnDef("TicksBetweenBurstShots"),
-                new StatColumnDef("Caliber")
+                new StatColumnDef("TicksBetweenBurstShots"),// CE
+                new StatColumnDef("Caliber")// CE
                 {
                     isSortable = false,
                 },
-                new StatColumnDef("OneHandedness"),
+                new StatColumnDef("OneHandedness"),// CE
                 new StatColumnDef("Mass"),
-                new StatColumnDef("Bulk"),
+                new StatColumnDef("Bulk"),// CE
             ],
         });
 

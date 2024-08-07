@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using RimWorld;
 using UnityEngine;
 using Verse;
@@ -90,7 +92,7 @@ class Table
             DrawHeaders(pinnedHeadersRowRect, pinnedColumns);
 
             // Draw headers
-            var headersRowRect = new Rect(scrollPosition.x + pinnedColumnsWidth, scrollPosition.y, contentRect.xMax - pinnedColumnsWidth, rowHeight);
+            var headersRowRect = new Rect(scrollPosition.x + pinnedColumnsWidth, scrollPosition.y, targetRect.width - pinnedColumnsWidth, rowHeight);
             DrawHeaders(headersRowRect, middleColumns, scrollPosition);
 
             // Draw pinned rows
@@ -330,7 +332,7 @@ class StatColumnDef : ColumnDef
     {
         base.DrawCell(targetRect, row);
 
-        var cell = row.GetCell(statDef);
+        var cell = row.GetCell(this, CreateCell);
 
         Widgets.LabelEllipses(targetRect.ContractedBy(Table.cellPaddingHor, 0), Debug.InDebugMode() || drawRawValue ? cell.valueRaw + "" : cell.valueDisplay + "");
 
@@ -343,8 +345,8 @@ class StatColumnDef : ColumnDef
     {
         rows.Sort((r1, r2) =>
         {
-            var val1 = r1.GetCell(statDef).valueRaw;
-            var val2 = r2.GetCell(statDef).valueRaw;
+            var val1 = r1.GetCell(this, CreateCell).valueRaw;
+            var val2 = r2.GetCell(this, CreateCell).valueRaw;
 
             if (val1 == val2)
             {
@@ -363,6 +365,10 @@ class StatColumnDef : ColumnDef
                 return val1 < val2 ? 1 : -1;
             }
         });
+    }
+    private StatCell CreateCell(ThingDef thingDef)
+    {
+        return new StatCell(thingDef, statDef);
     }
 }
 
@@ -424,35 +430,101 @@ class LabelColumnDef : ColumnDef
     }
 }
 
+class RangeColumnDef : ColumnDef
+{
+    public bool drawRawValue { get; init; } = true;
+    public RangeColumnDef() : base()
+    {
+        label = "Range".Translate();
+        description = "Stat_Thing_Weapon_Range_Desc".Translate();
+    }
+    public override void DrawCell(Rect targetRect, Row row)
+    {
+        base.DrawCell(targetRect, row);
+
+        var cell = row.GetCell(this, CreateCell);
+
+        Widgets.LabelEllipses(targetRect.ContractedBy(Table.cellPaddingHor, 0), Debug.InDebugMode() || drawRawValue ? cell.valueRaw + "" : cell.valueDisplay + "");
+
+        if (Mouse.IsOver(targetRect) && !string.IsNullOrEmpty(cell.valueExplanation) && Event.current.control)
+        {
+            TooltipHandler.TipRegion(targetRect, new TipSignal(cell.valueExplanation));
+        }
+    }
+    public override void SortRows(List<Row> rows, SortDirection direction)
+    {
+        rows.Sort((r1, r2) =>
+        {
+            var val1 = r1.GetCell(this, CreateCell).valueRaw;
+            var val2 = r2.GetCell(this, CreateCell).valueRaw;
+
+            if (val1 == val2)
+            {
+                return 0;
+            }
+            else if (val1 == null || val2 == null)
+            {
+                return -1;
+            }
+            else if (direction == SortDirection.Ascending)
+            {
+                return val1 > val2 ? 1 : -1;
+            }
+            else
+            {
+                return val1 < val2 ? 1 : -1;
+            }
+        });
+    }
+    private Cell CreateCell(ThingDef thingDef)
+    {
+        return new Cell()
+        {
+            valueRaw = thingDef.Verbs.First(v => v.isPrimary)?.range
+        };
+    }
+}
+
 class Row
 {
     public readonly ThingDef thingDef;
-    private readonly Dictionary<string, Cell> cells = [];
+    private readonly Dictionary<ColumnDef, ICell> cells = [];
     public Row(ThingDef thingDef)
     {
         this.thingDef = thingDef;
     }
-    public Cell GetCell(StatDef statDef)
+    public ICell GetCell(ColumnDef column, Func<ThingDef, ICell> createCellIfNotFound)
     {
-        cells.TryGetValue(statDef.defName, out Cell cell);
+        cells.TryGetValue(column, out ICell cell);
 
         if (cell == null)
         {
-            return cells[statDef.defName] = new Cell(thingDef, statDef);
+            return cells[column] = createCellIfNotFound(thingDef);
         }
         else
         {
-            return cells[statDef.defName];
+            return cells[column];
         }
     }
 }
 
-class Cell
+interface ICell
 {
-    public readonly float? valueRaw;
-    public readonly string? valueDisplay;
-    public readonly string? valueExplanation;
-    public Cell(ThingDef thingDef, StatDef statDef)
+    public float? valueRaw { get; init; }
+    public string? valueDisplay { get; init; }
+    public string? valueExplanation { get; init; }
+}
+
+class Cell : ICell
+{
+    public float? valueRaw { get; init; }
+    public string? valueDisplay { get; init; }
+    public string? valueExplanation { get; init; }
+}
+
+class StatCell : Cell
+{
+    public StatCell(ThingDef thingDef, StatDef statDef)
     {
         // This is all very expensive.
         // The good thing is that it all will be cached.
