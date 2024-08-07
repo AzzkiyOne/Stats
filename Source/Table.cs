@@ -269,25 +269,11 @@ enum SortDirection
 
 class ColumnDef
 {
-    public readonly string? label;
-    public readonly string? description;
-    public readonly float minWidth;
-    public readonly bool isPinned;
-    public readonly bool isSortable;
-    public ColumnDef(
-        string? label = null,
-        string? description = null,
-        float minWidth = 100f,
-        bool isPinned = false,
-        bool isSortable = true
-    )
-    {
-        this.label = label;
-        this.description = description;
-        this.minWidth = minWidth;
-        this.isPinned = isPinned;
-        this.isSortable = isSortable;
-    }
+    public string? label { get; init; }
+    public string? description { get; init; }
+    public float minWidth { get; init; } = 100f;
+    public bool isPinned { get; init; } = false;
+    public bool isSortable { get; init; } = true;
     public virtual void DrawCell(Rect targetRect, Row row)
     {
         // Not very performant, because border will be rendered for each individual cell.
@@ -332,25 +318,13 @@ class ColumnDef
 
 class StatColumnDef : ColumnDef
 {
-    public readonly StatDef statDef;
-    private readonly bool drawRawValue;
-    public StatColumnDef(
-        string statDefName,
-        string? label = null,
-        float minWidth = 100f,
-        bool isPinned = false,
-        bool isSortable = true,
-        bool drawRawValue = false
-    ) : base(
-        label ?? StatDef.Named(statDefName).LabelCap,
-        StatDef.Named(statDefName).description,
-        minWidth,
-        isPinned,
-        isSortable
-    )
+    public StatDef statDef { get; }
+    public bool drawRawValue { get; init; } = false;
+    public StatColumnDef(string statDefName) : base()
     {
         statDef = StatDef.Named(statDefName);
-        this.drawRawValue = drawRawValue;
+        label = statDef.LabelCap;
+        description = statDef.description;
     }
     public override void DrawCell(Rect targetRect, Row row)
     {
@@ -394,20 +368,11 @@ class StatColumnDef : ColumnDef
 
 class LabelColumnDef : ColumnDef
 {
-    public LabelColumnDef(
-        string? label = "Name",
-        string? description = null,
-        float minWidth = 250f,
-        bool isPinned = true,
-        bool isSortable = true
-    ) : base(
-        label,
-        description,
-        minWidth,
-        isPinned,
-        isSortable
-    )
+    public LabelColumnDef() : base()
     {
+        label = "Name";
+        minWidth = 250f;
+        isPinned = true;
     }
     public override void DrawCell(Rect targetRect, Row row)
     {

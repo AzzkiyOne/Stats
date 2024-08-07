@@ -46,11 +46,16 @@ class ColumnSet
     public List<string> categories = ["Root"];
     public List<ColumnDef> columns = [
         new LabelColumnDef(),
-        new StatColumnDef("MaxHitPoints", "HP"),
-        new StatColumnDef("MarketValue", "$"),
+        new StatColumnDef("MaxHitPoints")
+        {
+            label = "HP",
+        },
+        new StatColumnDef("MarketValue")
+        {
+            label = "$",
+        },
         new StatColumnDef("Mass"),
         new StatColumnDef("Bulk"),
-        new StatColumnDef("Caliber", isSortable: false),
     ];
 }
 
@@ -73,10 +78,19 @@ public class StatsMainTabWindow : MainTabWindow
                 new StatColumnDef("SwayFactor"),
                 new StatColumnDef("ShotSpread"),
                 new StatColumnDef("SightsEfficiency"),
-                new StatColumnDef("MagazineCapacity", drawRawValue: true),
-                new StatColumnDef("ReloadTime", drawRawValue: true),
+                new StatColumnDef("MagazineCapacity")
+                {
+                    drawRawValue = true,
+                },
+                new StatColumnDef("ReloadTime")
+                {
+                    drawRawValue = true,
+                },
                 new StatColumnDef("TicksBetweenBurstShots"),
-                new StatColumnDef("Caliber", isSortable: false),
+                new StatColumnDef("Caliber")
+                {
+                    isSortable = false,
+                },
                 new StatColumnDef("OneHandedness"),
                 new StatColumnDef("Mass"),
                 new StatColumnDef("Bulk"),
@@ -165,7 +179,7 @@ class CategoryPicker
 
         totalRowsDisplayed++;
 
-        // "-1" is because we don't sraw root category entry.
+        // "-1" because we don't draw the root category entry.
         var indentAmount = (catDef.Parents.Count() - 1) * indentSize;
         var rowRect = new Rect(
             indentAmount,
