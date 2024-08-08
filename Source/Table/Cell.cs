@@ -3,21 +3,21 @@ using Verse;
 
 namespace Stats;
 
-interface ICell
+public interface ICell
 {
     public float? valueRaw { get; init; }
     public string? valueDisplay { get; init; }
     public string? valueExplanation { get; init; }
 }
 
-class Cell : ICell
+public class Cell : ICell
 {
     public float? valueRaw { get; init; }
     public string? valueDisplay { get; init; }
     public string? valueExplanation { get; init; }
 }
 
-class StatCell : Cell
+public class StatCell : Cell
 {
     public StatCell(ThingDef thingDef, StatDef statDef)
     {

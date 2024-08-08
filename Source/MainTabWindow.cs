@@ -16,35 +16,6 @@ public class StatsMainTabWindow : MainTabWindow
         draggable = true;
         resizeable = true;
 
-        ColumnSetDB.Add(new ColumnSet
-        {
-            categories = ["WeaponsRanged"],
-            columns = [
-                new LabelColumn(),
-                new WeaponRangeColumn(),
-                new StatColumn("Recoil"),// CE
-                new StatColumn("SwayFactor"),// CE
-                new StatColumn("ShotSpread"),// CE
-                new StatColumn("SightsEfficiency"),// CE
-                new StatColumn("MagazineCapacity")// CE
-                {
-                    drawRawValue = true,
-                },
-                new StatColumn("ReloadTime")// CE
-                {
-                    drawRawValue = true,
-                },
-                new StatColumn("TicksBetweenBurstShots"),// CE
-                new StatColumn("Caliber")// CE
-                {
-                    isSortable = false,
-                },
-                new StatColumn("OneHandedness"),// CE
-                new StatColumn("Mass"),
-                new StatColumn("Bulk"),// CE
-            ],
-        });
-
         categoryPicker = new CategoryPicker();
         HandleCategoryChange(categoryPicker.selectedCatDef);
     }

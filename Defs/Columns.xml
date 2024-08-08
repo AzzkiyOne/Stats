@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+
+    <!-- Column sets -->
+
+    <Stats.ColumnSetDef>
+        <defName>Root</defName>
+        <categories>
+            <li>Root</li>
+        </categories>
+        <columns>
+            <li>Label</li>
+            <li>MaxHitPoints</li>
+            <li>MarketValue</li>
+            <li>Mass</li>
+        </columns>
+    </Stats.ColumnSetDef>
+
+    <Stats.ColumnSetDef>
+        <defName>WeaponsRanged</defName>
+        <categories>
+            <li>WeaponsRanged</li>
+        </categories>
+        <columns>
+            <li>Label</li>
+            <li>WeaponRange</li>
+            <li>CE_Recoil</li>
+            <li>CE_SwayFactor</li>
+            <li>CE_ShotSpread</li>
+            <li>CE_SightsEfficiency</li>
+            <li>CE_MagazineCapacity</li>
+            <li>CE_ReloadTime</li>
+            <li>CE_TicksBetweenBurstShots</li>
+            <li>CE_Caliber</li>
+            <li>CE_OneHandedness</li>
+            <li>Mass</li>
+            <li>CE_Bulk</li>
+        </columns>
+    </Stats.ColumnSetDef>
+
+    <!-- Vanilla columns -->
+
+    <Stats.LabelColumnDef>
+        <defName>Label</defName>
+    </Stats.LabelColumnDef>
+
+    <Stats.StatColumnDef>
+        <defName>MaxHitPoints</defName>
+        <stat>MaxHitPoints</stat>
+        <label>HP</label>
+    </Stats.StatColumnDef>
+
+    <Stats.StatColumnDef>
+        <defName>MarketValue</defName>
+        <stat>MarketValue</stat>
+        <label>$</label>
+    </Stats.StatColumnDef>
+
+    <Stats.StatColumnDef>
+        <defName>Mass</defName>
+        <stat>Mass</stat>
+    </Stats.StatColumnDef>
+
+    <Stats.WeaponRangeColumnDef>
+        <defName>WeaponRange</defName>
+    </Stats.WeaponRangeColumnDef>
+
+    <!-- CE -->
+
+    <Stats.StatColumnDef>
+        <defName>CE_Recoil</defName>
+        <stat>Recoil</stat>
+    </Stats.StatColumnDef>
+
+    <Stats.StatColumnDef>
+        <defName>CE_SwayFactor</defName>
+        <stat>SwayFactor</stat>
+    </Stats.StatColumnDef>
+
+    <Stats.StatColumnDef>
+        <defName>CE_ShotSpread</defName>
+        <stat>ShotSpread</stat>
+    </Stats.StatColumnDef>
+
+    <Stats.StatColumnDef>
+        <defName>CE_SightsEfficiency</defName>
+        <stat>SightsEfficiency</stat>
+    </Stats.StatColumnDef>
+
+    <Stats.StatColumnDef>
+        <defName>CE_MagazineCapacity</defName>
+        <stat>MagazineCapacity</stat>
+        <drawRawValue>true</drawRawValue>
+    </Stats.StatColumnDef>
+
+    <Stats.StatColumnDef>
+        <defName>CE_ReloadTime</defName>
+        <stat>ReloadTime</stat>
+        <drawRawValue>true</drawRawValue>
+    </Stats.StatColumnDef>
+
+    <Stats.StatColumnDef>
+        <defName>CE_TicksBetweenBurstShots</defName>
+        <stat>TicksBetweenBurstShots</stat>
+    </Stats.StatColumnDef>
+
+    <Stats.StatColumnDef>
+        <defName>CE_OneHandedness</defName>
+        <stat>OneHandedness</stat>
+    </Stats.StatColumnDef>
+
+    <Stats.StatColumnDef>
+        <defName>CE_Caliber</defName>
+        <stat>Caliber</stat>
+        <isSortable>false</isSortable>
+    </Stats.StatColumnDef>
+
+    <Stats.StatColumnDef>
+        <defName>CE_Bulk</defName>
+        <stat>Bulk</stat>
+    </Stats.StatColumnDef>
+
+</Defs>

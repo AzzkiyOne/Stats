@@ -6,13 +6,11 @@ using Verse;
 
 namespace Stats;
 
-class Column
+public abstract class ColumnDef : Def
 {
-    public string? label { get; init; }
-    public string? description { get; init; }
-    public float minWidth { get; init; } = 100f;
-    public bool isPinned { get; init; } = false;
-    public bool isSortable { get; init; } = true;
+    public float minWidth = 100f;
+    public bool isPinned = false;
+    public bool isSortable = true;
     public virtual void DrawCell(Rect targetRect, Row row)
     {
         // Not very performant, because border will be rendered for each individual cell.
@@ -56,7 +54,31 @@ class Column
             return false;
         }
     }
-    public virtual void SortRows(List<Row> rows, SortDirection direction)
+    public abstract void SortRows(List<Row> rows, SortDirection direction);
+}
+
+public abstract class DataColumnDef : ColumnDef
+{
+    public bool drawRawValue = false;
+    public override void DrawCell(Rect targetRect, Row row)
+    {
+        base.DrawCell(targetRect, row);
+
+        var cell = row.GetCell(this, CreateCell);
+        var text = Debug.InDebugMode || drawRawValue ? cell.valueRaw + "" : cell.valueDisplay + "";
+
+        Widgets.LabelEllipses(targetRect.ContractedBy(Table.cellPaddingHor, 0), text);
+
+        if (
+            Mouse.IsOver(targetRect)
+            && !string.IsNullOrEmpty(cell.valueExplanation)
+            && Event.current.control
+        )
+        {
+            TooltipHandler.TipRegion(targetRect, new TipSignal(cell.valueExplanation));
+        }
+    }
+    public override void SortRows(List<Row> rows, SortDirection direction)
     {
         rows.Sort((r1, r2) =>
         {
@@ -81,15 +103,12 @@ class Column
             }
         });
     }
-    protected virtual ICell CreateCell(ThingDef thingDef)
-    {
-        return new Cell();
-    }
+    abstract protected ICell CreateCell(ThingDef thingDef);
 }
 
-class LabelColumn : Column
+public class LabelColumnDef : ColumnDef
 {
-    public LabelColumn() : base()
+    public LabelColumnDef() : base()
     {
         label = "Name";
         minWidth = 250f;
@@ -150,64 +169,48 @@ class LabelColumn : Column
     }
 }
 
-class StatColumn : Column
+public class StatColumnDef : DataColumnDef
 {
-    public StatDef statDef { get; }
-    public bool drawRawValue { get; init; } = false;
-    public StatColumn(string statDefName) : base()
+    public StatDef stat;
+    public override void ResolveReferences()
     {
-        statDef = StatDef.Named(statDefName);
-        label = statDef.LabelCap;
-        description = statDef.description;
-    }
-    public override void DrawCell(Rect targetRect, Row row)
-    {
-        base.DrawCell(targetRect, row);
-
-        var cell = row.GetCell(this, CreateCell);
-        var text = Debug.InDebugMode || drawRawValue ? cell.valueRaw + "" : cell.valueDisplay;
-
-        Widgets.LabelEllipses(targetRect.ContractedBy(Table.cellPaddingHor, 0), text);
-
-        if (
-            Mouse.IsOver(targetRect)
-            && !string.IsNullOrEmpty(cell.valueExplanation)
-            && Event.current.control
-        )
+        if (string.IsNullOrEmpty(label))
         {
-            TooltipHandler.TipRegion(targetRect, new TipSignal(cell.valueExplanation));
+            label = stat?.LabelCap;
+        }
+
+        if (string.IsNullOrEmpty(description))
+        {
+            description = stat?.description;
         }
     }
     protected override ICell CreateCell(ThingDef thingDef)
     {
-        return new StatCell(thingDef, statDef);
+        if (stat != null)
+        {
+            return new StatCell(thingDef, stat);
+        }
+
+        return new Cell();
     }
 }
 
-class WeaponRangeColumn : Column
+public class WeaponRangeColumnDef : DataColumnDef
 {
-    public bool drawRawValue { get; init; } = true;
-    public WeaponRangeColumn() : base()
+    public WeaponRangeColumnDef() : base()
     {
-        label = "Range".Translate();
-        description = "Stat_Thing_Weapon_Range_Desc".Translate();
+        drawRawValue = true;
     }
-    public override void DrawCell(Rect targetRect, Row row)
+    public override void ResolveReferences()
     {
-        base.DrawCell(targetRect, row);
-
-        var cell = row.GetCell(this, CreateCell);
-        var text = Debug.InDebugMode || drawRawValue ? cell.valueRaw + "" : cell.valueDisplay;
-
-        Widgets.LabelEllipses(targetRect.ContractedBy(Table.cellPaddingHor, 0), text);
-
-        if (
-            Mouse.IsOver(targetRect)
-            && !string.IsNullOrEmpty(cell.valueExplanation)
-            && Event.current.control
-        )
+        if (string.IsNullOrEmpty(label))
         {
-            TooltipHandler.TipRegion(targetRect, new TipSignal(cell.valueExplanation));
+            label = "Range".Translate();
+        }
+
+        if (string.IsNullOrEmpty(description))
+        {
+            description = "Stat_Thing_Weapon_Range_Desc".Translate();
         }
     }
     protected override ICell CreateCell(ThingDef thingDef)

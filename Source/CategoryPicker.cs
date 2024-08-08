@@ -13,7 +13,7 @@ class CategoryPicker
     private const float indentSize = 20f;
     private Vector2 scrollPosition;
     private readonly ThingCategoryDef rootCatDef;
-    public ThingCategoryDef? selectedCatDef;
+    public ThingCategoryDef selectedCatDef;
     private int debug_rowsDrawn = 0;
     private int totalRowsDisplayed = 0;
     private readonly List<ThingCategoryDef> openedCategories = [];
