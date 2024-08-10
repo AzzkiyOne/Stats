@@ -10,12 +10,12 @@ public class Row
     // Storing cells like this is a potential memory leak.
     // If the set of columns cahnges for the same row
     // then new columns will create new cells.
-    private readonly Dictionary<ColumnDef, ICell> cells = [];
+    private readonly Dictionary<Column, ICell> cells = [];
     public Row(ThingDef thingDef)
     {
         this.thingDef = thingDef;
     }
-    public ICell GetCell(ColumnDef column, Func<ThingDef, ICell> createCellIfNotFound)
+    public ICell GetCell(Column column, Func<ThingDef, ICell> createCellIfNotFound)
     {
         cells.TryGetValue(column, out ICell cell);
 

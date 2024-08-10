@@ -16,18 +16,18 @@ class Table
     public const float cellPaddingHor = 10f;
     public static Color columnSeparatorLineColor = new(1f, 1f, 1f, 0.04f);
     public Vector2 scrollPosition = new();
-    public readonly List<ColumnDef> middleColumns = [];
-    public readonly List<ColumnDef> pinnedColumns = [];
+    public readonly List<Column> middleColumns = [];
+    public readonly List<Column> pinnedColumns = [];
     private readonly List<Row> rows;
     private readonly float middleColumnsWidth = 0f;
     private readonly float pinnedColumnsWidth = 0f;
     private readonly float minRowWidth = 0f;
     private readonly float totalRowsHeight = 0f;
     private int? mouseOverRowIndex = null;
-    private ColumnDef sortColumn;
+    private Column sortColumn;
     private SortDirection sortDirection = SortDirection.Ascending;
     private bool dragInProgress = false;
-    public Table(List<ColumnDef> columns, List<Row> rows)
+    public Table(List<Column> columns, List<Row> rows)
     {
         this.rows = rows;
 
@@ -175,7 +175,7 @@ class Table
             Widgets.EndScrollView();
         }
     }
-    void DrawHeaders(Rect targetRect, List<ColumnDef> columns, Vector2? scrollPosition = null)
+    void DrawHeaders(Rect targetRect, List<Column> columns, Vector2? scrollPosition = null)
     {
         Widgets.BeginGroup(targetRect);
 
@@ -195,7 +195,7 @@ class Table
 
         Widgets.EndGroup();
     }
-    void DrawRows(Rect targetRect, List<ColumnDef> columns, Vector2 scrollPosition)
+    void DrawRows(Rect targetRect, List<Column> columns, Vector2 scrollPosition)
     {
         Widgets.BeginGroup(targetRect);
 
@@ -273,7 +273,7 @@ class Table
 
         Widgets.EndGroup();
     }
-    Rect AdjustLastColumnWidth(Rect parentRect, Rect targetRect, List<ColumnDef> columns, ColumnDef column)
+    Rect AdjustLastColumnWidth(Rect parentRect, Rect targetRect, List<Column> columns, Column column)
     {
         if (
             column == columns[columns.Count - 1]
@@ -290,7 +290,7 @@ class Table
 
         return targetRect;
     }
-    private void HandleHeaderRowCellClick(ColumnDef column)
+    private void HandleHeaderRowCellClick(Column column)
     {
         if (column == null)
         {

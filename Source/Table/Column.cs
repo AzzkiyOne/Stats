@@ -6,7 +6,7 @@ using Verse;
 
 namespace Stats;
 
-public abstract class ColumnDef : Def
+public abstract class Column : Def
 {
     public float minWidth = 100f;
     public bool isPinned = false;
@@ -57,7 +57,7 @@ public abstract class ColumnDef : Def
     public abstract void SortRows(List<Row> rows, SortDirection direction);
 }
 
-public abstract class DataColumnDef : ColumnDef
+public abstract class DataColumnDef : Column
 {
     public bool drawRawValue = false;
     public override void DrawCell(Rect targetRect, Row row)
@@ -106,7 +106,7 @@ public abstract class DataColumnDef : ColumnDef
     abstract protected ICell CreateCell(ThingDef thingDef);
 }
 
-public class LabelColumnDef : ColumnDef
+public class LabelColumnDef : Column
 {
     public LabelColumnDef() : base()
     {
