@@ -117,7 +117,7 @@ class CategoryPicker
             }
 
             Widgets.DrawTextureFitted(iconRect, catDef.icon, 0.9f);
-            Widgets.LabelEllipses(labelRect, labelText);
+            Widgets.Label(labelRect, labelText);
 
             if (catDef.childThingDefs.Count > 0)
             {

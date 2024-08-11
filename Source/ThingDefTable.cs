@@ -8,18 +8,20 @@ using Verse;
 
 namespace Stats;
 
-[StaticConstructorOnStartup]
+//[StaticConstructorOnStartup]
 public static class ThingDefTable
 {
     public static Dictionary<string, ThingDefTable_Column> columns;
-    public static Dictionary<string, ThingDefTable_Column> customColumns = new()
-    {
-        ["ThingDefRef"] = new ThingDefTable_ThingDefRefColumn(),
-        ["Range"] = new ThingDefTable_WeaponRangeColumn(),
-    };
-    public static List<ThingDefTable_Row> rows;
+    public static Dictionary<string, ThingDefTable_Column> customColumns;
+    public static Dictionary<ThingDef, ThingDefTable_Row> rows;
     static ThingDefTable()
     {
+        customColumns = new()
+        {
+            ["ThingDefRef"] = new ThingDefTable_ThingDefRefColumn(),
+            ["Range"] = new ThingDefTable_WeaponRangeColumn(),
+        };
+
         // Columns
         var statDefs = DefDatabase<StatDef>.AllDefs;
         var columns = new Dictionary<string, ThingDefTable_Column>(
@@ -48,7 +50,7 @@ public static class ThingDefTable
 
         // Rows
         var thingDefs = DefDatabase<ThingDef>.AllDefs;
-        var rows = new List<ThingDefTable_Row>(thingDefs.Count());
+        var rows = new Dictionary<ThingDef, ThingDefTable_Row>(thingDefs.Count());
 
         foreach (var thingDef in thingDefs)
         {
@@ -59,7 +61,7 @@ public static class ThingDefTable
                 row.Add(column.id, column.GetCellFor(thingDef));
             }
 
-            rows.Add(row);
+            rows.Add(thingDef, row);
         }
 
         ThingDefTable.rows = rows;
@@ -109,7 +111,7 @@ public class ThingDefTable_NumCell(
         var contentRect = targetRect.ContractedBy(Table.cellPaddingHor, 0);
         var text = Debug.InDebugMode ? valueNum + "" : valueString;
 
-        Widgets.LabelEllipses(contentRect, text);
+        Widgets.Label(contentRect, text);
 
         if (
             Mouse.IsOver(targetRect)
@@ -158,7 +160,7 @@ public class ThingDefTable_RefCell(
         string labelText = Debug.InDebugMode ? valueDef.defName : valueString;
 
         Widgets.DefIcon(iconRect, valueDef);
-        Widgets.LabelEllipses(textRect, labelText);
+        Widgets.Label(textRect, labelText);
 
         if (Mouse.IsOver(targetRect))
         {
@@ -183,17 +185,19 @@ public class ThingDefTable_RefCell(
 public abstract class ThingDefTable_Column(
     string id,
     string? label = null,
-    string? description = null
+    string? description = null,
+    float? minWidth = null
 )
 {
     public readonly string id = id;
     public readonly string label = label ?? "";
     public readonly string description = description ?? "";
+    public readonly float minWidth = minWidth ?? 100f;
 
-    public bool DrawHeaderCell(Rect targetRect, SortDirection? sortDirection = null)
+    public bool Draw(Rect targetRect, SortDirection? sortDirection = null)
     {
         Widgets.DrawHighlight(targetRect);
-        Widgets.LabelEllipses(targetRect.ContractedBy(Table.cellPaddingHor, 0), label);
+        Widgets.Label(targetRect.ContractedBy(Table.cellPaddingHor, 0), label);
 
         if (sortDirection != null)
         {
@@ -232,11 +236,13 @@ public abstract class ThingDefTable_Column(
 public abstract class ThingDefTable_NumColumn(
     string id,
     string? label = null,
-    string? description = null
+    string? description = null,
+    float? minWidth = null
 ) : ThingDefTable_Column(
     id,
     label,
-    description
+    description,
+    minWidth
 )
 {
     public override void SortRows(List<ThingDefTable_Row> rows, SortDirection direction)
@@ -269,11 +275,13 @@ public abstract class ThingDefTable_NumColumn(
 public abstract class ThingDefTable_StringColumn(
     string id,
     string? label = null,
-    string? description = null
+    string? description = null,
+    float? minWidth = null
 ) : ThingDefTable_Column(
     id,
     label,
-    description
+    description,
+    minWidth
 )
 {
     public override void SortRows(List<ThingDefTable_Row> rows, SortDirection direction)
@@ -303,11 +311,13 @@ public abstract class ThingDefTable_StringColumn(
 
 public class ThingDefTable_StatDefColumn(
     StatDef statDef,
-    string? label = null
+    string? label = null,
+    float? minWidth = null
 ) : ThingDefTable_NumColumn(
     statDef.defName,
     label ?? statDef.LabelCap,
-    statDef.description
+    statDef.description,
+    minWidth
 )
 {
     public override ThingDefTable_Cell GetCellFor(ThingDef thingDef)
@@ -337,7 +347,8 @@ public class ThingDefTable_StatDefColumn(
         {
             try
             {
-                valueString = statDef.ValueToString(_valueNum);
+                // Why ToStringNumberSense.Absolute?
+                valueString = statDef.Worker.GetStatDrawEntryLabel(statDef, _valueNum, ToStringNumberSense.Absolute, statReq);
             }
             catch
             {
@@ -385,7 +396,8 @@ public class ThingDefTable_WeaponRangeColumn() : ThingDefTable_NumColumn(
 
 public class ThingDefTable_ThingDefRefColumn() : ThingDefTable_StringColumn(
     "ThingDefRef",
-    "Name"
+    "Name",
+    minWidth: 250f
 )
 {
     public override ThingDefTable_Cell GetCellFor(ThingDef thingDef)

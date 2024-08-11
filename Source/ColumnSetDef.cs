@@ -39,5 +39,5 @@ static class ColumnSetDB
 public class ColumnSetDef : Def
 {
     public List<string> categories = [];
-    public List<Column> columns = [];
+    public List<string> columns = [];
 }

@@ -9,7 +9,6 @@
             <li>Root</li>
         </categories>
         <columns>
-            <li>Label</li>
             <li>MaxHitPoints</li>
             <li>MarketValue</li>
             <li>Mass</li>
@@ -22,19 +21,20 @@
             <li>WeaponsRanged</li>
         </categories>
         <columns>
-            <li>Label</li>
             <li>WeaponRange</li>
-            <li>CE_Recoil</li>
-            <li>CE_SwayFactor</li>
-            <li>CE_ShotSpread</li>
-            <li>CE_SightsEfficiency</li>
-            <li>CE_MagazineCapacity</li>
-            <li>CE_ReloadTime</li>
-            <li>CE_TicksBetweenBurstShots</li>
-            <li>CE_Caliber</li>
-            <li>CE_OneHandedness</li>
+            <!-- CE Start -->
+            <li>Recoil</li>
+            <li>SwayFactor</li>
+            <li>ShotSpread</li>
+            <li>SightsEfficiency</li>
+            <li>MagazineCapacity</li>
+            <li>ReloadTime</li>
+            <li>TicksBetweenBurstShots</li>
+            <li>Caliber</li>
+            <li>OneHandedness</li>
+            <li>Bulk</li>
+            <!-- CE End -->
             <li>Mass</li>
-            <li>CE_Bulk</li>
         </columns>
     </Stats.ColumnSetDef>
 

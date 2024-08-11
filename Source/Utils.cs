@@ -52,6 +52,19 @@ static class GUIUtils
             GUI.color = prevColor;
         }
     }
+    public readonly record struct TextWordWrapContext : IDisposable
+    {
+        private readonly bool prevWordWrap;
+        public TextWordWrapContext(bool wordWrap)
+        {
+            prevWordWrap = Text.WordWrap;
+            Text.WordWrap = wordWrap;
+        }
+        public void Dispose()
+        {
+            Text.WordWrap = prevWordWrap;
+        }
+    }
 }
 
 static class Debug
