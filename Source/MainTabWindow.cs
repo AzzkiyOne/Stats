@@ -16,6 +16,9 @@ public class StatsMainTabWindow : MainTabWindow
         draggable = true;
         resizeable = true;
 
+        Log.Message(ThingDefTable.columns.Count);
+        Log.Message(ThingDefTable.rows.Count);
+
         categoryPicker = new CategoryPicker();
         HandleCategoryChange(categoryPicker.selectedCatDef);
     }
