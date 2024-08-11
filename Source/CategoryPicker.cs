@@ -33,7 +33,9 @@ class CategoryPicker
                 0f,
                 0f,
                 targetRect.width,
-                displayedRowsHeight >= targetRect.height ? displayedRowsHeight + targetRect.height : displayedRowsHeight
+                displayedRowsHeight >= targetRect.height
+                    ? displayedRowsHeight + targetRect.height
+                    : displayedRowsHeight
             );
             var currY = 0f;
 
@@ -87,7 +89,10 @@ class CategoryPicker
 
             if (
                 catDef.childCategories.Count != 0
-                && Widgets.ButtonImage(collapseControlRect, openedCategories.Contains(catDef) ? TexButton.Collapse : TexButton.Reveal)
+                && Widgets.ButtonImage(
+                    collapseControlRect,
+                    openedCategories.Contains(catDef) ? TexButton.Collapse : TexButton.Reveal
+                )
             )
             {
                 if (openedCategories.Contains(catDef))
@@ -101,7 +106,9 @@ class CategoryPicker
             }
 
             var iconRect = contentRect.LeftPartPixels(rowHeight);
-            var labelRect = contentRect.RightPartPixels(contentRect.width - iconRect.width).ContractedBy(labelPadding, 0);
+            var labelRect = contentRect
+                .RightPartPixels(contentRect.width - iconRect.width)
+                .ContractedBy(labelPadding, 0);
             string labelText = Debug.InDebugMode ? catDef.defName : catDef.LabelCap;
 
             if (string.IsNullOrEmpty(labelText))

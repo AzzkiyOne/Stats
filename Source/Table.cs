@@ -53,6 +53,7 @@ class Table
 
         totalRowsHeight = rowHeight * rows.Count;
     }
+    // There is an issue where scroll are is smaller than total columns width.
     public void Draw(Rect targetRect)
     {
         using (new GUIUtils.GameFontContext(GameFont.Small))
@@ -145,8 +146,8 @@ class Table
             // Initiate drag when the user holds left mouse button down in the (not always) scrollable table area.
             if (
                 !dragInProgress
-                && Mouse.IsOver(tableBodyRect)
                 && Event.current.type == EventType.MouseDown
+                && Mouse.IsOver(tableBodyRect)
             )
             {
                 dragInProgress = true;
@@ -181,7 +182,9 @@ class Table
 
         foreach (var column in columns)
         {
-            var cellRect = AdjustLastColumnWidth(targetRect, new Rect(currX, 0, column.minWidth, targetRect.height), columns, column);
+            var cellRect = new Rect(currX, 0, column.minWidth, targetRect.height);
+
+            cellRect = AdjustColumnWidthIfLastColumn(targetRect, cellRect, columns, column);
 
             if (column.Draw(cellRect, sortColumn == column ? sortDirection : null))
             {
@@ -234,13 +237,13 @@ class Table
                     break;
                 }
 
-                var cellRect = AdjustLastColumnWidth(
-                    targetRect,
-                    new Rect(currX, currY, column.minWidth, rowHeight),
-                    columns,
-                    column
-                );
+                var cellRect = new Rect(currX, currY, column.minWidth, rowHeight);
 
+                cellRect = AdjustColumnWidthIfLastColumn(targetRect, cellRect, columns, column);
+
+                // This is kind of expensive.
+                // I'm not sure whether accessing an element of the
+                // dictionary itself is expensive or just this method.
                 row.TryGetValue(column.id, out var cell);
 
                 cell.Draw(cellRect);
@@ -273,19 +276,20 @@ class Table
 
         Widgets.EndGroup();
     }
-    Rect AdjustLastColumnWidth(Rect parentRect, Rect targetRect, List<ThingDefTable_Column> columns, ThingDefTable_Column column)
+    // Maybe it could be done once for a whole column.
+    Rect AdjustColumnWidthIfLastColumn(
+        Rect parentRect,
+        Rect targetRect,
+        List<ThingDefTable_Column> columns,
+        ThingDefTable_Column column
+    )
     {
         if (
             column == columns[columns.Count - 1]
             && targetRect.xMax < parentRect.width
         )
         {
-            return new Rect(
-                targetRect.x,
-                targetRect.y,
-                parentRect.width - targetRect.x,
-                targetRect.height
-            );
+            targetRect.xMax = parentRect.width;
         }
 
         return targetRect;

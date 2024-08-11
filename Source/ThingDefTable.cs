@@ -83,12 +83,12 @@ public class ThingDefTable_Cell(
     public virtual void Draw(Rect targetRect)
     {
         // Not very performant, because border will be rendered for each individual cell.
-        GUIUtils.DrawLineVertical(
-            targetRect.xMax,
-            targetRect.y,
-            Table.rowHeight,
-            Table.columnSeparatorLineColor
-        );
+        //GUIUtils.DrawLineVertical(
+        //    targetRect.xMax,
+        //    targetRect.y,
+        //    Table.rowHeight,
+        //    Table.columnSeparatorLineColor
+        //);
     }
 
     public static readonly ThingDefTable_Cell Empty = new();
@@ -113,10 +113,7 @@ public class ThingDefTable_NumCell(
 
         Widgets.Label(contentRect, text);
 
-        if (
-            Mouse.IsOver(targetRect)
-            && Event.current.control
-        )
+        if (Event.current.control)
         {
             TooltipHandler.TipRegion(targetRect, new TipSignal(valueExplanation));
         }
@@ -161,18 +158,11 @@ public class ThingDefTable_RefCell(
 
         Widgets.DefIcon(iconRect, valueDef);
         Widgets.Label(textRect, labelText);
+        Widgets.DrawHighlightIfMouseover(targetRect);
 
-        if (Mouse.IsOver(targetRect))
+        if (Event.current.control)
         {
-            Widgets.DrawHighlight(targetRect);
-
-            if (Event.current.control)
-            {
-                TooltipHandler.TipRegion(
-                    targetRect,
-                    new TipSignal(valueExplanation)
-                );
-            }
+            TooltipHandler.TipRegion(targetRect, new TipSignal(valueExplanation));
         }
 
         if (Widgets.ButtonInvisible(targetRect))
@@ -210,17 +200,14 @@ public abstract class ThingDefTable_Column(
             );
         }
 
-        GUIUtils.DrawLineVertical(
-            targetRect.xMax,
-            targetRect.y,
-            targetRect.height,
-            Table.columnSeparatorLineColor
-        );
+        //GUIUtils.DrawLineVertical(
+        //    targetRect.xMax,
+        //    targetRect.y,
+        //    targetRect.height,
+        //    Table.columnSeparatorLineColor
+        //);
 
-        if (Mouse.IsOver(targetRect))
-        {
-            TooltipHandler.TipRegion(targetRect, new TipSignal(description));
-        }
+        TooltipHandler.TipRegion(targetRect, new TipSignal(description));
 
         Widgets.DrawHighlightIfMouseover(targetRect);
 
