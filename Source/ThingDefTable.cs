@@ -54,14 +54,28 @@ public static class ThingDefTable
 
         foreach (var thingDef in thingDefs)
         {
-            var row = new ThingDefTable_Row(columns.Count);
-
-            foreach (var column in columns.Values)
+            if (
+                !thingDef.IsBlueprint
+                && !thingDef.IsFrame
+                && !thingDef.isUnfinishedThing
+                && !thingDef.IsCorpse
+                && (
+                    thingDef.category == ThingCategory.Pawn
+                    || thingDef.category == ThingCategory.Item
+                    || thingDef.category == ThingCategory.Building
+                    || thingDef.category == ThingCategory.Plant
+                )
+            )
             {
-                row.Add(column.id, column.GetCellFor(thingDef));
-            }
+                var row = new ThingDefTable_Row(columns.Count);
 
-            rows.Add(thingDef, row);
+                foreach (var column in columns.Values)
+                {
+                    row.Add(column.id, column.GetCellFor(thingDef));
+                }
+
+                rows.Add(thingDef, row);
+            }
         }
 
         ThingDefTable.rows = rows;
@@ -324,7 +338,7 @@ public class ThingDefTable_StatDefColumn(
         // The good thing is that it all will be cached.
         try
         {
-            valueNum = thingDef.GetStatValueAbstract(statDef);
+            valueNum = statDef.Worker.GetValue(statReq);
         }
         catch
         {
@@ -334,8 +348,7 @@ public class ThingDefTable_StatDefColumn(
         {
             try
             {
-                // Why ToStringNumberSense.Absolute?
-                valueString = statDef.Worker.GetStatDrawEntryLabel(statDef, _valueNum, ToStringNumberSense.Absolute, statReq);
+                valueString = statDef.Worker.GetStatDrawEntryLabel(statDef, _valueNum, ToStringNumberSense.Undefined, statReq);
             }
             catch
             {
@@ -343,8 +356,10 @@ public class ThingDefTable_StatDefColumn(
 
             try
             {
-                // Why valueNum as final value?
-                valueExplanation = statDef.Worker.GetExplanationFull(statReq, ToStringNumberSense.Absolute, _valueNum);
+                // Maybe we don't really need to cache explanation.
+                // Because we only show one at a time.
+                // The only issue is that it is shown at 60fps.
+                valueExplanation = statDef.Worker.GetExplanationFull(statReq, ToStringNumberSense.Undefined, _valueNum);
             }
             catch
             {
