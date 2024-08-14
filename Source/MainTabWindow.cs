@@ -11,13 +11,16 @@ public class StatsMainTabWindow : MainTabWindow
     protected override float Margin { get => 1f; }
     private readonly CategoryPicker categoryPicker;
     private readonly Dictionary<string, Table> tablesCache = [];
+    private readonly Table table;
     public StatsMainTabWindow()
     {
         draggable = true;
         resizeable = true;
 
-        Log.Message(ThingDefTable.columns.Count);
-        Log.Message(ThingDefTable.rows.Count);
+        table = new(Columns.list.Values.ToList(), FakeThings.list);
+
+        Log.Message(Columns.list.Count);
+        Log.Message(FakeThings.list);
 
         categoryPicker = new CategoryPicker();
         HandleCategoryChange(categoryPicker.selectedCatDef);
@@ -32,10 +35,10 @@ public class StatsMainTabWindow : MainTabWindow
             {
                 tablesCache[catDef.defName] = new Table(
                     columnSet.columns.Select(
-                        columnId => ThingDefTable.columns[columnId]
+                        columnId => Columns.list[columnId]
                     ).ToList(),
-                    catDef.childThingDefs.Select(
-                        thingDef => ThingDefTable.rows[thingDef]
+                    FakeThings.list.Where(
+                        ft => catDef.childThingDefs.Contains(ft.thingDef)
                     ).ToList()
                 );
             }
@@ -59,6 +62,10 @@ public class StatsMainTabWindow : MainTabWindow
             {
                 tablesCache.TryGetValue(selCatDef.defName, out Table table);
                 table?.Draw(tableRect);
+            }
+            else
+            {
+                table.Draw(tableRect);
             }
         }
     }

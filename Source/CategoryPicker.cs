@@ -13,7 +13,7 @@ class CategoryPicker
     private const float indentSize = 20f;
     private Vector2 scrollPosition;
     private readonly ThingCategoryDef rootCatDef;
-    public ThingCategoryDef selectedCatDef;
+    public ThingCategoryDef? selectedCatDef;
     private int debug_rowsDrawn = 0;
     private int totalRowsDisplayed = 0;
     private readonly List<ThingCategoryDef> openedCategories = [];
@@ -21,7 +21,7 @@ class CategoryPicker
     {
         rootCatDef = DefDatabase<ThingCategoryDef>.GetNamed("Root");
     }
-    public void Draw(Rect targetRect, Action<ThingCategoryDef> onCategoryChange)
+    public void Draw(Rect targetRect, Action<ThingCategoryDef?> onCategoryChange)
     {
         using (new GUIUtils.GameFontContext(GameFont.Tiny))
         using (new GUIUtils.TextAnchorContext(TextAnchor.MiddleLeft))
@@ -54,7 +54,7 @@ class CategoryPicker
             Debug.TryDrawUIDebugInfo(targetRect, debug_rowsDrawn + "");
         }
     }
-    private void DrawRows(Rect parentRect, ref float currY, ThingCategoryDef catDef, Action<ThingCategoryDef> onCategoryChange)
+    private void DrawRows(Rect parentRect, ref float currY, ThingCategoryDef catDef, Action<ThingCategoryDef?> onCategoryChange)
     {
         if (
             catDef.childThingDefs.Count == 0
@@ -130,13 +130,18 @@ class CategoryPicker
             {
                 Widgets.DrawHighlightIfMouseover(contentRect);
 
-                if (
-                    Widgets.ButtonInvisible(contentRect)
-                    && catDef != selectedCatDef
-                )
+                if (Widgets.ButtonInvisible(contentRect))
                 {
-                    selectedCatDef = catDef;
-                    onCategoryChange(catDef);
+                    if (catDef == selectedCatDef)
+                    {
+                        selectedCatDef = null;
+                    }
+                    else
+                    {
+                        selectedCatDef = catDef;
+                    }
+
+                    onCategoryChange(selectedCatDef);
                 }
             }
 

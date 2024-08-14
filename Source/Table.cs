@@ -16,18 +16,18 @@ class Table
     public const float cellPaddingHor = 10f;
     public static Color columnSeparatorLineColor = new(1f, 1f, 1f, 0.04f);
     public Vector2 scrollPosition = new();
-    public readonly List<ThingDefTable_Column> middleColumns = [];
-    public readonly List<ThingDefTable_Column> pinnedColumns = [];
-    private readonly List<ThingDefTable_Row> rows;
+    public readonly List<Column> middleColumns = [];
+    public readonly List<Column> pinnedColumns = [];
+    private readonly List<FakeThing> rows;
     private readonly float middleColumnsWidth = 0f;
     private readonly float pinnedColumnsWidth = 0f;
     private readonly float minRowWidth = 0f;
     private readonly float totalRowsHeight = 0f;
     private int? mouseOverRowIndex = null;
-    private ThingDefTable_Column sortColumn;
+    private Column sortColumn;
     private SortDirection sortDirection = SortDirection.Ascending;
     private bool dragInProgress = false;
-    public Table(List<ThingDefTable_Column> columns, List<ThingDefTable_Row> rows)
+    public Table(List<Column> columns, List<FakeThing> rows)
     {
         this.rows = rows;
 
@@ -37,12 +37,14 @@ class Table
             sortColumn.SortRows(rows, sortDirection);
         }
 
-        pinnedColumns.Add(ThingDefTable.columns["ThingDefRef"]);
-        pinnedColumnsWidth += ThingDefTable.columns["ThingDefRef"].minWidth;
-
         foreach (var column in columns)
         {
-            if (!pinnedColumns.Contains(column))
+            if (column.id == "Label")
+            {
+                pinnedColumns.Add(column);
+                pinnedColumnsWidth += column.minWidth;
+            }
+            else
             {
                 middleColumns.Add(column);
                 middleColumnsWidth += column.minWidth;
@@ -174,7 +176,7 @@ class Table
             Widgets.EndScrollView();
         }
     }
-    void DrawHeaders(Rect targetRect, List<ThingDefTable_Column> columns, Vector2? scrollPosition = null)
+    void DrawHeaders(Rect targetRect, List<Column> columns, Vector2? scrollPosition = null)
     {
         Widgets.BeginGroup(targetRect);
 
@@ -196,7 +198,7 @@ class Table
 
         Widgets.EndGroup();
     }
-    void DrawRows(Rect targetRect, List<ThingDefTable_Column> columns, Vector2 scrollPosition)
+    void DrawRows(Rect targetRect, List<Column> columns, Vector2 scrollPosition)
     {
         Widgets.BeginGroup(targetRect);
 
@@ -241,12 +243,8 @@ class Table
 
                 cellRect = AdjustColumnWidthIfLastColumn(targetRect, cellRect, columns, column);
 
-                // This is kind of expensive.
-                // I'm not sure whether accessing an element of the
-                // dictionary itself is expensive or just this method.
-                row.TryGetValue(column.id, out var cell);
 
-                cell.Draw(cellRect);
+                column.DrawCellFor(cellRect, row);
 
                 currX += cellRect.width;
                 debug_columnsDrawn++;
@@ -280,8 +278,8 @@ class Table
     Rect AdjustColumnWidthIfLastColumn(
         Rect parentRect,
         Rect targetRect,
-        List<ThingDefTable_Column> columns,
-        ThingDefTable_Column column
+        List<Column> columns,
+        Column column
     )
     {
         if (
@@ -294,7 +292,7 @@ class Table
 
         return targetRect;
     }
-    private void HandleHeaderRowCellClick(ThingDefTable_Column column)
+    private void HandleHeaderRowCellClick(Column column)
     {
         if (column == null)
         {

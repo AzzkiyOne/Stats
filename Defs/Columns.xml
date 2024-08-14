@@ -9,6 +9,7 @@
             <li>Root</li>
         </categories>
         <columns>
+            <li>Label</li>
             <li>MaxHitPoints</li>
             <li>MarketValue</li>
             <li>Mass</li>
@@ -21,6 +22,7 @@
             <li>WeaponsRanged</li>
         </categories>
         <columns>
+            <li>Label</li>
             <li>WeaponRange</li>
             <!-- CE Start -->
             <li>Recoil</li>
