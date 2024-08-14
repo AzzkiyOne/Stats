@@ -13,7 +13,15 @@ public class StatsMainTabWindow : MainTabWindow
     private readonly CategoryPicker categoryPicker;
     private readonly Dictionary<string, Table> tablesCache = [];
     private readonly Table table;
-    private Rect? prevRect = null;
+    private Rect? preCloseRect = null;
+    private Rect? preExpandRect = null;
+    private bool isExpanded => preExpandRect != null;
+    private Rect expandRect => new Rect(
+        0f,
+        0f,
+        UI.screenWidth,
+        windowRect.height = UI.screenHeight - MainButtonDef.ButtonHeight
+    );
 
     private const float titleBarHeight = 30f;
 
@@ -54,25 +62,37 @@ public class StatsMainTabWindow : MainTabWindow
     }
     private void DrawTitleBar(Rect targetRect)
     {
-        var labelRect = targetRect.LeftPartPixels(targetRect.width - titleBarHeight * 3);
+        var labelRect = targetRect.LeftPartPixels(targetRect.width - titleBarHeight * 4);
         var labelText = categoryPicker.selectedCatDef?.LabelCap ?? "All";
         var currX = labelRect.xMax;
         var helpIconRect = new Rect(currX, 0f, titleBarHeight, titleBarHeight);
+        currX += titleBarHeight;
+        var minimizeButtonRect = new Rect(currX, 0f, titleBarHeight, titleBarHeight);
         currX += titleBarHeight;
         var expandButtonRect = new Rect(currX, 0f, titleBarHeight, titleBarHeight);
         currX += titleBarHeight;
         var closeButtonRect = new Rect(currX, 0f, titleBarHeight, titleBarHeight);
         using (new GUIUtils.TextAnchorContext(TextAnchor.MiddleLeft))
         {
+            Widgets.DrawLightHighlight(targetRect);
             Widgets.Label(labelRect.ContractedBy(GenUI.Pad, 0f), labelText);
             Widgets.ButtonImage(helpIconRect, TexButton.Info, GUI.color, tooltip: "How to use:");
 
+            if (Widgets.ButtonImageFitted(minimizeButtonRect, TexButton.Minus))
+            {
+                Minimize();
+            }
+
             if (TitleBar.ButtonExpand(expandButtonRect))
             {
-                windowRect.x = 0f;
-                windowRect.y = 0f;
-                windowRect.width = UI.screenWidth;
-                windowRect.height = UI.screenHeight - MainButtonDef.ButtonHeight;
+                if (isExpanded)
+                {
+                    Collapse();
+                }
+                else
+                {
+                    Expand();
+                }
             }
 
             if (Widgets.ButtonImageFitted(closeButtonRect, TexButton.CloseXSmall))
@@ -81,21 +101,52 @@ public class StatsMainTabWindow : MainTabWindow
             }
         }
     }
+    private void Expand()
+    {
+        draggable = false;
+        resizeable = false;
+
+        preExpandRect = windowRect;
+        windowRect = expandRect;
+    }
+    private void Collapse()
+    {
+        draggable = true;
+        resizeable = true;
+
+        if (preExpandRect is Rect _preExpandRect)
+        {
+            windowRect = _preExpandRect;
+            preExpandRect = null;
+        }
+    }
+    private void Minimize()
+    {
+        draggable = true;
+        resizeable = true;
+        preExpandRect = null;
+
+        SetInitialSizeAndPosition();
+    }
 
     public override void PreOpen()
     {
         base.PreOpen();
 
-        if (prevRect is Rect _prevRect)
+        if (isExpanded)
         {
-            windowRect = _prevRect;
+            windowRect = expandRect;
+        }
+        else if (preCloseRect is Rect _preCloseRect)
+        {
+            windowRect = _preCloseRect;
         }
     }
     public override void PostClose()
     {
         base.PostClose();
 
-        prevRect = windowRect;
+        preCloseRect = windowRect;
     }
     public override void DoWindowContents(Rect targetRect)
     {
@@ -147,7 +198,7 @@ static class TitleBar
 
         GUI.color = Color.white;
 
-        TooltipHandler.TipRegion(targetRect, "Maximize/minimize window");
+        TooltipHandler.TipRegion(targetRect, "Maximize/restore window");
 
         var isClicked = Widgets.ButtonInvisible(targetRect);
 
