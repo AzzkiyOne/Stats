@@ -69,25 +69,25 @@ class Table
             );
             var controlId = GUIUtility.GetControlID(FocusType.Passive);
 
-            // If the table stops drawing while the user is dragging the mouse on the screen
-            // (for example the table is rendered in a window and the user pressed ESC)
-            // we end up in a state where dragInProgess == true.
-            // I'm not sure if the code below is a good way to fix this, but it looks harmless.
-            if (GUIUtility.hotControl == 0)
+            if (
+                Event.current.isScrollWheel
+                && Event.current.control
+                && Mouse.IsOver(targetRect)
+            )
             {
-                dragInProgress = false;
-            }
+                var scrollAmount = Event.current.delta.y * 10;
+                var newScrollX = scrollPosition.x + scrollAmount;
 
-            if (dragInProgress)
-            {
-                // Taking control over GUI events while dragging is in progress.
-                GUIUtility.hotControl = controlId;
-
-                // Catching "mouse up" event to stop drag.
-                if (Event.current.GetTypeForControl(controlId) == EventType.MouseUp)
+                if (newScrollX >= 0)
                 {
-                    GUIUtility.hotControl = 0;
+                    scrollPosition.x = newScrollX;
                 }
+                else
+                {
+                    scrollPosition.x = 0;
+                }
+
+                Event.current.Use();
             }
 
             Widgets.BeginScrollView(targetRect, ref scrollPosition, contentRect, true);
@@ -144,29 +144,6 @@ class Table
                 targetRect.height,
                 StatsMainTabWindow.borderLineColor
             );
-
-            // Initiate drag when the user holds left mouse button down in the (not always) scrollable table area.
-            if (
-                !dragInProgress
-                && Event.current.type == EventType.MouseDown
-                && Mouse.IsOver(tableBodyRect)
-            )
-            {
-                dragInProgress = true;
-            }
-
-            // Adjust horizontal scroll position on drag event.
-            if (
-                dragInProgress
-                && Event.current.GetTypeForControl(controlId) == EventType.MouseDrag
-            )
-            {
-                scrollPosition.x = Mathf.Clamp(
-                    scrollPosition.x + Event.current.delta.x,
-                    0,
-                    contentRect.width - targetRect.width + GUI.skin.verticalScrollbar.fixedWidth
-                );
-            }
 
             if (!Mouse.IsOver(pinnedTableBodyRect.Union(tableBodyRect)))
             {
