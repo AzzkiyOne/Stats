@@ -34,7 +34,8 @@ static class FakeThings
 
                 foreach (var stuffDef in allowedStuffs)
                 {
-                    var label = GenLabel.ThingLabel(thingDef, stuffDef, 0).CapitalizeFirst();
+                    //var label = GenLabel.ThingLabel(thingDef, stuffDef, 0).CapitalizeFirst();
+                    var label = thingDef.LabelCap + " (" + stuffDef.LabelCap + ")";
                     //var icon = thingDef.GetUIIconForStuff(stuffDef);
 
                     list.Add(new FakeThing(thingDef, label, stuffDef));

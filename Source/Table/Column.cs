@@ -194,7 +194,7 @@ public class LabelColumn() : Column("Label", "Name", minWidth: 250f)
         //thing.label + "\n\n" + thing.thingDef.description
         Cell.LabelWithDefIcon(targetRect, thing, thing.label);
         Cell.Tip(targetRect, thing.thingDef.description);
-        Cell.DefDialogOnClick(targetRect, thing.thingDef);
+        Cell.DefDialogOnClick(targetRect, thing);
     }
     public override void SortRows(List<FakeThing> thingDefs, SortDirection direction)
     {

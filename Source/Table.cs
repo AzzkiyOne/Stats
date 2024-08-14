@@ -13,7 +13,7 @@ class Table
 {
     public const float rowHeight = 30f;
     public const float headersRowHeight = rowHeight;
-    public const float cellPaddingHor = 10f;
+    public const float cellPaddingHor = GenUI.Pad;
     public static Color columnSeparatorLineColor = new(1f, 1f, 1f, 0.04f);
     public Vector2 scrollPosition = new();
     public readonly List<Column> middleColumns = [];
@@ -130,19 +130,19 @@ class Table
                 scrollPosition.x,
                 scrollPosition.y,
                 targetRect.height,
-                new(1f, 1f, 1f, 0.4f)
+                StatsMainTabWindow.borderLineColor
             );
             Widgets.DrawLineHorizontal(
                 scrollPosition.x,
                 headersRowHeight + scrollPosition.y,
                 targetRect.width,
-                new(1f, 1f, 1f, 0.4f)
+                StatsMainTabWindow.borderLineColor
             );
             GUIUtils.DrawLineVertical(
                 pinnedColumnsWidth + scrollPosition.x,
                 scrollPosition.y,
                 targetRect.height,
-                new(1f, 1f, 1f, 0.4f)
+                StatsMainTabWindow.borderLineColor
             );
 
             // Initiate drag when the user holds left mouse button down in the (not always) scrollable table area.

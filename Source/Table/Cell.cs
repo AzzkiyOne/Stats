@@ -1,10 +1,14 @@
-﻿using UnityEngine;
+﻿using System.Reflection;
+using UnityEngine;
 using Verse;
 
 namespace Stats;
 
 static class Cell
 {
+    private static readonly FieldInfo dialogInfoCardStuffField = typeof(Dialog_InfoCard)
+        .GetField("stuff", BindingFlags.Instance | BindingFlags.NonPublic);
+
     static public void Label(Rect targetRect, string text)
     {
         var contentRect = targetRect.ContractedBy(Table.cellPaddingHor, 0);
@@ -39,13 +43,20 @@ static class Cell
             TooltipHandler.TipRegion(targetRect, new TipSignal(text));
         }
     }
-    static public void DefDialogOnClick(Rect targetRect, ThingDef thingDef)
+    static public void DefDialogOnClick(Rect targetRect, FakeThing thing)
     {
         Widgets.DrawHighlightIfMouseover(targetRect);
 
         if (Widgets.ButtonInvisible(targetRect))
         {
-            Find.WindowStack.Add(new Dialog_InfoCard(thingDef));
+            var dialog = new Dialog_InfoCard(thing.thingDef);
+
+            if (thing.stuffDef != null)
+            {
+                dialogInfoCardStuffField.SetValue(dialog, thing.stuffDef);
+            }
+
+            Find.WindowStack.Add(dialog);
         }
     }
 }
