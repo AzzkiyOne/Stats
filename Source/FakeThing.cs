@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using RimWorld;
-using UnityEngine;
 using Verse;
 
 namespace Stats;
@@ -49,6 +48,7 @@ static class FakeThings
     }
 }
 
+// Implement GetHashCode (and Equals) jsut in case?
 public class FakeThing(
     ThingDef thingDef,
     string label,

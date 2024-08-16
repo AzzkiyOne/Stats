@@ -94,6 +94,7 @@ public class StatDefColumn(
 )
 {
     private readonly StatDef statDef = statDef;
+    // Initialize in constructor with FakeThings.list.Count?
     private readonly Dictionary<FakeThing, StatDefColumn_CacheEntry?> cache = [];
 
     private StatDefColumn_CacheEntry? TryGetValueFor(FakeThing thing)
@@ -114,6 +115,7 @@ public class StatDefColumn(
         string? valueString = null;
         //string? valueExplanation = null;
 
+        // Maybe add some indication that there was an exception.
         try
         {
             valueAbs = statDef.Worker.GetValue(statReq);
