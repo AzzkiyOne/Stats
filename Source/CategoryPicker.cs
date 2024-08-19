@@ -56,14 +56,14 @@ class CategoryPicker
     }
     private void DrawRows(Rect parentRect, ref float currY, ThingCategoryDef catDef, Action<ThingCategoryDef?> onCategoryChange)
     {
-        if (
-            catDef.childThingDefs.Count == 0
-            && catDef.childCategories.Count == 0
-            && !Debug.InDebugMode
-        )
-        {
-            return;
-        }
+        //if (
+        //    catDef.childThingDefs.Count == 0
+        //    && catDef.childCategories.Count == 0
+        //    && !Debug.InDebugMode
+        //)
+        //{
+        //    return;
+        //}
 
         totalRowsDisplayed++;
 
@@ -126,24 +126,24 @@ class CategoryPicker
             Widgets.DrawTextureFitted(iconRect, catDef.icon, 0.9f);
             Widgets.Label(labelRect, labelText);
 
-            if (catDef.childThingDefs.Count > 0)
+            //if (catDef.childThingDefs.Count > 0)
+            //{
+            Widgets.DrawHighlightIfMouseover(contentRect);
+
+            if (Widgets.ButtonInvisible(contentRect))
             {
-                Widgets.DrawHighlightIfMouseover(contentRect);
-
-                if (Widgets.ButtonInvisible(contentRect))
+                if (catDef == selectedCatDef)
                 {
-                    if (catDef == selectedCatDef)
-                    {
-                        selectedCatDef = null;
-                    }
-                    else
-                    {
-                        selectedCatDef = catDef;
-                    }
-
-                    onCategoryChange(selectedCatDef);
+                    selectedCatDef = null;
                 }
+                else
+                {
+                    selectedCatDef = catDef;
+                }
+
+                onCategoryChange(selectedCatDef);
             }
+            //}
 
             if (selectedCatDef == catDef)
             {

@@ -16,7 +16,7 @@ public class StatsMainTabWindow : MainTabWindow
     private Rect? preCloseRect = null;
     private Rect? preExpandRect = null;
     private bool isExpanded => preExpandRect != null;
-    private Rect expandRect => new Rect(
+    private Rect expandRect => new(
         0f,
         0f,
         UI.screenWidth,
@@ -24,6 +24,7 @@ public class StatsMainTabWindow : MainTabWindow
     );
 
     private const float titleBarHeight = 30f;
+    private const float catPickerWidth = 300f;
 
     public static readonly Color borderLineColor = new(1f, 1f, 1f, 0.4f);
 
@@ -32,7 +33,17 @@ public class StatsMainTabWindow : MainTabWindow
         draggable = true;
         resizeable = true;
 
-        table = new(Columns.list.Values.ToList(), FakeThings.list);
+        //table = new(Columns.list.Values.ToList(), FakeThings.list);
+        table = new(
+            Columns.list.Values.ToList(),
+            FakeThings.list.Where(t =>
+                (
+                    t.thingDef.thingCategories == null
+                    || t.thingDef.thingCategories.Count == 0
+                )
+                && t.thingDef.designationCategory == null
+            ).ToList()
+        );
 
         Log.Message(Columns.list.Count);
         Log.Message(FakeThings.list.Count);
@@ -54,51 +65,21 @@ public class StatsMainTabWindow : MainTabWindow
                         columnId => Columns.list[columnId]
                     ).ToList(),
                     FakeThings.list.Where(
-                        ft => catDef.childThingDefs.Contains(ft.thingDef)
+                        ft => catDef.AllThingDefs().Contains(ft.thingDef)
                     ).ToList()
                 );
             }
         }
     }
-    private void DrawTitleBar(Rect targetRect)
+    private void ExpandOrCollapse()
     {
-        var labelRect = targetRect.LeftPartPixels(targetRect.width - titleBarHeight * 4);
-        var labelText = categoryPicker.selectedCatDef?.LabelCap ?? "All";
-        var currX = labelRect.xMax;
-        var helpIconRect = new Rect(currX, 0f, titleBarHeight, titleBarHeight);
-        currX += titleBarHeight;
-        var minimizeButtonRect = new Rect(currX, 0f, titleBarHeight, titleBarHeight);
-        currX += titleBarHeight;
-        var expandButtonRect = new Rect(currX, 0f, titleBarHeight, titleBarHeight);
-        currX += titleBarHeight;
-        var closeButtonRect = new Rect(currX, 0f, titleBarHeight, titleBarHeight);
-        using (new GUIUtils.TextAnchorContext(TextAnchor.MiddleLeft))
+        if (isExpanded)
         {
-            Widgets.DrawLightHighlight(targetRect);
-            Widgets.Label(labelRect.ContractedBy(GenUI.Pad, 0f), labelText);
-            Widgets.ButtonImage(helpIconRect, TexButton.Info, GUI.color, tooltip: "How to use:");
-
-            if (Widgets.ButtonImageFitted(minimizeButtonRect, TexButton.Minus))
-            {
-                Minimize();
-            }
-
-            if (TitleBar.ButtonExpand(expandButtonRect))
-            {
-                if (isExpanded)
-                {
-                    Collapse();
-                }
-                else
-                {
-                    Expand();
-                }
-            }
-
-            if (Widgets.ButtonImageFitted(closeButtonRect, TexButton.CloseXSmall))
-            {
-                Close();
-            }
+            Collapse();
+        }
+        else
+        {
+            Expand();
         }
     }
     private void Expand()
@@ -150,46 +131,117 @@ public class StatsMainTabWindow : MainTabWindow
     }
     public override void DoWindowContents(Rect targetRect)
     {
+        var titleBarText = categoryPicker.selectedCatDef?.LabelCap ?? "All";
+        var currY = targetRect.y;
+
         using (new GUIUtils.TextWordWrapContext(false))
         {
-            var titleBarRect = new Rect(0f, 0f, targetRect.width, titleBarHeight);
-            var categoryPickerTargetRect = new Rect(
-                0f,
-                titleBarRect.yMax,
-                300f,
-                targetRect.height - titleBarRect.height
-            );
-            var tableRect = new Rect(
-                categoryPickerTargetRect.xMax,
-                titleBarRect.yMax,
-                targetRect.width - categoryPickerTargetRect.width,
-                targetRect.height - titleBarRect.height
-            );
-
-            DrawTitleBar(titleBarRect);
-            Widgets.DrawLineHorizontal(
-                0f,
-                titleBarRect.yMax,
-                targetRect.width,
-                borderLineColor
-            );
-            categoryPicker.Draw(categoryPickerTargetRect, HandleCategoryChange);
-
-            if (categoryPicker.selectedCatDef is ThingCategoryDef selCatDef)
+            switch (TitleBar.Draw(
+                targetRect.CutFromY(ref currY, titleBarHeight),
+                titleBarText
+            ))
             {
-                tablesCache.TryGetValue(selCatDef.defName, out Table table);
-                table?.Draw(tableRect);
+                case TitleBarEvent.Minimize:
+                    Minimize();
+                    break;
+                case TitleBarEvent.Expand:
+                    ExpandOrCollapse();
+                    break;
+                case TitleBarEvent.Close:
+                    Close();
+                    break;
             }
-            else
-            {
-                table.Draw(tableRect);
-            }
+
+            DrawContent(targetRect.CutFromY(currY));
+        }
+    }
+    private void DrawContent(Rect targetRect)
+    {
+        var currX = targetRect.x;
+
+        categoryPicker.Draw(
+            targetRect.CutFromX(ref currX, catPickerWidth),
+            HandleCategoryChange
+        );
+
+        if (categoryPicker.selectedCatDef is ThingCategoryDef selCatDef)
+        {
+            tablesCache.TryGetValue(selCatDef.defName, out Table table);
+            table?.Draw(targetRect.CutFromX(currX));
+        }
+        else
+        {
+            table.Draw(targetRect.CutFromX(currX));
         }
     }
 }
 
+enum TitleBarEvent
+{
+    Minimize,
+    Expand,
+    Close,
+}
+
 static class TitleBar
 {
+    public static TitleBarEvent? Draw(Rect targetRect, string text)
+    {
+        var buttonWidth = targetRect.height;
+        var labelWidth = targetRect.width - buttonWidth * 4;
+        var currX = targetRect.x;
+        TitleBarEvent? Event = null;
+
+        using (new GUIUtils.TextAnchorContext(TextAnchor.MiddleLeft))
+        {
+            Widgets.DrawLightHighlight(targetRect);
+
+            Widgets.DrawLineHorizontal(
+                targetRect.x,
+                targetRect.yMax,
+                targetRect.width,
+                StatsMainTabWindow.borderLineColor
+            );
+
+            Widgets.Label(
+                targetRect
+                    .CutFromX(ref currX, labelWidth)
+                    .ContractedBy(GenUI.Pad, 0f),
+                text
+            );
+
+            Widgets.ButtonImage(
+                targetRect.CutFromX(ref currX, buttonWidth),
+                TexButton.Info,
+                GUI.color,
+                tooltip: "How to use:"
+            );
+
+            if (Widgets.ButtonImageFitted(
+                targetRect.CutFromX(ref currX, buttonWidth),
+                TexButton.Reveal
+            ))
+            {
+                Event = TitleBarEvent.Minimize;
+            }
+
+            if (ButtonExpand(targetRect.CutFromX(ref currX, buttonWidth)))
+            {
+
+                Event = TitleBarEvent.Expand;
+            }
+
+            if (Widgets.ButtonImageFitted(
+                targetRect.CutFromX(currX, buttonWidth),
+                TexButton.CloseXSmall
+            ))
+            {
+                Event = TitleBarEvent.Close;
+            }
+        }
+
+        return Event;
+    }
     public static bool ButtonExpand(Rect targetRect)
     {
         GUI.color = (Mouse.IsOver(targetRect) ? GenUI.MouseoverColor : Color.white);

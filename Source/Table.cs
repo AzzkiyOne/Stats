@@ -11,10 +11,6 @@ namespace Stats;
 
 class Table
 {
-    public const float rowHeight = 30f;
-    public const float headersRowHeight = rowHeight;
-    public const float cellPaddingHor = GenUI.Pad;
-    public static Color columnSeparatorLineColor = new(1f, 1f, 1f, 0.04f);
     public Vector2 scrollPosition = new();
     public readonly List<Column> middleColumns = [];
     public readonly List<Column> pinnedColumns = [];
@@ -27,6 +23,13 @@ class Table
     private Column sortColumn;
     private SortDirection sortDirection = SortDirection.Ascending;
     private bool dragInProgress = false;
+
+    public const float rowHeight = 30f;
+    public const float headersRowHeight = rowHeight;
+    public const float cellPaddingHor = GenUI.Pad;
+
+    public static Color columnSeparatorLineColor = new(1f, 1f, 1f, 0.04f);
+
     public Table(List<Column> columns, List<FakeThing> rows)
     {
         this.rows = rows;
@@ -55,6 +58,7 @@ class Table
 
         totalRowsHeight = rowHeight * rows.Count;
     }
+
     // There is an issue where scroll are is smaller than total columns width.
     public void Draw(Rect targetRect)
     {
@@ -153,7 +157,7 @@ class Table
             Widgets.EndScrollView();
         }
     }
-    void DrawHeaders(Rect targetRect, List<Column> columns, Vector2? scrollPosition = null)
+    private void DrawHeaders(Rect targetRect, List<Column> columns, Vector2? scrollPosition = null)
     {
         Widgets.BeginGroup(targetRect);
 
@@ -175,7 +179,7 @@ class Table
 
         Widgets.EndGroup();
     }
-    void DrawRows(Rect targetRect, List<Column> columns, Vector2 scrollPosition)
+    private void DrawRows(Rect targetRect, List<Column> columns, Vector2 scrollPosition)
     {
         Widgets.BeginGroup(targetRect);
 
@@ -252,7 +256,7 @@ class Table
         Widgets.EndGroup();
     }
     // Maybe it could be done once for a whole column.
-    Rect AdjustColumnWidthIfLastColumn(
+    private Rect AdjustColumnWidthIfLastColumn(
         Rect parentRect,
         Rect targetRect,
         List<Column> columns,
