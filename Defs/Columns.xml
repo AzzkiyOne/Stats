@@ -25,7 +25,7 @@
             <li>Label</li>
             <li>WeaponRange</li>
             <!-- CE Start -->
-            <li>Recoil</li>
+            <!-- <li>Recoil</li>
             <li>SwayFactor</li>
             <li>ShotSpread</li>
             <li>SightsEfficiency</li>
@@ -34,7 +34,7 @@
             <li>TicksBetweenBurstShots</li>
             <li>Caliber</li>
             <li>OneHandedness</li>
-            <li>Bulk</li>
+            <li>Bulk</li> -->
             <!-- CE End -->
             <li>Mass</li>
         </columns>

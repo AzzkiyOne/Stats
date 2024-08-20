@@ -14,7 +14,7 @@ class Table
     public Vector2 scrollPosition = new();
     public readonly List<Column> middleColumns = [];
     public readonly List<Column> pinnedColumns = [];
-    private readonly List<FakeThing> rows;
+    private readonly List<ThingAlike> rows;
     private readonly float middleColumnsWidth = 0f;
     private readonly float pinnedColumnsWidth = 0f;
     private readonly float minRowWidth = 0f;
@@ -30,7 +30,7 @@ class Table
 
     public static Color columnSeparatorLineColor = new(1f, 1f, 1f, 0.04f);
 
-    public Table(List<Column> columns, List<FakeThing> rows)
+    public Table(List<Column> columns, List<ThingAlike> rows)
     {
         this.rows = rows;
 
@@ -59,7 +59,7 @@ class Table
         totalRowsHeight = rowHeight * rows.Count;
     }
 
-    // There is an issue where scroll are is smaller than total columns width.
+    // There is an issue where scroll area is smaller than total columns width.
     public void Draw(Rect targetRect)
     {
         using (new GUIUtils.GameFontContext(GameFont.Small))
@@ -71,7 +71,6 @@ class Table
                 minRowWidth,
                 totalRowsHeight + headersRowHeight
             );
-            var controlId = GUIUtility.GetControlID(FocusType.Passive);
 
             if (
                 Event.current.isScrollWheel
@@ -96,39 +95,22 @@ class Table
 
             Widgets.BeginScrollView(targetRect, ref scrollPosition, contentRect, true);
 
-            var pinnedHeadersRowRect = new Rect(
+            var headersRect = new Rect(
                 scrollPosition.x,
                 scrollPosition.y,
-                pinnedColumnsWidth,
+                targetRect.width,
                 headersRowHeight
             );
-            var headersRowRect = new Rect(
-                scrollPosition.x + pinnedColumnsWidth,
-                scrollPosition.y,
-                targetRect.width - pinnedColumnsWidth,
-                rowHeight
-            );
-            var pinnedTableBodyRect = new Rect(
+            DrawHeaders(headersRect);
+
+            var bodyRect = new Rect(
                 scrollPosition.x,
                 scrollPosition.y + headersRowHeight,
-                pinnedColumnsWidth,
+                targetRect.width,
                 targetRect.height - headersRowHeight
             );
-            var tableBodyRect = new Rect(
-                scrollPosition.x + pinnedColumnsWidth,
-                scrollPosition.y + headersRowHeight,
-                targetRect.width - pinnedColumnsWidth,
-                targetRect.height - headersRowHeight
-            );
+            DrawBody(bodyRect);
 
-            // Draw pinned headers
-            DrawHeaders(pinnedHeadersRowRect, pinnedColumns);
-            // Draw headers
-            DrawHeaders(headersRowRect, middleColumns, scrollPosition);
-            // Draw pinned rows
-            DrawRows(pinnedTableBodyRect, pinnedColumns, new Vector2(0, scrollPosition.y));
-            // Draw rows
-            DrawRows(tableBodyRect, middleColumns, scrollPosition);
             // Separators
             GUIUtils.DrawLineVertical(
                 scrollPosition.x,
@@ -149,7 +131,7 @@ class Table
                 StatsMainTabWindow.borderLineColor
             );
 
-            if (!Mouse.IsOver(pinnedTableBodyRect.Union(tableBodyRect)))
+            if (!Mouse.IsOver(bodyRect))
             {
                 mouseOverRowIndex = null;
             }
@@ -157,7 +139,27 @@ class Table
             Widgets.EndScrollView();
         }
     }
-    private void DrawHeaders(Rect targetRect, List<Column> columns, Vector2? scrollPosition = null)
+    private void DrawHeaders(Rect targetRect)
+    {
+        var currX = targetRect.x;
+
+        // Draw pinned headers
+        DrawHeaderColumns(
+            targetRect.CutFromX(ref currX, pinnedColumnsWidth),
+            pinnedColumns
+        );
+        // Draw middle headers
+        DrawHeaderColumns(
+            targetRect.CutFromX(ref currX),
+            middleColumns,
+            scrollPosition
+        );
+    }
+    private void DrawHeaderColumns(
+        Rect targetRect,
+        List<Column> columns,
+        Vector2? scrollPosition = null
+    )
     {
         Widgets.BeginGroup(targetRect);
 
@@ -167,7 +169,7 @@ class Table
         {
             var cellRect = new Rect(currX, 0, column.minWidth, targetRect.height);
 
-            cellRect = AdjustColumnWidthIfLastColumn(targetRect, cellRect, columns, column);
+            AdjustColumnWidthIfLastColumn(targetRect, ref cellRect, columns, column);
 
             if (column.Draw(cellRect, sortColumn == column ? sortDirection : null))
             {
@@ -178,6 +180,23 @@ class Table
         }
 
         Widgets.EndGroup();
+    }
+    private void DrawBody(Rect targetRect)
+    {
+        var currX = targetRect.x;
+
+        // Draw pinned rows
+        DrawRows(
+            targetRect.CutFromX(ref currX, pinnedColumnsWidth),
+            pinnedColumns,
+            new Vector2(0, scrollPosition.y)
+        );
+        // Draw middle rows
+        DrawRows(
+            targetRect.CutFromX(ref currX),
+            middleColumns,
+            scrollPosition
+        );
     }
     private void DrawRows(Rect targetRect, List<Column> columns, Vector2 scrollPosition)
     {
@@ -222,8 +241,7 @@ class Table
 
                 var cellRect = new Rect(currX, currY, column.minWidth, rowHeight);
 
-                cellRect = AdjustColumnWidthIfLastColumn(targetRect, cellRect, columns, column);
-
+                AdjustColumnWidthIfLastColumn(targetRect, ref cellRect, columns, column);
 
                 column.DrawCellFor(cellRect, row);
 
@@ -256,9 +274,9 @@ class Table
         Widgets.EndGroup();
     }
     // Maybe it could be done once for a whole column.
-    private Rect AdjustColumnWidthIfLastColumn(
+    private void AdjustColumnWidthIfLastColumn(
         Rect parentRect,
-        Rect targetRect,
+        ref Rect targetRect,
         List<Column> columns,
         Column column
     )
@@ -270,8 +288,6 @@ class Table
         {
             targetRect.xMax = parentRect.width;
         }
-
-        return targetRect;
     }
     private void HandleHeaderRowCellClick(Column column)
     {

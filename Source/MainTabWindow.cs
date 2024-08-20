@@ -36,17 +36,17 @@ public class StatsMainTabWindow : MainTabWindow
         //table = new(Columns.list.Values.ToList(), FakeThings.list);
         table = new(
             Columns.list.Values.ToList(),
-            FakeThings.list.Where(t =>
+            ThingAlikes.list.Where(t =>
                 (
-                    t.thingDef.thingCategories == null
-                    || t.thingDef.thingCategories.Count == 0
+                    t.def.thingCategories == null
+                    || t.def.thingCategories.Count == 0
                 )
-                && t.thingDef.designationCategory == null
+                && t.def.designationCategory == null
             ).ToList()
         );
 
         Log.Message(Columns.list.Count);
-        Log.Message(FakeThings.list.Count);
+        Log.Message(ThingAlikes.list.Count);
 
         categoryPicker = new CategoryPicker();
         HandleCategoryChange(categoryPicker.selectedCatDef);
@@ -64,8 +64,8 @@ public class StatsMainTabWindow : MainTabWindow
                     columnSet.columns.Select(
                         columnId => Columns.list[columnId]
                     ).ToList(),
-                    FakeThings.list.Where(
-                        ft => catDef.AllThingDefs().Contains(ft.thingDef)
+                    ThingAlikes.list.Where(
+                        ft => catDef.AllThingDefs().Contains(ft.def)
                     ).ToList()
                 );
             }
@@ -152,7 +152,7 @@ public class StatsMainTabWindow : MainTabWindow
                     break;
             }
 
-            DrawContent(targetRect.CutFromY(currY));
+            DrawContent(targetRect.CutFromY(ref currY));
         }
     }
     private void DrawContent(Rect targetRect)
@@ -167,11 +167,11 @@ public class StatsMainTabWindow : MainTabWindow
         if (categoryPicker.selectedCatDef is ThingCategoryDef selCatDef)
         {
             tablesCache.TryGetValue(selCatDef.defName, out Table table);
-            table?.Draw(targetRect.CutFromX(currX));
+            table?.Draw(targetRect.CutFromX(ref currX));
         }
         else
         {
-            table.Draw(targetRect.CutFromX(currX));
+            table.Draw(targetRect.CutFromX(ref currX));
         }
     }
 }
@@ -232,7 +232,7 @@ static class TitleBar
             }
 
             if (Widgets.ButtonImageFitted(
-                targetRect.CutFromX(currX, buttonWidth),
+                targetRect.CutFromX(ref currX, buttonWidth),
                 TexButton.CloseXSmall
             ))
             {

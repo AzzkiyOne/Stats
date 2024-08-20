@@ -69,8 +69,8 @@ public abstract class Column(
         return Widgets.ButtonInvisible(targetRect);
     }
 
-    public abstract void DrawCellFor(Rect targetRect, FakeThing thing);
-    public abstract void SortRows(List<FakeThing> thingDefs, SortDirection direction);
+    public abstract void DrawCellFor(Rect targetRect, ThingAlike thing);
+    public abstract void SortRows(List<ThingAlike> thingDefs, SortDirection direction);
 }
 
 class StatDefColumn_CacheEntry(
@@ -95,16 +95,16 @@ public class StatDefColumn(
 {
     private readonly StatDef statDef = statDef;
     // Initialize in constructor with FakeThings.list.Count?
-    private readonly Dictionary<FakeThing, StatDefColumn_CacheEntry?> cache = [];
+    private readonly Dictionary<ThingAlike, StatDefColumn_CacheEntry?> cache = [];
 
-    private StatDefColumn_CacheEntry? TryGetValueFor(FakeThing thing)
+    private StatDefColumn_CacheEntry? TryGetValueFor(ThingAlike thing)
     {
         if (cache.ContainsKey(thing))
         {
             return cache[thing];
         }
 
-        var statReq = StatRequest.For(thing.thingDef, thing.stuffDef);
+        var statReq = StatRequest.For(thing.def, thing.stuff);
 
         if (statDef.Worker.ShouldShowFor(statReq) == false)
         {
@@ -151,7 +151,7 @@ public class StatDefColumn(
         return cache[thing] = null;
     }
 
-    public override void DrawCellFor(Rect targetRect, FakeThing thing)
+    public override void DrawCellFor(Rect targetRect, ThingAlike thing)
     {
         var cellValue = TryGetValueFor(thing);
 
@@ -160,7 +160,7 @@ public class StatDefColumn(
             Cell.Label(targetRect, cellValue.valueString);
         }
     }
-    public override void SortRows(List<FakeThing> thingDefs, SortDirection direction)
+    public override void SortRows(List<ThingAlike> thingDefs, SortDirection direction)
     {
         // Something is wrong with sorting.
         thingDefs.Sort((r1, r2) =>
@@ -190,15 +190,15 @@ public class StatDefColumn(
 
 public class LabelColumn() : Column("Label", "Name", minWidth: 250f)
 {
-    public override void DrawCellFor(Rect targetRect, FakeThing thing)
+    public override void DrawCellFor(Rect targetRect, ThingAlike thing)
     {
         //Cell.LabelWithDefIcon(targetRect, thing.icon, thing.label);
         //thing.label + "\n\n" + thing.thingDef.description
         Cell.LabelWithDefIcon(targetRect, thing, thing.label);
-        Cell.Tip(targetRect, thing.thingDef.description);
+        Cell.Tip(targetRect, thing.def.description);
         Cell.DefDialogOnClick(targetRect, thing);
     }
-    public override void SortRows(List<FakeThing> thingDefs, SortDirection direction)
+    public override void SortRows(List<ThingAlike> thingDefs, SortDirection direction)
     {
         if (direction == SortDirection.Ascending)
         {
@@ -230,21 +230,21 @@ public class WeaponRangeColumn() : Column(
     "Stat_Thing_Weapon_Range_Desc".Translate()
 )
 {
-    private readonly Dictionary<FakeThing, StatDefColumn_CacheEntry?> cache = [];
+    private readonly Dictionary<ThingAlike, StatDefColumn_CacheEntry?> cache = [];
 
-    private StatDefColumn_CacheEntry? TryGetValueFor(FakeThing thing)
+    private StatDefColumn_CacheEntry? TryGetValueFor(ThingAlike thing)
     {
         if (cache.ContainsKey(thing))
         {
             return cache[thing];
         }
 
-        if (thing.thingDef.Verbs.Count == 0)
+        if (thing.def.Verbs.Count == 0)
         {
             return cache[thing] = null;
         }
 
-        var value = thing.thingDef.Verbs.First(v => v.isPrimary)?.range;
+        var value = thing.def.Verbs.First(v => v.isPrimary)?.range;
 
         if (value is float _value)
         {
@@ -254,7 +254,7 @@ public class WeaponRangeColumn() : Column(
         return cache[thing] = null;
     }
 
-    public override void DrawCellFor(Rect targetRect, FakeThing thing)
+    public override void DrawCellFor(Rect targetRect, ThingAlike thing)
     {
         var cellValue = TryGetValueFor(thing);
 
@@ -263,5 +263,5 @@ public class WeaponRangeColumn() : Column(
             Cell.Label(targetRect, cellValue.valueString);
         }
     }
-    public override void SortRows(List<FakeThing> thingDefs, SortDirection direction) { }
+    public override void SortRows(List<ThingAlike> thingDefs, SortDirection direction) { }
 }

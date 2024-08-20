@@ -4,10 +4,10 @@ using Verse;
 
 namespace Stats;
 
-static class FakeThings
+static class ThingAlikes
 {
-    static public List<FakeThing> list = [];
-    static FakeThings()
+    static public List<ThingAlike> list = [];
+    static ThingAlikes()
     {
         foreach (var thingDef in DefDatabase<ThingDef>.AllDefs)
         {
@@ -37,27 +37,27 @@ static class FakeThings
                     var label = thingDef.LabelCap + " (" + stuffDef.LabelCap + ")";
                     //var icon = thingDef.GetUIIconForStuff(stuffDef);
 
-                    list.Add(new FakeThing(thingDef, label, stuffDef));
+                    list.Add(new ThingAlike(thingDef, label, stuffDef));
                 }
             }
             else
             {
-                list.Add(new FakeThing(thingDef, thingDef.LabelCap));
+                list.Add(new ThingAlike(thingDef, thingDef.LabelCap));
             }
         }
     }
 }
 
 // Implement GetHashCode (and Equals) jsut in case?
-public class FakeThing(
-    ThingDef thingDef,
+public class ThingAlike(
+    ThingDef def,
     string label,
     //Texture2D icon,
-    ThingDef? stuffDef = null
+    ThingDef? stuff = null
 )
 {
     public readonly string label = label;
-    public readonly ThingDef thingDef = thingDef;
-    public readonly ThingDef? stuffDef = stuffDef;
+    public readonly ThingDef def = def;
+    public readonly ThingDef? stuff = stuff;
     //public readonly Texture2D icon = icon;
 }

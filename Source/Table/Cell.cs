@@ -15,7 +15,7 @@ static class Cell
 
         Widgets.Label(contentRect, text);
     }
-    static public void LabelWithDefIcon(Rect targetRect, FakeThing thing, string text)
+    static public void LabelWithDefIcon(Rect targetRect, ThingAlike thing, string text)
     {
         var contentRect = targetRect.ContractedBy(Table.cellPaddingHor, 0);
         var iconRect = new Rect(
@@ -33,7 +33,7 @@ static class Cell
 
         //Widgets.DrawTextureFitted(iconRect, icon, 0.9f);
         // This is very expensive.
-        Widgets.DefIcon(iconRect, thing.thingDef, thing.stuffDef);
+        Widgets.DefIcon(iconRect, thing.def, thing.stuff);
         Widgets.Label(textRect, text);
     }
     static public void Tip(Rect targetRect, string text)
@@ -43,17 +43,17 @@ static class Cell
             TooltipHandler.TipRegion(targetRect, new TipSignal(text));
         }
     }
-    static public void DefDialogOnClick(Rect targetRect, FakeThing thing)
+    static public void DefDialogOnClick(Rect targetRect, ThingAlike thing)
     {
         Widgets.DrawHighlightIfMouseover(targetRect);
 
         if (Widgets.ButtonInvisible(targetRect))
         {
-            var dialog = new Dialog_InfoCard(thing.thingDef);
+            var dialog = new Dialog_InfoCard(thing.def);
 
-            if (thing.stuffDef != null)
+            if (thing.stuff != null)
             {
-                dialogInfoCardStuffField.SetValue(dialog, thing.stuffDef);
+                dialogInfoCardStuffField.SetValue(dialog, thing.stuff);
             }
 
             Find.WindowStack.Add(dialog);
