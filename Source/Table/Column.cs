@@ -9,7 +9,7 @@ namespace Stats;
 
 static class Columns
 {
-    static public readonly Dictionary<string, Column> list = [];
+    static public readonly Dictionary<string, Column<ThingAlike>> list = [];
     static Columns()
     {
         var labelColumn = new LabelColumn();
@@ -27,7 +27,7 @@ static class Columns
     }
 }
 
-public abstract class Column(
+public abstract class Column<RowType>(
     string id,
     string? label = null,
     string? description = null,
@@ -49,7 +49,7 @@ public abstract class Column(
             var rotationAngle = sortDirection == SortDirection.Ascending ? -90f : 90f;
 
             Widgets.DrawTextureRotated(
-                targetRect.RightPartPixels(Table.headersRowHeight),
+                targetRect.RightPartPixels(Table<ThingAlike>.headersRowHeight),
                 TexButton.Reveal,
                 rotationAngle
             );
@@ -69,50 +69,76 @@ public abstract class Column(
         return Widgets.ButtonInvisible(targetRect);
     }
 
-    public abstract void DrawCellFor(Rect targetRect, ThingAlike thing);
-    public abstract void SortRows(List<ThingAlike> thingDefs, SortDirection direction);
+    public abstract void DrawCellFor(Rect targetRect, RowType row);
+    public abstract void SortRows(List<RowType> rows, SortDirection direction);
 }
 
-class StatDefColumn_CacheEntry(
-    float valueAbs,
-    string? valueString = null
-)
+public abstract class Column<RowType, ValueType>(
+    string id,
+    string? label = null,
+    string? description = null,
+    float? minWidth = null
+) : Column<RowType>(
+    id,
+    label,
+    description,
+    minWidth
+) where ValueType : IComparable<ValueType>
 {
-    public readonly float valueAbs = valueAbs;
-    public readonly string valueString = valueString ?? "";
+    // Initialize in constructor with ThingAlikes count?
+    private readonly Dictionary<RowType, AbsCell<ValueType>> cellsCache = [];
+
+    private AbsCell<ValueType> GetCell(RowType row)
+    {
+        if (!cellsCache.ContainsKey(row))
+        {
+            cellsCache[row] = CreateCell(row);
+        }
+
+        return cellsCache[row];
+    }
+
+    public override void DrawCellFor(Rect targetRect, RowType row)
+    {
+        GetCell(row).Draw(targetRect);
+    }
+    public override void SortRows(List<RowType> rows, SortDirection direction)
+    {
+        rows.Sort((r1, r2) =>
+        {
+            if (direction == SortDirection.Ascending)
+            {
+                return GetCell(r1).CompareTo(GetCell(r2));
+            }
+            else
+            {
+                return GetCell(r2).CompareTo(GetCell(r1));
+            }
+        });
+    }
+
+    protected abstract AbsCell<ValueType> CreateCell(RowType row);
 }
 
 public class StatDefColumn(
-    StatDef statDef,
-    string? label = null,
-    float? minWidth = null
-) : Column(
+    StatDef statDef
+) : Column<ThingAlike, float>(
     statDef.defName,
-    label ?? statDef.LabelCap,
-    statDef.description,
-    minWidth
+    statDef.LabelCap,
+    statDef.description
 )
 {
-    private readonly StatDef statDef = statDef;
-    // Initialize in constructor with FakeThings.list.Count?
-    private readonly Dictionary<ThingAlike, StatDefColumn_CacheEntry?> cache = [];
-
-    private StatDefColumn_CacheEntry? TryGetValueFor(ThingAlike thing)
+    protected override AbsCell<float> CreateCell(ThingAlike thing)
     {
-        if (cache.ContainsKey(thing))
-        {
-            return cache[thing];
-        }
-
         var statReq = StatRequest.For(thing.def, thing.stuff);
 
         if (statDef.Worker.ShouldShowFor(statReq) == false)
         {
-            return cache[thing] = null;
+            return NumCell.Empty;
         }
 
-        float? valueAbs = null;
-        string? valueString = null;
+        float valueAbs = float.NaN;
+        string valueString = "";
         //string? valueExplanation = null;
 
         // Maybe add some indication that there was an exception.
@@ -124,11 +150,16 @@ public class StatDefColumn(
         {
         }
 
-        if (valueAbs is float _valueAbs)
+        if (!float.IsNaN(valueAbs))
         {
             try
             {
-                valueString = statDef.Worker.GetStatDrawEntryLabel(statDef, _valueAbs, ToStringNumberSense.Undefined, statReq);
+                valueString = statDef.Worker.GetStatDrawEntryLabel(
+                    statDef,
+                    valueAbs,
+                    ToStringNumberSense.Undefined,
+                    statReq
+                );
             }
             catch
             {
@@ -145,123 +176,45 @@ public class StatDefColumn(
             //{
             //}
 
-            return cache[thing] = new StatDefColumn_CacheEntry(_valueAbs, valueString);
+            return new NumCell(
+                valueAbs,
+                string.IsNullOrEmpty(valueString) ? valueAbs + "" : valueString
+            );
         }
 
-        return cache[thing] = null;
-    }
-
-    public override void DrawCellFor(Rect targetRect, ThingAlike thing)
-    {
-        var cellValue = TryGetValueFor(thing);
-
-        if (cellValue != null)
-        {
-            Cell.Label(targetRect, cellValue.valueString);
-        }
-    }
-    public override void SortRows(List<ThingAlike> thingDefs, SortDirection direction)
-    {
-        // Something is wrong with sorting.
-        thingDefs.Sort((r1, r2) =>
-        {
-            var val1 = TryGetValueFor(r1)?.valueAbs;
-            var val2 = TryGetValueFor(r2)?.valueAbs;
-
-            if (val1 == val2)
-            {
-                return 0;
-            }
-            else if (val1 == null || val2 == null)
-            {
-                return -1;
-            }
-            else if (direction == SortDirection.Ascending)
-            {
-                return val1 > val2 ? 1 : -1;
-            }
-            else
-            {
-                return val1 < val2 ? 1 : -1;
-            }
-        });
+        return NumCell.Empty;
     }
 }
 
-public class LabelColumn() : Column("Label", "Name", minWidth: 250f)
+public class LabelColumn() : Column<ThingAlike, string>("Label", "Name", minWidth: 250f)
 {
-    public override void DrawCellFor(Rect targetRect, ThingAlike thing)
+    protected override AbsCell<string> CreateCell(ThingAlike thing)
     {
-        //Cell.LabelWithDefIcon(targetRect, thing.icon, thing.label);
-        //thing.label + "\n\n" + thing.thingDef.description
-        Cell.LabelWithDefIcon(targetRect, thing, thing.label);
-        Cell.Tip(targetRect, thing.def.description);
-        Cell.DefDialogOnClick(targetRect, thing);
-    }
-    public override void SortRows(List<ThingAlike> thingDefs, SortDirection direction)
-    {
-        if (direction == SortDirection.Ascending)
-        {
-            thingDefs.Sort((r1, r2) =>
-            {
-                var val1 = r1.label;
-                var val2 = r2.label;
-
-                return val1.CompareTo(val2);
-            });
-        }
-        else
-        {
-            thingDefs.Sort((r1, r2) =>
-            {
-                var val1 = r1.label;
-                var val2 = r2.label;
-
-                return val2.CompareTo(val1);
-            });
-        }
+        return new StrCell(thing.label);
     }
 }
 
-// It is basically StatDefColumn
-public class WeaponRangeColumn() : Column(
+public class WeaponRangeColumn() : Column<ThingAlike, float>(
     "WeaponRange",
     "Range".Translate(),
     "Stat_Thing_Weapon_Range_Desc".Translate()
 )
 {
-    private readonly Dictionary<ThingAlike, StatDefColumn_CacheEntry?> cache = [];
-
-    private StatDefColumn_CacheEntry? TryGetValueFor(ThingAlike thing)
+    protected override AbsCell<float> CreateCell(ThingAlike thing)
     {
-        if (cache.ContainsKey(thing))
+        if (
+            thing.def.IsRangedWeapon
+            && thing.def.Verbs.Count > 0
+        )
         {
-            return cache[thing];
+            var value = thing.def.Verbs.First(v => v.isPrimary)?.range;
+
+            if (value is float _value)
+            {
+                return new NumCell(_value, _value + "");
+            }
         }
 
-        if (thing.def.Verbs.Count == 0)
-        {
-            return cache[thing] = null;
-        }
-
-        var value = thing.def.Verbs.First(v => v.isPrimary)?.range;
-
-        if (value is float _value)
-        {
-            return cache[thing] = new StatDefColumn_CacheEntry(_value, value + "");
-        }
-
-        return cache[thing] = null;
+        return NumCell.Empty;
     }
-
-    public override void DrawCellFor(Rect targetRect, ThingAlike thing)
-    {
-        var cellValue = TryGetValueFor(thing);
-
-        if (cellValue != null)
-        {
-            Cell.Label(targetRect, cellValue.valueString);
-        }
-    }
-    public override void SortRows(List<ThingAlike> thingDefs, SortDirection direction) { }
 }

@@ -9,20 +9,19 @@ using Verse;
 
 namespace Stats;
 
-class Table
+class Table<RowType>
 {
     public Vector2 scrollPosition = new();
-    public readonly List<Column> middleColumns = [];
-    public readonly List<Column> pinnedColumns = [];
-    private readonly List<ThingAlike> rows;
+    public readonly List<Column<RowType>> middleColumns = [];
+    public readonly List<Column<RowType>> pinnedColumns = [];
+    private readonly List<RowType> rows;
     private readonly float middleColumnsWidth = 0f;
     private readonly float pinnedColumnsWidth = 0f;
     private readonly float minRowWidth = 0f;
     private readonly float totalRowsHeight = 0f;
     private int? mouseOverRowIndex = null;
-    private Column sortColumn;
+    private Column<RowType> sortColumn;
     private SortDirection sortDirection = SortDirection.Ascending;
-    private bool dragInProgress = false;
 
     public const float rowHeight = 30f;
     public const float headersRowHeight = rowHeight;
@@ -30,7 +29,7 @@ class Table
 
     public static Color columnSeparatorLineColor = new(1f, 1f, 1f, 0.04f);
 
-    public Table(List<Column> columns, List<ThingAlike> rows)
+    public Table(List<Column<RowType>> columns, List<RowType> rows)
     {
         this.rows = rows;
 
@@ -59,7 +58,8 @@ class Table
         totalRowsHeight = rowHeight * rows.Count;
     }
 
-    // There is an issue where scroll area is smaller than total columns width.
+    // There might be an issue where scroll area is smaller than total columns width.
+    // Probably fixed, but should check.
     public void Draw(Rect targetRect)
     {
         using (new GUIUtils.GameFontContext(GameFont.Small))
@@ -157,7 +157,7 @@ class Table
     }
     private void DrawHeaderColumns(
         Rect targetRect,
-        List<Column> columns,
+        List<Column<RowType>> columns,
         Vector2? scrollPosition = null
     )
     {
@@ -198,7 +198,11 @@ class Table
             scrollPosition
         );
     }
-    private void DrawRows(Rect targetRect, List<Column> columns, Vector2 scrollPosition)
+    private void DrawRows(
+        Rect targetRect,
+        List<Column<RowType>> columns,
+        Vector2 scrollPosition
+    )
     {
         Widgets.BeginGroup(targetRect);
 
@@ -277,8 +281,8 @@ class Table
     private void AdjustColumnWidthIfLastColumn(
         Rect parentRect,
         ref Rect targetRect,
-        List<Column> columns,
-        Column column
+        List<Column<RowType>> columns,
+        Column<RowType> column
     )
     {
         if (
@@ -289,7 +293,7 @@ class Table
             targetRect.xMax = parentRect.width;
         }
     }
-    private void HandleHeaderRowCellClick(Column column)
+    private void HandleHeaderRowCellClick(Column<RowType> column)
     {
         if (column == null)
         {

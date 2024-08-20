@@ -11,8 +11,8 @@ public class StatsMainTabWindow : MainTabWindow
     protected override float Margin { get => 1f; }
 
     private readonly CategoryPicker categoryPicker;
-    private readonly Dictionary<string, Table> tablesCache = [];
-    private readonly Table table;
+    private readonly Dictionary<string, Table<ThingAlike>> tablesCache = [];
+    private readonly Table<ThingAlike> table;
     private Rect? preCloseRect = null;
     private Rect? preExpandRect = null;
     private bool isExpanded => preExpandRect != null;
@@ -60,7 +60,7 @@ public class StatsMainTabWindow : MainTabWindow
 
             if (columnSet != null)
             {
-                tablesCache[catDef.defName] = new Table(
+                tablesCache[catDef.defName] = new Table<ThingAlike>(
                     columnSet.columns.Select(
                         columnId => Columns.list[columnId]
                     ).ToList(),
@@ -166,7 +166,7 @@ public class StatsMainTabWindow : MainTabWindow
 
         if (categoryPicker.selectedCatDef is ThingCategoryDef selCatDef)
         {
-            tablesCache.TryGetValue(selCatDef.defName, out Table table);
+            tablesCache.TryGetValue(selCatDef.defName, out Table<ThingAlike> table);
             table?.Draw(targetRect.CutFromX(ref currX));
         }
         else
