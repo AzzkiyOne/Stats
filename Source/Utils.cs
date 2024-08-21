@@ -1,12 +1,13 @@
 ﻿using System;
-using UnityEngine;
+using System.Reflection;
 using Verse;
+using UE = UnityEngine;
 
-namespace Stats;
+namespace Stats.Utils;
 
-static class GUIUtils
+static class GUI
 {
-    static public void DrawLineVertical(float x, float y, float length, Color color)
+    static public void DrawLineVertical(float x, float y, float length, UE::Color color)
     {
         using (new ColorContext(color))
         {
@@ -28,8 +29,8 @@ static class GUIUtils
     }
     public readonly record struct TextAnchorContext : IDisposable
     {
-        private readonly TextAnchor prevAnchor;
-        public TextAnchorContext(TextAnchor anchor)
+        private readonly UE::TextAnchor prevAnchor;
+        public TextAnchorContext(UE::TextAnchor anchor)
         {
             prevAnchor = Text.Anchor;
             Text.Anchor = anchor;
@@ -41,15 +42,15 @@ static class GUIUtils
     }
     public readonly record struct ColorContext : IDisposable
     {
-        private readonly Color prevColor;
-        public ColorContext(Color color)
+        private readonly UE::Color prevColor;
+        public ColorContext(UE::Color color)
         {
-            prevColor = GUI.color;
-            GUI.color = color;
+            prevColor = UE::GUI.color;
+            UE::GUI.color = color;
         }
         public void Dispose()
         {
-            GUI.color = prevColor;
+            UE::GUI.color = prevColor;
         }
     }
     public readonly record struct TextWordWrapContext : IDisposable
@@ -69,21 +70,21 @@ static class GUIUtils
 
 static class Debug
 {
-    static public void TryDrawUIDebugInfo(Rect targetRect, string text)
+    static public void TryDrawUIDebugInfo(UE::Rect targetRect, string text)
     {
         if (!InDebugMode)
         {
             return;
         }
 
-        using (new GUIUtils.GameFontContext(GameFont.Small))
-        using (new GUIUtils.TextAnchorContext(TextAnchor.MiddleCenter))
+        using (new GUI.GameFontContext(GameFont.Small))
+        using (new GUI.TextAnchorContext(UE::TextAnchor.MiddleCenter))
         {
             var textSize = Text.CalcSize(text);
             const float padding = 5f;
             var rectWidth = textSize.x + padding + 10f;
             var rectHeight = textSize.y + padding;
-            var rect = new Rect(
+            var rect = new UE::Rect(
                 (targetRect.width - rectWidth) / 2,
                 (targetRect.height - rectHeight) / 2,
                 rectWidth,
@@ -94,10 +95,16 @@ static class Debug
             Widgets.Label(rect.ContractedBy(padding), text);
         }
     }
-    static public bool InDebugMode => Event.current.alt;
+    static public bool InDebugMode => UE::Event.current.alt;
 }
 
 public interface IDrawable
 {
-    public void Draw(Rect targetRect);
+    public void Draw(UE::Rect targetRect);
+}
+
+public static class Reflection
+{
+    public static readonly FieldInfo dialogInfoCardStuffField = typeof(Dialog_InfoCard)
+        .GetField("stuff", BindingFlags.Instance | BindingFlags.NonPublic);
 }

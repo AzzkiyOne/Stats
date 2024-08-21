@@ -63,8 +63,8 @@ class Table<RowType>
     // Probably fixed, but should check.
     public void Draw(Rect targetRect)
     {
-        using (new GUIUtils.GameFontContext(GameFont.Small))
-        using (new GUIUtils.TextAnchorContext(TextAnchor.MiddleLeft))
+        using (new Utils.GUI.GameFontContext(GameFont.Small))
+        using (new Utils.GUI.TextAnchorContext(TextAnchor.MiddleLeft))
         {
             var contentRect = new Rect(
                 0f,
@@ -113,7 +113,7 @@ class Table<RowType>
             DrawBody(bodyRect);
 
             // Separators
-            GUIUtils.DrawLineVertical(
+            Utils.GUI.DrawLineVertical(
                 scrollPosition.x,
                 scrollPosition.y,
                 targetRect.height,
@@ -125,7 +125,7 @@ class Table<RowType>
                 targetRect.width,
                 StatsMainTabWindow.borderLineColor
             );
-            GUIUtils.DrawLineVertical(
+            Utils.GUI.DrawLineVertical(
                 pinnedColumnsWidth + scrollPosition.x,
                 scrollPosition.y,
                 targetRect.height,
@@ -274,7 +274,7 @@ class Table<RowType>
             debug_rowsDrawn++;
         }
 
-        Debug.TryDrawUIDebugInfo(targetRect, debug_rowsDrawn + "/" + debug_columnsDrawn);
+        Utils.Debug.TryDrawUIDebugInfo(targetRect, debug_rowsDrawn + "/" + debug_columnsDrawn);
 
         Widgets.EndGroup();
     }
@@ -312,10 +312,10 @@ class Table<RowType>
     {
         rows.Sort((r1, r2) =>
         {
-            var r1cv = sortColumn.GetCellFor(r1).value;
-            var r2cv = sortColumn.GetCellFor(r2).value;
+            var r1c = sortColumn.GetCellFor(r1);
+            var r2c = sortColumn.GetCellFor(r2);
 
-            return r1cv.CompareTo(r2cv) * (int)sortDirection;
+            return r1c.CompareTo(r2c) * (int)sortDirection;
         });
     }
 }

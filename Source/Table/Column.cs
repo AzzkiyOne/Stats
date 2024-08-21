@@ -105,11 +105,11 @@ public class StatDefColumn(
 
         if (statDef.Worker.ShouldShowFor(statReq) == false)
         {
-            return NumCell.Empty;
+            return Cell.Empty;
         }
 
-        float valueAbs = float.NaN;
-        string valueString = "";
+        float? valueAbs = null;
+        string? valueString = null;
         //string? valueExplanation = null;
 
         // Maybe add some indication that there was an exception.
@@ -121,13 +121,13 @@ public class StatDefColumn(
         {
         }
 
-        if (!float.IsNaN(valueAbs))
+        if (valueAbs is float _valueAbs)
         {
             try
             {
                 valueString = statDef.Worker.GetStatDrawEntryLabel(
                     statDef,
-                    valueAbs,
+                    _valueAbs,
                     ToStringNumberSense.Undefined,
                     statReq
                 );
@@ -147,13 +147,10 @@ public class StatDefColumn(
             //{
             //}
 
-            return new NumCell(
-                valueAbs,
-                string.IsNullOrEmpty(valueString) ? valueAbs + "" : valueString
-            );
+            return new Cell(valueAbs, valueString);
         }
 
-        return NumCell.Empty;
+        return Cell.Empty;
     }
 }
 
@@ -161,7 +158,12 @@ public class LabelColumn() : Column<ThingAlike>("Label", "Name", minWidth: 250f)
 {
     protected override ICell CreateCell(ThingAlike thing)
     {
-        return new StrCell(thing.label);
+        return new Cell(thing.label)
+        {
+            def = thing.def,
+            stuff = thing.stuff,
+            tip = thing.def.description
+        };
     }
 }
 
@@ -182,10 +184,10 @@ public class WeaponRangeColumn() : Column<ThingAlike>(
 
             if (value is float _value)
             {
-                return new NumCell(_value, _value + "");
+                return new Cell(_value);
             }
         }
 
-        return NumCell.Empty;
+        return Cell.Empty;
     }
 }

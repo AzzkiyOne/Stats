@@ -134,7 +134,7 @@ public class StatsMainTabWindow : MainTabWindow
         var titleBarText = categoryPicker.selectedCatDef?.LabelCap ?? "All";
         var currY = targetRect.y;
 
-        using (new GUIUtils.TextWordWrapContext(false))
+        using (new Utils.GUI.TextWordWrapContext(false))
         {
             switch (TitleBar.Draw(
                 targetRect.CutFromY(ref currY, titleBarHeight),
@@ -192,7 +192,7 @@ static class TitleBar
         var currX = targetRect.x;
         TitleBarEvent? Event = null;
 
-        using (new GUIUtils.TextAnchorContext(TextAnchor.MiddleLeft))
+        using (new Utils.GUI.TextAnchorContext(TextAnchor.MiddleLeft))
         {
             Widgets.DrawLightHighlight(targetRect);
 
