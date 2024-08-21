@@ -5,22 +5,25 @@ using Verse;
 
 namespace Stats;
 
-public abstract class AbsCell<T>(T value) : IComparable<AbsCell<T>> where T : IComparable<T>
+public interface ICell :
+    IDrawable
 {
-    public T value { get; } = value;
+    public IComparable value { get; }
+}
+
+public abstract class Cell(IComparable value) :
+    ICell
+{
+    public IComparable value { get; } = value;
     public virtual void Draw(Rect targetRect)
     {
         var contentRect = targetRect.ContractedBy(Table<ThingAlike>.cellPaddingHor, 0);
 
         Widgets.Label(contentRect, ToString());
     }
-    public int CompareTo(AbsCell<T> other)
-    {
-        return value.CompareTo(other.value);
-    }
 }
 
-public class NumCell(float value, string valueStr) : AbsCell<float>(value)
+public class NumCell(float value, string valueStr) : Cell(value)
 {
     public override string ToString()
     {
@@ -30,17 +33,18 @@ public class NumCell(float value, string valueStr) : AbsCell<float>(value)
     public static readonly NumCell Empty = new(float.NaN, "");
 }
 
-public class StrCell(string value) : AbsCell<string>(value)
+// Do we still need this?
+public class StrCell(string _value) : Cell(_value)
 {
     public override string ToString()
     {
-        return value;
+        return _value;
     }
 
     public static readonly StrCell Empty = new("");
 }
 
-static class Cell
+static class CellWidgets
 {
     private static readonly FieldInfo dialogInfoCardStuffField = typeof(Dialog_InfoCard)
         .GetField("stuff", BindingFlags.Instance | BindingFlags.NonPublic);

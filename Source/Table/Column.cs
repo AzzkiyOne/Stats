@@ -9,7 +9,7 @@ namespace Stats;
 
 static class Columns
 {
-    static public readonly Dictionary<string, Column<ThingAlike>> list = [];
+    static public readonly Dictionary<string, IColumn<ThingAlike>> list = [];
     static Columns()
     {
         var labelColumn = new LabelColumn();
@@ -27,22 +27,32 @@ static class Columns
     }
 }
 
+public interface IColumn<RowType>
+{
+    public string id { get; }
+    public float minWidth { get; }
+    public bool Draw(Rect targetRect, SortDirection? sortDirection = null);
+    public ICell GetCellFor(RowType row);
+}
+
 public abstract class Column<RowType>(
     string id,
     string? label = null,
     string? description = null,
     float? minWidth = null
-)
+) : IColumn<RowType>
 {
-    public readonly string id = id;
+    public string id { get; } = id;
     public readonly string label = label ?? "";
     public readonly string description = description ?? "";
-    public readonly float minWidth = minWidth ?? 100f;
+    public float minWidth { get; } = minWidth ?? 100f;
+    // Initialize in constructor with ThingAlikes count?
+    private readonly Dictionary<RowType, ICell> cellsCache = [];
 
     public bool Draw(Rect targetRect, SortDirection? sortDirection = null)
     {
         //Widgets.DrawHighlight(targetRect);
-        Cell.Label(targetRect, label);
+        CellWidgets.Label(targetRect, label);
 
         if (sortDirection != null)
         {
@@ -68,27 +78,7 @@ public abstract class Column<RowType>(
 
         return Widgets.ButtonInvisible(targetRect);
     }
-
-    public abstract void DrawCellFor(Rect targetRect, RowType row);
-    public abstract void SortRows(List<RowType> rows, SortDirection direction);
-}
-
-public abstract class Column<RowType, ValueType>(
-    string id,
-    string? label = null,
-    string? description = null,
-    float? minWidth = null
-) : Column<RowType>(
-    id,
-    label,
-    description,
-    minWidth
-) where ValueType : IComparable<ValueType>
-{
-    // Initialize in constructor with ThingAlikes count?
-    private readonly Dictionary<RowType, AbsCell<ValueType>> cellsCache = [];
-
-    private AbsCell<ValueType> GetCell(RowType row)
+    public ICell GetCellFor(RowType row)
     {
         if (!cellsCache.ContainsKey(row))
         {
@@ -98,37 +88,18 @@ public abstract class Column<RowType, ValueType>(
         return cellsCache[row];
     }
 
-    public override void DrawCellFor(Rect targetRect, RowType row)
-    {
-        GetCell(row).Draw(targetRect);
-    }
-    public override void SortRows(List<RowType> rows, SortDirection direction)
-    {
-        rows.Sort((r1, r2) =>
-        {
-            if (direction == SortDirection.Ascending)
-            {
-                return GetCell(r1).CompareTo(GetCell(r2));
-            }
-            else
-            {
-                return GetCell(r2).CompareTo(GetCell(r1));
-            }
-        });
-    }
-
-    protected abstract AbsCell<ValueType> CreateCell(RowType row);
+    protected abstract ICell CreateCell(RowType row);
 }
 
 public class StatDefColumn(
     StatDef statDef
-) : Column<ThingAlike, float>(
+) : Column<ThingAlike>(
     statDef.defName,
     statDef.LabelCap,
     statDef.description
 )
 {
-    protected override AbsCell<float> CreateCell(ThingAlike thing)
+    protected override ICell CreateCell(ThingAlike thing)
     {
         var statReq = StatRequest.For(thing.def, thing.stuff);
 
@@ -186,21 +157,21 @@ public class StatDefColumn(
     }
 }
 
-public class LabelColumn() : Column<ThingAlike, string>("Label", "Name", minWidth: 250f)
+public class LabelColumn() : Column<ThingAlike>("Label", "Name", minWidth: 250f)
 {
-    protected override AbsCell<string> CreateCell(ThingAlike thing)
+    protected override ICell CreateCell(ThingAlike thing)
     {
         return new StrCell(thing.label);
     }
 }
 
-public class WeaponRangeColumn() : Column<ThingAlike, float>(
+public class WeaponRangeColumn() : Column<ThingAlike>(
     "WeaponRange",
     "Range".Translate(),
     "Stat_Thing_Weapon_Range_Desc".Translate()
 )
 {
-    protected override AbsCell<float> CreateCell(ThingAlike thing)
+    protected override ICell CreateCell(ThingAlike thing)
     {
         if (
             thing.def.IsRangedWeapon

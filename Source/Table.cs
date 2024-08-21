@@ -12,15 +12,15 @@ namespace Stats;
 class Table<RowType>
 {
     public Vector2 scrollPosition = new();
-    public readonly List<Column<RowType>> middleColumns = [];
-    public readonly List<Column<RowType>> pinnedColumns = [];
+    public readonly List<IColumn<RowType>> middleColumns = [];
+    public readonly List<IColumn<RowType>> pinnedColumns = [];
     private readonly List<RowType> rows;
     private readonly float middleColumnsWidth = 0f;
     private readonly float pinnedColumnsWidth = 0f;
     private readonly float minRowWidth = 0f;
     private readonly float totalRowsHeight = 0f;
     private int? mouseOverRowIndex = null;
-    private Column<RowType> sortColumn;
+    private IColumn<RowType> sortColumn;
     private SortDirection sortDirection = SortDirection.Ascending;
 
     public const float rowHeight = 30f;
@@ -29,14 +29,15 @@ class Table<RowType>
 
     public static Color columnSeparatorLineColor = new(1f, 1f, 1f, 0.04f);
 
-    public Table(List<Column<RowType>> columns, List<RowType> rows)
+    public Table(List<IColumn<RowType>> columns, List<RowType> rows)
     {
         this.rows = rows;
 
         if (columns[0] != null)
         {
             sortColumn = columns[0];
-            sortColumn.SortRows(rows, sortDirection);
+
+            SortRows();
         }
 
         foreach (var column in columns)
@@ -157,7 +158,7 @@ class Table<RowType>
     }
     private void DrawHeaderColumns(
         Rect targetRect,
-        List<Column<RowType>> columns,
+        List<IColumn<RowType>> columns,
         Vector2? scrollPosition = null
     )
     {
@@ -200,7 +201,7 @@ class Table<RowType>
     }
     private void DrawRows(
         Rect targetRect,
-        List<Column<RowType>> columns,
+        List<IColumn<RowType>> columns,
         Vector2 scrollPosition
     )
     {
@@ -247,7 +248,7 @@ class Table<RowType>
 
                 AdjustColumnWidthIfLastColumn(targetRect, ref cellRect, columns, column);
 
-                column.DrawCellFor(cellRect, row);
+                column.GetCellFor(row).Draw(cellRect);
 
                 currX += cellRect.width;
                 debug_columnsDrawn++;
@@ -281,8 +282,8 @@ class Table<RowType>
     private void AdjustColumnWidthIfLastColumn(
         Rect parentRect,
         ref Rect targetRect,
-        List<Column<RowType>> columns,
-        Column<RowType> column
+        List<IColumn<RowType>> columns,
+        IColumn<RowType> column
     )
     {
         if (
@@ -293,36 +294,34 @@ class Table<RowType>
             targetRect.xMax = parentRect.width;
         }
     }
-    private void HandleHeaderRowCellClick(Column<RowType> column)
+    private void HandleHeaderRowCellClick(IColumn<RowType> column)
     {
-        if (column == null)
+        if (column == sortColumn)
         {
-            return;
-        }
-
-        if (sortColumn == column)
-        {
-            if (sortDirection == SortDirection.Ascending)
-            {
-                sortDirection = SortDirection.Descending;
-            }
-            else
-            {
-                sortDirection = SortDirection.Ascending;
-            }
+            sortDirection = (SortDirection)((int)sortDirection * -1);
         }
         else
         {
-            sortColumn = column;
             sortDirection = SortDirection.Ascending;
+            sortColumn = column;
         }
 
-        sortColumn.SortRows(rows, sortDirection);
+        SortRows();
+    }
+    private void SortRows()
+    {
+        rows.Sort((r1, r2) =>
+        {
+            var r1cv = sortColumn.GetCellFor(r1).value;
+            var r2cv = sortColumn.GetCellFor(r2).value;
+
+            return r1cv.CompareTo(r2cv) * (int)sortDirection;
+        });
     }
 }
 
 public enum SortDirection
 {
-    Ascending,
-    Descending,
+    Ascending = 1,
+    Descending = -1,
 }

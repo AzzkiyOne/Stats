@@ -96,3 +96,8 @@ static class Debug
     }
     static public bool InDebugMode => Event.current.alt;
 }
+
+public interface IDrawable
+{
+    public void Draw(Rect targetRect);
+}
