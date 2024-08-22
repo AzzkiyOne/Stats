@@ -8,27 +8,27 @@ using Verse;
 
 namespace Stats;
 
-class Table<RowType>
+class GenTable<ColumnType, RowType> where ColumnType : class, IGenTableColumn<RowType>
 {
     public Vector2 scrollPosition = new();
-    public readonly List<IColumn<RowType>> middleColumns = [];
-    public readonly List<IColumn<RowType>> pinnedColumns = [];
+    public readonly List<ColumnType> middleColumns = [];
+    public readonly List<ColumnType> pinnedColumns = [];
     private readonly List<RowType> rows;
     private readonly float middleColumnsWidth = 0f;
     private readonly float pinnedColumnsWidth = 0f;
     private readonly float minRowWidth = 0f;
     private readonly float totalRowsHeight = 0f;
     private int? mouseOverRowIndex = null;
-    private IColumn<RowType>? sortColumn;
+    private ColumnType? sortColumn;
     private SortDirection sortDirection = SortDirection.Ascending;
 
     public const float rowHeight = 30f;
     public const float headersRowHeight = rowHeight;
-    public const float cellPaddingHor = GenUI.Pad;
+    //public const float cellPaddingHor = GenUI.Pad;
 
     public static Color columnSeparatorLineColor = new(1f, 1f, 1f, 0.04f);
 
-    public Table(List<IColumn<RowType>> columns, List<RowType> rows)
+    public GenTable(List<ColumnType> columns, List<RowType> rows)
     {
         this.rows = rows;
 
@@ -37,16 +37,14 @@ class Table<RowType>
             sortColumn = columns[0];
 
             SortRows();
+
+            pinnedColumns.Add(columns[0]);
+            pinnedColumnsWidth += columns[0].minWidth;
         }
 
         foreach (var column in columns)
         {
-            if (column.id == "Label")
-            {
-                pinnedColumns.Add(column);
-                pinnedColumnsWidth += column.minWidth;
-            }
-            else
+            if (!pinnedColumns.Contains(column))
             {
                 middleColumns.Add(column);
                 middleColumnsWidth += column.minWidth;
@@ -157,7 +155,7 @@ class Table<RowType>
     }
     private void DrawHeaderColumns(
         Rect targetRect,
-        List<IColumn<RowType>> columns,
+        List<ColumnType> columns,
         Vector2? scrollPosition = null
     )
     {
@@ -171,7 +169,7 @@ class Table<RowType>
 
             AdjustColumnWidthIfLastColumn(targetRect, ref cellRect, columns, column);
 
-            if (column.Draw(cellRect, sortColumn == column ? sortDirection : null))
+            if (DrawHeaderCell(cellRect, column))
             {
                 HandleHeaderRowCellClick(column);
             }
@@ -180,6 +178,35 @@ class Table<RowType>
         }
 
         Widgets.EndGroup();
+    }
+    private bool DrawHeaderCell(Rect targetRect, ColumnType column)
+    {
+        //Widgets.DrawHighlight(targetRect);
+        Widgets.Label(targetRect.ContractedBy(GenUI.Pad, 0), column.label);
+
+        if (sortColumn == column)
+        {
+            var rotationAngle = (int)sortDirection * -90f;
+
+            Widgets.DrawTextureRotated(
+                targetRect.RightPartPixels(targetRect.height),
+                TexButton.Reveal,
+                rotationAngle
+            );
+        }
+
+        //GUIUtils.DrawLineVertical(
+        //    targetRect.xMax,
+        //    targetRect.y,
+        //    targetRect.height,
+        //    Table.columnSeparatorLineColor
+        //);
+
+        TooltipHandler.TipRegion(targetRect, new TipSignal(column.description));
+
+        Widgets.DrawHighlightIfMouseover(targetRect);
+
+        return Widgets.ButtonInvisible(targetRect);
     }
     private void DrawBody(Rect targetRect)
     {
@@ -200,7 +227,7 @@ class Table<RowType>
     }
     private void DrawRows(
         Rect targetRect,
-        List<IColumn<RowType>> columns,
+        List<ColumnType> columns,
         Vector2 scrollPosition
     )
     {
@@ -247,7 +274,7 @@ class Table<RowType>
 
                 AdjustColumnWidthIfLastColumn(targetRect, ref cellRect, columns, column);
 
-                column.GetCellFor(row).Draw(cellRect);
+                DrawRowCell(cellRect, column, row);
 
                 currX += cellRect.width;
                 debug_columnsDrawn++;
@@ -277,12 +304,49 @@ class Table<RowType>
 
         Widgets.EndGroup();
     }
+    public void DrawRowCell(Rect targetRect, ColumnType column, RowType row)
+    {
+        var (label, tip, def, stuff) = column.GetCellDrawData(row);
+
+        if (label == "")
+        {
+            return;
+        }
+
+        var contentRect = targetRect.ContractedBy(GenUI.Pad, 0);
+        var currX = contentRect.x;
+
+        if (def is not null)
+        {
+            // This is very expensive.
+            Widgets.DefIcon(contentRect.CutFromX(ref currX, contentRect.height), def, stuff);
+
+            currX += GenUI.Pad;
+
+            Widgets.DrawHighlightIfMouseover(targetRect);
+
+            if (Widgets.ButtonInvisible(targetRect))
+            {
+                GUIWidgets.DefInfoDialog(def, stuff);
+            }
+        }
+
+        Widgets.Label(contentRect.CutFromX(ref currX), label);
+
+        if (
+            //Event.current.control &&
+            !string.IsNullOrEmpty(tip)
+        )
+        {
+            TooltipHandler.TipRegion(targetRect, new TipSignal(tip));
+        }
+    }
     // Maybe it could be done once for a whole column.
     private void AdjustColumnWidthIfLastColumn(
         Rect parentRect,
         ref Rect targetRect,
-        List<IColumn<RowType>> columns,
-        IColumn<RowType> column
+        List<ColumnType> columns,
+        ColumnType column
     )
     {
         if (
@@ -293,7 +357,7 @@ class Table<RowType>
             targetRect.xMax = parentRect.width;
         }
     }
-    private void HandleHeaderRowCellClick(IColumn<RowType> column)
+    private void HandleHeaderRowCellClick(ColumnType column)
     {
         if (column == sortColumn)
         {
@@ -314,13 +378,7 @@ class Table<RowType>
             return;
         }
 
-        rows.Sort((r1, r2) =>
-        {
-            var r1c = sortColumn.GetCellFor(r1);
-            var r2c = sortColumn.GetCellFor(r2);
-
-            return r1c.CompareTo(r2c) * (int)sortDirection;
-        });
+        rows.Sort((r1, r2) => sortColumn.CompareRows(r1, r2) * (int)sortDirection);
     }
 }
 
@@ -328,4 +386,18 @@ public enum SortDirection
 {
     Ascending = 1,
     Descending = -1,
+}
+
+public interface IGenTableColumn<RowType>
+{
+    public string label { get; }
+    public string description { get; }
+    public float minWidth { get; }
+    public (
+        string label,
+        string? tip,
+        Def? def,
+        ThingDef? stuff
+    ) GetCellDrawData(RowType row);
+    public int CompareRows(RowType r1, RowType r2);
 }

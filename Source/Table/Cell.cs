@@ -7,7 +7,6 @@ namespace Stats;
 public interface ICell : IComparable<ICell>
 {
     public IComparable? value { get; }
-    public void Draw(Rect targetRect);
 }
 
 public class Cell : ICell
@@ -36,43 +35,6 @@ public class Cell : ICell
         }
     }
 
-    public void Draw(Rect targetRect)
-    {
-        var label = ToString();
-
-        if (label == "")
-        {
-            return;
-        }
-
-        var contentRect = targetRect.ContractedBy(Table<ThingAlike>.cellPaddingHor, 0);
-        var currX = contentRect.x;
-
-        if (def is not null)
-        {
-            // This is very expensive.
-            Widgets.DefIcon(contentRect.CutFromX(ref currX, contentRect.height), def, stuff);
-
-            currX += Table<ThingAlike>.cellPaddingHor;
-
-            Widgets.DrawHighlightIfMouseover(targetRect);
-
-            if (Widgets.ButtonInvisible(targetRect))
-            {
-                GUIWidgets.DefInfoDialog(def, stuff);
-            }
-        }
-
-        Widgets.Label(contentRect.CutFromX(ref currX), label);
-
-        if (
-            //Event.current.control &&
-            !string.IsNullOrEmpty(tip)
-        )
-        {
-            TooltipHandler.TipRegion(targetRect, new TipSignal(tip));
-        }
-    }
     public int CompareTo(ICell other)
     {
         if (value is null)

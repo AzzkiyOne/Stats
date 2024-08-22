@@ -1,14 +1,13 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using RimWorld;
-using UnityEngine;
 using Verse;
 
 namespace Stats;
 
 static class Columns
 {
-    static public readonly Dictionary<string, IColumn<ThingAlike>> list = [];
+    static public readonly Dictionary<string, Column<ThingAlike>> list = [];
     static Columns()
     {
         var labelColumn = new LabelColumn();
@@ -26,61 +25,43 @@ static class Columns
     }
 }
 
-public interface IColumn<RowType>
-{
-    public string id { get; }
-    public float minWidth { get; }
-    public bool Draw(Rect targetRect, SortDirection? sortDirection = null);
-    // This requirement restricts flexibility:
-    // - We can't render data directly from row.
-    // - We'll have to store data in rows/columns in form of ICells.
-    public ICell GetCellFor(RowType row);
-}
-
 public abstract class Column<RowType>(
     string id,
     string? label = null,
     string? description = null,
     float? minWidth = null
-) : IColumn<RowType>
+) : IGenTableColumn<RowType>
 {
     public string id { get; } = id;
-    public readonly string label = label ?? "";
-    public readonly string description = description ?? "";
+    public string label { get; } = label ?? "";
+    public string description { get; } = description ?? "";
     public float minWidth { get; } = minWidth ?? 100f;
+
+    public abstract (
+        string label,
+        string? tip,
+        Def? def,
+        ThingDef? stuff
+    ) GetCellDrawData(RowType row);
+    public abstract int CompareRows(RowType r1, RowType r2);
+}
+
+public abstract class CachedColumn<RowType>(
+    string id,
+    string? label = null,
+    string? description = null,
+    float? minWidth = null
+) : Column<RowType>(
+    id,
+    label,
+    description,
+    minWidth
+)
+{
     // Initialize in constructor with ThingAlikes count?
-    private readonly Dictionary<RowType, ICell> cellsCache = [];
+    private readonly Dictionary<RowType, Cell> cellsCache = [];
 
-    public bool Draw(Rect targetRect, SortDirection? sortDirection = null)
-    {
-        //Widgets.DrawHighlight(targetRect);
-        Widgets.Label(targetRect.ContractedBy(Table<ThingAlike>.cellPaddingHor, 0), label);
-
-        if (sortDirection != null)
-        {
-            var rotationAngle = sortDirection == SortDirection.Ascending ? -90f : 90f;
-
-            Widgets.DrawTextureRotated(
-                targetRect.RightPartPixels(Table<ThingAlike>.headersRowHeight),
-                TexButton.Reveal,
-                rotationAngle
-            );
-        }
-
-        //GUIUtils.DrawLineVertical(
-        //    targetRect.xMax,
-        //    targetRect.y,
-        //    targetRect.height,
-        //    Table.columnSeparatorLineColor
-        //);
-
-        TooltipHandler.TipRegion(targetRect, new TipSignal(description));
-
-        Widgets.DrawHighlightIfMouseover(targetRect);
-
-        return Widgets.ButtonInvisible(targetRect);
-    }
-    public ICell GetCellFor(RowType row)
+    private Cell GetCellFor(RowType row)
     {
         if (!cellsCache.ContainsKey(row))
         {
@@ -90,18 +71,34 @@ public abstract class Column<RowType>(
         return cellsCache[row];
     }
 
-    protected abstract ICell CreateCell(RowType row);
+    public override (
+        string label,
+        string? tip,
+        Def? def,
+        ThingDef? stuff
+    ) GetCellDrawData(RowType row)
+    {
+        var cell = GetCellFor(row);
+
+        return (cell.ToString(), cell.tip, cell.def, cell.stuff);
+    }
+    public override int CompareRows(RowType r1, RowType r2)
+    {
+        return GetCellFor(r1).CompareTo(GetCellFor(r2));
+    }
+
+    protected abstract Cell CreateCell(RowType row);
 }
 
 public class StatDefColumn(
     StatDef statDef
-) : Column<ThingAlike>(
+) : CachedColumn<ThingAlike>(
     statDef.defName,
     statDef.LabelCap,
     statDef.description
 )
 {
-    protected override ICell CreateCell(ThingAlike thing)
+    protected override Cell CreateCell(ThingAlike thing)
     {
         var statReq = StatRequest.For(thing.def, thing.stuff);
 
@@ -158,24 +155,28 @@ public class StatDefColumn(
 
 public class LabelColumn() : Column<ThingAlike>("Label", "Name", minWidth: 250f)
 {
-    protected override ICell CreateCell(ThingAlike thing)
+    public override (
+        string label,
+        string? tip,
+        Def? def,
+        ThingDef? stuff
+    ) GetCellDrawData(ThingAlike row)
     {
-        return new Cell(thing.label)
-        {
-            def = thing.def,
-            stuff = thing.stuff,
-            tip = thing.def.description
-        };
+        return (row.label, row.def.description, row.def, row.stuff);
+    }
+    public override int CompareRows(ThingAlike r1, ThingAlike r2)
+    {
+        return r1.label.CompareTo(r2.label);
     }
 }
 
-public class WeaponRangeColumn() : Column<ThingAlike>(
+public class WeaponRangeColumn() : CachedColumn<ThingAlike>(
     "WeaponRange",
     "Range".Translate(),
     "Stat_Thing_Weapon_Range_Desc".Translate()
 )
 {
-    protected override ICell CreateCell(ThingAlike thing)
+    protected override Cell CreateCell(ThingAlike thing)
     {
         if (
             thing.def.IsRangedWeapon
