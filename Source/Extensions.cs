@@ -1,8 +1,10 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
+using Verse;
 
 namespace Stats;
 
-static class Rect_Extensions
+public static class UnityEngine_Rect
 {
     public static Rect CutFromX(this Rect rect, float x, float? amount = null)
     {
@@ -27,5 +29,25 @@ static class Rect_Extensions
         y = result.yMax;
 
         return result;
+    }
+}
+
+public static class Verse_ThingCategoryDef
+{
+    // What about duplicates?
+    public static IEnumerable<ThingDef> AllThingDefs(this ThingCategoryDef categoryDef)
+    {
+        foreach (var thingDef in categoryDef.childThingDefs)
+        {
+            yield return thingDef;
+        }
+
+        foreach (var childCat in categoryDef.childCategories)
+        {
+            foreach (var thingDef in childCat.AllThingDefs())
+            {
+                yield return thingDef;
+            }
+        }
     }
 }

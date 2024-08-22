@@ -3,9 +3,9 @@
 namespace Stats;
 
 [StaticConstructorOnStartup]
-public static class Stats
+public static class StatsMod
 {
-    static Stats()
+    static StatsMod()
     {
     }
 }

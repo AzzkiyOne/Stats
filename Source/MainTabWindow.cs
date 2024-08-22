@@ -134,7 +134,7 @@ public class StatsMainTabWindow : MainTabWindow
         var titleBarText = categoryPicker.selectedCatDef?.LabelCap ?? "All";
         var currY = targetRect.y;
 
-        using (new Utils.GUI.TextWordWrapContext(false))
+        using (new TextWordWrapCtx(false))
         {
             switch (TitleBar.Draw(
                 targetRect.CutFromY(ref currY, titleBarHeight),
@@ -192,7 +192,7 @@ static class TitleBar
         var currX = targetRect.x;
         TitleBarEvent? Event = null;
 
-        using (new Utils.GUI.TextAnchorContext(TextAnchor.MiddleLeft))
+        using (new TextAnchorCtx(TextAnchor.MiddleLeft))
         {
             Widgets.DrawLightHighlight(targetRect);
 
@@ -244,7 +244,7 @@ static class TitleBar
     }
     public static bool ButtonExpand(Rect targetRect)
     {
-        GUI.color = (Mouse.IsOver(targetRect) ? GenUI.MouseoverColor : Color.white);
+        GUI.color = Mouse.IsOver(targetRect) ? GenUI.MouseoverColor : Color.white;
 
         Widgets.DrawTextureRotated(targetRect, TexButton.ShowZones, 90f);
 

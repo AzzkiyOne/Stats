@@ -23,8 +23,8 @@ class CategoryPicker
     }
     public void Draw(Rect targetRect, Action<ThingCategoryDef?> onCategoryChange)
     {
-        using (new Utils.GUI.GameFontContext(GameFont.Tiny))
-        using (new Utils.GUI.TextAnchorContext(TextAnchor.MiddleLeft))
+        using (new GameFontCtx(GameFont.Tiny))
+        using (new TextAnchorCtx(TextAnchor.MiddleLeft))
         {
             // Scroll area size correction only works because of how rows are "culled" at the top.
             // We don't render them, but still counting.
@@ -51,7 +51,7 @@ class CategoryPicker
 
             Widgets.EndScrollView();
 
-            Utils.Debug.TryDrawUIDebugInfo(targetRect, debug_rowsDrawn + "");
+            Debug.TryDrawUIDebugInfo(targetRect, debug_rowsDrawn + "");
         }
     }
     private void DrawRows(Rect parentRect, ref float currY, ThingCategoryDef catDef, Action<ThingCategoryDef?> onCategoryChange)
@@ -109,7 +109,7 @@ class CategoryPicker
             var labelRect = contentRect
                 .RightPartPixels(contentRect.width - iconRect.width)
                 .ContractedBy(labelPadding, 0);
-            string labelText = Utils.Debug.InDebugMode ? catDef.defName : catDef.LabelCap;
+            string labelText = Debug.InDebugMode ? catDef.defName : catDef.LabelCap;
 
             if (string.IsNullOrEmpty(labelText))
             {

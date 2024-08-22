@@ -52,7 +52,7 @@ public abstract class Column<RowType>(
     public bool Draw(Rect targetRect, SortDirection? sortDirection = null)
     {
         //Widgets.DrawHighlight(targetRect);
-        CellWidgets.Label(targetRect, label);
+        Widgets.Label(targetRect.ContractedBy(Table<ThingAlike>.cellPaddingHor, 0), label);
 
         if (sortDirection != null)
         {

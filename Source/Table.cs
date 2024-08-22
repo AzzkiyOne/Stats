@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 using Verse;
 
@@ -63,8 +62,8 @@ class Table<RowType>
     // Probably fixed, but should check.
     public void Draw(Rect targetRect)
     {
-        using (new Utils.GUI.GameFontContext(GameFont.Small))
-        using (new Utils.GUI.TextAnchorContext(TextAnchor.MiddleLeft))
+        using (new GameFontCtx(GameFont.Small))
+        using (new TextAnchorCtx(TextAnchor.MiddleLeft))
         {
             var contentRect = new Rect(
                 0f,
@@ -113,7 +112,7 @@ class Table<RowType>
             DrawBody(bodyRect);
 
             // Separators
-            Utils.GUI.DrawLineVertical(
+            GUIWidgets.DrawLineVertical(
                 scrollPosition.x,
                 scrollPosition.y,
                 targetRect.height,
@@ -125,7 +124,7 @@ class Table<RowType>
                 targetRect.width,
                 StatsMainTabWindow.borderLineColor
             );
-            Utils.GUI.DrawLineVertical(
+            GUIWidgets.DrawLineVertical(
                 pinnedColumnsWidth + scrollPosition.x,
                 scrollPosition.y,
                 targetRect.height,
@@ -274,7 +273,7 @@ class Table<RowType>
             debug_rowsDrawn++;
         }
 
-        Utils.Debug.TryDrawUIDebugInfo(targetRect, debug_rowsDrawn + "/" + debug_columnsDrawn);
+        Debug.TryDrawUIDebugInfo(targetRect, debug_rowsDrawn + "/" + debug_columnsDrawn);
 
         Widgets.EndGroup();
     }
