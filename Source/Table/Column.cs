@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using RimWorld;
 using UnityEngine;
@@ -32,6 +31,9 @@ public interface IColumn<RowType>
     public string id { get; }
     public float minWidth { get; }
     public bool Draw(Rect targetRect, SortDirection? sortDirection = null);
+    // This requirement restricts flexibility:
+    // - We can't render data directly from row.
+    // - We'll have to store data in rows/columns in form of ICells.
     public ICell GetCellFor(RowType row);
 }
 

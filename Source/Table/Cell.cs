@@ -66,8 +66,8 @@ public class Cell : ICell
         Widgets.Label(contentRect.CutFromX(ref currX), label);
 
         if (
-            Event.current.control
-            && !string.IsNullOrEmpty(tip)
+            //Event.current.control &&
+            !string.IsNullOrEmpty(tip)
         )
         {
             TooltipHandler.TipRegion(targetRect, new TipSignal(tip));

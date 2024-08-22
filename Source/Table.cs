@@ -19,7 +19,7 @@ class Table<RowType>
     private readonly float minRowWidth = 0f;
     private readonly float totalRowsHeight = 0f;
     private int? mouseOverRowIndex = null;
-    private IColumn<RowType> sortColumn;
+    private IColumn<RowType>? sortColumn;
     private SortDirection sortDirection = SortDirection.Ascending;
 
     public const float rowHeight = 30f;
@@ -301,7 +301,7 @@ class Table<RowType>
         }
         else
         {
-            sortDirection = SortDirection.Ascending;
+            //sortDirection = SortDirection.Ascending;
             sortColumn = column;
         }
 
@@ -309,6 +309,11 @@ class Table<RowType>
     }
     private void SortRows()
     {
+        if (sortColumn is null)
+        {
+            return;
+        }
+
         rows.Sort((r1, r2) =>
         {
             var r1c = sortColumn.GetCellFor(r1);
