@@ -1,23 +1,17 @@
 ﻿using System;
-using UnityEngine;
 using Verse;
 
 namespace Stats;
 
-public interface ICell : IComparable<ICell>
+public class Cell<ValueType> : IComparable<Cell<ValueType>> where ValueType : IComparable<ValueType>
 {
-    public IComparable? value { get; }
-}
-
-public class Cell : ICell
-{
-    public IComparable? value { get; }
+    public ValueType value { get; }
     private readonly string valueStr;
     public Def? def { get; init; }
     public ThingDef? stuff { get; init; }
     public string? tip { get; init; }
 
-    public Cell(IComparable? value = null, string? valueStr = "")
+    public Cell(ValueType value, string? valueStr = "")
     {
         this.value = value;
 
@@ -35,36 +29,13 @@ public class Cell : ICell
         }
     }
 
-    public int CompareTo(ICell other)
+    public int CompareTo(Cell<ValueType> other)
     {
-        if (value is null)
-        {
-            if (other.value is null)
-            {
-                return 0;
-            }
-            else
-            {
-                return -1;
-            }
-        }
-        else
-        {
-            if (other.value is null)
-            {
-                return 1;
-            }
-            else
-            {
-                return value.CompareTo(other.value);
-            }
-        }
+        return value.CompareTo(other.value);
     }
 
     public override string ToString()
     {
         return valueStr;
     }
-
-    public static readonly Cell Empty = new();
 }

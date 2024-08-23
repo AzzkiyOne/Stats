@@ -1,4 +1,11 @@
-﻿using System.Collections.Generic;
+﻿global using GenTableCellDrawData = (
+    string label,
+    string tip,
+    Verse.Def? def,
+    Verse.ThingDef? stuff
+);
+
+using System.Collections.Generic;
 using UnityEngine;
 using Verse;
 
@@ -8,11 +15,13 @@ using Verse;
 
 namespace Stats;
 
-class GenTable<ColumnType, RowType> where ColumnType : class, IGenTableColumn<RowType>
+internal class GenTable<ColumnType, RowType>
+    where ColumnType : class, IGenTableColumn<RowType>
+    where RowType : class
 {
-    public Vector2 scrollPosition = new();
-    public readonly List<ColumnType> middleColumns = [];
-    public readonly List<ColumnType> pinnedColumns = [];
+    private Vector2 scrollPosition = new();
+    private readonly List<ColumnType> middleColumns = [];
+    private readonly List<ColumnType> pinnedColumns = [];
     private readonly List<RowType> rows;
     private readonly float middleColumnsWidth = 0f;
     private readonly float pinnedColumnsWidth = 0f;
@@ -21,12 +30,12 @@ class GenTable<ColumnType, RowType> where ColumnType : class, IGenTableColumn<Ro
     private int? mouseOverRowIndex = null;
     private ColumnType? sortColumn;
     private SortDirection sortDirection = SortDirection.Ascending;
+    private RowType? selectedRow = null;
 
-    public const float rowHeight = 30f;
-    public const float headersRowHeight = rowHeight;
-    //public const float cellPaddingHor = GenUI.Pad;
+    private const float rowHeight = 30f;
+    private const float headersRowHeight = rowHeight;
 
-    public static Color columnSeparatorLineColor = new(1f, 1f, 1f, 0.04f);
+    private static Color columnSeparatorLineColor = new(1f, 1f, 1f, 0.04f);
 
     public GenTable(List<ColumnType> columns, List<RowType> rows)
     {
@@ -254,7 +263,15 @@ class GenTable<ColumnType, RowType> where ColumnType : class, IGenTableColumn<Ro
             debug_columnsDrawn = 0;
 
             var row = rows[i];
+            var isEven = i % 2 == 0;
+            var isMouseOver = mouseOverRowIndex == i;
+            var rowRect = new Rect(0, currY, targetRect.width, rowHeight);
             float currX = -scrollPosition.x;
+
+            if (isEven && !isMouseOver)
+            {
+                Widgets.DrawLightHighlight(rowRect);
+            }
 
             // Cells
             foreach (var column in columns)
@@ -280,20 +297,31 @@ class GenTable<ColumnType, RowType> where ColumnType : class, IGenTableColumn<Ro
                 debug_columnsDrawn++;
             }
 
-            var rowRect = new Rect(0, currY, currX, rowHeight);
-
             if (Mouse.IsOver(rowRect))
             {
                 mouseOverRowIndex = i;
             }
 
-            if (mouseOverRowIndex == i)
+            if (Widgets.ButtonInvisible(rowRect))
+            {
+                if (selectedRow == row)
+                {
+                    selectedRow = null;
+                }
+                else
+                {
+                    selectedRow = row;
+                }
+            }
+
+            if (selectedRow == row)
+            {
+                Widgets.DrawHighlightSelected(rowRect);
+            }
+
+            if (isMouseOver)
             {
                 Widgets.DrawHighlight(rowRect);
-            }
-            else if (i % 2 == 0)
-            {
-                Widgets.DrawLightHighlight(rowRect);
             }
 
             currY += rowHeight;
@@ -304,13 +332,35 @@ class GenTable<ColumnType, RowType> where ColumnType : class, IGenTableColumn<Ro
 
         Widgets.EndGroup();
     }
-    public void DrawRowCell(Rect targetRect, ColumnType column, RowType row)
+    private void DrawRowCell(Rect targetRect, ColumnType column, RowType row)
     {
         var (label, tip, def, stuff) = column.GetCellDrawData(row);
 
         if (label == "")
         {
             return;
+        }
+
+        if (
+            column.isComparable
+            && selectedRow is not null
+            && row != selectedRow
+        )
+        {
+            var compareResult = column.CompareRows(selectedRow, row);
+
+            if (compareResult == 1)
+            {
+                GUI.color = Color.red;
+            }
+            else if (compareResult == -1)
+            {
+                GUI.color = Color.green;
+            }
+            else
+            {
+                GUI.color = Color.yellow;
+            }
         }
 
         var contentRect = targetRect.ContractedBy(GenUI.Pad, 0);
@@ -332,6 +382,8 @@ class GenTable<ColumnType, RowType> where ColumnType : class, IGenTableColumn<Ro
         }
 
         Widgets.Label(contentRect.CutFromX(ref currX), label);
+
+        GUI.color = Color.white;
 
         if (
             //Event.current.control &&
@@ -382,7 +434,7 @@ class GenTable<ColumnType, RowType> where ColumnType : class, IGenTableColumn<Ro
     }
 }
 
-public enum SortDirection
+internal enum SortDirection
 {
     Ascending = 1,
     Descending = -1,
@@ -393,11 +445,7 @@ public interface IGenTableColumn<RowType>
     public string label { get; }
     public string description { get; }
     public float minWidth { get; }
-    public (
-        string label,
-        string? tip,
-        Def? def,
-        ThingDef? stuff
-    ) GetCellDrawData(RowType row);
+    public bool isComparable { get; }
+    public GenTableCellDrawData GetCellDrawData(RowType row);
     public int CompareRows(RowType r1, RowType r2);
 }

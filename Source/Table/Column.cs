@@ -29,24 +29,21 @@ public abstract class Column<RowType>(
     string id,
     string? label = null,
     string? description = null,
-    float? minWidth = null
+    float? minWidth = null,
+    bool isComparable = true
 ) : IGenTableColumn<RowType>
 {
     public string id { get; } = id;
     public string label { get; } = label ?? "";
     public string description { get; } = description ?? "";
     public float minWidth { get; } = minWidth ?? 100f;
+    public bool isComparable { get; } = isComparable;
 
-    public abstract (
-        string label,
-        string? tip,
-        Def? def,
-        ThingDef? stuff
-    ) GetCellDrawData(RowType row);
+    public abstract GenTableCellDrawData GetCellDrawData(RowType row);
     public abstract int CompareRows(RowType r1, RowType r2);
 }
 
-public abstract class CachedColumn<RowType>(
+public abstract class CachedColumn<RowType, CellType>(
     string id,
     string? label = null,
     string? description = null,
@@ -59,57 +56,42 @@ public abstract class CachedColumn<RowType>(
 )
 {
     // Initialize in constructor with ThingAlikes count?
-    private readonly Dictionary<RowType, Cell> cellsCache = [];
+    private readonly Dictionary<RowType, CellType> cellsCache = [];
 
-    private Cell GetCellFor(RowType row)
+    protected CellType GetCellFor(RowType row)
     {
-        if (!cellsCache.ContainsKey(row))
-        {
-            cellsCache[row] = CreateCell(row);
-        }
-
-        return cellsCache[row];
+        return cellsCache.GetOrCreateValue(row, CreateCell);
     }
 
-    public override (
-        string label,
-        string? tip,
-        Def? def,
-        ThingDef? stuff
-    ) GetCellDrawData(RowType row)
-    {
-        var cell = GetCellFor(row);
-
-        return (cell.ToString(), cell.tip, cell.def, cell.stuff);
-    }
-    public override int CompareRows(RowType r1, RowType r2)
-    {
-        return GetCellFor(r1).CompareTo(GetCellFor(r2));
-    }
-
-    protected abstract Cell CreateCell(RowType row);
+    protected abstract CellType CreateCell(RowType row);
 }
 
 public class StatDefColumn(
     StatDef statDef
-) : CachedColumn<ThingAlike>(
+) : CachedColumn<ThingAlike, (float, string)>(
     statDef.defName,
     statDef.LabelCap,
     statDef.description
 )
 {
-    protected override Cell CreateCell(ThingAlike thing)
+    public override GenTableCellDrawData GetCellDrawData(ThingAlike row)
+    {
+        var cell = GetCellFor(row);
+
+        return (cell.Item2, "", null, null);
+    }
+    protected override (float, string) CreateCell(ThingAlike thing)
     {
         var statReq = StatRequest.For(thing.def, thing.stuff);
 
         if (statDef.Worker.ShouldShowFor(statReq) == false)
         {
-            return Cell.Empty;
+            return (float.NaN, "");
         }
 
-        float? valueAbs = null;
-        string? valueString = null;
-        //string? valueExplanation = null;
+        float valueAbs = float.NaN;
+        string valueString = "";
+        //string valueExplanation = "";
 
         // Maybe add some indication that there was an exception.
         try
@@ -120,13 +102,13 @@ public class StatDefColumn(
         {
         }
 
-        if (valueAbs is float _valueAbs)
+        if (!float.IsNaN(valueAbs))
         {
             try
             {
                 valueString = statDef.Worker.GetStatDrawEntryLabel(
                     statDef,
-                    _valueAbs,
+                    valueAbs,
                     ToStringNumberSense.Undefined,
                     statReq
                 );
@@ -140,27 +122,29 @@ public class StatDefColumn(
             //    // Maybe we don't really need to cache explanation.
             //    // Because we only show one at a time.
             //    // The only issue is that it is shown at 60fps.
-            //    valueExplanation = statDef.Worker.GetExplanationFull(statReq, ToStringNumberSense.Undefined, _valueAbs);
+            //    valueExplanation = statDef.Worker.GetExplanationFull(statReq, ToStringNumberSense.Undefined, valueAbs);
             //}
             //catch
             //{
             //}
-
-            return new Cell(valueAbs, valueString);
         }
 
-        return Cell.Empty;
+        return (valueAbs, valueString);
+    }
+    public override int CompareRows(ThingAlike r1, ThingAlike r2)
+    {
+        return GetCellFor(r1).Item1.CompareTo(GetCellFor(r2).Item1);
     }
 }
 
-public class LabelColumn() : Column<ThingAlike>("Label", "Name", minWidth: 250f)
+public class LabelColumn() : Column<ThingAlike>(
+    "Label",
+    "Name",
+    minWidth: 250f,
+    isComparable: false
+)
 {
-    public override (
-        string label,
-        string? tip,
-        Def? def,
-        ThingDef? stuff
-    ) GetCellDrawData(ThingAlike row)
+    public override GenTableCellDrawData GetCellDrawData(ThingAlike row)
     {
         return (row.label, row.def.description, row.def, row.stuff);
     }
@@ -170,27 +154,37 @@ public class LabelColumn() : Column<ThingAlike>("Label", "Name", minWidth: 250f)
     }
 }
 
-public class WeaponRangeColumn() : CachedColumn<ThingAlike>(
+public class WeaponRangeColumn() : CachedColumn<ThingAlike, (float, string)>(
     "WeaponRange",
     "Range".Translate(),
     "Stat_Thing_Weapon_Range_Desc".Translate()
 )
 {
-    protected override Cell CreateCell(ThingAlike thing)
+    public override GenTableCellDrawData GetCellDrawData(ThingAlike row)
+    {
+        var cell = GetCellFor(row);
+
+        return (cell.Item2, "", null, null);
+    }
+    protected override (float, string) CreateCell(ThingAlike thing)
     {
         if (
             thing.def.IsRangedWeapon
             && thing.def.Verbs.Count > 0
         )
         {
-            var value = thing.def.Verbs.First(v => v.isPrimary)?.range;
+            var range = thing.def.Verbs.First(v => v.isPrimary)?.range;
 
-            if (value is float _value)
+            if (range is float _range)
             {
-                return new Cell(_value);
+                return (_range, _range.ToString());
             }
         }
 
-        return Cell.Empty;
+        return (float.NaN, "");
+    }
+    public override int CompareRows(ThingAlike r1, ThingAlike r2)
+    {
+        return GetCellFor(r1).CompareTo(GetCellFor(r2));
     }
 }

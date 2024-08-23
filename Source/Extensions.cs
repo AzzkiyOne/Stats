@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 using Verse;
 
@@ -49,5 +50,28 @@ public static class Verse_ThingCategoryDef
                 yield return thingDef;
             }
         }
+    }
+}
+
+public static class Sys_Dictionary
+{
+    public static ValueType GetOrCreateValue<KeyType, ValueType>(
+        this Dictionary<KeyType, ValueType> dict,
+        KeyType key,
+        Func<KeyType, ValueType> factory
+    )
+    {
+        var containsValue = dict.TryGetValue(key, out ValueType value);
+
+        if (!containsValue)
+        {
+            var newValue = factory(key);
+
+            dict[key] = newValue;
+
+            return newValue;
+        }
+
+        return value;
     }
 }
