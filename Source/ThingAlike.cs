@@ -6,9 +6,15 @@ namespace Stats;
 
 static class ThingAlikes
 {
-    static public List<ThingAlike> list = [];
+    public static List<ThingAlike> list = [];
+    public static Dictionary<ThingCategoryDef, List<ThingAlike>> byCategory = [];
     static ThingAlikes()
     {
+        foreach (var thingCatDef in DefDatabase<ThingCategoryDef>.AllDefs)
+        {
+            byCategory[thingCatDef] = [];
+        }
+
         foreach (var thingDef in DefDatabase<ThingDef>.AllDefs)
         {
             if (
@@ -35,29 +41,40 @@ static class ThingAlikes
                 {
                     //var label = GenLabel.ThingLabel(thingDef, stuffDef, 0).CapitalizeFirst();
                     var label = thingDef.LabelCap + " (" + stuffDef.LabelCap + ")";
-                    //var icon = thingDef.GetUIIconForStuff(stuffDef);
 
-                    list.Add(new ThingAlike(thingDef, label, stuffDef));
+                    Add(new ThingAlike(thingDef, label, stuffDef));
                 }
             }
             else
             {
-                list.Add(new ThingAlike(thingDef, thingDef.LabelCap));
+                Add(new ThingAlike(thingDef, thingDef.LabelCap));
             }
+        }
+    }
+    private static void Add(ThingAlike thingAlike)
+    {
+        list.Add(thingAlike);
+
+        if (thingAlike.def.thingCategories is null)
+        {
+            return;
+        }
+
+        foreach (var thingCatDef in thingAlike.def.thingCategories)
+        {
+            byCategory[thingCatDef].Add(thingAlike);
         }
     }
 }
 
-// Implement GetHashCode (and Equals) jsut in case?
+// Implement GetHashCode (and Equals) just in case?
 public class ThingAlike(
     ThingDef def,
     string label,
-    //Texture2D icon,
     ThingDef? stuff = null
 )
 {
     public readonly string label = label;
     public readonly ThingDef def = def;
     public readonly ThingDef? stuff = stuff;
-    //public readonly Texture2D icon = icon;
 }

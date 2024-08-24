@@ -22,34 +22,54 @@ internal class GenTable<ColumnType, RowType>
     private Vector2 scrollPosition = new();
     private readonly List<ColumnType> middleColumns = [];
     private readonly List<ColumnType> pinnedColumns = [];
-    private readonly List<RowType> rows;
+    private List<RowType> _rows;
+    public List<RowType> rows
+    {
+        get
+        {
+            return _rows;
+        }
+        set
+        {
+            _rows = value;
+            totalRowsHeight = value.Count * rowHeight;
+
+            SortRows();
+        }
+    }
     private readonly float middleColumnsWidth = 0f;
     private readonly float pinnedColumnsWidth = 0f;
     private readonly float minRowWidth = 0f;
-    private readonly float totalRowsHeight = 0f;
+    private float totalRowsHeight = 0f;
     private int? mouseOverRowIndex = null;
     private ColumnType? sortColumn;
     private SortDirection sortDirection = SortDirection.Ascending;
-    private RowType? selectedRow = null;
+    public RowType? selectedRow { get; private set; } = null;
 
     private const float rowHeight = 30f;
     private const float headersRowHeight = rowHeight;
 
     private static Color columnSeparatorLineColor = new(1f, 1f, 1f, 0.04f);
+    private static Dictionary<int, Color> compareColorMap = new()
+    {
+        [1] = Color.red,
+        [-1] = Color.green,
+        [0] = Color.yellow
+    };
 
     public GenTable(List<ColumnType> columns, List<RowType> rows)
     {
-        this.rows = rows;
+
 
         if (columns[0] != null)
         {
             sortColumn = columns[0];
 
-            SortRows();
-
             pinnedColumns.Add(columns[0]);
             pinnedColumnsWidth += columns[0].minWidth;
         }
+
+        this.rows = rows;
 
         foreach (var column in columns)
         {
@@ -61,8 +81,6 @@ internal class GenTable<ColumnType, RowType>
 
             minRowWidth += column.minWidth;
         }
-
-        totalRowsHeight = rowHeight * rows.Count;
     }
 
     // There might be an issue where scroll area is smaller than total columns width.
@@ -349,18 +367,7 @@ internal class GenTable<ColumnType, RowType>
         {
             var compareResult = column.CompareRows(selectedRow, row);
 
-            if (compareResult == 1)
-            {
-                GUI.color = Color.red;
-            }
-            else if (compareResult == -1)
-            {
-                GUI.color = Color.green;
-            }
-            else
-            {
-                GUI.color = Color.yellow;
-            }
+            GUI.color = compareColorMap[compareResult];
         }
 
         var contentRect = targetRect.ContractedBy(GenUI.Pad, 0);

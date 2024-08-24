@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿using System.Drawing.Drawing2D;
+using System.Reflection;
 using UnityEngine;
 using Verse;
 
@@ -27,5 +28,27 @@ public static class GUIWidgets
         }
 
         Find.WindowStack.Add(dialog);
+    }
+    public static bool ButtonImage(
+        Rect targetRect,
+        Texture2D tex,
+        string tooltip = "",
+        float angle = 0f
+    )
+    {
+        GUI.color = (Mouse.IsOver(targetRect) ? GenUI.MouseoverColor : Color.white);
+
+        Widgets.DrawTextureRotated(targetRect, tex, angle);
+
+        GUI.color = Color.white;
+
+        if (tooltip != "")
+        {
+            TooltipHandler.TipRegion(targetRect, tooltip);
+        }
+
+        bool result = Widgets.ButtonInvisible(targetRect);
+        GUI.color = Color.white;
+        return result;
     }
 }

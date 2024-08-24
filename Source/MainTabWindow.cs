@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using RimWorld;
 using UnityEngine;
 using Verse;
@@ -11,8 +10,7 @@ public class StatsMainTabWindow : MainTabWindow
     protected override float Margin { get => 1f; }
 
     private readonly CategoryPicker categoryPicker;
-    private readonly Dictionary<string, GenTable<Column<ThingAlike>, ThingAlike>> tablesCache = [];
-    private readonly GenTable<Column<ThingAlike>, ThingAlike> table;
+    private GenTable<Column<ThingAlike>, ThingAlike> thingDefsTable;
     private Rect? preCloseRect = null;
     private Rect? preExpandRect = null;
     private bool isExpanded => preExpandRect != null;
@@ -33,8 +31,7 @@ public class StatsMainTabWindow : MainTabWindow
         draggable = true;
         resizeable = true;
 
-        //table = new(Columns.list.Values.ToList(), FakeThings.list);
-        table = new(
+        thingDefsTable = new(
             Columns.list.Values.ToList(),
             ThingAlikes.list.Where(t =>
                 (
@@ -54,21 +51,23 @@ public class StatsMainTabWindow : MainTabWindow
 
     private void HandleCategoryChange(ThingCategoryDef? catDef)
     {
-        if (catDef != null && !tablesCache.ContainsKey(catDef.defName))
+        if (catDef != null)
         {
-            var columnSet = ColumnSetDB.GetColumnSetForCatDef(catDef);
+            //var columnSet = ColumnSetDB.GetColumnSetForCatDef(catDef);
 
-            if (columnSet != null)
-            {
-                tablesCache[catDef.defName] = new GenTable<Column<ThingAlike>, ThingAlike>(
-                    columnSet.columns.Select(
-                        columnId => Columns.list[columnId]
-                    ).ToList(),
-                    ThingAlikes.list.Where(
-                        ft => catDef.AllThingDefs().Contains(ft.def)
-                    ).ToList()
-                );
-            }
+            //if (columnSet != null)
+            //{
+            //    var catThingDefs = catDef.AllThingDefs();
+
+            //    tablesCache[catDef.defName] = new GenTable<Column<ThingAlike>, ThingAlike>(
+            //        columnSet.columns.Select(
+            //            columnId => Columns.list[columnId]
+            //        ).ToList(),
+            //        catDef.AllThingAlikes().ToList()
+            //    );
+            //}
+
+            thingDefsTable.rows = catDef.AllThingAlikes().ToList();
         }
     }
     private void ExpandOrCollapse()
@@ -131,8 +130,13 @@ public class StatsMainTabWindow : MainTabWindow
     }
     public override void DoWindowContents(Rect targetRect)
     {
-        var titleBarText = categoryPicker.selectedCatDef?.LabelCap ?? "All";
+        var titleBarText = "Things";
         var currY = targetRect.y;
+
+        if (thingDefsTable.selectedRow?.label is not null)
+        {
+            titleBarText += " / " + thingDefsTable.selectedRow.label;
+        }
 
         using (new TextWordWrapCtx(false))
         {
@@ -164,15 +168,7 @@ public class StatsMainTabWindow : MainTabWindow
             HandleCategoryChange
         );
 
-        if (categoryPicker.selectedCatDef is ThingCategoryDef selCatDef)
-        {
-            tablesCache.TryGetValue(selCatDef.defName, out GenTable<Column<ThingAlike>, ThingAlike> table);
-            table?.Draw(targetRect.CutFromX(ref currX));
-        }
-        else
-        {
-            table.Draw(targetRect.CutFromX(ref currX));
-        }
+        thingDefsTable.Draw(targetRect.CutFromX(ref currX));
     }
 }
 
@@ -213,25 +209,30 @@ static class TitleBar
             Widgets.ButtonImage(
                 targetRect.CutFromX(ref currX, buttonWidth),
                 TexButton.Info,
-                GUI.color,
                 tooltip: "How to use:"
             );
 
-            if (Widgets.ButtonImageFitted(
+            if (GUIWidgets.ButtonImage(
                 targetRect.CutFromX(ref currX, buttonWidth),
-                TexButton.Reveal
+                TexButton.Reveal,
+                angle: 90f
             ))
             {
                 Event = TitleBarEvent.Minimize;
             }
 
-            if (ButtonExpand(targetRect.CutFromX(ref currX, buttonWidth)))
+            if (GUIWidgets.ButtonImage(
+                targetRect.CutFromX(ref currX, buttonWidth),
+                TexButton.ShowZones,
+                "Maximize/restore window",
+                90f
+            ))
             {
 
                 Event = TitleBarEvent.Expand;
             }
 
-            if (Widgets.ButtonImageFitted(
+            if (Widgets.ButtonImage(
                 targetRect.CutFromX(ref currX, buttonWidth),
                 TexButton.CloseXSmall
             ))
@@ -241,21 +242,5 @@ static class TitleBar
         }
 
         return Event;
-    }
-    public static bool ButtonExpand(Rect targetRect)
-    {
-        GUI.color = Mouse.IsOver(targetRect) ? GenUI.MouseoverColor : Color.white;
-
-        Widgets.DrawTextureRotated(targetRect, TexButton.ShowZones, 90f);
-
-        GUI.color = Color.white;
-
-        TooltipHandler.TipRegion(targetRect, "Maximize/restore window");
-
-        var isClicked = Widgets.ButtonInvisible(targetRect);
-
-        GUI.color = Color.white;
-
-        return isClicked;
     }
 }

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using Verse;
 
@@ -36,42 +35,19 @@ public static class UnityEngine_Rect
 public static class Verse_ThingCategoryDef
 {
     // What about duplicates?
-    public static IEnumerable<ThingDef> AllThingDefs(this ThingCategoryDef categoryDef)
+    public static IEnumerable<ThingAlike> AllThingAlikes(this ThingCategoryDef categoryDef)
     {
-        foreach (var thingDef in categoryDef.childThingDefs)
+        foreach (var thingAlike in ThingAlikes.byCategory[categoryDef])
         {
-            yield return thingDef;
+            yield return thingAlike;
         }
 
         foreach (var childCat in categoryDef.childCategories)
         {
-            foreach (var thingDef in childCat.AllThingDefs())
+            foreach (var thingAlike in childCat.AllThingAlikes())
             {
-                yield return thingDef;
+                yield return thingAlike;
             }
         }
-    }
-}
-
-public static class Sys_Dictionary
-{
-    public static ValueType GetOrCreateValue<KeyType, ValueType>(
-        this Dictionary<KeyType, ValueType> dict,
-        KeyType key,
-        Func<KeyType, ValueType> factory
-    )
-    {
-        var containsValue = dict.TryGetValue(key, out ValueType value);
-
-        if (!containsValue)
-        {
-            var newValue = factory(key);
-
-            dict[key] = newValue;
-
-            return newValue;
-        }
-
-        return value;
     }
 }

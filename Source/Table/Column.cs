@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using RimWorld;
 using Verse;
@@ -43,44 +44,44 @@ public abstract class Column<RowType>(
     public abstract int CompareRows(RowType r1, RowType r2);
 }
 
-public abstract class CachedColumn<RowType, CellType>(
-    string id,
-    string? label = null,
-    string? description = null,
-    float? minWidth = null
-) : Column<RowType>(
-    id,
-    label,
-    description,
-    minWidth
-)
+public class Cache<K, V>(Func<K, V> factory)
 {
-    // Initialize in constructor with ThingAlikes count?
-    private readonly Dictionary<RowType, CellType> cellsCache = [];
+    private readonly Dictionary<K, V> dict = new();
+    private readonly Func<K, V> factory = factory;
 
-    protected CellType GetCellFor(RowType row)
+    public V GetValue(K key)
     {
-        return cellsCache.GetOrCreateValue(row, CreateCell);
-    }
+        var containsValue = dict.TryGetValue(key, out V value);
 
-    protected abstract CellType CreateCell(RowType row);
+        if (!containsValue)
+        {
+            var newValue = factory(key);
+
+            dict[key] = newValue;
+
+            return newValue;
+        }
+
+        return value;
+    }
 }
 
-public class StatDefColumn(
-    StatDef statDef
-) : CachedColumn<ThingAlike, (float, string)>(
-    statDef.defName,
-    statDef.LabelCap,
-    statDef.description
-)
+public class StatDefColumn : Column<ThingAlike>
 {
-    public override GenTableCellDrawData GetCellDrawData(ThingAlike row)
-    {
-        var cell = GetCellFor(row);
+    private readonly StatDef statDef;
+    private readonly Cache<ThingAlike, (float, string)> cache;
 
-        return (cell.Item2, "", null, null);
+    public StatDefColumn(StatDef statDef) : base(
+        statDef.defName,
+        statDef.LabelCap,
+        statDef.description
+    )
+    {
+        this.statDef = statDef;
+        cache = new(CreateCell);
     }
-    protected override (float, string) CreateCell(ThingAlike thing)
+
+    private (float, string) CreateCell(ThingAlike thing)
     {
         var statReq = StatRequest.For(thing.def, thing.stuff);
 
@@ -131,9 +132,16 @@ public class StatDefColumn(
 
         return (valueAbs, valueString);
     }
+
+    public override GenTableCellDrawData GetCellDrawData(ThingAlike row)
+    {
+        var cell = cache.GetValue(row);
+
+        return (cell.Item2, "", null, null);
+    }
     public override int CompareRows(ThingAlike r1, ThingAlike r2)
     {
-        return GetCellFor(r1).Item1.CompareTo(GetCellFor(r2).Item1);
+        return cache.GetValue(r1).Item1.CompareTo(cache.GetValue(r2).Item1);
     }
 }
 
@@ -154,19 +162,20 @@ public class LabelColumn() : Column<ThingAlike>(
     }
 }
 
-public class WeaponRangeColumn() : CachedColumn<ThingAlike, (float, string)>(
-    "WeaponRange",
-    "Range".Translate(),
-    "Stat_Thing_Weapon_Range_Desc".Translate()
-)
+public class WeaponRangeColumn : Column<ThingAlike>
 {
-    public override GenTableCellDrawData GetCellDrawData(ThingAlike row)
-    {
-        var cell = GetCellFor(row);
+    private readonly Cache<ThingAlike, (float, string)> cache;
 
-        return (cell.Item2, "", null, null);
+    public WeaponRangeColumn() : base(
+        "WeaponRange",
+        "Range".Translate(),
+        "Stat_Thing_Weapon_Range_Desc".Translate()
+    )
+    {
+        cache = new(CreateCell);
     }
-    protected override (float, string) CreateCell(ThingAlike thing)
+
+    private (float, string) CreateCell(ThingAlike thing)
     {
         if (
             thing.def.IsRangedWeapon
@@ -183,8 +192,15 @@ public class WeaponRangeColumn() : CachedColumn<ThingAlike, (float, string)>(
 
         return (float.NaN, "");
     }
+
+    public override GenTableCellDrawData GetCellDrawData(ThingAlike row)
+    {
+        var cell = cache.GetValue(row);
+
+        return (cell.Item2, "", null, null);
+    }
     public override int CompareRows(ThingAlike r1, ThingAlike r2)
     {
-        return GetCellFor(r1).CompareTo(GetCellFor(r2));
+        return cache.GetValue(r1).Item1.CompareTo(cache.GetValue(r2).Item1);
     }
 }
