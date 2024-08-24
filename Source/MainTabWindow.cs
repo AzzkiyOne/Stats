@@ -13,8 +13,8 @@ public class StatsMainTabWindow : MainTabWindow
     private GenTable<Column<ThingAlike>, ThingAlike> thingDefsTable;
     private Rect? preCloseRect = null;
     private Rect? preExpandRect = null;
-    private bool isExpanded => preExpandRect != null;
-    private Rect expandRect => new(
+    private bool IsExpanded => preExpandRect != null;
+    private Rect ExpandRect => new(
         0f,
         0f,
         UI.screenWidth,
@@ -49,30 +49,36 @@ public class StatsMainTabWindow : MainTabWindow
         HandleCategoryChange(categoryPicker.selectedCatDef);
     }
 
+    private void DrawContent(Rect targetRect)
+    {
+        var currX = targetRect.x;
+
+        categoryPicker.Draw(
+            targetRect.CutFromX(ref currX, catPickerWidth),
+            HandleCategoryChange
+        );
+
+        thingDefsTable.Draw(targetRect.CutFromX(ref currX));
+    }
     private void HandleCategoryChange(ThingCategoryDef? catDef)
     {
         if (catDef != null)
         {
-            //var columnSet = ColumnSetDB.GetColumnSetForCatDef(catDef);
+            thingDefsTable.Rows = catDef.AllThingAlikes().ToList();
 
-            //if (columnSet != null)
-            //{
-            //    var catThingDefs = catDef.AllThingDefs();
+            var columnSet = ColumnSetDB.GetColumnSetForCatDef(catDef);
 
-            //    tablesCache[catDef.defName] = new GenTable<Column<ThingAlike>, ThingAlike>(
-            //        columnSet.columns.Select(
-            //            columnId => Columns.list[columnId]
-            //        ).ToList(),
-            //        catDef.AllThingAlikes().ToList()
-            //    );
-            //}
-
-            thingDefsTable.rows = catDef.AllThingAlikes().ToList();
+            if (columnSet != null)
+            {
+                thingDefsTable.Columns = columnSet.columns.Select(
+                    columnId => Columns.list[columnId]
+                ).ToList();
+            }
         }
     }
     private void ExpandOrCollapse()
     {
-        if (isExpanded)
+        if (IsExpanded)
         {
             Collapse();
         }
@@ -87,7 +93,7 @@ public class StatsMainTabWindow : MainTabWindow
         resizeable = false;
 
         preExpandRect = windowRect;
-        windowRect = expandRect;
+        windowRect = ExpandRect;
     }
     private void Collapse()
     {
@@ -113,9 +119,9 @@ public class StatsMainTabWindow : MainTabWindow
     {
         base.PreOpen();
 
-        if (isExpanded)
+        if (IsExpanded)
         {
-            windowRect = expandRect;
+            windowRect = ExpandRect;
         }
         else if (preCloseRect is Rect _preCloseRect)
         {
@@ -133,9 +139,9 @@ public class StatsMainTabWindow : MainTabWindow
         var titleBarText = "Things";
         var currY = targetRect.y;
 
-        if (thingDefsTable.selectedRow?.label is not null)
+        if (thingDefsTable.SelectedRow?.label is not null)
         {
-            titleBarText += " / " + thingDefsTable.selectedRow.label;
+            titleBarText += " / " + thingDefsTable.SelectedRow.label;
         }
 
         using (new TextWordWrapCtx(false))
@@ -158,17 +164,6 @@ public class StatsMainTabWindow : MainTabWindow
 
             DrawContent(targetRect.CutFromY(ref currY));
         }
-    }
-    private void DrawContent(Rect targetRect)
-    {
-        var currX = targetRect.x;
-
-        categoryPicker.Draw(
-            targetRect.CutFromX(ref currX, catPickerWidth),
-            HandleCategoryChange
-        );
-
-        thingDefsTable.Draw(targetRect.CutFromX(ref currX));
     }
 }
 

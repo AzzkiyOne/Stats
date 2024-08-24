@@ -14,14 +14,14 @@ static class Columns
         var labelColumn = new LabelColumn();
         var weaponRangeColumn = new WeaponRangeColumn();
 
-        list.Add(labelColumn.id, labelColumn);
-        list.Add(weaponRangeColumn.id, weaponRangeColumn);
+        list.Add(labelColumn.Id, labelColumn);
+        list.Add(weaponRangeColumn.Id, weaponRangeColumn);
 
         foreach (var statDef in DefDatabase<StatDef>.AllDefs)
         {
             var column = new StatDefColumn(statDef);
 
-            list.TryAdd(column.id, column);
+            list.TryAdd(column.Id, column);
         }
     }
 }
@@ -34,11 +34,11 @@ public abstract class Column<RowType>(
     bool isComparable = true
 ) : IGenTableColumn<RowType>
 {
-    public string id { get; } = id;
-    public string label { get; } = label ?? "";
-    public string description { get; } = description ?? "";
-    public float minWidth { get; } = minWidth ?? 100f;
-    public bool isComparable { get; } = isComparable;
+    public string Id { get; } = id;
+    public string Label { get; } = label ?? "";
+    public string Description { get; } = description ?? "";
+    public float MinWidth { get; } = minWidth ?? 100f;
+    public bool IsComparable { get; } = isComparable;
 
     public abstract GenTableCellDrawData GetCellDrawData(RowType row);
     public abstract int CompareRows(RowType r1, RowType r2);
@@ -46,7 +46,7 @@ public abstract class Column<RowType>(
 
 public class Cache<K, V>(Func<K, V> factory)
 {
-    private readonly Dictionary<K, V> dict = new();
+    private readonly Dictionary<K, V> dict = [];
     private readonly Func<K, V> factory = factory;
 
     public V GetValue(K key)
