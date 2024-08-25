@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using RimWorld;
 using Verse;
 
@@ -42,12 +43,12 @@ static class ThingAlikes
                     //var label = GenLabel.ThingLabel(thingDef, stuffDef, 0).CapitalizeFirst();
                     var label = thingDef.LabelCap + " (" + stuffDef.LabelCap + ")";
 
-                    Add(new ThingAlike(thingDef, label, stuffDef));
+                    Add(new ThingAlike(ThingDefTable_Columns.list.Count, thingDef, label, stuffDef));
                 }
             }
             else
             {
-                Add(new ThingAlike(thingDef, thingDef.LabelCap));
+                Add(new ThingAlike(ThingDefTable_Columns.list.Count, thingDef, thingDef.LabelCap));
             }
         }
     }
@@ -69,12 +70,31 @@ static class ThingAlikes
 
 // Implement GetHashCode (and Equals) just in case?
 public class ThingAlike(
+    int size,
     ThingDef def,
     string label,
     ThingDef? stuff = null
-)
+) :
+    Dictionary<ThingDefTable_Column, IGenTableCell>(size),
+    IGenTableRow<ThingDefTable_Column>
 {
     public readonly string label = label;
     public readonly ThingDef def = def;
     public readonly ThingDef? stuff = stuff;
+
+    public IGenTableCell GetCell(ThingDefTable_Column column)
+    {
+        var containsValue = TryGetValue(column, out var value);
+
+        if (!containsValue)
+        {
+            var newValue = column.GetCellData(this);
+
+            this[column] = newValue;
+
+            return newValue;
+        }
+
+        return value;
+    }
 }

@@ -1,10 +1,4 @@
-﻿global using GenTableCellDrawData = (
-    string label,
-    string tip,
-    Verse.Def? def,
-    Verse.ThingDef? stuff
-);
-
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -17,8 +11,8 @@ using Verse;
 namespace Stats;
 
 internal class GenTable<ColumnType, RowType>
-    where ColumnType : class, IGenTableColumn<RowType>
-    where RowType : class
+    where ColumnType : class, IGenTableColumn
+    where RowType : class, IGenTableRow<ColumnType>
 {
     private Vector2 scrollPosition = new();
     public List<ColumnType> Columns
@@ -386,20 +380,20 @@ internal class GenTable<ColumnType, RowType>
     }
     private void DrawRowCell(Rect targetRect, ColumnType column, RowType row)
     {
-        var (label, tip, def, stuff) = column.GetCellDrawData(row);
+        var cell = row.GetCell(column);
 
-        if (label == "")
+        if (cell.ValueStr == "")
         {
             return;
         }
 
         if (
-            column.IsComparable
+            column.Type == GenTableColumnType.Number
             && SelectedRow is not null
             && row != SelectedRow
         )
         {
-            var compareResult = column.CompareRows(SelectedRow, row);
+            var compareResult = SelectedRow.GetCell(column).CompareTo(row.GetCell(column));
 
             GUI.color = compareColorMap[compareResult];
         }
@@ -407,10 +401,14 @@ internal class GenTable<ColumnType, RowType>
         var contentRect = targetRect.ContractedBy(GenUI.Pad, 0);
         var currX = contentRect.x;
 
-        if (def is not null)
+        if (cell.Def is not null)
         {
             // This is very expensive.
-            Widgets.DefIcon(contentRect.CutFromX(ref currX, contentRect.height), def, stuff);
+            Widgets.DefIcon(
+                contentRect.CutFromX(ref currX, contentRect.height),
+                cell.Def,
+                cell.Stuff
+            );
 
             currX += GenUI.Pad;
 
@@ -418,20 +416,20 @@ internal class GenTable<ColumnType, RowType>
 
             if (Widgets.ButtonInvisible(targetRect))
             {
-                GUIWidgets.DefInfoDialog(def, stuff);
+                GUIWidgets.DefInfoDialog(cell.Def, cell.Stuff);
             }
         }
 
-        Widgets.Label(contentRect.CutFromX(ref currX), label);
+        Widgets.Label(contentRect.CutFromX(ref currX), cell.ValueStr);
 
         GUI.color = Color.white;
 
         if (
             //Event.current.control &&
-            !string.IsNullOrEmpty(tip)
+            cell.Tip != ""
         )
         {
-            TooltipHandler.TipRegion(targetRect, new TipSignal(tip));
+            TooltipHandler.TipRegion(targetRect, new TipSignal(cell.Tip));
         }
     }
     // Maybe it could be done once for a whole column.
@@ -457,7 +455,10 @@ internal class GenTable<ColumnType, RowType>
             return;
         }
 
-        Rows.Sort((r1, r2) => SortColumn.CompareRows(r1, r2) * (int)sortDirection);
+        //Rows.Sort((r1, r2) => r1.CompareByColumn(r2, SortColumn) * (int)sortDirection);
+        Rows.Sort((r1, r2) =>
+            r1.GetCell(SortColumn).CompareTo(r2.GetCell(SortColumn)) * (int)sortDirection
+        );
     }
 }
 
@@ -467,12 +468,71 @@ internal enum SortDirection
     Descending = -1,
 }
 
-public interface IGenTableColumn<RowType>
+public enum GenTableColumnType
+{
+    Number,
+    String,
+    Boolean,
+}
+
+public interface IGenTableColumn
 {
     public string Label { get; }
     public string Description { get; }
     public float MinWidth { get; }
-    public bool IsComparable { get; }
-    public GenTableCellDrawData GetCellDrawData(RowType row);
-    public int CompareRows(RowType r1, RowType r2);
+    public GenTableColumnType Type { get; }
+}
+
+public abstract class GenTableColumn(
+    string? label = null,
+    string? description = null,
+    float? minWidth = null,
+    GenTableColumnType type = GenTableColumnType.Number
+) : IGenTableColumn
+{
+    public string Label { get; } = label ?? "";
+    public string Description { get; } = description ?? "";
+    public float MinWidth { get; } = minWidth ?? 100f;
+    public GenTableColumnType Type { get; } = type;
+}
+
+public interface IGenTableRow<ColumnType> where ColumnType : IGenTableColumn
+{
+    public IGenTableCell GetCell(ColumnType column);
+}
+
+public interface IGenTableCell : IComparable<IGenTableCell>
+{
+    public float ValueNum { get; }
+    public string ValueStr { get; }
+    public string Tip { get; }
+    public Def? Def { get; }
+    public ThingDef? Stuff { get; }
+}
+
+public abstract class GenTableCell() : IGenTableCell
+{
+    public float ValueNum { get; init; } = float.NaN;
+    public string ValueStr { get; init; } = "";
+    public string Tip { get; init; } = "";
+    public Def? Def { get; init; }
+    public ThingDef? Stuff { get; init; }
+
+    public abstract int CompareTo(IGenTableCell other);
+}
+
+public class GenTableNumCell() : GenTableCell
+{
+    public override int CompareTo(IGenTableCell other)
+    {
+        return ValueNum.CompareTo(other.ValueNum);
+    }
+}
+
+public class GenTableStrCell() : GenTableCell
+{
+    public override int CompareTo(IGenTableCell other)
+    {
+        return ValueStr.CompareTo(other.ValueStr);
+    }
 }

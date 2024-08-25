@@ -10,7 +10,7 @@ public class StatsMainTabWindow : MainTabWindow
     protected override float Margin { get => 1f; }
 
     private readonly CategoryPicker categoryPicker;
-    private GenTable<Column<ThingAlike>, ThingAlike> thingDefsTable;
+    private GenTable<ThingDefTable_Column, ThingAlike> thingDefsTable;
     private Rect? preCloseRect = null;
     private Rect? preExpandRect = null;
     private bool IsExpanded => preExpandRect != null;
@@ -32,7 +32,7 @@ public class StatsMainTabWindow : MainTabWindow
         resizeable = true;
 
         thingDefsTable = new(
-            Columns.list.Values.ToList(),
+            ThingDefTable_Columns.list.Values.ToList(),
             ThingAlikes.list.Where(t =>
                 (
                     t.def.thingCategories == null
@@ -42,7 +42,7 @@ public class StatsMainTabWindow : MainTabWindow
             ).ToList()
         );
 
-        Log.Message(Columns.list.Count);
+        Log.Message(ThingDefTable_Columns.list.Count);
         Log.Message(ThingAlikes.list.Count);
 
         categoryPicker = new CategoryPicker();
@@ -71,7 +71,7 @@ public class StatsMainTabWindow : MainTabWindow
             if (columnSet != null)
             {
                 thingDefsTable.Columns = columnSet.columns.Select(
-                    columnId => Columns.list[columnId]
+                    columnId => ThingDefTable_Columns.list[columnId]
                 ).ToList();
             }
         }
