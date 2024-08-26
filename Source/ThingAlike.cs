@@ -94,7 +94,16 @@ public class ThingAlike :
 
         if (!containsValue)
         {
-            var newValue = column.GetCellData(this);
+            IGenTable_Cell newValue;
+
+            try
+            {
+                newValue = column.GetCellData(this);
+            }
+            catch
+            {
+                newValue = new GenTable_ExCell();
+            }
 
             this[column] = newValue;
 

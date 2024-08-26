@@ -60,13 +60,13 @@ public class ThingDefTable_StatDefColumn : ThingDefTable_Column
     {
         var statReq = StatRequest.For(thing.def, thing.stuff);
 
-        if (statDef.Worker.ShouldShowFor(statReq) == false)
-        {
-            return new GenTable_StatCell(
-                statDef,
-                float.NaN
-            );
-        }
+        //if (statDef.Worker.ShouldShowFor(statReq) == false)
+        //{
+        //    return new GenTable_StatCell(
+        //        statDef,
+        //        float.NaN
+        //    );
+        //}
 
         return new GenTable_StatCell(
             statDef,

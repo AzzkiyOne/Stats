@@ -383,6 +383,20 @@ internal class GenTable<ColumnType, RowType>
     {
         var cell = row.GetCell(column);
 
+        if (cell is GenTable_ExCell)
+        {
+            GUI.color = Color.red;
+            Widgets.DrawHighlight(targetRect);
+            GUI.color = Color.white;
+
+            using (new TextAnchorCtx(TextAnchor.MiddleCenter))
+            {
+                Widgets.Label(targetRect, "!!!");
+            }
+
+            return;
+        }
+
         if (cell.ValueStr == "")
         {
             return;
@@ -571,10 +585,7 @@ public class GenTable_StrCell : GenTable_Cell
     }
     public override IGenTable_Cell GetDiff(IGenTable_Cell other)
     {
-        return new GenTable_NumCell()
-        {
-            ValueNum = float.NaN,
-        };
+        return new GenTable_StrCell();
     }
 }
 
@@ -624,5 +635,21 @@ public class GenTable_StatCell : GenTable_Cell
             ValueNum - other.ValueNum,
             ToStringNumberSense.Offset
         );
+    }
+}
+
+public class GenTable_ExCell : GenTable_Cell
+{
+    public GenTable_ExCell()
+    {
+    }
+
+    public override int CompareTo(IGenTable_Cell other)
+    {
+        return ValueNum.CompareTo(other.ValueNum);
+    }
+    public override IGenTable_Cell GetDiff(IGenTable_Cell other)
+    {
+        return new GenTable_ExCell();
     }
 }
