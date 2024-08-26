@@ -68,10 +68,7 @@ public class ThingDefTable_StatDefColumn : ThingDefTable_Column
         //    );
         //}
 
-        return new GenTable_StatCell(
-            statDef,
-            statDef.Worker.GetValue(statReq)
-        );
+        return new GenTable_StatCell(statDef, statReq);
     }
 }
 
