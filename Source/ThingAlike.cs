@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using RimWorld;
 using Verse;
 
@@ -69,20 +68,27 @@ static class ThingAlikes
 }
 
 // Implement GetHashCode (and Equals) just in case?
-public class ThingAlike(
-    int size,
-    ThingDef def,
-    string label,
-    ThingDef? stuff = null
-) :
-    Dictionary<ThingDefTable_Column, IGenTableCell>(size),
-    IGenTableRow<ThingDefTable_Column>
+public class ThingAlike :
+    Dictionary<ThingDefTable_Column, IGenTable_Cell>,
+    IGenTable_Row<ThingDefTable_Column>
 {
-    public readonly string label = label;
-    public readonly ThingDef def = def;
-    public readonly ThingDef? stuff = stuff;
+    public readonly string label;
+    public readonly ThingDef def;
+    public readonly ThingDef? stuff;
 
-    public IGenTableCell GetCell(ThingDefTable_Column column)
+    public ThingAlike(
+        int size,
+        ThingDef def,
+        string label,
+        ThingDef? stuff = null
+    ) : base(size)
+    {
+        this.label = label;
+        this.def = def;
+        this.stuff = stuff;
+    }
+
+    public IGenTable_Cell GetCell(ThingDefTable_Column column)
     {
         var containsValue = TryGetValue(column, out var value);
 

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using RimWorld;
 using UnityEngine;
 using Verse;
 
@@ -11,8 +12,8 @@ using Verse;
 namespace Stats;
 
 internal class GenTable<ColumnType, RowType>
-    where ColumnType : class, IGenTableColumn
-    where RowType : class, IGenTableRow<ColumnType>
+    where ColumnType : class, IGenTable_Column
+    where RowType : class, IGenTable_Row<ColumnType>
 {
     private Vector2 scrollPosition = new();
     public List<ColumnType> Columns
@@ -388,7 +389,7 @@ internal class GenTable<ColumnType, RowType>
         }
 
         if (
-            column.Type == GenTableColumnType.Number
+            column.Type == GenTable_ColumnType.Number
             && SelectedRow is not null
             && row != SelectedRow
         )
@@ -468,49 +469,58 @@ internal enum SortDirection
     Descending = -1,
 }
 
-public enum GenTableColumnType
+public enum GenTable_ColumnType
 {
     Number,
     String,
     Boolean,
 }
 
-public interface IGenTableColumn
+public interface IGenTable_Column
 {
     public string Label { get; }
     public string Description { get; }
     public float MinWidth { get; }
-    public GenTableColumnType Type { get; }
+    public GenTable_ColumnType Type { get; }
 }
 
-public abstract class GenTableColumn(
-    string? label = null,
-    string? description = null,
-    float? minWidth = null,
-    GenTableColumnType type = GenTableColumnType.Number
-) : IGenTableColumn
+public abstract class GenTable_Column : IGenTable_Column
 {
-    public string Label { get; } = label ?? "";
-    public string Description { get; } = description ?? "";
-    public float MinWidth { get; } = minWidth ?? 100f;
-    public GenTableColumnType Type { get; } = type;
+    public string Label { get; }
+    public string Description { get; }
+    public float MinWidth { get; }
+    public GenTable_ColumnType Type { get; }
+
+    public GenTable_Column(
+        string? label = null,
+        string? description = null,
+        float? minWidth = null,
+        GenTable_ColumnType type = GenTable_ColumnType.Number
+    )
+    {
+        Label = label ?? "";
+        Description = description ?? "";
+        MinWidth = minWidth ?? 100f;
+        Type = type;
+    }
 }
 
-public interface IGenTableRow<ColumnType> where ColumnType : IGenTableColumn
+public interface IGenTable_Row<ColumnType> where ColumnType : IGenTable_Column
 {
-    public IGenTableCell GetCell(ColumnType column);
+    public IGenTable_Cell GetCell(ColumnType column);
 }
 
-public interface IGenTableCell : IComparable<IGenTableCell>
+public interface IGenTable_Cell : IComparable<IGenTable_Cell>
 {
     public float ValueNum { get; }
     public string ValueStr { get; }
     public string Tip { get; }
     public Def? Def { get; }
     public ThingDef? Stuff { get; }
+    public IGenTable_Cell GetDiff(IGenTable_Cell other);
 }
 
-public abstract class GenTableCell() : IGenTableCell
+public abstract class GenTable_Cell : IGenTable_Cell
 {
     public float ValueNum { get; init; } = float.NaN;
     public string ValueStr { get; init; } = "";
@@ -518,21 +528,101 @@ public abstract class GenTableCell() : IGenTableCell
     public Def? Def { get; init; }
     public ThingDef? Stuff { get; init; }
 
-    public abstract int CompareTo(IGenTableCell other);
+    public GenTable_Cell()
+    {
+    }
+
+    public abstract IGenTable_Cell GetDiff(IGenTable_Cell other);
+
+    public abstract int CompareTo(IGenTable_Cell other);
 }
 
-public class GenTableNumCell() : GenTableCell
+public class GenTable_NumCell : GenTable_Cell
 {
-    public override int CompareTo(IGenTableCell other)
+    public GenTable_NumCell()
+    {
+    }
+
+    public override int CompareTo(IGenTable_Cell other)
     {
         return ValueNum.CompareTo(other.ValueNum);
     }
+    public override IGenTable_Cell GetDiff(IGenTable_Cell other)
+    {
+        var diff = ValueNum - other.ValueNum;
+
+        return new GenTable_NumCell()
+        {
+            ValueNum = diff,
+            ValueStr = diff.ToString(),
+        };
+    }
 }
 
-public class GenTableStrCell() : GenTableCell
+public class GenTable_StrCell : GenTable_Cell
 {
-    public override int CompareTo(IGenTableCell other)
+    public GenTable_StrCell()
+    {
+    }
+
+    public override int CompareTo(IGenTable_Cell other)
     {
         return ValueStr.CompareTo(other.ValueStr);
+    }
+    public override IGenTable_Cell GetDiff(IGenTable_Cell other)
+    {
+        return new GenTable_NumCell()
+        {
+            ValueNum = float.NaN,
+        };
+    }
+}
+
+public class GenTable_StatCell : GenTable_Cell
+{
+    protected readonly StatDef stat;
+
+    public GenTable_StatCell(
+        StatDef stat,
+        float value,
+        ToStringNumberSense numberSense = ToStringNumberSense.Absolute
+    )
+    {
+        this.stat = stat;
+        ValueNum = value;
+
+        if (numberSense == ToStringNumberSense.Offset)
+        {
+            var strAbs = stat.ValueToString(Math.Abs(value), ToStringNumberSense.Absolute);
+
+            if (value > 0)
+            {
+                strAbs = "+" + strAbs;
+            }
+            else if (value < 0)
+            {
+                strAbs = "-" + strAbs;
+            }
+
+            ValueStr = strAbs;
+        }
+        else
+        {
+            ValueStr = stat.ValueToString(value, numberSense);
+        }
+    }
+
+    public override int CompareTo(IGenTable_Cell other)
+    {
+        return ValueNum.CompareTo(other.ValueNum);
+    }
+    public override IGenTable_Cell GetDiff(IGenTable_Cell other)
+    {
+        // Probably should check if both are of the same "type".
+        return new GenTable_StatCell(
+            stat,
+            ValueNum - other.ValueNum,
+            ToStringNumberSense.Offset
+        );
     }
 }
