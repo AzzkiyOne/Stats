@@ -421,7 +421,7 @@ internal class GenTable<ColumnType, RowType>
                 case > 0:
                     GUI.color = Color.green;
                     break;
-                default:
+                case 0:
                     GUI.color = Color.yellow;
                     break;
             }
@@ -551,8 +551,8 @@ public interface IGenTable_Cell : IComparable<IGenTable_Cell>
 
 public abstract class GenTable_Cell : IGenTable_Cell
 {
-    public virtual float ValueNum { get; protected set; } = float.NaN;
-    public string ValueStr { get; protected set; } = "";
+    public virtual float ValueNum { get; protected init; } = float.NaN;
+    public string ValueStr { get; protected init; } = "";
     public virtual float ValueNumDiff { get; protected set; } = float.NaN;
     public string ValueStrDiff { get; protected set; } = "";
     private IGenTable_Cell? _diffCell = null;
@@ -587,7 +587,7 @@ public class GenTable_NumCell : GenTable_Cell
     public override float ValueNum
     {
         get => _valueNum;
-        protected set
+        protected init
         {
             _valueNum = value;
             ValueStr = float.IsNaN(value) ? "" : value.ToString();
@@ -601,7 +601,7 @@ public class GenTable_NumCell : GenTable_Cell
         {
             _valueNumDiff = value;
             ValueStrDiff = float.IsNaN(value)
-                ? ""
+                ? ValueStr
                 : value > 0
                     ? "+" + value.ToString()
                     : value.ToString();
@@ -636,7 +636,7 @@ public class GenTable_StatCell : GenTable_Cell
     private StatRequest Req
     {
         get => _req;
-        set
+        init
         {
             _req = value;
             ValueNum = stat.Worker.GetValue(value);
@@ -646,15 +646,17 @@ public class GenTable_StatCell : GenTable_Cell
     public override float ValueNum
     {
         get => _valueNum;
-        protected set
+        protected init
         {
             _valueNum = value;
-            ValueStr = stat.Worker.GetStatDrawEntryLabel(
-                stat,
-                ValueNum,
-                ToStringNumberSense.Absolute,
-                Req
-            );
+            ValueStr = float.IsNaN(value)
+                ? ""
+                : stat.Worker.GetStatDrawEntryLabel(
+                    stat,
+                    ValueNum,
+                    ToStringNumberSense.Absolute,
+                    Req
+                );
         }
     }
     private float _valueNumDiff;
@@ -665,28 +667,35 @@ public class GenTable_StatCell : GenTable_Cell
         {
             _valueNumDiff = value;
 
-            var strAbs = stat.Worker.GetStatDrawEntryLabel(
+            if (float.IsNaN(value))
+            {
+                ValueStrDiff = ValueStr;
+            }
+            else
+            {
+                var strAbs = stat.Worker.GetStatDrawEntryLabel(
                 stat,
                 Math.Abs(value),
                 ToStringNumberSense.Absolute,
                 Req
             );
 
-            // "Boolean" type cells are displayed incorrectly.
-            // "No" (0) becomes "-Yes" (0 - 1 = -1).
-            //
-            // We have to keep in mind that string representation
-            // of a stat's value wil not always be a formatted number.
-            if (value > 0)
-            {
-                strAbs = "+" + strAbs;
-            }
-            else if (value < 0)
-            {
-                strAbs = "-" + strAbs;
-            }
+                // "Boolean" type cells are displayed incorrectly.
+                // "No" (0) becomes "-Yes" (0 - 1 = -1).
+                //
+                // We have to keep in mind that string representation
+                // of a stat's value wil not always be a formatted number.
+                if (value > 0)
+                {
+                    strAbs = "+" + strAbs;
+                }
+                else if (value < 0)
+                {
+                    strAbs = "-" + strAbs;
+                }
 
-            ValueStrDiff = strAbs;
+                ValueStrDiff = strAbs;
+            }
         }
     }
 
