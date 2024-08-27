@@ -397,7 +397,7 @@ internal class GenTable<ColumnType, RowType>
             return;
         }
 
-        var label = cell.ValueStr;
+        var label = Debug.InDebugMode ? cell.ValueNum.ToString() : cell.ValueStr;
         var tip = cell.Tip;
 
         if (
@@ -413,7 +413,7 @@ internal class GenTable<ColumnType, RowType>
             label = thisCell.ValueStrDiff;
             tip = thisCell.ValueStr;
 
-            switch (thisCell.ValueNumDiff)
+            switch (thisCell.ValueNumDiff * column.DiffMult)
             {
                 case < 0:
                     GUI.color = Color.red;
@@ -424,6 +424,11 @@ internal class GenTable<ColumnType, RowType>
                 case 0:
                     GUI.color = Color.yellow;
                     break;
+            }
+
+            if (Debug.InDebugMode)
+            {
+                label = thisCell.ValueNumDiff.ToString();
             }
         }
 
@@ -509,6 +514,7 @@ public interface IGenTable_Column
     public string Description { get; }
     public float MinWidth { get; }
     public GenTable_ColumnType Type { get; }
+    public int DiffMult { get; }
 }
 
 public abstract class GenTable_Column : IGenTable_Column
@@ -517,6 +523,7 @@ public abstract class GenTable_Column : IGenTable_Column
     public string Description { get; }
     public float MinWidth { get; }
     public GenTable_ColumnType Type { get; }
+    public int DiffMult { get; protected init; } = 1;
 
     public GenTable_Column(
         string? label = null,

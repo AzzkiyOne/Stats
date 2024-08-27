@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Patch>
+
+    <Operation Class="PatchOperationAdd">
+        <xpath>Defs/StatDef[defName="ReloadTime"]</xpath>
+        <value>
+            <formatString>{0} s</formatString>
+            <toStringStyle>FloatTwo</toStringStyle>
+        </value>
+    </Operation>
+
+    <Operation Class="PatchOperationAddModExtension">
+        <xpath>Defs/StatDef[defName="ShotSpread"]</xpath>
+        <value>
+            <li Class="Stats.StatDefExtension">
+                <diffMult>-1</diffMult>
+            </li>
+        </value>
+    </Operation>
+
+    <Operation Class="PatchOperationAddModExtension">
+        <xpath>Defs/StatDef[defName="SwayFactor"]</xpath>
+        <value>
+            <li Class="Stats.StatDefExtension">
+                <diffMult>-1</diffMult>
+            </li>
+        </value>
+    </Operation>
+
+    <Operation Class="PatchOperationAddModExtension">
+        <xpath>Defs/StatDef[defName="Recoil"]</xpath>
+        <value>
+            <li Class="Stats.StatDefExtension">
+                <diffMult>-1</diffMult>
+            </li>
+        </value>
+    </Operation>
+
+</Patch>
