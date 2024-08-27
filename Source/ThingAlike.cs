@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using RimWorld;
 using Verse;
 
@@ -98,11 +99,11 @@ public class ThingAlike :
 
             try
             {
-                newValue = column.GetCellData(this);
+                newValue = column.CreateCell(this);
             }
-            catch
+            catch (Exception ex)
             {
-                newValue = new GenTable_ExCell();
+                newValue = new GenTable_ExCell(ex);
             }
 
             this[column] = newValue;

@@ -40,7 +40,7 @@ public abstract class ThingDefTable_Column : GenTable_Column
         Id = id;
     }
 
-    public abstract IGenTable_Cell GetCellData(ThingAlike thingAlike);
+    public abstract IGenTable_Cell CreateCell(ThingAlike thingAlike);
 }
 
 public class ThingDefTable_StatDefColumn : ThingDefTable_Column
@@ -56,7 +56,7 @@ public class ThingDefTable_StatDefColumn : ThingDefTable_Column
         this.statDef = statDef;
     }
 
-    public override IGenTable_Cell GetCellData(ThingAlike thing)
+    public override IGenTable_Cell CreateCell(ThingAlike thing)
     {
         var statReq = StatRequest.For(thing.def, thing.stuff);
 
@@ -83,11 +83,10 @@ public class LabelColumn : ThingDefTable_Column
     {
     }
 
-    public override IGenTable_Cell GetCellData(ThingAlike thing)
+    public override IGenTable_Cell CreateCell(ThingAlike thing)
     {
-        return new GenTable_StrCell()
+        return new GenTable_StrCell(thing.label)
         {
-            ValueStr = thing.label,
             Tip = thing.def.description,
             Def = thing.def,
             Stuff = thing.stuff,
@@ -105,7 +104,7 @@ public class ThingDefTable_WeaponRangeColumn : ThingDefTable_Column
     {
     }
 
-    public override IGenTable_Cell GetCellData(ThingAlike thing)
+    public override IGenTable_Cell CreateCell(ThingAlike thing)
     {
         if (
             thing.def.IsRangedWeapon
@@ -116,7 +115,7 @@ public class ThingDefTable_WeaponRangeColumn : ThingDefTable_Column
 
             if (range is float _range)
             {
-                return new GenTable_NumCell() { ValueNum = _range, ValueStr = _range.ToString() };
+                return new GenTable_NumCell(_range);
             }
         }
 

@@ -385,7 +385,8 @@ internal class GenTable<ColumnType, RowType>
 
             using (new TextAnchorCtx(TextAnchor.MiddleCenter))
             {
-                Widgets.Label(targetRect, "!!!");
+                Widgets.Label(targetRect, cell.ValueStr);
+                TooltipHandler.TipRegion(targetRect, new TipSignal(cell.Tip));
             }
 
             return;
@@ -408,7 +409,7 @@ internal class GenTable<ColumnType, RowType>
             var selectedRowCell = SelectedRow.GetCell(column);
             var thisCell = row.GetCell(column);
 
-            thisCell.Diff(selectedRowCell);
+            thisCell.DiffCell = selectedRowCell;
             label = thisCell.ValueStrDiff;
             tip = thisCell.ValueStr;
 
@@ -545,104 +546,130 @@ public interface IGenTable_Cell : IComparable<IGenTable_Cell>
     public string Tip { get; }
     public Def? Def { get; }
     public ThingDef? Stuff { get; }
-    public void Diff(IGenTable_Cell other);
+    public IGenTable_Cell DiffCell { set; }
 }
 
 public abstract class GenTable_Cell : IGenTable_Cell
 {
-    public float ValueNum { get; init; } = float.NaN;
-    public string ValueStr { get; init; } = "";
-    public float ValueNumDiff { get; set; } = float.NaN;
-    public string ValueStrDiff { get; set; } = "";
-    protected IGenTable_Cell? DiffCell { get; set; } = null;
+    public virtual float ValueNum { get; protected set; } = float.NaN;
+    public string ValueStr { get; protected set; } = "";
+    public virtual float ValueNumDiff { get; protected set; } = float.NaN;
+    public string ValueStrDiff { get; protected set; } = "";
+    private IGenTable_Cell? _diffCell = null;
+    public virtual IGenTable_Cell DiffCell
+    {
+        set
+        {
+            if (value != _diffCell)
+            {
+                _diffCell = value;
+                ValueNumDiff = ValueNum - value.ValueNum;
+            }
+        }
+    }
     public string Tip { get; init; } = "";
-    public Def? Def { get; init; }
-    public ThingDef? Stuff { get; init; }
+    public Def? Def { get; init; } = null;
+    public ThingDef? Stuff { get; init; } = null;
 
     public GenTable_Cell()
     {
     }
 
-    public abstract void Diff(IGenTable_Cell other);
-
-    public abstract int CompareTo(IGenTable_Cell other);
+    public virtual int CompareTo(IGenTable_Cell other)
+    {
+        return ValueNum.CompareTo(other.ValueNum);
+    }
 }
 
 public class GenTable_NumCell : GenTable_Cell
 {
-    public GenTable_NumCell()
+    private float _valueNum;
+    public override float ValueNum
     {
+        get => _valueNum;
+        protected set
+        {
+            _valueNum = value;
+            ValueStr = float.IsNaN(value) ? "" : value.ToString();
+        }
+    }
+    private float _valueNumDiff;
+    public override float ValueNumDiff
+    {
+        get => _valueNumDiff;
+        protected set
+        {
+            _valueNumDiff = value;
+            ValueStrDiff = float.IsNaN(value)
+                ? ""
+                : value > 0
+                    ? "+" + value.ToString()
+                    : value.ToString();
+        }
     }
 
-    public override int CompareTo(IGenTable_Cell other)
+    public GenTable_NumCell(float value = float.NaN)
     {
-        return ValueNum.CompareTo(other.ValueNum);
-    }
-    public override void Diff(IGenTable_Cell other)
-    {
-        if (DiffCell != other)
-        {
-            DiffCell = other;
-            ValueNumDiff = ValueNum - other.ValueNum;
-            ValueStrDiff = ValueNumDiff > 0
-                ? "+" + ValueNumDiff.ToString()
-                : ValueNumDiff.ToString();
-        }
+        ValueNum = value;
     }
 }
 
 public class GenTable_StrCell : GenTable_Cell
 {
-    public GenTable_StrCell()
+    public override IGenTable_Cell DiffCell { set { } }
+
+    public GenTable_StrCell(string value = "")
     {
+        ValueStr = value;
     }
 
     public override int CompareTo(IGenTable_Cell other)
     {
         return ValueStr.CompareTo(other.ValueStr);
     }
-    public override void Diff(IGenTable_Cell other)
-    {
-    }
 }
 
 public class GenTable_StatCell : GenTable_Cell
 {
     private readonly StatDef stat;
-    private readonly StatRequest req;
-
-    public GenTable_StatCell(
-        StatDef stat,
-        StatRequest req
-    )
+    private StatRequest _req;
+    private StatRequest Req
     {
-        this.stat = stat;
-        this.req = req;
-        ValueNum = stat.Worker.GetValue(req);
-        ValueStr = stat.Worker.GetStatDrawEntryLabel(
-            stat,
-            ValueNum,
-            ToStringNumberSense.Absolute,
-            req
-        );
-    }
-
-    public override int CompareTo(IGenTable_Cell other)
-    {
-        return ValueNum.CompareTo(other.ValueNum);
-    }
-    public override void Diff(IGenTable_Cell other)
-    {
-        if (DiffCell != other)
+        get => _req;
+        set
         {
-            DiffCell = other;
-            ValueNumDiff = ValueNum - other.ValueNum;
+            _req = value;
+            ValueNum = stat.Worker.GetValue(value);
+        }
+    }
+    private float _valueNum;
+    public override float ValueNum
+    {
+        get => _valueNum;
+        protected set
+        {
+            _valueNum = value;
+            ValueStr = stat.Worker.GetStatDrawEntryLabel(
+                stat,
+                ValueNum,
+                ToStringNumberSense.Absolute,
+                Req
+            );
+        }
+    }
+    private float _valueNumDiff;
+    public override float ValueNumDiff
+    {
+        get => _valueNumDiff;
+        protected set
+        {
+            _valueNumDiff = value;
 
             var strAbs = stat.Worker.GetStatDrawEntryLabel(
                 stat,
-                Math.Abs(ValueNumDiff),
+                Math.Abs(value),
                 ToStringNumberSense.Absolute,
-                req
+                Req
             );
 
             // "Boolean" type cells are displayed incorrectly.
@@ -650,11 +677,11 @@ public class GenTable_StatCell : GenTable_Cell
             //
             // We have to keep in mind that string representation
             // of a stat's value wil not always be a formatted number.
-            if (ValueNumDiff > 0)
+            if (value > 0)
             {
                 strAbs = "+" + strAbs;
             }
-            else if (ValueNumDiff < 0)
+            else if (value < 0)
             {
                 strAbs = "-" + strAbs;
             }
@@ -662,19 +689,24 @@ public class GenTable_StatCell : GenTable_Cell
             ValueStrDiff = strAbs;
         }
     }
+
+    public GenTable_StatCell(
+        StatDef stat,
+        StatRequest req
+    )
+    {
+        this.stat = stat;
+        Req = req;
+    }
 }
 
 public class GenTable_ExCell : GenTable_Cell
 {
-    public GenTable_ExCell()
-    {
-    }
+    public override IGenTable_Cell DiffCell { set { } }
 
-    public override int CompareTo(IGenTable_Cell other)
+    public GenTable_ExCell(Exception ex)
     {
-        return ValueNum.CompareTo(other.ValueNum);
-    }
-    public override void Diff(IGenTable_Cell other)
-    {
+        ValueStr = "!!!";
+        Tip = ex.ToString();
     }
 }
