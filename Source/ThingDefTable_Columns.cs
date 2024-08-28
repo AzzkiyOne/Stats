@@ -37,7 +37,7 @@ public abstract class ThingDefTable_Column : GenTable_Column
         string id,
         string? label = null,
         string? description = null,
-        float? minWidth = null,
+        float minWidth = 75f,
         GenTable_ColumnType type = GenTable_ColumnType.Number
     ) : base(label, description, minWidth, type)
     {

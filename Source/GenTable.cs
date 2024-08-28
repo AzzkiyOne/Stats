@@ -23,7 +23,7 @@ internal class GenTable<ColumnType, RowType>
             pinnedLeftColumns.Clear();
             middleColumns.Clear();
             pinnedLeftColumnsWidth = 0;
-            //middleColumnsWidth = 0;
+            middleColumnsWidth = 0;
             minRowWidth = 0;
 
             if (SortColumn is null && value.First() != null)
@@ -41,7 +41,7 @@ internal class GenTable<ColumnType, RowType>
                 else
                 {
                     middleColumns.Add(column);
-                    //middleColumnsWidth += column.minWidth;
+                    middleColumnsWidth += column.MinWidth;
                 }
 
                 minRowWidth += column.MinWidth;
@@ -65,7 +65,7 @@ internal class GenTable<ColumnType, RowType>
             SortRows();
         }
     }
-    //private float middleColumnsWidth = 0f;
+    private float middleColumnsWidth = 0f;
     private float pinnedLeftColumnsWidth = 0f;
     private float minRowWidth = 0f;
     private float totalRowsHeight = 0f;
@@ -97,6 +97,7 @@ internal class GenTable<ColumnType, RowType>
 
     private const float rowHeight = 30f;
     private const float headersRowHeight = rowHeight;
+    private const float cellPadding = 5f;
 
     //private static Color columnSeparatorLineColor = new(1f, 1f, 1f, 0.04f);
 
@@ -113,10 +114,15 @@ internal class GenTable<ColumnType, RowType>
         using (new GameFontCtx(GameFont.Small))
         using (new TextAnchorCtx(TextAnchor.MiddleLeft))
         {
+            var willHorScroll = totalRowsHeight + headersRowHeight > targetRect.height;
+            var adjTargetRectWidth = willHorScroll
+                ? targetRect.width - GenUI.ScrollBarWidth
+                : targetRect.width;
+
             var contentRect = new Rect(
                 0f,
                 0f,
-                minRowWidth,
+                Math.Max(minRowWidth, adjTargetRectWidth),
                 totalRowsHeight + headersRowHeight
             );
 
@@ -146,7 +152,7 @@ internal class GenTable<ColumnType, RowType>
             var headersRect = new Rect(
                 scrollPosition.x,
                 scrollPosition.y,
-                targetRect.width,
+                adjTargetRectWidth,
                 headersRowHeight
             );
             DrawHeaders(headersRect);
@@ -154,7 +160,7 @@ internal class GenTable<ColumnType, RowType>
             var bodyRect = new Rect(
                 scrollPosition.x,
                 scrollPosition.y + headersRowHeight,
-                targetRect.width,
+                adjTargetRectWidth,
                 targetRect.height - headersRowHeight
             );
             DrawBody(bodyRect);
@@ -194,7 +200,8 @@ internal class GenTable<ColumnType, RowType>
         // Draw pinned headers
         DrawHeaderColumns(
             targetRect.CutFromX(ref currX, pinnedLeftColumnsWidth),
-            pinnedLeftColumns
+            pinnedLeftColumns,
+            Vector2.zero
         );
         // Draw middle headers
         DrawHeaderColumns(
@@ -206,25 +213,29 @@ internal class GenTable<ColumnType, RowType>
     private void DrawHeaderColumns(
         Rect targetRect,
         List<ColumnType> columns,
-        Vector2? scrollPosition = null
+        Vector2 scrollPosition
     )
     {
         Widgets.BeginGroup(targetRect);
 
-        var currX = -scrollPosition?.x ?? 0f;
+        var currX = -scrollPosition.x;
+        var addCellWidth = GetAddCellWidth(targetRect.width, columns);
 
         foreach (var column in columns)
         {
-            var cellRect = new Rect(currX, 0, column.MinWidth, targetRect.height);
-
-            AdjustColumnWidthIfLastColumn(targetRect, ref cellRect, columns, column);
+            var cellRect = new Rect(
+                currX,
+                0,
+                column.MinWidth + addCellWidth,
+                targetRect.height
+            );
 
             if (DrawHeaderCell(cellRect, column))
             {
                 SortColumn = column;
             }
 
-            currX += column.MinWidth;
+            currX += cellRect.width;
         }
 
         Widgets.EndGroup();
@@ -232,16 +243,21 @@ internal class GenTable<ColumnType, RowType>
     private bool DrawHeaderCell(Rect targetRect, ColumnType column)
     {
         //Widgets.DrawHighlight(targetRect);
-        Widgets.Label(targetRect.ContractedBy(GenUI.Pad, 0), column.Label);
+        using (new TextAnchorCtx(
+            column.Type == GenTable_ColumnType.Number
+            ? TextAnchor.LowerRight
+            : TextAnchor.LowerLeft
+        ))
+        {
+            Widgets.Label(targetRect.ContractedBy(cellPadding, 0), column.Label);
+        }
 
         if (SortColumn == column)
         {
-            var rotationAngle = (int)sortDirection * -90f;
-
             Widgets.DrawTextureRotated(
                 targetRect.RightPartPixels(targetRect.height),
                 TexButton.Reveal,
-                rotationAngle
+                (int)sortDirection * -90f
             );
         }
 
@@ -284,6 +300,7 @@ internal class GenTable<ColumnType, RowType>
         Widgets.BeginGroup(targetRect);
 
         float currY = -scrollPosition.y;
+        var addCellWidth = GetAddCellWidth(targetRect.width, columns);
         int debug_rowsDrawn = 0;
         int debug_columnsDrawn = 0;
 
@@ -328,9 +345,12 @@ internal class GenTable<ColumnType, RowType>
                     break;
                 }
 
-                var cellRect = new Rect(currX, currY, column.MinWidth, rowHeight);
-
-                AdjustColumnWidthIfLastColumn(targetRect, ref cellRect, columns, column);
+                var cellRect = new Rect(
+                    currX,
+                    currY,
+                    column.MinWidth + addCellWidth,
+                    rowHeight
+                );
 
                 DrawRowCell(cellRect, column, row);
 
@@ -432,7 +452,7 @@ internal class GenTable<ColumnType, RowType>
             }
         }
 
-        var contentRect = targetRect.ContractedBy(GenUI.Pad, 0);
+        var contentRect = targetRect.ContractedBy(cellPadding, 0);
         var currX = contentRect.x;
 
         if (cell.Def is not null)
@@ -454,7 +474,14 @@ internal class GenTable<ColumnType, RowType>
             }
         }
 
-        Widgets.Label(contentRect.CutFromX(ref currX), label);
+        using (new TextAnchorCtx(
+            column.Type == GenTable_ColumnType.Number
+            ? TextAnchor.LowerRight
+            : TextAnchor.LowerLeft
+        ))
+        {
+            Widgets.Label(contentRect.CutFromX(ref currX), label);
+        }
 
         GUI.color = Color.white;
 
@@ -466,21 +493,20 @@ internal class GenTable<ColumnType, RowType>
             TooltipHandler.TipRegion(targetRect, new TipSignal(tip));
         }
     }
-    // Maybe it could be done once for a whole column.
-    private void AdjustColumnWidthIfLastColumn(
-        Rect parentRect,
-        ref Rect targetRect,
-        List<ColumnType> columns,
-        ColumnType column
+    private float GetAddCellWidth(
+        float parentRectWidth,
+        List<ColumnType> columns
     )
     {
         if (
-            column == columns[columns.Count - 1]
-            && targetRect.xMax < parentRect.width
+            columns == middleColumns
+            && middleColumnsWidth < parentRectWidth
         )
         {
-            targetRect.xMax = parentRect.width;
+            return (parentRectWidth - middleColumnsWidth) / middleColumns.Count;
         }
+
+        return 0f;
     }
     private void SortRows()
     {
@@ -528,13 +554,13 @@ public abstract class GenTable_Column : IGenTable_Column
     public GenTable_Column(
         string? label = null,
         string? description = null,
-        float? minWidth = null,
+        float minWidth = 75f,
         GenTable_ColumnType type = GenTable_ColumnType.Number
     )
     {
         Label = label ?? "";
         Description = description ?? "";
-        MinWidth = minWidth ?? 100f;
+        MinWidth = Math.Max(Text.CalcSize(Label).x + 15f, minWidth);
         Type = type;
     }
 }

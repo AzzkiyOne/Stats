@@ -23,7 +23,7 @@ class CategoryPicker
     }
     public void Draw(Rect targetRect, Action<ThingCategoryDef?> onCategoryChange)
     {
-        using (new GameFontCtx(GameFont.Tiny))
+        //using (new GameFontCtx(GameFont.Tiny))
         using (new TextAnchorCtx(TextAnchor.MiddleLeft))
         {
             // Scroll area size correction only works because of how rows are "culled" at the top.
