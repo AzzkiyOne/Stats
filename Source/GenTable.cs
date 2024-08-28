@@ -107,8 +107,6 @@ internal class GenTable<ColumnType, RowType>
         Rows = rows;
     }
 
-    // There might be an issue where scroll area is smaller than total columns width.
-    // Probably fixed, but should check.
     public void Draw(Rect targetRect)
     {
         using (new GameFontCtx(GameFont.Small))
@@ -246,6 +244,8 @@ internal class GenTable<ColumnType, RowType>
         using (new TextAnchorCtx(
             column.Type == GenTable_ColumnType.Number
             ? TextAnchor.LowerRight
+            : column.Type == GenTable_ColumnType.Boolean
+            ? TextAnchor.LowerCenter
             : TextAnchor.LowerLeft
         ))
         {
@@ -421,8 +421,10 @@ internal class GenTable<ColumnType, RowType>
         var tip = cell.Tip;
 
         if (
-            column.Type == GenTable_ColumnType.Number
-            && SelectedRow is not null
+            // Not doing this check will (probably) impact performance.
+            //column.Type == GenTable_ColumnType.Number
+            //&& 
+            SelectedRow is not null
             && row != SelectedRow
         )
         {
@@ -477,6 +479,8 @@ internal class GenTable<ColumnType, RowType>
         using (new TextAnchorCtx(
             column.Type == GenTable_ColumnType.Number
             ? TextAnchor.LowerRight
+            : column.Type == GenTable_ColumnType.Boolean
+            ? TextAnchor.LowerCenter
             : TextAnchor.LowerLeft
         ))
         {
@@ -545,23 +549,31 @@ public interface IGenTable_Column
 
 public abstract class GenTable_Column : IGenTable_Column
 {
-    public string Label { get; }
-    public string Description { get; }
-    public float MinWidth { get; }
-    public GenTable_ColumnType Type { get; }
+    private string _label = "";
+    public string Label
+    {
+        get => _label;
+        protected init
+        {
+            _label = value;
+            MinWidth = Math.Max(Text.CalcSize(value).x + 15f, MinWidth);
+        }
+    }
+    public string Description { get; protected init; } = "";
+    private float _minWidth = 75f;
+    public float MinWidth
+    {
+        get => _minWidth;
+        protected init
+        {
+            _minWidth = Math.Max(Text.CalcSize(Label).x + 15f, value);
+        }
+    }
+    public GenTable_ColumnType Type { get; protected init; } = GenTable_ColumnType.Number;
     public int DiffMult { get; protected init; } = 1;
 
-    public GenTable_Column(
-        string? label = null,
-        string? description = null,
-        float minWidth = 75f,
-        GenTable_ColumnType type = GenTable_ColumnType.Number
-    )
+    public GenTable_Column()
     {
-        Label = label ?? "";
-        Description = description ?? "";
-        MinWidth = Math.Max(Text.CalcSize(Label).x + 15f, minWidth);
-        Type = type;
     }
 }
 
@@ -654,6 +666,10 @@ public class GenTable_StrCell : GenTable_Cell
     public GenTable_StrCell(string value = "")
     {
         ValueStr = value;
+        // In "diff mode" the cell renderer uses ValueStrDiff to draw a label
+        // regardless of whether a column's cells are diffable (because it doesn't know).
+        // So this can be considered a crutch.
+        ValueStrDiff = value;
     }
 
     public override int CompareTo(IGenTable_Cell other)
@@ -750,5 +766,22 @@ public class GenTable_ExCell : GenTable_Cell
     {
         ValueStr = "!!!";
         Tip = ex.ToString();
+    }
+}
+
+public class GenTable_BoolCell : GenTable_Cell
+{
+    public GenTable_BoolCell(float value)
+    {
+        ValueNum = value;
+
+        if (value > 0)
+        {
+            ValueStr = ValueStrDiff = "Yes";
+        }
+        else if (value <= 0)
+        {
+            ValueStr = ValueStrDiff = "No";
+        }
     }
 }

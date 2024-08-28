@@ -2,10 +2,29 @@
 <Patch>
 
     <Operation Class="PatchOperationAddModExtension">
+        <xpath>Defs/StatDef[defName="MaxHitPoints"]</xpath>
+        <value>
+            <li Class="Stats.StatDefExtension">
+                <label>max hp</label>
+            </li>
+        </value>
+    </Operation>
+
+    <Operation Class="PatchOperationAddModExtension">
         <xpath>Defs/StatDef[defName="Mass"]</xpath>
         <value>
             <li Class="Stats.StatDefExtension">
                 <diffMult>-1</diffMult>
+                <minWidth>100</minWidth>
+            </li>
+        </value>
+    </Operation>
+
+    <Operation Class="PatchOperationAddModExtension">
+        <xpath>Defs/StatDef[defName="MarketValue"]</xpath>
+        <value>
+            <li Class="Stats.StatDefExtension">
+                <label>$$$</label>
             </li>
         </value>
     </Operation>
