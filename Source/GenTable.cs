@@ -116,13 +116,13 @@ internal class GenTable<ColumnType, RowType>
             var adjTargetRectWidth = willHorScroll
                 ? targetRect.width - GenUI.ScrollBarWidth
                 : targetRect.width;
-
             var contentRect = new Rect(
                 0f,
                 0f,
                 Math.Max(minRowWidth, adjTargetRectWidth),
                 totalRowsHeight + headersRowHeight
             );
+            var extraCellWidth = CalcExtraMiddleCellsWidth(adjTargetRectWidth);
 
             if (
                 Event.current.isScrollWheel
@@ -153,7 +153,7 @@ internal class GenTable<ColumnType, RowType>
                 adjTargetRectWidth,
                 headersRowHeight
             );
-            DrawHeaders(headersRect);
+            DrawHeaders(headersRect, extraCellWidth);
 
             var bodyRect = new Rect(
                 scrollPosition.x,
@@ -161,7 +161,7 @@ internal class GenTable<ColumnType, RowType>
                 adjTargetRectWidth,
                 targetRect.height - headersRowHeight
             );
-            DrawBody(bodyRect);
+            DrawBody(bodyRect, extraCellWidth);
 
             // Separators
             GUIWidgets.DrawLineVertical(
@@ -191,7 +191,7 @@ internal class GenTable<ColumnType, RowType>
             Widgets.EndScrollView();
         }
     }
-    private void DrawHeaders(Rect targetRect)
+    private void DrawHeaders(Rect targetRect, float extraCellWidth)
     {
         var currX = targetRect.x;
 
@@ -205,26 +205,27 @@ internal class GenTable<ColumnType, RowType>
         DrawHeaderColumns(
             targetRect.CutFromX(ref currX),
             middleColumns,
-            scrollPosition
+            scrollPosition,
+            extraCellWidth
         );
     }
     private void DrawHeaderColumns(
         Rect targetRect,
         List<ColumnType> columns,
-        Vector2 scrollPosition
+        Vector2 scrollPosition,
+        float extraCellWidth = 0f
     )
     {
         Widgets.BeginGroup(targetRect);
 
         var currX = -scrollPosition.x;
-        var addCellWidth = GetAddCellWidth(targetRect.width, columns);
 
         foreach (var column in columns)
         {
             var cellRect = new Rect(
                 currX,
                 0,
-                column.MinWidth + addCellWidth,
+                column.MinWidth + extraCellWidth,
                 targetRect.height
             );
 
@@ -274,7 +275,7 @@ internal class GenTable<ColumnType, RowType>
 
         return Widgets.ButtonInvisible(targetRect);
     }
-    private void DrawBody(Rect targetRect)
+    private void DrawBody(Rect targetRect, float extraCellWidth)
     {
         var currX = targetRect.x;
 
@@ -288,19 +289,20 @@ internal class GenTable<ColumnType, RowType>
         DrawRows(
             targetRect.CutFromX(ref currX),
             middleColumns,
-            scrollPosition
+            scrollPosition,
+            extraCellWidth
         );
     }
     private void DrawRows(
         Rect targetRect,
         List<ColumnType> columns,
-        Vector2 scrollPosition
+        Vector2 scrollPosition,
+        float extraCellWidth = 0f
     )
     {
         Widgets.BeginGroup(targetRect);
 
         float currY = -scrollPosition.y;
-        var addCellWidth = GetAddCellWidth(targetRect.width, columns);
         int debug_rowsDrawn = 0;
         int debug_columnsDrawn = 0;
 
@@ -348,7 +350,7 @@ internal class GenTable<ColumnType, RowType>
                 var cellRect = new Rect(
                     currX,
                     currY,
-                    column.MinWidth + addCellWidth,
+                    column.MinWidth + extraCellWidth,
                     rowHeight
                 );
 
@@ -428,14 +430,11 @@ internal class GenTable<ColumnType, RowType>
             && row != SelectedRow
         )
         {
-            var selectedRowCell = SelectedRow.GetCell(column);
-            var thisCell = row.GetCell(column);
+            cell.DiffCell = SelectedRow.GetCell(column);
+            label = cell.ValueStrDiff;
+            tip = cell.ValueStr;
 
-            thisCell.DiffCell = selectedRowCell;
-            label = thisCell.ValueStrDiff;
-            tip = thisCell.ValueStr;
-
-            switch (thisCell.ValueNumDiff * column.DiffMult)
+            switch (cell.ValueNumDiff * column.DiffMult)
             {
                 case < 0:
                     GUI.color = Color.red;
@@ -450,7 +449,7 @@ internal class GenTable<ColumnType, RowType>
 
             if (Debug.InDebugMode)
             {
-                label = thisCell.ValueNumDiff.ToString();
+                label = cell.ValueNumDiff.ToString();
             }
         }
 
@@ -497,15 +496,11 @@ internal class GenTable<ColumnType, RowType>
             TooltipHandler.TipRegion(targetRect, new TipSignal(tip));
         }
     }
-    private float GetAddCellWidth(
-        float parentRectWidth,
-        List<ColumnType> columns
-    )
+    private float CalcExtraMiddleCellsWidth(float parentRectWidth)
     {
-        if (
-            columns == middleColumns
-            && middleColumnsWidth < parentRectWidth
-        )
+        parentRectWidth -= pinnedLeftColumnsWidth;
+
+        if (middleColumnsWidth < parentRectWidth)
         {
             return (parentRectWidth - middleColumnsWidth) / middleColumns.Count;
         }

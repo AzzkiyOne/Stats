@@ -5,7 +5,7 @@
         <xpath>Defs/StatDef[defName="MaxHitPoints"]</xpath>
         <value>
             <li Class="Stats.StatDefExtension">
-                <label>max hp</label>
+                <label>max HP</label>
             </li>
         </value>
     </Operation>
