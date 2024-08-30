@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using RimWorld;
 using Verse;
@@ -29,7 +30,7 @@ public abstract class ThingDefTable_Column : GenTable_Column
 {
     public ThingDefTable_Column() { }
 
-    public abstract IGenTable_Cell CreateCell(ThingAlike thingAlike);
+    public abstract Cell? CreateCell(ThingAlike thingAlike);
 }
 
 public class ThingDefTable_StatDefColumn : ThingDefTable_Column
@@ -67,20 +68,21 @@ public class ThingDefTable_StatDefColumn : ThingDefTable_Column
         Stat = stat;
     }
 
-    public override IGenTable_Cell CreateCell(ThingAlike thing)
+    public override Cell? CreateCell(ThingAlike thing)
     {
         var statReq = StatRequest.For(thing.def, thing.stuff);
 
         if (Stat.Worker.ShouldShowFor(statReq))
         {
-            return new GenTable_StatCell(Stat, statReq);
+            return new StatCell(Stat, statReq) { DiffMult = DiffMult };
         }
 
         //return new GenTable_StatCell(
         //    statDef,
         //    float.NaN
         //);
-        return new GenTable_NumCell();
+        //return Cell.Empty;
+        return null;
     }
 }
 
@@ -93,9 +95,9 @@ public class LabelColumn : ThingDefTable_Column
         Type = GenTable_ColumnType.String;
     }
 
-    public override IGenTable_Cell CreateCell(ThingAlike thing)
+    public override Cell? CreateCell(ThingAlike thing)
     {
-        return new GenTable_StrCell(thing.label)
+        return new StrCell(thing.label)
         {
             Tip = thing.def.description,
             Def = thing.def,
@@ -112,7 +114,7 @@ public class ThingDefTable_WeaponRangeColumn : ThingDefTable_Column
         Description = "Stat_Thing_Weapon_Range_Desc".Translate();
     }
 
-    public override IGenTable_Cell CreateCell(ThingAlike thing)
+    public override Cell? CreateCell(ThingAlike thing)
     {
         if (
             thing.def.IsRangedWeapon
@@ -123,11 +125,12 @@ public class ThingDefTable_WeaponRangeColumn : ThingDefTable_Column
 
             if (range is float _range)
             {
-                return new GenTable_NumCell(_range);
+                return new NumCell(_range) { DiffMult = DiffMult };
             }
         }
 
-        return new GenTable_NumCell();
+        //return Cell.Empty;
+        return null;
     }
 }
 
@@ -140,16 +143,17 @@ public class ThingDefTable_CEReloadTimeColumn : ThingDefTable_StatDefColumn
         DiffMult = -1;
     }
 
-    public override IGenTable_Cell CreateCell(ThingAlike thing)
+    public override Cell? CreateCell(ThingAlike thing)
     {
         var statReq = StatRequest.For(thing.def, thing.stuff);
 
         if (mcStat.Worker.ShouldShowFor(statReq))
         {
-            return new GenTable_StatCell(Stat, statReq);
+            return new StatCell(Stat, statReq) { DiffMult = DiffMult };
         }
 
-        return new GenTable_NumCell();
+        //return Cell.Empty;
+        return null;
     }
 
     private static readonly StatDef mcStat = DefDatabase<StatDef>.GetNamed("MagazineCapacity");
@@ -163,16 +167,17 @@ public class ThingDefTable_CEMagCapColumn : ThingDefTable_StatDefColumn
     {
     }
 
-    public override IGenTable_Cell CreateCell(ThingAlike thing)
+    public override Cell? CreateCell(ThingAlike thing)
     {
         var statReq = StatRequest.For(thing.def, thing.stuff);
 
         if (Stat.Worker.ShouldShowFor(statReq))
         {
-            return new GenTable_NumCell(Stat.Worker.GetValue(statReq));
+            return new NumCell(Stat.Worker.GetValue(statReq)) { DiffMult = DiffMult };
         }
 
-        return new GenTable_NumCell();
+        //return Cell.Empty;
+        return null;
     }
 }
 
@@ -184,15 +189,16 @@ public class ThingDefTable_CEOneHandednessColumn : ThingDefTable_StatDefColumn
     {
     }
 
-    public override IGenTable_Cell CreateCell(ThingAlike thing)
+    public override Cell? CreateCell(ThingAlike thing)
     {
         var statReq = StatRequest.For(thing.def, thing.stuff);
 
         if (Stat.Worker.ShouldShowFor(statReq))
         {
-            return new GenTable_BoolCell(Stat.Worker.GetValue(statReq));
+            return new BoolCell(Stat.Worker.GetValue(statReq));
         }
 
-        return new GenTable_NumCell();
+        //return Cell.Empty;
+        return null;
     }
 }

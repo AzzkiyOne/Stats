@@ -353,8 +353,13 @@ internal class GenTable<ColumnType, RowType>
                     column.MinWidth + extraCellWidth,
                     rowHeight
                 );
+                var cell = row.GetCell(column);
+                var diffCell = SelectedRow?.GetCell(column);
 
-                DrawRowCell(cellRect, column, row);
+                if (cell is not null)
+                {
+                    DrawRowCell(cellRect, cell, diffCell);
+                }
 
                 currX += cellRect.width;
                 debug_columnsDrawn++;
@@ -395,62 +400,19 @@ internal class GenTable<ColumnType, RowType>
 
         Widgets.EndGroup();
     }
-    private void DrawRowCell(Rect targetRect, ColumnType column, RowType row)
+    private void DrawRowCell(Rect targetRect, Cell cell, Cell? diffCell)
     {
-        var cell = row.GetCell(column);
-
-        if (cell is GenTable_ExCell)
+        if (cell.BGColor is Color bgColor)
         {
-            GUI.color = Color.red;
-            Widgets.DrawHighlight(targetRect);
-            GUI.color = Color.white;
-
-            using (new TextAnchorCtx(TextAnchor.MiddleCenter))
+            using (new ColorCtx(bgColor))
             {
-                Widgets.Label(targetRect, cell.ValueStr);
-                TooltipHandler.TipRegion(targetRect, new TipSignal(cell.Tip));
+                Widgets.DrawHighlight(targetRect);
             }
-
-            return;
         }
 
-        if (cell.ValueStr == "")
+        if (Event.current.type == EventType.Repaint)
         {
-            return;
-        }
-
-        var label = Debug.InDebugMode ? cell.ValueNum.ToString() : cell.ValueStr;
-        var tip = cell.Tip;
-
-        if (
-            // Not doing this check will (probably) impact performance.
-            //column.Type == GenTable_ColumnType.Number
-            //&& 
-            SelectedRow is not null
-            && row != SelectedRow
-        )
-        {
-            cell.DiffCell = SelectedRow.GetCell(column);
-            label = cell.ValueStrDiff;
-            tip = cell.ValueStr;
-
-            switch (cell.ValueNumDiff * column.DiffMult)
-            {
-                case < 0:
-                    GUI.color = Color.red;
-                    break;
-                case > 0:
-                    GUI.color = Color.green;
-                    break;
-                case 0:
-                    GUI.color = Color.yellow;
-                    break;
-            }
-
-            if (Debug.InDebugMode)
-            {
-                label = cell.ValueNumDiff.ToString();
-            }
+            cell.SwitchToDiffState(diffCell);
         }
 
         var contentRect = targetRect.ContractedBy(cellPadding, 0);
@@ -475,25 +437,16 @@ internal class GenTable<ColumnType, RowType>
             }
         }
 
-        using (new TextAnchorCtx(
-            column.Type == GenTable_ColumnType.Number
-            ? TextAnchor.LowerRight
-            : column.Type == GenTable_ColumnType.Boolean
-            ? TextAnchor.LowerCenter
-            : TextAnchor.LowerLeft
-        ))
+        using (new ColorCtx(cell.Color))
+        using (new TextAnchorCtx(cell.TextAnchor))
         {
+            var label = Debug.InDebugMode ? cell.Value.ToString() : cell.Label;
             Widgets.Label(contentRect.CutFromX(ref currX), label);
         }
 
-        GUI.color = Color.white;
-
-        if (
-            //Event.current.control &&
-            tip != ""
-        )
+        if (cell.Tip != "")
         {
-            TooltipHandler.TipRegion(targetRect, new TipSignal(tip));
+            TooltipHandler.TipRegion(targetRect, new TipSignal(cell.Tip));
         }
     }
     private float CalcExtraMiddleCellsWidth(float parentRectWidth)
@@ -515,8 +468,26 @@ internal class GenTable<ColumnType, RowType>
         }
 
         Rows.Sort((r1, r2) =>
-            r1.GetCell(SortColumn).CompareTo(r2.GetCell(SortColumn)) * (int)sortDirection
-        );
+        {
+            var r1c = r1.GetCell(SortColumn);
+            var r2c = r2.GetCell(SortColumn);
+            int result = 0;
+
+            if (r1c is not null && r2c is not null)
+            {
+                result = r1c.CompareTo(r2c);
+            }
+            else if (r1c is null && r2c is not null)
+            {
+                result = -1;
+            }
+            else if (r1c is not null && r2c is null)
+            {
+                result = 1;
+            }
+
+            return result * (int)sortDirection;
+        });
     }
 }
 
@@ -574,209 +545,240 @@ public abstract class GenTable_Column : IGenTable_Column
 
 public interface IGenTable_Row<ColumnType> where ColumnType : IGenTable_Column
 {
-    public IGenTable_Cell GetCell(ColumnType column);
+    public Cell? GetCell(ColumnType column);
 }
 
-public interface IGenTable_Cell : IComparable<IGenTable_Cell>
+public class Cell : IComparable<Cell>
 {
-    public float ValueNum { get; }
-    public string ValueStr { get; }
-    public float ValueNumDiff { get; }
-    public string ValueStrDiff { get; }
-    public string Tip { get; }
-    public Def? Def { get; }
-    public ThingDef? Stuff { get; }
-    public IGenTable_Cell DiffCell { set; }
-}
+    public StrOrSingle Value { get; set; } = float.NaN;
+    public string Label { get; set; } = "";
+    public string Tip { get; set; } = "";
+    public Def? Def { get; set; }
+    public ThingDef? Stuff { get; set; }
+    public Color Color { get; set; } = Color.white;
+    public Color? BGColor { get; set; }
+    public TextAnchor TextAnchor { get; set; } = TextAnchor.MiddleLeft;
+    public int DiffMult { get; set; } = 1;
+    private Cell? curDiffCell;
 
-public abstract class GenTable_Cell : IGenTable_Cell
-{
-    public virtual float ValueNum { get; protected init; } = float.NaN;
-    public string ValueStr { get; protected init; } = "";
-    public virtual float ValueNumDiff { get; protected set; } = float.NaN;
-    public string ValueStrDiff { get; protected set; } = "";
-    private IGenTable_Cell? _diffCell = null;
-    public virtual IGenTable_Cell DiffCell
+    public Cell()
     {
-        set
+    }
+
+    public void SwitchToDiffState(Cell? cell)
+    {
+        if (curDiffCell == cell)
         {
-            if (value != _diffCell)
-            {
-                _diffCell = value;
-                ValueNumDiff = ValueNum - value.ValueNum;
-            }
+            return;
+        }
+
+        curDiffCell = cell;
+
+        if (cell is null || cell == this)
+        {
+            SwitchToNormalState();
+        }
+        else
+        {
+            SwitchToDiffState(Value.Single - cell.Value.Single);
         }
     }
-    public string Tip { get; init; } = "";
-    public Def? Def { get; init; } = null;
-    public ThingDef? Stuff { get; init; } = null;
-
-    public GenTable_Cell()
+    public int CompareTo(Cell other)
     {
+        return Value.CompareTo(other.Value);
     }
 
-    public virtual int CompareTo(IGenTable_Cell other)
+    protected virtual void SwitchToDiffState(float value)
     {
-        return ValueNum.CompareTo(other.ValueNum);
-    }
-}
-
-public class GenTable_NumCell : GenTable_Cell
-{
-    private float _valueNum;
-    public override float ValueNum
-    {
-        get => _valueNum;
-        protected init
+        switch (value * DiffMult)
         {
-            _valueNum = value;
-            ValueStr = float.IsNaN(value) ? "" : value.ToString();
+            case < 0:
+                Color = Color.red;
+                break;
+            case > 0:
+                Color = Color.green;
+                break;
+            case 0:
+                Color = Color.yellow;
+                break;
         }
     }
-    private float _valueNumDiff;
-    public override float ValueNumDiff
+    protected virtual void SwitchToNormalState()
     {
-        get => _valueNumDiff;
-        protected set
+        Color = Color.white;
+    }
+
+    public static readonly Cell Empty = new();
+}
+
+public class NumCell : Cell
+{
+    public NumCell(float value = float.NaN)
+    {
+        Value = value;
+        Label = Value.ToString();
+        // This shouldn't be here.
+        TextAnchor = TextAnchor.MiddleRight;
+    }
+
+    protected override void SwitchToDiffState(float value)
+    {
+        base.SwitchToDiffState(value);
+
+        Label = value > 0 ? "+" + value : value.ToString();
+        Tip = Value.ToString();
+    }
+    protected override void SwitchToNormalState()
+    {
+        base.SwitchToNormalState();
+
+        Label = Value.ToString();
+        Tip = "";
+    }
+}
+
+public class StrCell : Cell
+{
+    public StrCell(string value = "")
+    {
+        Value = value;
+        Label = value;
+    }
+
+    protected override void SwitchToDiffState(float value)
+    {
+    }
+    protected override void SwitchToNormalState()
+    {
+    }
+}
+
+public class BoolCell : Cell
+{
+    public BoolCell(float value)
+    {
+        Value = value;
+        TextAnchor = TextAnchor.MiddleCenter;
+
+        if (value > 0)
         {
-            _valueNumDiff = value;
-            ValueStrDiff = float.IsNaN(value)
-                ? ValueStr
-                : value > 0
-                    ? "+" + value.ToString()
-                    : value.ToString();
+            Label = "Yes";
+        }
+        else if (value <= 0)
+        {
+            Label = "No";
         }
     }
-
-    public GenTable_NumCell(float value = float.NaN)
-    {
-        ValueNum = value;
-    }
 }
 
-public class GenTable_StrCell : GenTable_Cell
+public class ExCell : Cell
 {
-    public override IGenTable_Cell DiffCell { set { } }
-
-    public GenTable_StrCell(string value = "")
+    public ExCell(Exception ex)
     {
-        ValueStr = value;
-        // In "diff mode" the cell renderer uses ValueStrDiff to draw a label
-        // regardless of whether a column's cells are diffable (because it doesn't know).
-        // So this can be considered a crutch.
-        ValueStrDiff = value;
+        // This cell may appear in a column of any type.
+        // This can cause exception in StrOrSingle.CompareTo
+        Value = float.NaN;
+        Label = "!!!";
+        TextAnchor = TextAnchor.MiddleCenter;
+        Tip = ex.ToString();
+        BGColor = Color.red;
     }
 
-    public override int CompareTo(IGenTable_Cell other)
+    protected override void SwitchToDiffState(float value)
     {
-        return ValueStr.CompareTo(other.ValueStr);
+    }
+    protected override void SwitchToNormalState()
+    {
     }
 }
 
-public class GenTable_StatCell : GenTable_Cell
+public class StatCell : Cell
 {
     private readonly StatDef stat;
-    private StatRequest _req;
-    private StatRequest Req
-    {
-        get => _req;
-        init
-        {
-            _req = value;
-            ValueNum = stat.Worker.GetValue(value);
-        }
-    }
-    private float _valueNum;
-    public override float ValueNum
-    {
-        get => _valueNum;
-        protected init
-        {
-            _valueNum = value;
-            ValueStr = float.IsNaN(value)
-                ? ""
-                : stat.Worker.GetStatDrawEntryLabel(
-                    stat,
-                    ValueNum,
-                    ToStringNumberSense.Absolute,
-                    Req
-                );
-        }
-    }
-    private float _valueNumDiff;
-    public override float ValueNumDiff
-    {
-        get => _valueNumDiff;
-        protected set
-        {
-            _valueNumDiff = value;
+    private readonly StatRequest req;
 
-            if (float.IsNaN(value))
-            {
-                ValueStrDiff = ValueStr;
-            }
-            else
-            {
-                var strAbs = stat.Worker.GetStatDrawEntryLabel(
-                stat,
-                Math.Abs(value),
-                ToStringNumberSense.Absolute,
-                Req
-            );
-
-                // "Boolean" type cells are displayed incorrectly.
-                // "No" (0) becomes "-Yes" (0 - 1 = -1).
-                //
-                // We have to keep in mind that string representation
-                // of a stat's value wil not always be a formatted number.
-                if (value > 0)
-                {
-                    strAbs = "+" + strAbs;
-                }
-                else if (value < 0)
-                {
-                    strAbs = "-" + strAbs;
-                }
-
-                ValueStrDiff = strAbs;
-            }
-        }
-    }
-
-    public GenTable_StatCell(
+    public StatCell(
         StatDef stat,
         StatRequest req
     )
     {
         this.stat = stat;
-        Req = req;
+        this.req = req;
+        Value = stat.Worker.GetValue(req);
+        Label = float.IsNaN(Value.Single)
+            ? ""
+            : stat.Worker.GetStatDrawEntryLabel(
+                stat,
+                Value.Single,
+                ToStringNumberSense.Absolute,
+                req
+            );
+        // This shouldn't be here.
+        TextAnchor = TextAnchor.MiddleRight;
     }
-}
 
-public class GenTable_ExCell : GenTable_Cell
-{
-    public override IGenTable_Cell DiffCell { set { } }
-
-    public GenTable_ExCell(Exception ex)
+    protected override void SwitchToDiffState(float value)
     {
-        ValueStr = "!!!";
-        Tip = ex.ToString();
+        base.SwitchToDiffState(value);
+
+        Tip = float.IsNaN(Value.Single)
+            ? ""
+            : stat.Worker.GetStatDrawEntryLabel(
+                stat,
+                Value.Single,
+                ToStringNumberSense.Absolute,
+                req
+            );
+
+        if (float.IsNaN(value))
+        {
+            Label = float.IsNaN(Value.Single)
+                ? ""
+                : stat.Worker.GetStatDrawEntryLabel(
+                    stat,
+                    Value.Single,
+                    ToStringNumberSense.Absolute,
+                    req
+                );
+        }
+        else
+        {
+            var strAbs = stat.Worker.GetStatDrawEntryLabel(
+                stat,
+                Math.Abs(value),
+                ToStringNumberSense.Absolute,
+                req
+            );
+
+            // "Boolean" type cells are displayed incorrectly.
+            // "No" (0) becomes "-Yes" (0 - 1 = -1).
+            //
+            // We have to keep in mind that string representation
+            // of a stat's value will not always be a formatted number.
+            if (value > 0)
+            {
+                strAbs = "+" + strAbs;
+            }
+            else if (value < 0)
+            {
+                strAbs = "-" + strAbs;
+            }
+
+            Label = strAbs;
+        }
     }
-}
-
-public class GenTable_BoolCell : GenTable_Cell
-{
-    public GenTable_BoolCell(float value)
+    protected override void SwitchToNormalState()
     {
-        ValueNum = value;
+        base.SwitchToNormalState();
 
-        if (value > 0)
-        {
-            ValueStr = ValueStrDiff = "Yes";
-        }
-        else if (value <= 0)
-        {
-            ValueStr = ValueStrDiff = "No";
-        }
+        Label = float.IsNaN(Value.Single)
+            ? ""
+            : stat.Worker.GetStatDrawEntryLabel(
+                stat,
+                Value.Single,
+                ToStringNumberSense.Absolute,
+                req
+            );
+        Tip = "";
     }
 }

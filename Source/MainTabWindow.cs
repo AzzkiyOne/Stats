@@ -8,6 +8,7 @@ namespace Stats;
 public class StatsMainTabWindow : MainTabWindow
 {
     protected override float Margin { get => 1f; }
+    public override Vector2 RequestedTabSize => new(UI.screenWidth, base.RequestedTabSize.y);
 
     private readonly CategoryPicker categoryPicker;
     private GenTable<ThingDefTable_Column, ThingAlike> thingDefsTable;
@@ -33,13 +34,14 @@ public class StatsMainTabWindow : MainTabWindow
 
         thingDefsTable = new(
             ThingDefTable_Columns.list.Values.ToList(),
-            ThingAlikes.list.Where(t =>
-                (
-                    t.def.thingCategories == null
-                    || t.def.thingCategories.Count == 0
-                )
-                && t.def.designationCategory == null
-            ).ToList()
+            //ThingAlikes.list.Where(t =>
+            //    (
+            //        t.def.thingCategories == null
+            //        || t.def.thingCategories.Count == 0
+            //    )
+            //    && t.def.designationCategory == null
+            //).ToList()
+            ThingAlikes.list
         );
 
         Log.Message(ThingDefTable_Columns.list.Count);
@@ -74,6 +76,11 @@ public class StatsMainTabWindow : MainTabWindow
                     columnId => ThingDefTable_Columns.list[columnId]
                 ).ToList();
             }
+        }
+        else
+        {
+            thingDefsTable.Columns = ThingDefTable_Columns.list.Values.ToList();
+            thingDefsTable.Rows = ThingAlikes.list;
         }
     }
     private void ExpandOrCollapse()

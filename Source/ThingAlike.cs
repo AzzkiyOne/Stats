@@ -70,7 +70,7 @@ static class ThingAlikes
 
 // Implement GetHashCode (and Equals) just in case?
 public class ThingAlike :
-    Dictionary<ThingDefTable_Column, IGenTable_Cell>,
+    Dictionary<ThingDefTable_Column, Cell>,
     IGenTable_Row<ThingDefTable_Column>
 {
     public readonly string label;
@@ -89,13 +89,13 @@ public class ThingAlike :
         this.stuff = stuff;
     }
 
-    public IGenTable_Cell GetCell(ThingDefTable_Column column)
+    public Cell? GetCell(ThingDefTable_Column column)
     {
         var containsValue = TryGetValue(column, out var value);
 
         if (!containsValue)
         {
-            IGenTable_Cell newValue;
+            Cell? newValue;
 
             try
             {
@@ -103,7 +103,7 @@ public class ThingAlike :
             }
             catch (Exception ex)
             {
-                newValue = new GenTable_ExCell(ex);
+                newValue = new ExCell(ex);
             }
 
             this[column] = newValue;
