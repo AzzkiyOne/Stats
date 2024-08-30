@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+
+    <Stats.StatColumnDef>
+        <defName>Bulk</defName>
+        <reverseDiffModeColors>true</reverseDiffModeColors>
+    </Stats.StatColumnDef>
+
+    <Stats.StatColumnDef>
+        <defName>ShotSpread</defName>
+        <reverseDiffModeColors>true</reverseDiffModeColors>
+    </Stats.StatColumnDef>
+
+    <Stats.StatColumnDef>
+        <defName>SwayFactor</defName>
+        <label>sway</label>
+        <reverseDiffModeColors>true</reverseDiffModeColors>
+    </Stats.StatColumnDef>
+
+    <Stats.StatColumnDef>
+        <defName>Recoil</defName>
+        <label>recoil</label>
+        <reverseDiffModeColors>true</reverseDiffModeColors>
+    </Stats.StatColumnDef>
+
+    <Stats.StatColumnDef>
+        <defName>SightsEfficiency</defName>
+        <label>sights</label>
+    </Stats.StatColumnDef>
+
+    <Stats.StatColumnDef>
+        <defName>MagazineCapacity</defName>
+        <label>mag. cap</label>
+        <formatValue>false</formatValue>
+    </Stats.StatColumnDef>
+
+    <Stats.StatColumnDef>
+        <defName>ReloadTime</defName>
+        <useShouldShowFrom>MagazineCapacity</useShouldShowFrom>
+    </Stats.StatColumnDef>
+
+    <Stats.StatColumnDef>
+        <defName>OneHandedness</defName>
+        <label>one-handed</label>
+        <type>Boolean</type>
+    </Stats.StatColumnDef>
+
+    <Stats.StatColumnDef>
+        <defName>Caliber</defName>
+        <type>String</type>
+        <minWidth>175</minWidth>
+    </Stats.StatColumnDef>
+
+</Defs>

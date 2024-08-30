@@ -12,7 +12,7 @@ using Verse;
 namespace Stats;
 
 internal class GenTable<ColumnType, RowType>
-    where ColumnType : class, IGenTable_Column
+    where ColumnType : ColumnDef
     where RowType : class, IGenTable_Row<ColumnType>
 {
     private Vector2 scrollPosition = new();
@@ -36,15 +36,15 @@ internal class GenTable<ColumnType, RowType>
                 if (column == value.First())
                 {
                     pinnedLeftColumns.Add(column);
-                    pinnedLeftColumnsWidth += column.MinWidth;
+                    pinnedLeftColumnsWidth += column.minWidth;
                 }
                 else
                 {
                     middleColumns.Add(column);
-                    middleColumnsWidth += column.MinWidth;
+                    middleColumnsWidth += column.minWidth;
                 }
 
-                minRowWidth += column.MinWidth;
+                minRowWidth += column.minWidth;
             }
         }
     }
@@ -225,7 +225,7 @@ internal class GenTable<ColumnType, RowType>
             var cellRect = new Rect(
                 currX,
                 0,
-                column.MinWidth + extraCellWidth,
+                column.minWidth + extraCellWidth,
                 targetRect.height
             );
 
@@ -242,15 +242,9 @@ internal class GenTable<ColumnType, RowType>
     private bool DrawHeaderCell(Rect targetRect, ColumnType column)
     {
         //Widgets.DrawHighlight(targetRect);
-        using (new TextAnchorCtx(
-            column.Type == GenTable_ColumnType.Number
-            ? TextAnchor.LowerRight
-            : column.Type == GenTable_ColumnType.Boolean
-            ? TextAnchor.LowerCenter
-            : TextAnchor.LowerLeft
-        ))
+        using (new TextAnchorCtx(column.textAnchor))
         {
-            Widgets.Label(targetRect.ContractedBy(cellPadding, 0), column.Label);
+            Widgets.Label(targetRect.ContractedBy(cellPadding, 0), column.LabelCap);
         }
 
         if (SortColumn == column)
@@ -269,7 +263,7 @@ internal class GenTable<ColumnType, RowType>
         //    Table.columnSeparatorLineColor
         //);
 
-        TooltipHandler.TipRegion(targetRect, new TipSignal(column.Description));
+        TooltipHandler.TipRegion(targetRect, new TipSignal(column.description));
 
         Widgets.DrawHighlightIfMouseover(targetRect);
 
@@ -337,9 +331,9 @@ internal class GenTable<ColumnType, RowType>
             foreach (var column in columns)
             {
                 // Culling
-                if (currX + column.MinWidth <= 0)
+                if (currX + column.minWidth <= 0)
                 {
-                    currX += column.MinWidth;
+                    currX += column.minWidth;
                     continue;
                 }
                 else if (currX > targetRect.width)
@@ -350,7 +344,7 @@ internal class GenTable<ColumnType, RowType>
                 var cellRect = new Rect(
                     currX,
                     currY,
-                    column.MinWidth + extraCellWidth,
+                    column.minWidth + extraCellWidth,
                     rowHeight
                 );
                 var cell = row.GetCell(column);
@@ -506,49 +500,52 @@ public enum GenTable_ColumnType
 
 public interface IGenTable_Column
 {
-    public string Label { get; }
+    //public string Label { get; }
     public string Description { get; }
-    public float MinWidth { get; }
-    public GenTable_ColumnType Type { get; }
-    public int DiffMult { get; }
+    //public float MinWidth { get; }
+    //public GenTable_ColumnType Type { get; }
+    //public int DiffMult { get; }
+    public ColumnDef Def { get; }
 }
 
 public abstract class GenTable_Column : IGenTable_Column
 {
-    private string _label = "";
-    public string Label
-    {
-        get => _label;
-        protected init
-        {
-            _label = value;
-            MinWidth = Math.Max(Text.CalcSize(value).x + 15f, MinWidth);
-        }
-    }
+    //private string _label = "";
+    //public string Label
+    //{
+    //    get => _label;
+    //    protected init
+    //    {
+    //        _label = value;
+    //        MinWidth = Math.Max(Text.CalcSize(value).x + 15f, MinWidth);
+    //    }
+    //}
     public string Description { get; protected init; } = "";
-    private float _minWidth = 75f;
-    public float MinWidth
-    {
-        get => _minWidth;
-        protected init
-        {
-            _minWidth = Math.Max(Text.CalcSize(Label).x + 15f, value);
-        }
-    }
-    public GenTable_ColumnType Type { get; protected init; } = GenTable_ColumnType.Number;
-    public int DiffMult { get; protected init; } = 1;
+    //private float _minWidth = 75f;
+    //public float MinWidth
+    //{
+    //    get => _minWidth;
+    //    protected init
+    //    {
+    //        _minWidth = Math.Max(Text.CalcSize(Label).x + 15f, value);
+    //    }
+    //}
+    //public GenTable_ColumnType Type { get; protected init; } = GenTable_ColumnType.Number;
+    //public int DiffMult { get; protected init; } = 1;
+    public ColumnDef Def { get; }
 
-    public GenTable_Column()
+    public GenTable_Column(ColumnDef def)
     {
+        Def = def;
     }
 }
 
-public interface IGenTable_Row<ColumnType> where ColumnType : IGenTable_Column
+public interface IGenTable_Row<ColumnType> where ColumnType : ColumnDef
 {
     public Cell? GetCell(ColumnType column);
 }
 
-public class Cell : IComparable<Cell>
+public abstract class Cell : IComparable<Cell>
 {
     public StrOrSingle Value { get; set; } = float.NaN;
     public string Label { get; set; } = "";
@@ -557,12 +554,14 @@ public class Cell : IComparable<Cell>
     public ThingDef? Stuff { get; set; }
     public Color Color { get; set; } = Color.white;
     public Color? BGColor { get; set; }
-    public TextAnchor TextAnchor { get; set; } = TextAnchor.MiddleLeft;
-    public int DiffMult { get; set; } = 1;
+    public TextAnchor TextAnchor { get; init; }
+    private int DiffMult { get; init; }
     private Cell? curDiffCell;
 
-    public Cell()
+    public Cell(ColumnDef columnDef)
     {
+        TextAnchor = columnDef.textAnchor;
+        DiffMult = columnDef.reverseDiffModeColors ? -1 : 1;
     }
 
     public void SwitchToDiffState(Cell? cell)
@@ -607,18 +606,14 @@ public class Cell : IComparable<Cell>
     {
         Color = Color.white;
     }
-
-    public static readonly Cell Empty = new();
 }
 
 public class NumCell : Cell
 {
-    public NumCell(float value = float.NaN)
+    public NumCell(ColumnDef columnDef, float value = float.NaN) : base(columnDef)
     {
         Value = value;
         Label = Value.ToString();
-        // This shouldn't be here.
-        TextAnchor = TextAnchor.MiddleRight;
     }
 
     protected override void SwitchToDiffState(float value)
@@ -639,7 +634,7 @@ public class NumCell : Cell
 
 public class StrCell : Cell
 {
-    public StrCell(string value = "")
+    public StrCell(ColumnDef columnDef, string value = "") : base(columnDef)
     {
         Value = value;
         Label = value;
@@ -655,7 +650,7 @@ public class StrCell : Cell
 
 public class BoolCell : Cell
 {
-    public BoolCell(float value)
+    public BoolCell(ColumnDef columnDef, float value) : base(columnDef)
     {
         Value = value;
         TextAnchor = TextAnchor.MiddleCenter;
@@ -673,7 +668,7 @@ public class BoolCell : Cell
 
 public class ExCell : Cell
 {
-    public ExCell(Exception ex)
+    public ExCell(ColumnDef columnDef, Exception ex) : base(columnDef)
     {
         // This cell may appear in a column of any type.
         // This can cause exception in StrOrSingle.CompareTo
@@ -698,9 +693,10 @@ public class StatCell : Cell
     private readonly StatRequest req;
 
     public StatCell(
+        ColumnDef columnDef,
         StatDef stat,
         StatRequest req
-    )
+    ) : base(columnDef)
     {
         this.stat = stat;
         this.req = req;
@@ -713,8 +709,6 @@ public class StatCell : Cell
                 ToStringNumberSense.Absolute,
                 req
             );
-        // This shouldn't be here.
-        TextAnchor = TextAnchor.MiddleRight;
     }
 
     protected override void SwitchToDiffState(float value)

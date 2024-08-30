@@ -11,6 +11,8 @@ static class ThingAlikes
     public static Dictionary<ThingCategoryDef, List<ThingAlike>> byCategory = [];
     static ThingAlikes()
     {
+        var columnDefs = DefDatabase<ColumnDef>.AllDefsListForReading;
+
         foreach (var thingCatDef in DefDatabase<ThingCategoryDef>.AllDefs)
         {
             byCategory[thingCatDef] = [];
@@ -43,12 +45,12 @@ static class ThingAlikes
                     //var label = GenLabel.ThingLabel(thingDef, stuffDef, 0).CapitalizeFirst();
                     var label = thingDef.LabelCap + " (" + stuffDef.LabelCap + ")";
 
-                    Add(new ThingAlike(ThingDefTable_Columns.list.Count, thingDef, label, stuffDef));
+                    Add(new ThingAlike(columnDefs.Count, thingDef, label, stuffDef));
                 }
             }
             else
             {
-                Add(new ThingAlike(ThingDefTable_Columns.list.Count, thingDef, thingDef.LabelCap));
+                Add(new ThingAlike(columnDefs.Count, thingDef, thingDef.LabelCap));
             }
         }
     }
@@ -70,8 +72,8 @@ static class ThingAlikes
 
 // Implement GetHashCode (and Equals) just in case?
 public class ThingAlike :
-    Dictionary<ThingDefTable_Column, Cell>,
-    IGenTable_Row<ThingDefTable_Column>
+    Dictionary<ColumnDef, Cell?>,
+    IGenTable_Row<ColumnDef>
 {
     public readonly string label;
     public readonly ThingDef def;
@@ -89,7 +91,7 @@ public class ThingAlike :
         this.stuff = stuff;
     }
 
-    public Cell? GetCell(ThingDefTable_Column column)
+    public Cell? GetCell(ColumnDef column)
     {
         var containsValue = TryGetValue(column, out var value);
 
@@ -103,7 +105,7 @@ public class ThingAlike :
             }
             catch (Exception ex)
             {
-                newValue = new ExCell(ex);
+                newValue = new ExCell(ColumnDefOf.ExCellColumn, ex);
             }
 
             this[column] = newValue;

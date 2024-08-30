@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using RimWorld;
 using UnityEngine;
 using Verse;
@@ -11,7 +12,7 @@ public class StatsMainTabWindow : MainTabWindow
     public override Vector2 RequestedTabSize => new(UI.screenWidth, base.RequestedTabSize.y);
 
     private readonly CategoryPicker categoryPicker;
-    private GenTable<ThingDefTable_Column, ThingAlike> thingDefsTable;
+    private GenTable<ColumnDef, ThingAlike> thingDefsTable;
     private Rect? preCloseRect = null;
     private Rect? preExpandRect = null;
     private bool IsExpanded => preExpandRect != null;
@@ -32,8 +33,23 @@ public class StatsMainTabWindow : MainTabWindow
         draggable = true;
         resizeable = true;
 
+        // Adjust column widths.
+        //
+        // Why here of all the places?
+        //
+        // Calling Text.CalcSize before GUI has been initialized will cause a crash.
+        // So i can't call it in Def.PostLoad/ResolveReferences where it would make
+        // more sense.
+        foreach (var columnDef in DefDatabase<ColumnDef>.AllDefs)
+        {
+            columnDef.minWidth = Math.Max(
+                Text.CalcSize(columnDef.label).x + 15f,
+                columnDef.minWidth
+            );
+        }
+
         thingDefsTable = new(
-            ThingDefTable_Columns.list.Values.ToList(),
+            DefDatabase<ColumnDef>.AllDefsListForReading,
             //ThingAlikes.list.Where(t =>
             //    (
             //        t.def.thingCategories == null
@@ -44,7 +60,7 @@ public class StatsMainTabWindow : MainTabWindow
             ThingAlikes.list
         );
 
-        Log.Message(ThingDefTable_Columns.list.Count);
+        Log.Message(DefDatabase<ColumnDef>.AllDefsListForReading.Count);
         Log.Message(ThingAlikes.list.Count);
 
         categoryPicker = new CategoryPicker();
@@ -73,13 +89,13 @@ public class StatsMainTabWindow : MainTabWindow
             if (columnSet != null)
             {
                 thingDefsTable.Columns = columnSet.columns.Select(
-                    columnId => ThingDefTable_Columns.list[columnId]
+                    columnId => DefDatabase<ColumnDef>.GetNamed(columnId)
                 ).ToList();
             }
         }
         else
         {
-            thingDefsTable.Columns = ThingDefTable_Columns.list.Values.ToList();
+            thingDefsTable.Columns = DefDatabase<ColumnDef>.AllDefsListForReading;
             thingDefsTable.Rows = ThingAlikes.list;
         }
     }
