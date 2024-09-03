@@ -14,6 +14,7 @@ public static class StatsMod
 
             columnDef.defName = statDef.defName;
 
+            // hotReload = true so it won't add duplicates.
             DefGenerator.AddImpliedDef<ColumnDef>(columnDef, true);
 
             columnDef.ResolveReferences();

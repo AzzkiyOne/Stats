@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+
+    <Stats.DynamicThingCategoryDef>
+        <defName>Root</defName>
+        <label>All</label>
+    </Stats.DynamicThingCategoryDef>
+
+    <Stats.DynamicThingCategoryDef>
+        <defName>Food</defName>
+        <label>food</label>
+        <parent>Root</parent>
+        <filter>Stats.DynamicThingCategoryFilters.IsFood</filter>
+    </Stats.DynamicThingCategoryDef>
+
+    <Stats.DynamicThingCategoryDef>
+        <defName>FoodMeals</defName>
+        <label>meals</label>
+        <parent>Food</parent>
+        <filter>Stats.DynamicThingCategoryFilters.IsMeal</filter>
+    </Stats.DynamicThingCategoryDef>
+
+    <Stats.DynamicThingCategoryDef>
+        <defName>FoodMeat</defName>
+        <label>meat</label>
+        <parent>Food</parent>
+        <filter>Stats.DynamicThingCategoryFilters.IsMeat</filter>
+    </Stats.DynamicThingCategoryDef>
+
+    <Stats.DynamicThingCategoryDef>
+        <defName>FoodProduce</defName>
+        <label>produce</label>
+        <parent>Food</parent>
+        <filter>Stats.DynamicThingCategoryFilters.IsFoodProduce</filter>
+    </Stats.DynamicThingCategoryDef>
+
+    <Stats.DynamicThingCategoryDef>
+        <defName>FoodAnimalProducts</defName>
+        <label>animal products</label>
+        <parent>Food</parent>
+        <filter>Stats.DynamicThingCategoryFilters.IsAnimalProduct</filter>
+    </Stats.DynamicThingCategoryDef>
+
+    <Stats.DynamicThingCategoryDef>
+        <defName>Weapons</defName>
+        <label>weapons</label>
+        <parent>Root</parent>
+        <filter>Stats.DynamicThingCategoryFilters.IsWeapon</filter>
+    </Stats.DynamicThingCategoryDef>
+
+    <Stats.DynamicThingCategoryDef>
+        <defName>WeaponsMelee</defName>
+        <label>melee</label>
+        <parent>Weapons</parent>
+        <filter>Stats.DynamicThingCategoryFilters.IsMeleeWeapon</filter>
+    </Stats.DynamicThingCategoryDef>
+
+    <Stats.DynamicThingCategoryDef>
+        <defName>WeaponsRanged</defName>
+        <label>ranged</label>
+        <parent>Weapons</parent>
+        <filter>Stats.DynamicThingCategoryFilters.IsRangedWeapon</filter>
+    </Stats.DynamicThingCategoryDef>
+
+    <Stats.DynamicThingCategoryDef>
+        <defName>WeaponsGrenades</defName>
+        <label>grenades</label>
+        <parent>Weapons</parent>
+        <filter>Stats.DynamicThingCategoryFilters.IsGrenade</filter>
+    </Stats.DynamicThingCategoryDef>
+
+    <Stats.DynamicThingCategoryDef>
+        <defName>Apparel</defName>
+        <label>apparel</label>
+        <parent>Root</parent>
+        <filter>Stats.DynamicThingCategoryFilters.IsApparel</filter>
+    </Stats.DynamicThingCategoryDef>
+
+    <Stats.DynamicThingCategoryDef>
+        <defName>Buildings</defName>
+        <label>buildings</label>
+        <parent>Root</parent>
+        <filter>Stats.DynamicThingCategoryFilters.IsBuilding</filter>
+    </Stats.DynamicThingCategoryDef>
+
+    <Stats.DynamicThingCategoryDef>
+        <defName>Creatures</defName>
+        <label>creatures</label>
+        <parent>Root</parent>
+        <filter>Stats.DynamicThingCategoryFilters.IsCreature</filter>
+    </Stats.DynamicThingCategoryDef>
+
+    <Stats.DynamicThingCategoryDef>
+        <defName>CreaturesAnimals</defName>
+        <label>animals</label>
+        <parent>Creatures</parent>
+        <filter>Stats.DynamicThingCategoryFilters.IsAnimal</filter>
+    </Stats.DynamicThingCategoryDef>
+
+    <Stats.DynamicThingCategoryDef>
+        <defName>CreaturesAnimalsDomestic</defName>
+        <label>domestic</label>
+        <parent>CreaturesAnimals</parent>
+        <filter>Stats.DynamicThingCategoryFilters.IsAnimalDomestic</filter>
+    </Stats.DynamicThingCategoryDef>
+
+    <Stats.DynamicThingCategoryDef>
+        <defName>CreaturesAnimalsWild</defName>
+        <label>wild</label>
+        <parent>CreaturesAnimals</parent>
+        <filter>Stats.DynamicThingCategoryFilters.IsAnimalWild</filter>
+    </Stats.DynamicThingCategoryDef>
+
+    <Stats.DynamicThingCategoryDef>
+        <defName>CreaturesMechs</defName>
+        <label>mechs</label>
+        <parent>Creatures</parent>
+        <filter>Stats.DynamicThingCategoryFilters.IsCreatureMech</filter>
+    </Stats.DynamicThingCategoryDef>
+
+    <Stats.DynamicThingCategoryDef>
+        <defName>Plants</defName>
+        <label>plants</label>
+        <parent>Root</parent>
+        <filter>Stats.DynamicThingCategoryFilters.IsPlant</filter>
+    </Stats.DynamicThingCategoryDef>
+
+    <Stats.DynamicThingCategoryDef>
+        <defName>PlantsSowable</defName>
+        <label>sowable</label>
+        <parent>Plants</parent>
+        <filter>Stats.DynamicThingCategoryFilters.IsPlantSowable</filter>
+    </Stats.DynamicThingCategoryDef>
+
+    <Stats.DynamicThingCategoryDef>
+        <defName>PlantsSowableProduce</defName>
+        <label>produce</label>
+        <parent>PlantsSowable</parent>
+        <filter>Stats.DynamicThingCategoryFilters.IsPlantProduceYeilding</filter>
+    </Stats.DynamicThingCategoryDef>
+
+    <Stats.DynamicThingCategoryDef>
+        <defName>PlantsSowableTrees</defName>
+        <label>trees</label>
+        <parent>PlantsSowable</parent>
+        <filter>Stats.DynamicThingCategoryFilters.IsPlantTree</filter>
+    </Stats.DynamicThingCategoryDef>
+
+    <Stats.DynamicThingCategoryDef>
+        <defName>PlantsWild</defName>
+        <label>wild</label>
+        <parent>Plants</parent>
+        <filter>Stats.DynamicThingCategoryFilters.IsPlantWild</filter>
+    </Stats.DynamicThingCategoryDef>
+
+    <Stats.DynamicThingCategoryDef>
+        <defName>PlantsWildProduce</defName>
+        <label>produce</label>
+        <parent>PlantsWild</parent>
+        <filter>Stats.DynamicThingCategoryFilters.IsPlantProduceYeilding</filter>
+    </Stats.DynamicThingCategoryDef>
+
+    <Stats.DynamicThingCategoryDef>
+        <defName>PlantsWildTrees</defName>
+        <label>trees</label>
+        <parent>PlantsWild</parent>
+        <filter>Stats.DynamicThingCategoryFilters.IsPlantTree</filter>
+    </Stats.DynamicThingCategoryDef>
+
+</Defs>

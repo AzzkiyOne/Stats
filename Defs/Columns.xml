@@ -1,15 +1,12 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <Defs>
 
-    <Stats.ColumnDef>
-        <defName>ExCellColumn</defName>
-    </Stats.ColumnDef>
-
     <Stats.LabelColumnDef>
         <defName>Label</defName>
         <label>name</label>
         <minWidth>250</minWidth>
         <type>String</type>
+        <isPinned>true</isPinned>
     </Stats.LabelColumnDef>
 
     <Stats.StatColumnDef>

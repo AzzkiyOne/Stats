@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using RimWorld;
 using UnityEngine;
@@ -48,23 +49,14 @@ public class StatsMainTabWindow : MainTabWindow
             );
         }
 
+        categoryPicker = new CategoryPicker();
         thingDefsTable = new(
             DefDatabase<ColumnDef>.AllDefsListForReading,
-            //ThingAlikes.list.Where(t =>
-            //    (
-            //        t.def.thingCategories == null
-            //        || t.def.thingCategories.Count == 0
-            //    )
-            //    && t.def.designationCategory == null
-            //).ToList()
-            ThingAlikes.list
+            categoryPicker.selectedCategory.Items
         );
 
         Log.Message(DefDatabase<ColumnDef>.AllDefsListForReading.Count);
         Log.Message(ThingAlikes.list.Count);
-
-        categoryPicker = new CategoryPicker();
-        HandleCategoryChange(categoryPicker.selectedCatDef);
     }
 
     private void DrawContent(Rect targetRect)
@@ -78,26 +70,9 @@ public class StatsMainTabWindow : MainTabWindow
 
         thingDefsTable.Draw(targetRect.CutFromX(ref currX));
     }
-    private void HandleCategoryChange(ThingCategoryDef? catDef)
+    private void HandleCategoryChange(DynamicThingCategoryDef catDef)
     {
-        if (catDef != null)
-        {
-            thingDefsTable.Rows = catDef.AllThingAlikes().ToList();
-
-            var columnSet = ColumnSetDB.GetColumnSetForCatDef(catDef);
-
-            if (columnSet != null)
-            {
-                thingDefsTable.Columns = columnSet.columns.Select(
-                    columnId => DefDatabase<ColumnDef>.GetNamed(columnId)
-                ).ToList();
-            }
-        }
-        else
-        {
-            thingDefsTable.Columns = DefDatabase<ColumnDef>.AllDefsListForReading;
-            thingDefsTable.Rows = ThingAlikes.list;
-        }
+        thingDefsTable.Rows = catDef.Items;
     }
     private void ExpandOrCollapse()
     {

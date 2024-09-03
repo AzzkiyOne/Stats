@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 using Verse;
 
@@ -12,18 +11,17 @@ class CategoryPicker
     private const float labelPadding = 5f;
     private const float indentSize = 20f;
     private Vector2 scrollPosition;
-    private readonly ThingCategoryDef rootCatDef;
-    public ThingCategoryDef? selectedCatDef;
+    private readonly DynamicThingCategoryDef rootCategory;
+    public DynamicThingCategoryDef selectedCategory;
     private int debug_rowsDrawn = 0;
     private int totalRowsDisplayed = 0;
-    private readonly List<ThingCategoryDef> openedCategories = [];
+    private readonly List<DynamicThingCategoryDef> openedCategories = [];
     public CategoryPicker()
     {
-        rootCatDef = DefDatabase<ThingCategoryDef>.GetNamed("Root");
+        selectedCategory = rootCategory = DynamicThingCategoryDefOf.Root;
     }
-    public void Draw(Rect targetRect, Action<ThingCategoryDef?> onCategoryChange)
+    public void Draw(Rect targetRect, Action<DynamicThingCategoryDef> onCategoryChange)
     {
-        //using (new GameFontCtx(GameFont.Tiny))
         using (new TextAnchorCtx(TextAnchor.MiddleLeft))
         {
             // Scroll area size correction only works because of how rows are "culled" at the top.
@@ -44,7 +42,7 @@ class CategoryPicker
             debug_rowsDrawn = 0;
             totalRowsDisplayed = 0;
 
-            foreach (var catDef in rootCatDef.childCategories)
+            foreach (var catDef in rootCategory.Children)
             {
                 DrawRows(targetRect, ref currY, catDef, onCategoryChange);
             }
@@ -54,21 +52,21 @@ class CategoryPicker
             Debug.TryDrawUIDebugInfo(targetRect, debug_rowsDrawn + "");
         }
     }
-    private void DrawRows(Rect parentRect, ref float currY, ThingCategoryDef catDef, Action<ThingCategoryDef?> onCategoryChange)
+    private void DrawRows(
+        Rect parentRect,
+        ref float currY,
+        DynamicThingCategoryDef catDef, Action<DynamicThingCategoryDef> onCategoryChange,
+        float treeLevel = 0
+    )
     {
-        //if (
-        //    catDef.childThingDefs.Count == 0
-        //    && catDef.childCategories.Count == 0
-        //    && !Debug.InDebugMode
-        //)
-        //{
-        //    return;
-        //}
+        if (catDef.Items.Count == 0 && !Debug.InDebugMode)
+        {
+            return;
+        }
 
         totalRowsDisplayed++;
 
-        // "-1" because we don't draw the root category entry.
-        var indentAmount = (catDef.Parents.Count() - 1) * indentSize;
+        var indentAmount = treeLevel * indentSize;
         var rowRect = new Rect(
             indentAmount,
             currY,
@@ -88,7 +86,7 @@ class CategoryPicker
             var contentRect = rowRect.RightPartPixels(rowRect.width - collapseControlRect.width);
 
             if (
-                catDef.childCategories.Count != 0
+                catDef.Children.Count != 0
                 && Widgets.ButtonImage(
                     collapseControlRect,
                     openedCategories.Contains(catDef) ? TexButton.Collapse : TexButton.Reveal
@@ -111,41 +109,26 @@ class CategoryPicker
                 .ContractedBy(labelPadding, 0);
             string labelText = Debug.InDebugMode ? catDef.defName : catDef.LabelCap;
 
-            if (string.IsNullOrEmpty(labelText))
-            {
-                if (!string.IsNullOrEmpty(catDef.label))
-                {
-                    labelText = catDef.label;
-                }
-                else
-                {
-                    labelText = catDef.defName;
-                }
-            }
-
-            Widgets.DrawTextureFitted(iconRect, catDef.icon, 0.9f);
+            Widgets.DrawTextureFitted(iconRect, catDef.Icon, 0.9f);
             Widgets.Label(labelRect, labelText);
 
-            //if (catDef.childThingDefs.Count > 0)
-            //{
             Widgets.DrawHighlightIfMouseover(contentRect);
 
             if (Widgets.ButtonInvisible(contentRect))
             {
-                if (catDef == selectedCatDef)
+                if (catDef == selectedCategory)
                 {
-                    selectedCatDef = null;
+                    selectedCategory = rootCategory;
                 }
                 else
                 {
-                    selectedCatDef = catDef;
+                    selectedCategory = catDef;
                 }
 
-                onCategoryChange(selectedCatDef);
+                onCategoryChange(selectedCategory);
             }
-            //}
 
-            if (selectedCatDef == catDef)
+            if (selectedCategory == catDef)
             {
                 Widgets.DrawHighlight(contentRect);
             }
@@ -157,9 +140,9 @@ class CategoryPicker
 
         if (openedCategories.Contains(catDef))
         {
-            foreach (var childCat in catDef.childCategories)
+            foreach (var childCat in catDef.Children)
             {
-                DrawRows(parentRect, ref currY, childCat, onCategoryChange);
+                DrawRows(parentRect, ref currY, childCat, onCategoryChange, treeLevel + 1);
             }
         }
     }

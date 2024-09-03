@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using UnityEngine;
-using Verse;
+﻿using UnityEngine;
 
 namespace Stats;
 
@@ -21,25 +19,5 @@ public static class UnityEngine_Rect
         y = result.yMax;
 
         return result;
-    }
-}
-
-public static class Verse_ThingCategoryDef
-{
-    // What about duplicates?
-    public static IEnumerable<ThingAlike> AllThingAlikes(this ThingCategoryDef categoryDef)
-    {
-        foreach (var thingAlike in ThingAlikes.byCategory[categoryDef])
-        {
-            yield return thingAlike;
-        }
-
-        foreach (var childCat in categoryDef.childCategories)
-        {
-            foreach (var thingAlike in childCat.AllThingAlikes())
-            {
-                yield return thingAlike;
-            }
-        }
     }
 }

@@ -3,12 +3,14 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.8.34408.163
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Stats", "Stats.csproj", "{DC107B78-C176-421F-83F3-3AE9D5240875}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Stats", "Source\Stats.csproj", "{DC107B78-C176-421F-83F3-3AE9D5240875}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{3F2D775F-2C27-427F-A70E-7886D1851BAD}"
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
 	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CECompat", "ModCompat\CE\Source\CECompat.csproj", "{2BB6FF31-6837-4A3D-952E-D9F1F40520A8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -20,6 +22,10 @@ Global
 		{DC107B78-C176-421F-83F3-3AE9D5240875}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DC107B78-C176-421F-83F3-3AE9D5240875}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DC107B78-C176-421F-83F3-3AE9D5240875}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2BB6FF31-6837-4A3D-952E-D9F1F40520A8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2BB6FF31-6837-4A3D-952E-D9F1F40520A8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2BB6FF31-6837-4A3D-952E-D9F1F40520A8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2BB6FF31-6837-4A3D-952E-D9F1F40520A8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

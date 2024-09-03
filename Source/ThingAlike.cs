@@ -105,7 +105,7 @@ public class ThingAlike :
             }
             catch (Exception ex)
             {
-                newValue = new ExCell(ColumnDefOf.ExCellColumn, ex);
+                newValue = new ExCell(column, ex);
             }
 
             this[column] = newValue;

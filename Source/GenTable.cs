@@ -26,14 +26,9 @@ internal class GenTable<ColumnType, RowType>
             middleColumnsWidth = 0;
             minRowWidth = 0;
 
-            if (SortColumn is null && value.First() != null)
-            {
-                SortColumn = value.First();
-            }
-
             foreach (var column in value)
             {
-                if (column == value.First())
+                if (column.isPinned)
                 {
                     pinnedLeftColumns.Add(column);
                     pinnedLeftColumnsWidth += column.minWidth;
@@ -45,6 +40,11 @@ internal class GenTable<ColumnType, RowType>
                 }
 
                 minRowWidth += column.minWidth;
+            }
+
+            if (SortColumn is null && pinnedLeftColumns.First() != null)
+            {
+                SortColumn = pinnedLeftColumns.First();
             }
         }
     }
