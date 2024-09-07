@@ -17,8 +17,6 @@ public class ColumnDef : GenTable.ColumnDef, GenTable.IColumnDefWithWorker<Thing
 {
     public StatDef? stat;
     public StatDef? Stat => stat;
-    public StatDef? useShouldShowFrom = null;
-    public StatDef? UseShouldShowFrom => useShouldShowFrom;
     public bool formatValue = true;
     public bool FormatValue => formatValue;
     public Type workerClass = typeof(StatColumnWorker);
@@ -30,7 +28,7 @@ public class ColumnDef : GenTable.ColumnDef, GenTable.IColumnDefWithWorker<Thing
             if (worker == null)
             {
                 worker = (ColumnWorker)Activator.CreateInstance(workerClass);
-                worker.Def = this;
+                worker.Column = this;
             }
 
             return worker;

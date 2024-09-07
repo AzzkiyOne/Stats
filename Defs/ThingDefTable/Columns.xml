@@ -7,7 +7,7 @@
         <minWidth>250</minWidth>
         <type>String</type>
         <isPinned>true</isPinned>
-        <workerClass>Stats.ThingDefTable.LabelColumnWorker</workerClass>
+        <workerClass>Stats.ThingDefTable.ColumnWorker_Label</workerClass>
     </Stats.ThingDefTable.ColumnDef>
 
     <Stats.ThingDefTable.ColumnDef>
@@ -33,7 +33,7 @@
         <defName>WeaponRange</defName>
         <labelKey>Range</labelKey>
         <descriptionKey>Stat_Thing_Weapon_Range_Desc</descriptionKey>
-        <workerClass>Stats.ThingDefTable.WeaponRangeColumnWorker</workerClass>
+        <workerClass>Stats.ThingDefTable.ColumnWorker_WeaponRange</workerClass>
     </Stats.ThingDefTable.ColumnDef>
 
 </Defs>

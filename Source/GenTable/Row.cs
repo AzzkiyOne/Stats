@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
+using Verse;
 
 namespace Stats.GenTable;
 
@@ -29,17 +30,19 @@ public class Row<DataType> : Dictionary<IColumnDefWithWorker<DataType>, Cell?>
                     Text = column.Worker.GetCellText(Data),
                     Tip = column.Worker.GetCellTip(Data),
                     TextAnchor = column.TextAnchor,
-                    SortValue = column.Worker.GetCellSortValue(Data)
+                    SortValue = column.Worker.GetCellSortValue(Data),
+                    DefRef = column.Worker.GetDefRef(Data),
                 };
             }
             catch (Exception ex)
             {
+                Log.Warning(ex.Message);
                 //cell = new Cell
                 //{
                 //    Text = "!!!",
                 //    TextAnchor = TextAnchor.MiddleCenter,
                 //    Tip = ex.ToString(),
-                //    BGColor = Color.red
+                //    BGColor = Color.red,
                 //};
             }
         }

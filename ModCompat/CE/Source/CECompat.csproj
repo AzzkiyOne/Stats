@@ -23,4 +23,16 @@
     <ItemGroup>
         <PackageReference Include="Krafs.Rimworld.Ref" Version="1.5.*" />
     </ItemGroup>
+    <ItemGroup>
+      <ProjectReference Include="..\..\..\Source\Stats.csproj">
+        <Private>False</Private>
+        <CopyLocalSatelliteAssemblies>False</CopyLocalSatelliteAssemblies>
+      </ProjectReference>
+    </ItemGroup>
+    <ItemGroup>
+      <Reference Include="CombatExtended">
+        <HintPath>..\CombatExtended.dll</HintPath>
+        <Private>False</Private>
+      </Reference>
+    </ItemGroup>
 </Project>

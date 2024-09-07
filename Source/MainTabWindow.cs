@@ -1,5 +1,4 @@
-﻿using System;
-using RimWorld;
+﻿using RimWorld;
 using UnityEngine;
 using Verse;
 
@@ -30,21 +29,6 @@ public class StatsMainTabWindow : MainTabWindow
     {
         draggable = true;
         resizeable = true;
-
-        // Adjust column widths.
-        //
-        // Why here of all the places?
-        //
-        // Calling Text.CalcSize before GUI has been initialized will cause a crash.
-        // So i can't call it in Def.PostLoad/ResolveReferences where it would make
-        // more sense.
-        foreach (var columnDef in DefDatabase<ThingDefTable.ColumnDef>.AllDefs)
-        {
-            columnDef.minWidth = Math.Max(
-                Text.CalcSize(columnDef.label).x + 15f,
-                columnDef.minWidth
-            );
-        }
 
         thingDefsTable = new(
             DefDatabase<ThingDefTable.ColumnDef>.AllDefsListForReading,

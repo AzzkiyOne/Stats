@@ -404,13 +404,13 @@ internal class Table<ColumnType, DataType>
         var contentRect = targetRect.ContractedBy(cellPadding, 0);
         var currX = contentRect.x;
 
-        if (cell.Def is not null)
+        if (cell.DefRef is not null)
         {
             // This is very expensive.
             Widgets.DefIcon(
                 contentRect.CutFromX(ref currX, contentRect.height),
-                cell.Def,
-                cell.Stuff
+                cell.DefRef.Def,
+                cell.DefRef.StuffDef
             );
 
             currX += GenUI.Pad;
@@ -419,14 +419,17 @@ internal class Table<ColumnType, DataType>
 
             if (Widgets.ButtonInvisible(targetRect))
             {
-                GUIWidgets.DefInfoDialog(cell.Def, cell.Stuff);
+                GUIWidgets.DefInfoDialog(cell.DefRef.Def, cell.DefRef.StuffDef);
             }
         }
 
         using (new ColorCtx(cell.Color))
         using (new TextAnchorCtx(cell.TextAnchor))
         {
-            Widgets.Label(contentRect.CutFromX(ref currX), cell.Text);
+            Widgets.Label(
+                contentRect.CutFromX(ref currX),
+                Debug.InDebugMode ? cell.SortValue.ToString() : cell.Text
+            );
         }
 
         if (cell.Tip != "")

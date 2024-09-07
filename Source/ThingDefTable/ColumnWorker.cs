@@ -7,15 +7,19 @@ namespace Stats.ThingDefTable;
 
 public abstract class ColumnWorker : GenTable.IColumnWorker<ThingAlike>
 {
-    public ColumnDef Def { get; set; }
+    public ColumnDef Column { get; set; }
 
     public abstract bool ShouldShowFor(ThingAlike thing);
     public virtual string GetCellText(ThingAlike thing) { return ""; }
     public virtual string GetCellTip(ThingAlike thing) { return ""; }
     public abstract IComparable GetCellSortValue(ThingAlike thing);
+    public virtual DefReference? GetDefRef(ThingAlike thing)
+    {
+        return null;
+    }
 }
 
-public class LabelColumnWorker : ColumnWorker
+public class ColumnWorker_Label : ColumnWorker
 {
     public override bool ShouldShowFor(ThingAlike thing)
     {
@@ -33,46 +37,35 @@ public class LabelColumnWorker : ColumnWorker
     {
         return thing.Label;
     }
+    public override DefReference? GetDefRef(ThingAlike thing)
+    {
+        return new DefReference(thing.Def, thing.Stuff);
+    }
 }
 
 public class StatColumnWorker : ColumnWorker
 {
+    protected virtual StatDef Stat => Column.Stat;
     private float GetValue(ThingAlike thing)
     {
-        if (Def.Stat == null)
-        {
-            return float.NaN;
-        }
-
         var statReq = StatRequest.For(thing.Def, thing.Stuff);
 
-        return Def.Stat.Worker.GetValue(statReq);
+        return Stat.Worker.GetValue(statReq);
     }
     public override bool ShouldShowFor(ThingAlike thing)
     {
-        if (Def.Stat == null)
-        {
-            return false;
-        }
-
         var statReq = StatRequest.For(thing.Def, thing.Stuff);
-        var shouldShowStat = Def.UseShouldShowFrom ?? Def.Stat;
 
-        return shouldShowStat.Worker.ShouldShowFor(statReq);
+        return Stat.Worker.ShouldShowFor(statReq);
     }
     public override string GetCellText(ThingAlike thing)
     {
-        if (Def.Stat == null)
-        {
-            return "";
-        }
-
         var statValue = GetValue(thing);
 
-        if (Def.FormatValue)
+        if (Column.FormatValue)
         {
-            return Def.Stat.Worker.GetStatDrawEntryLabel(
-                Def.Stat,
+            return Stat.Worker.GetStatDrawEntryLabel(
+                Stat,
                 statValue,
                 ToStringNumberSense.Absolute,
                 // This is necessary (despite statReq being "optional") because some mods
@@ -91,7 +84,7 @@ public class StatColumnWorker : ColumnWorker
     }
 }
 
-public class WeaponRangeColumnWorker : ColumnWorker
+public class ColumnWorker_WeaponRange : ColumnWorker
 {
     private float GetValue(ThingAlike thing)
     {

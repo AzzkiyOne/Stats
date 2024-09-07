@@ -43,7 +43,7 @@
     <Stats.ThingDefTable.ColumnDef>
         <defName>ReloadTime</defName>
         <stat>ReloadTime</stat>
-        <useShouldShowFrom>MagazineCapacity</useShouldShowFrom>
+        <workerClass>Stats.Compat.CE.ColumnWorker_ReloadTime</workerClass>
     </Stats.ThingDefTable.ColumnDef>
 
     <Stats.ThingDefTable.ColumnDef>
@@ -58,6 +58,7 @@
         <stat>Caliber</stat>
         <type>String</type>
         <minWidth>175</minWidth>
+        <workerClass>Stats.Compat.CE.ColumnWorker_Caliber</workerClass>
     </Stats.ThingDefTable.ColumnDef>
 
 </Defs>
