@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using RimWorld;
 using UnityEngine;
 using Verse;
@@ -12,8 +10,7 @@ public class StatsMainTabWindow : MainTabWindow
     protected override float Margin { get => 1f; }
     public override Vector2 RequestedTabSize => new(UI.screenWidth, base.RequestedTabSize.y);
 
-    private readonly CategoryPicker categoryPicker;
-    private GenTable<ColumnDef, ThingAlike> thingDefsTable;
+    private ThingDefTable.Table thingDefsTable;
     private Rect? preCloseRect = null;
     private Rect? preExpandRect = null;
     private bool IsExpanded => preExpandRect != null;
@@ -41,7 +38,7 @@ public class StatsMainTabWindow : MainTabWindow
         // Calling Text.CalcSize before GUI has been initialized will cause a crash.
         // So i can't call it in Def.PostLoad/ResolveReferences where it would make
         // more sense.
-        foreach (var columnDef in DefDatabase<ColumnDef>.AllDefs)
+        foreach (var columnDef in DefDatabase<ThingDefTable.ColumnDef>.AllDefs)
         {
             columnDef.minWidth = Math.Max(
                 Text.CalcSize(columnDef.label).x + 15f,
@@ -49,30 +46,17 @@ public class StatsMainTabWindow : MainTabWindow
             );
         }
 
-        categoryPicker = new CategoryPicker();
         thingDefsTable = new(
-            DefDatabase<ColumnDef>.AllDefsListForReading,
-            categoryPicker.selectedCategory.Items
+            DefDatabase<ThingDefTable.ColumnDef>.AllDefsListForReading,
+            ThingDefTable.ThingAlike.All
         );
-
-        Log.Message(DefDatabase<ColumnDef>.AllDefsListForReading.Count);
-        Log.Message(ThingAlikes.list.Count);
     }
 
     private void DrawContent(Rect targetRect)
     {
         var currX = targetRect.x;
 
-        categoryPicker.Draw(
-            targetRect.CutFromX(ref currX, catPickerWidth),
-            HandleCategoryChange
-        );
-
         thingDefsTable.Draw(targetRect.CutFromX(ref currX));
-    }
-    private void HandleCategoryChange(DynamicThingCategoryDef catDef)
-    {
-        thingDefsTable.Rows = catDef.Items;
     }
     private void ExpandOrCollapse()
     {
@@ -136,11 +120,6 @@ public class StatsMainTabWindow : MainTabWindow
     {
         var titleBarText = "Things";
         var currY = targetRect.y;
-
-        if (thingDefsTable.SelectedRow?.label is not null)
-        {
-            titleBarText += " / " + thingDefsTable.SelectedRow.label;
-        }
 
         using (new TextWordWrapCtx(false))
         {

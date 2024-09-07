@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+
+    <Stats.ThingDefTable.ColumnDef>
+        <defName>Label</defName>
+        <label>name</label>
+        <minWidth>250</minWidth>
+        <type>String</type>
+        <isPinned>true</isPinned>
+        <workerClass>Stats.ThingDefTable.LabelColumnWorker</workerClass>
+    </Stats.ThingDefTable.ColumnDef>
+
+    <Stats.ThingDefTable.ColumnDef>
+        <defName>MaxHitPoints</defName>
+        <stat>MaxHitPoints</stat>
+        <label>max HP</label>
+    </Stats.ThingDefTable.ColumnDef>
+
+    <Stats.ThingDefTable.ColumnDef>
+        <defName>Mass</defName>
+        <stat>Mass</stat>
+        <reverseDiffModeColors>true</reverseDiffModeColors>
+        <minWidth>100</minWidth>
+    </Stats.ThingDefTable.ColumnDef>
+
+    <Stats.ThingDefTable.ColumnDef>
+        <defName>MarketValue</defName>
+        <stat>MarketValue</stat>
+        <label>$$$</label>
+    </Stats.ThingDefTable.ColumnDef>
+
+    <Stats.ThingDefTable.ColumnDef>
+        <defName>WeaponRange</defName>
+        <labelKey>Range</labelKey>
+        <descriptionKey>Stat_Thing_Weapon_Range_Desc</descriptionKey>
+        <workerClass>Stats.ThingDefTable.WeaponRangeColumnWorker</workerClass>
+    </Stats.ThingDefTable.ColumnDef>
+
+</Defs>

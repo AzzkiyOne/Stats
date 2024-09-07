@@ -1,54 +1,63 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Defs>
 
-    <Stats.StatColumnDef>
+    <Stats.ThingDefTable.ColumnDef>
         <defName>Bulk</defName>
+        <stat>Bulk</stat>
         <reverseDiffModeColors>true</reverseDiffModeColors>
-    </Stats.StatColumnDef>
+    </Stats.ThingDefTable.ColumnDef>
 
-    <Stats.StatColumnDef>
+    <Stats.ThingDefTable.ColumnDef>
         <defName>ShotSpread</defName>
+        <stat>ShotSpread</stat>
         <reverseDiffModeColors>true</reverseDiffModeColors>
-    </Stats.StatColumnDef>
+    </Stats.ThingDefTable.ColumnDef>
 
-    <Stats.StatColumnDef>
+    <Stats.ThingDefTable.ColumnDef>
         <defName>SwayFactor</defName>
+        <stat>SwayFactor</stat>
         <label>sway</label>
         <reverseDiffModeColors>true</reverseDiffModeColors>
-    </Stats.StatColumnDef>
+    </Stats.ThingDefTable.ColumnDef>
 
-    <Stats.StatColumnDef>
+    <Stats.ThingDefTable.ColumnDef>
         <defName>Recoil</defName>
+        <stat>Recoil</stat>
         <label>recoil</label>
         <reverseDiffModeColors>true</reverseDiffModeColors>
-    </Stats.StatColumnDef>
+    </Stats.ThingDefTable.ColumnDef>
 
-    <Stats.StatColumnDef>
+    <Stats.ThingDefTable.ColumnDef>
         <defName>SightsEfficiency</defName>
+        <stat>SightsEfficiency</stat>
         <label>sights</label>
-    </Stats.StatColumnDef>
+    </Stats.ThingDefTable.ColumnDef>
 
-    <Stats.StatColumnDef>
+    <Stats.ThingDefTable.ColumnDef>
         <defName>MagazineCapacity</defName>
+        <stat>MagazineCapacity</stat>
         <label>mag. cap</label>
         <formatValue>false</formatValue>
-    </Stats.StatColumnDef>
+    </Stats.ThingDefTable.ColumnDef>
 
-    <Stats.StatColumnDef>
+    <Stats.ThingDefTable.ColumnDef>
         <defName>ReloadTime</defName>
+        <stat>ReloadTime</stat>
         <useShouldShowFrom>MagazineCapacity</useShouldShowFrom>
-    </Stats.StatColumnDef>
+    </Stats.ThingDefTable.ColumnDef>
 
-    <Stats.StatColumnDef>
+    <Stats.ThingDefTable.ColumnDef>
         <defName>OneHandedness</defName>
+        <stat>OneHandedness</stat>
         <label>one-handed</label>
         <type>Boolean</type>
-    </Stats.StatColumnDef>
+    </Stats.ThingDefTable.ColumnDef>
 
-    <Stats.StatColumnDef>
+    <Stats.ThingDefTable.ColumnDef>
         <defName>Caliber</defName>
+        <stat>Caliber</stat>
         <type>String</type>
         <minWidth>175</minWidth>
-    </Stats.StatColumnDef>
+    </Stats.ThingDefTable.ColumnDef>
 
 </Defs>
