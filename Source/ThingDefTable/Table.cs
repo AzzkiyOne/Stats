@@ -8,7 +8,7 @@ internal class Table : GenTable.Table<ColumnDef, ThingAlike>
     public Table(
         List<ColumnDef> columns,
         List<ThingAlike> things
-    ) : base(columns, things.Select(thing => new GenTable.Row<ThingAlike>(thing)).ToList())
+    ) : base(columns, things.Select(thing => new GenTable.Row<ColumnDef, ThingAlike>(thing, columns.Count)).ToList())
     {
     }
 }

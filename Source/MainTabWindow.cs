@@ -10,6 +10,7 @@ public class StatsMainTabWindow : MainTabWindow
     public override Vector2 RequestedTabSize => new(UI.screenWidth, base.RequestedTabSize.y);
 
     private ThingDefTable.Table thingDefsTable;
+    private GeneDefTable.Table geneDefsTable;
     private Rect? preCloseRect = null;
     private Rect? preExpandRect = null;
     private bool IsExpanded => preExpandRect != null;
@@ -34,6 +35,10 @@ public class StatsMainTabWindow : MainTabWindow
             DefDatabase<ThingDefTable.ColumnDef>.AllDefsListForReading,
             ThingDefTable.ThingAlike.All
         );
+        geneDefsTable = new(
+            DefDatabase<GeneDefTable.ColumnDef>.AllDefsListForReading,
+            DefDatabase<GeneDef>.AllDefsListForReading
+        );
     }
 
     private void DrawContent(Rect targetRect)
@@ -41,6 +46,7 @@ public class StatsMainTabWindow : MainTabWindow
         var currX = targetRect.x;
 
         thingDefsTable.Draw(targetRect.CutFromX(ref currX));
+        //geneDefsTable.Draw(targetRect.CutFromX(ref currX));
     }
     private void ExpandOrCollapse()
     {

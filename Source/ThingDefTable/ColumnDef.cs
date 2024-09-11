@@ -6,22 +6,22 @@ namespace Stats.ThingDefTable;
 [DefOf]
 public static class ColumnDefOf
 {
-    public static ColumnDef Label;
+    public static ColumnDef ThingLabel;
     static ColumnDefOf()
     {
         DefOfHelper.EnsureInitializedInCtor(typeof(ColumnDefOf));
     }
 }
 
-public class ColumnDef : GenTable.ColumnDef, GenTable.IColumnDefWithWorker<ThingAlike>
+public class ColumnDef : GenTable.ColumnDef, GenTable.IColumn, GenTable.IRowKey<ThingAlike>
 {
     public StatDef? stat;
     public StatDef? Stat => stat;
     public bool formatValue = true;
     public bool FormatValue => formatValue;
-    public Type workerClass = typeof(StatColumnWorker);
+    public Type workerClass = typeof(ColumnWorker_Stat);
     private ColumnWorker worker;
-    public GenTable.IColumnWorker<ThingAlike> Worker
+    public GenTable.ColumnWorker<ThingAlike> Worker
     {
         get
         {

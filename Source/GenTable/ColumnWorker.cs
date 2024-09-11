@@ -1,12 +1,6 @@
-﻿using System;
+﻿namespace Stats.GenTable;
 
-namespace Stats.GenTable;
-
-public interface IColumnWorker<DataType>
+public abstract class ColumnWorker<DataType>
 {
-    public bool ShouldShowFor(DataType data);
-    public string GetCellText(DataType data);
-    public string GetCellTip(DataType data);
-    public IComparable GetCellSortValue(DataType data);
-    public DefReference? GetDefRef(DataType data);
+    public abstract Cell? GetCell(DataType data);
 }

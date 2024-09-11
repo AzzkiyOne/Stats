@@ -1,112 +1,72 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using RimWorld;
 using Verse;
 
 namespace Stats.ThingDefTable;
 
-public abstract class ColumnWorker : GenTable.IColumnWorker<ThingAlike>
+public abstract class ColumnWorker : GenTable.ColumnWorker<ThingAlike>
 {
     public ColumnDef Column { get; set; }
-
-    public abstract bool ShouldShowFor(ThingAlike thing);
-    public virtual string GetCellText(ThingAlike thing) { return ""; }
-    public virtual string GetCellTip(ThingAlike thing) { return ""; }
-    public abstract IComparable GetCellSortValue(ThingAlike thing);
-    public virtual DefReference? GetDefRef(ThingAlike thing)
-    {
-        return null;
-    }
 }
 
 public class ColumnWorker_Label : ColumnWorker
 {
-    public override bool ShouldShowFor(ThingAlike thing)
+    public override GenTable.Cell? GetCell(ThingAlike thing)
     {
-        return true;
-    }
-    public override string GetCellText(ThingAlike thing)
-    {
-        return thing.Label;
-    }
-    public override string GetCellTip(ThingAlike thing)
-    {
-        return thing.Def.description;
-    }
-    public override IComparable GetCellSortValue(ThingAlike thing)
-    {
-        return thing.Label;
-    }
-    public override DefReference? GetDefRef(ThingAlike thing)
-    {
-        return new DefReference(thing.Def, thing.Stuff);
+        return new GenTable.Cell_DefRef(Column, thing.Def, thing.Stuff);
     }
 }
 
-public class StatColumnWorker : ColumnWorker
+public class ColumnWorker_Stat : ColumnWorker
 {
     protected virtual StatDef Stat => Column.Stat;
-    private float GetValue(ThingAlike thing)
+    public override GenTable.Cell? GetCell(ThingAlike thing)
     {
         var statReq = StatRequest.For(thing.Def, thing.Stuff);
 
-        return Stat.Worker.GetValue(statReq);
-    }
-    public override bool ShouldShowFor(ThingAlike thing)
-    {
-        var statReq = StatRequest.For(thing.Def, thing.Stuff);
+        if (Stat.Worker.ShouldShowFor(statReq) == false)
+        {
+            return null;
+        }
 
-        return Stat.Worker.ShouldShowFor(statReq);
-    }
-    public override string GetCellText(ThingAlike thing)
-    {
-        var statValue = GetValue(thing);
+        var statValue_Num = Stat.Worker.GetValue(statReq);
+        string? statValue_Str = null;
 
         if (Column.FormatValue)
         {
-            return Stat.Worker.GetStatDrawEntryLabel(
+            statValue_Str = Stat.Worker.GetStatDrawEntryLabel(
                 Stat,
-                statValue,
+                statValue_Num,
                 ToStringNumberSense.Absolute,
                 // This is necessary (despite statReq being "optional") because some mods
                 // override this signature.
                 StatRequest.For(thing.Def, thing.Stuff)
             );
         }
-        else
+
+        if (Column.Type == GenTable.ColumnType.Boolean)
         {
-            return statValue.ToString();
+            return new GenTable.Cell_Bool(Column, statValue_Num);
         }
-    }
-    public override IComparable GetCellSortValue(ThingAlike thing)
-    {
-        return GetValue(thing);
+
+        return new GenTable.Cell_Num(Column, statValue_Num, statValue_Str);
     }
 }
 
 public class ColumnWorker_WeaponRange : ColumnWorker
 {
-    private float GetValue(ThingAlike thing)
+    public override GenTable.Cell? GetCell(ThingAlike thing)
     {
-        var range = thing.Def.Verbs.First(v => v.isPrimary)?.range;
-
-        if (range is float _range)
+        if (thing.Def.IsRangedWeapon && thing.Def.Verbs.Count > 0)
         {
-            return _range;
+            var range = thing.Def.Verbs.First(v => v.isPrimary)?.range;
+
+            if (range is float _range)
+            {
+                return new GenTable.Cell_Num(Column, _range);
+            }
         }
 
-        return float.NaN;
-    }
-    public override bool ShouldShowFor(ThingAlike thing)
-    {
-        return thing.Def.IsRangedWeapon && thing.Def.Verbs.Count > 0;
-    }
-    public override string GetCellText(ThingAlike thing)
-    {
-        return GetValue(thing).ToString();
-    }
-    public override IComparable GetCellSortValue(ThingAlike thing)
-    {
-        return GetValue(thing);
+        return null;
     }
 }

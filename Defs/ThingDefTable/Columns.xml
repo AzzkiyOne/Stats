@@ -1,14 +1,10 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <Defs>
 
-    <Stats.ThingDefTable.ColumnDef>
-        <defName>Label</defName>
-        <label>name</label>
-        <minWidth>250</minWidth>
-        <type>String</type>
-        <isPinned>true</isPinned>
+    <Stats.GenTable.ColumnDef ParentName="LabelColumnBase" Class="Stats.ThingDefTable.ColumnDef">
+        <defName>ThingLabel</defName>
         <workerClass>Stats.ThingDefTable.ColumnWorker_Label</workerClass>
-    </Stats.ThingDefTable.ColumnDef>
+    </Stats.GenTable.ColumnDef>
 
     <Stats.ThingDefTable.ColumnDef>
         <defName>MaxHitPoints</defName>

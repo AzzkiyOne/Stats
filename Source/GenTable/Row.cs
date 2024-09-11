@@ -1,54 +1,46 @@
 ﻿using System;
 using System.Collections.Generic;
-using UnityEngine;
 using Verse;
 
 namespace Stats.GenTable;
 
-public class Row<DataType> : Dictionary<IColumnDefWithWorker<DataType>, Cell?>
+public class Row<Key, DataType> :
+    Dictionary<Key, Cell?>
+    where Key : IRowKey<DataType>
 {
     private DataType Data { get; }
-
-    public Row(DataType data)
+    public Row(DataType data, int size) : base(size)
     {
         Data = data;
     }
-
-    public Cell? GetCell(IColumnDefWithWorker<DataType> column)
+    public Cell? GetCell(Key key, Cell? comparedTo = null)
     {
-        var containsCell = TryGetValue(column, out var cell);
+        var containsCell = TryGetValue(key, out var cell);
 
-        if (
-            !containsCell
-            && column.Worker.ShouldShowFor(Data)
-        )
+        if (!containsCell)
         {
             try
             {
-                cell = new Cell
+                cell = key.Worker.GetCell(Data);
+
+                if (comparedTo != null && cell is DiffableCell dcell)
                 {
-                    Text = column.Worker.GetCellText(Data),
-                    Tip = column.Worker.GetCellTip(Data),
-                    TextAnchor = column.TextAnchor,
-                    SortValue = column.Worker.GetCellSortValue(Data),
-                    DefRef = column.Worker.GetDefRef(Data),
-                };
+                    dcell.DisplayAsComparedTo(comparedTo);
+                }
             }
             catch (Exception ex)
             {
                 Log.Warning(ex.Message);
-                //cell = new Cell
-                //{
-                //    Text = "!!!",
-                //    TextAnchor = TextAnchor.MiddleCenter,
-                //    Tip = ex.ToString(),
-                //    BGColor = Color.red,
-                //};
             }
-        }
 
-        this[column] = cell;
+            this[key] = cell;
+        }
 
         return cell;
     }
+}
+
+public interface IRowKey<DataType>
+{
+    public ColumnWorker<DataType> Worker { get; }
 }

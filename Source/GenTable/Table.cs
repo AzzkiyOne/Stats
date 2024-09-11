@@ -11,7 +11,7 @@ using Verse;
 namespace Stats.GenTable;
 
 internal class Table<ColumnType, DataType>
-    where ColumnType : class, IColumnDefWithWorker<DataType>
+    where ColumnType : class, IColumn, IRowKey<DataType>
 {
     private Vector2 scrollPosition = new();
     public List<ColumnType> Columns
@@ -48,8 +48,8 @@ internal class Table<ColumnType, DataType>
     }
     private readonly List<ColumnType> middleColumns = [];
     private readonly List<ColumnType> pinnedLeftColumns = [];
-    private List<Row<DataType>> _rows = [];
-    public List<Row<DataType>> Rows
+    private List<Row<ColumnType, DataType>> _rows = [];
+    public List<Row<ColumnType, DataType>> Rows
     {
         get
         {
@@ -91,7 +91,20 @@ internal class Table<ColumnType, DataType>
         }
     }
     private SortDirection sortDirection = SortDirection.Ascending;
-    public Row<DataType>? SelectedRow { get; private set; } = null;
+    private Row<ColumnType, DataType>? selectedRow = null;
+    public Row<ColumnType, DataType>? SelectedRow
+    {
+        get => selectedRow;
+        private set
+        {
+            selectedRow = value;
+
+            foreach (var row in Rows)
+            {
+                row.Clear();
+            }
+        }
+    }
 
     private const float rowHeight = 30f;
     private const float headersRowHeight = rowHeight;
@@ -99,7 +112,7 @@ internal class Table<ColumnType, DataType>
 
     //private static Color columnSeparatorLineColor = new(1f, 1f, 1f, 0.04f);
 
-    public Table(List<ColumnType> columns, List<Row<DataType>> rows)
+    public Table(List<ColumnType> columns, List<Row<ColumnType, DataType>> rows)
     {
         Columns = columns;
         Rows = rows;
@@ -345,12 +358,8 @@ internal class Table<ColumnType, DataType>
                     column.MinWidth + extraCellWidth,
                     rowHeight
                 );
-                var cell = row.GetCell(column);
 
-                if (cell is not null)
-                {
-                    DrawRowCell(cellRect, cell);
-                }
+                GetRowCell(row, column)?.Draw(cellRect);
 
                 currX += cellRect.width;
                 debug_columnsDrawn++;
@@ -391,52 +400,6 @@ internal class Table<ColumnType, DataType>
 
         Widgets.EndGroup();
     }
-    private void DrawRowCell(Rect targetRect, Cell cell)
-    {
-        if (cell.BGColor is Color bgColor)
-        {
-            using (new ColorCtx(bgColor))
-            {
-                Widgets.DrawHighlight(targetRect);
-            }
-        }
-
-        var contentRect = targetRect.ContractedBy(cellPadding, 0);
-        var currX = contentRect.x;
-
-        if (cell.DefRef is not null)
-        {
-            // This is very expensive.
-            Widgets.DefIcon(
-                contentRect.CutFromX(ref currX, contentRect.height),
-                cell.DefRef.Def,
-                cell.DefRef.StuffDef
-            );
-
-            currX += GenUI.Pad;
-
-            Widgets.DrawHighlightIfMouseover(targetRect);
-
-            if (Widgets.ButtonInvisible(targetRect))
-            {
-                GUIWidgets.DefInfoDialog(cell.DefRef.Def, cell.DefRef.StuffDef);
-            }
-        }
-
-        using (new ColorCtx(cell.Color))
-        using (new TextAnchorCtx(cell.TextAnchor))
-        {
-            Widgets.Label(
-                contentRect.CutFromX(ref currX),
-                Debug.InDebugMode ? cell.SortValue.ToString() : cell.Text
-            );
-        }
-
-        if (cell.Tip != "")
-        {
-            TooltipHandler.TipRegion(targetRect, new TipSignal(cell.Tip));
-        }
-    }
     private float CalcExtraMiddleCellsWidth(float parentRectWidth)
     {
         parentRectWidth -= pinnedLeftColumnsWidth;
@@ -457,25 +420,25 @@ internal class Table<ColumnType, DataType>
 
         Rows.Sort((r1, r2) =>
         {
-            var r1c = r1.GetCell(SortColumn);
-            var r2c = r2.GetCell(SortColumn);
+            var r1c = GetRowCell(r1, SortColumn);
+            var r2c = GetRowCell(r2, SortColumn);
             int result = 0;
 
-            if (r1c is not null && r2c is not null)
+            if (r1c is not null)
             {
-                result = r1c.SortValue.CompareTo(r2c.SortValue);
+                result = r1c.CompareTo(r2c);
             }
-            else if (r1c is null && r2c is not null)
+            else if (r2c is not null)
             {
                 result = -1;
-            }
-            else if (r1c is not null && r2c is null)
-            {
-                result = 1;
             }
 
             return result * (int)sortDirection;
         });
+    }
+    private Cell? GetRowCell(Row<ColumnType, DataType> row, ColumnType column)
+    {
+        return row.GetCell(column, SelectedRow?.GetCell(column));
     }
 }
 

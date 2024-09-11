@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+
+    <Stats.GenTable.ColumnDef Name="LabelColumnBase" Abstract="True">
+        <label>name</label>
+        <minWidth>250</minWidth>
+        <type>String</type>
+        <isPinned>true</isPinned>
+    </Stats.GenTable.ColumnDef>
+
+</Defs>

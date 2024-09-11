@@ -1,25 +1,9 @@
 ﻿using System;
 using RimWorld;
-using Stats.ThingDefTable;
 using UnityEngine;
 using Verse;
 
 namespace Stats.GenTable;
-
-public interface IColumnDefWithWorker<DataType>
-{
-    public string Label { get; }
-    public string Description { get; }
-    /// <summary>
-    /// This should only be accessed in GUI context. Otherwise the game will crash.
-    /// </summary>
-    public float MinWidth { get; }
-    public ColumnType Type { get; }
-    public TextAnchor TextAnchor { get; }
-    public bool ReverseDiffModeColors { get; }
-    public bool IsPinned { get; }
-    public IColumnWorker<DataType> Worker { get; }
-}
 
 public abstract class ColumnDef : Def
 {
@@ -29,6 +13,9 @@ public abstract class ColumnDef : Def
     public string? descriptionKey;
     public float minWidth = 75f;
     private float? adjMinWidth = null;
+    /// <summary>
+    /// This should only be accessed in GUI context. Otherwise the game will crash.
+    /// </summary>
     public float MinWidth => adjMinWidth ??= Math.Max(Text.CalcSize(label).x + 15f, minWidth);
     public ColumnType type = ColumnType.Number;
     public ColumnType Type => type;

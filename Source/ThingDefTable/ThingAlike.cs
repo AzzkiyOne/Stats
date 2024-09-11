@@ -7,10 +7,13 @@ namespace Stats.ThingDefTable;
 // Implement GetHashCode (and Equals) just in case?
 public class ThingAlike
 {
-    public required string Label { get; init; }
-    public required ThingDef Def { get; init; }
-    public ThingDef? Stuff { get; init; }
-
+    public ThingDef Def { get; }
+    public ThingDef? Stuff { get; }
+    public ThingAlike(ThingDef def, ThingDef? stuff = null)
+    {
+        Def = def;
+        Stuff = stuff;
+    }
     private static List<ThingAlike> _all;
     public static List<ThingAlike> All
     {
@@ -47,21 +50,12 @@ public class ThingAlike
 
                     foreach (var stuffDef in allowedStuffs)
                     {
-                        _all.Add(new ThingAlike()
-                        {
-                            Label = thingDef.LabelCap + " (" + stuffDef.LabelCap + ")",
-                            Def = thingDef,
-                            Stuff = stuffDef,
-                        });
+                        _all.Add(new ThingAlike(thingDef, stuffDef));
                     }
                 }
                 else
                 {
-                    _all.Add(new ThingAlike()
-                    {
-                        Label = thingDef.LabelCap,
-                        Def = thingDef,
-                    });
+                    _all.Add(new ThingAlike(thingDef));
                 }
             }
 
