@@ -23,9 +23,9 @@ public class Row<Key, DataType> :
             {
                 cell = key.Worker.GetCell(Data);
 
-                if (comparedTo != null && cell is DiffableCell dcell)
+                if (comparedTo != null && cell is Cell_Num dcell)
                 {
-                    dcell.DisplayAsComparedTo(comparedTo);
+                    dcell.DisplayAsComparedTo(comparedTo, key.ReverseDiffModeColors);
                 }
             }
             catch (Exception ex)
@@ -42,5 +42,6 @@ public class Row<Key, DataType> :
 
 public interface IRowKey<DataType>
 {
+    public bool ReverseDiffModeColors { get; }
     public ColumnWorker<DataType> Worker { get; }
 }

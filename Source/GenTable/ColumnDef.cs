@@ -25,7 +25,6 @@ public abstract class ColumnDef : Def
     public bool ReverseDiffModeColors => reverseDiffModeColors;
     public bool isPinned = false;
     public bool IsPinned => isPinned;
-
     public override void ResolveReferences()
     {
         textAnchor = type == ColumnType.Number

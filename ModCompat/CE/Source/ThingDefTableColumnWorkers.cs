@@ -29,7 +29,7 @@ public class ColumnWorker_Caliber : ColumnWorker
             stat.Worker.GetValue(statReq)
         );
 
-        return new GenTable.Cell_Str(Column, cellText, cellTip);
+        return new GenTable.Cell_Str(cellText, cellTip);
     }
 }
 
@@ -53,6 +53,6 @@ public class ColumnWorker_ReloadTime : ColumnWorker
             StatRequest.For(thing.Def, thing.Stuff)
         );
 
-        return new GenTable.Cell_Num(Column, statValue_Num, statValue_Str);
+        return new GenTable.Cell_Num(statValue_Num, statValue_Str);
     }
 }

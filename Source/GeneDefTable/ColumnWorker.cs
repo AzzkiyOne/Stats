@@ -11,6 +11,6 @@ public class ColumnWorker_Label : ColumnWorker
 {
     public override GenTable.Cell? GetCell(GeneDef gene)
     {
-        return new GenTable.Cell_DefRef(Column, gene);
+        return new GenTable.Cell_DefRef(gene);
     }
 }

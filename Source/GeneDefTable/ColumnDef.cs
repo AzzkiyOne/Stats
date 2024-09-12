@@ -14,7 +14,7 @@ public static class ColumnDefOf
     }
 }
 
-public class ColumnDef : GenTable.ColumnDef, GenTable.IColumn, GenTable.IRowKey<GeneDef>
+public class ColumnDef : GenTable.ColumnDef, GenTable.IColumn<GeneDef>
 {
     public Type workerClass;
     private ColumnWorker worker;

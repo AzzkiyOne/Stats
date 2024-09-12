@@ -13,7 +13,7 @@ public class ColumnWorker_Label : ColumnWorker
 {
     public override GenTable.Cell? GetCell(ThingAlike thing)
     {
-        return new GenTable.Cell_DefRef(Column, thing.Def, thing.Stuff);
+        return new GenTable.Cell_DefRef(thing.Def, thing.Stuff);
     }
 }
 
@@ -29,14 +29,14 @@ public class ColumnWorker_Stat : ColumnWorker
             return null;
         }
 
-        var statValue_Num = Stat.Worker.GetValue(statReq);
-        string? statValue_Str = null;
+        var statValue_num = Stat.Worker.GetValue(statReq);
+        string? statValue_str = null;
 
         if (Column.FormatValue)
         {
-            statValue_Str = Stat.Worker.GetStatDrawEntryLabel(
+            statValue_str = Stat.Worker.GetStatDrawEntryLabel(
                 Stat,
-                statValue_Num,
+                statValue_num,
                 ToStringNumberSense.Absolute,
                 // This is necessary (despite statReq being "optional") because some mods
                 // override this signature.
@@ -46,10 +46,10 @@ public class ColumnWorker_Stat : ColumnWorker
 
         if (Column.Type == GenTable.ColumnType.Boolean)
         {
-            return new GenTable.Cell_Bool(Column, statValue_Num);
+            return new GenTable.Cell_Bool(statValue_num);
         }
 
-        return new GenTable.Cell_Num(Column, statValue_Num, statValue_Str);
+        return new GenTable.Cell_Num(statValue_num, statValue_str);
     }
 }
 
@@ -63,7 +63,7 @@ public class ColumnWorker_WeaponRange : ColumnWorker
 
             if (range is float _range)
             {
-                return new GenTable.Cell_Num(Column, _range);
+                return new GenTable.Cell_Num(_range);
             }
         }
 

@@ -14,17 +14,17 @@ public class ThingAlike
         Def = def;
         Stuff = stuff;
     }
-    private static List<ThingAlike> _all;
+    private static List<ThingAlike> all;
     public static List<ThingAlike> All
     {
         get
         {
-            if (_all != null)
+            if (all != null)
             {
-                return _all;
+                return all;
             }
 
-            _all = [];
+            all = [];
 
             foreach (var thingDef in DefDatabase<ThingDef>.AllDefs)
             {
@@ -50,16 +50,16 @@ public class ThingAlike
 
                     foreach (var stuffDef in allowedStuffs)
                     {
-                        _all.Add(new ThingAlike(thingDef, stuffDef));
+                        all.Add(new ThingAlike(thingDef, stuffDef));
                     }
                 }
                 else
                 {
-                    _all.Add(new ThingAlike(thingDef));
+                    all.Add(new ThingAlike(thingDef));
                 }
             }
 
-            return _all;
+            return all;
         }
     }
 }

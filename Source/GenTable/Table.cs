@@ -11,7 +11,7 @@ using Verse;
 namespace Stats.GenTable;
 
 internal class Table<ColumnType, DataType>
-    where ColumnType : class, IColumn, IRowKey<DataType>
+    where ColumnType : class, IColumn<DataType>
 {
     private Vector2 scrollPosition = new();
     public List<ColumnType> Columns
@@ -359,7 +359,7 @@ internal class Table<ColumnType, DataType>
                     rowHeight
                 );
 
-                GetRowCell(row, column)?.Draw(cellRect);
+                GetRowCell(row, column)?.Draw(cellRect, column.TextAnchor);
 
                 currX += cellRect.width;
                 debug_columnsDrawn++;

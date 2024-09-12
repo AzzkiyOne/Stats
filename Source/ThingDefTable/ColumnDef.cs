@@ -13,7 +13,7 @@ public static class ColumnDefOf
     }
 }
 
-public class ColumnDef : GenTable.ColumnDef, GenTable.IColumn, GenTable.IRowKey<ThingAlike>
+public class ColumnDef : GenTable.ColumnDef, GenTable.IColumn<ThingAlike>
 {
     public StatDef? stat;
     public StatDef? Stat => stat;
@@ -36,6 +36,8 @@ public class ColumnDef : GenTable.ColumnDef, GenTable.IColumn, GenTable.IRowKey<
     }
     public override void ResolveReferences()
     {
+        base.ResolveReferences();
+
         if (Stat != null)
         {
             if (string.IsNullOrEmpty(label))
@@ -48,7 +50,5 @@ public class ColumnDef : GenTable.ColumnDef, GenTable.IColumn, GenTable.IRowKey<
                 description = Stat.description;
             }
         }
-
-        base.ResolveReferences();
     }
 }
