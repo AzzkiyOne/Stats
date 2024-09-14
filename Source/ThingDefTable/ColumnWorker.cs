@@ -11,7 +11,7 @@ public abstract class ColumnWorker : GenTable.ColumnWorker<ThingAlike>
 
 public class ColumnWorker_Label : ColumnWorker
 {
-    public override GenTable.Cell? GetCell(ThingAlike thing)
+    public override GenTable.ICell? GetCell(ThingAlike thing)
     {
         return new GenTable.Cell_DefRef(thing.Def, thing.Stuff);
     }
@@ -20,7 +20,7 @@ public class ColumnWorker_Label : ColumnWorker
 public class ColumnWorker_Stat : ColumnWorker
 {
     protected virtual StatDef Stat => Column.Stat;
-    public override GenTable.Cell? GetCell(ThingAlike thing)
+    public override GenTable.ICell? GetCell(ThingAlike thing)
     {
         var statReq = StatRequest.For(thing.Def, thing.Stuff);
 
@@ -55,7 +55,7 @@ public class ColumnWorker_Stat : ColumnWorker
 
 public class ColumnWorker_WeaponRange : ColumnWorker
 {
-    public override GenTable.Cell? GetCell(ThingAlike thing)
+    public override GenTable.ICell? GetCell(ThingAlike thing)
     {
         if (thing.Def.IsRangedWeapon && thing.Def.Verbs.Count > 0)
         {

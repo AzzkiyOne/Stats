@@ -5,7 +5,7 @@ using Verse;
 namespace Stats.GenTable;
 
 public class Row<Key, DataType> :
-    Dictionary<Key, Cell?>
+    Dictionary<Key, ICell?>
     where Key : IRowKey<DataType>
 {
     private DataType Data { get; }
@@ -13,7 +13,7 @@ public class Row<Key, DataType> :
     {
         Data = data;
     }
-    public Cell? GetCell(Key key, Cell? comparedTo = null)
+    public ICell? GetCell(Key key, ICell? comparedTo = null)
     {
         var containsCell = TryGetValue(key, out var cell);
 
@@ -23,9 +23,12 @@ public class Row<Key, DataType> :
             {
                 cell = key.Worker.GetCell(Data);
 
-                if (comparedTo != null && cell is Cell_Num dcell)
+                if (
+                    comparedTo is ICell<float> to
+                    && cell is IAbleToBeDisplayedAsComparedTo dcell
+                )
                 {
-                    dcell.DisplayAsComparedTo(comparedTo, key.ReverseDiffModeColors);
+                    dcell.DisplayAsComparedTo(to, key.ReverseDiffModeColors);
                 }
             }
             catch (Exception ex)

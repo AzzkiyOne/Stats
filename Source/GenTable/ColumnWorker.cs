@@ -2,5 +2,5 @@
 
 public abstract class ColumnWorker<DataType>
 {
-    public abstract Cell? GetCell(DataType data);
+    public abstract ICell? GetCell(DataType data);
 }

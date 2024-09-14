@@ -9,7 +9,7 @@ public abstract class ColumnWorker : GenTable.ColumnWorker<GeneDef>
 
 public class ColumnWorker_Label : ColumnWorker
 {
-    public override GenTable.Cell? GetCell(GeneDef gene)
+    public override GenTable.ICell? GetCell(GeneDef gene)
     {
         return new GenTable.Cell_DefRef(gene);
     }

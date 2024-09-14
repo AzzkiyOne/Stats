@@ -7,7 +7,7 @@ namespace Stats.Compat.CE;
 
 public class ColumnWorker_Caliber : ColumnWorker
 {
-    public override GenTable.Cell? GetCell(ThingAlike thing)
+    public override GenTable.ICell? GetCell(ThingAlike thing)
     {
         var stat = DefDatabase<StatDef>.GetNamed("Caliber");
         var statReq = StatRequest.For(thing.Def, thing.Stuff);
@@ -35,7 +35,7 @@ public class ColumnWorker_Caliber : ColumnWorker
 
 public class ColumnWorker_ReloadTime : ColumnWorker
 {
-    public override GenTable.Cell? GetCell(ThingAlike thing)
+    public override GenTable.ICell? GetCell(ThingAlike thing)
     {
         var stat = CE_StatDefOf.ReloadTime;
         var statReq = StatRequest.For(thing.Def, thing.Stuff);

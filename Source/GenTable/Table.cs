@@ -436,7 +436,7 @@ internal class Table<ColumnType, DataType>
             return result * (int)sortDirection;
         });
     }
-    private Cell? GetRowCell(Row<ColumnType, DataType> row, ColumnType column)
+    private ICell? GetRowCell(Row<ColumnType, DataType> row, ColumnType column)
     {
         return row.GetCell(column, SelectedRow?.GetCell(column));
     }

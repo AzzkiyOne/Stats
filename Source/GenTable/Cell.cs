@@ -7,11 +7,36 @@ namespace Stats.GenTable;
 // It maybe a good idea to have column workers return just "description" of a cell (in a form
 // of a struct?). And then a row will create an appropriate cell.
 // This way column workers will have to provide only bare minimum of cell's data required.
+//
+// This will also allow for example to have a single column that displays leather amount and
+// type (as an icon) but still filter by these 2 values separatedly.
 
-public abstract class Cell : IComparable, IComparable<Cell>
+public interface ICell : IComparable
+{
+    void Draw(Rect targetRect, TextAnchor textAnchor);
+}
+
+public interface ICell<T>
+    where T : IComparable<T>
+{
+    T Value { get; }
+}
+
+public interface ICellWithText
+{
+    string Text { get; }
+}
+
+public interface IAbleToBeDisplayedAsComparedTo
+{
+    void DisplayAsComparedTo(ICell<float> other, bool reverseColors);
+}
+
+public abstract class Cell<T> : ICell, ICell<T>
+     where T : IComparable<T>
 {
     protected const float textPadding = 5f;
-    public IComparable Value { get; init; }
+    public T Value { get; init; }
     public abstract void Draw(Rect targetRect, TextAnchor textAnchor);
     public int CompareTo(object? other)
     {
@@ -19,38 +44,24 @@ public abstract class Cell : IComparable, IComparable<Cell>
         {
             return 1;
         }
-
-        if (other is Cell cell)
+        else if (other is ICell<T> cell)
         {
-            return CompareTo(cell);
+            return Value.CompareTo(cell.Value);
         }
 
-        throw new ArgumentException($"Argument must be {nameof(Cell)}.");
-    }
-    public int CompareTo(Cell? other)
-    {
-        if (other == null)
-        {
-            return 1;
-        }
-
-        return Value.CompareTo(other.Value);
+        throw new ArgumentException($"Argument must be {nameof(ICell<T>)}.");
     }
 }
 
-public sealed class Cell_DefRef : Cell
+public sealed class Cell_DefRef : Cell<string>
 {
-    private string Text { get; }
-    private string Tip { get; }
     private Def Def { get; }
     private ThingDef? Stuff { get; }
     public Cell_DefRef(Def def, ThingDef? stuff = null)
     {
-        Text = stuff != null ? $"{def.LabelCap}({stuff.LabelCap})" : def.LabelCap;
-        Value = Text;
+        Value = stuff != null ? $"{def.LabelCap} ({stuff.LabelCap})" : def.LabelCap;
         Def = def;
         Stuff = stuff;
-        Tip = def.description;
     }
     public override void Draw(Rect targetRect, TextAnchor textAnchor)
     {
@@ -69,23 +80,23 @@ public sealed class Cell_DefRef : Cell
 
         using (new TextAnchorCtx(textAnchor))
         {
-            Widgets.Label(contentRect.CutFromX(ref currX), Text);
+            Widgets.Label(contentRect.CutFromX(ref currX), Value);
         }
 
         Widgets.DrawHighlightIfMouseover(targetRect);
-        TooltipHandler.TipRegion(targetRect, new TipSignal(Tip));
+        TooltipHandler.TipRegion(targetRect, new TipSignal(Def.description));
     }
 }
 
-public sealed class Cell_Num : Cell
+public sealed class Cell_Num : Cell<float>, ICellWithText, IAbleToBeDisplayedAsComparedTo
 {
-    private string Text { get; set; }
-    private string Tip { get; set; }
+    public string Text { get; set; }
+    private string Tip { get; set; } = "";
     private Color Color { get; set; } = Color.white;
     public Cell_Num(float value, string? value_str = null)
     {
-        Text = value_str ?? value.ToString();
         Value = value;
+        Text = value_str ?? Value.ToString();
     }
     public override void Draw(Rect targetRect, TextAnchor textAnchor)
     {
@@ -97,7 +108,7 @@ public sealed class Cell_Num : Cell
 
         TooltipHandler.TipRegion(targetRect, new TipSignal(Tip));
     }
-    public void DisplayAsComparedTo(Cell other, bool reverseColors)
+    public void DisplayAsComparedTo(ICell<float> other, bool reverseColors)
     {
         if (this == other)
         {
@@ -117,55 +128,51 @@ public sealed class Cell_Num : Cell
                 break;
         }
 
-        if (Value is float value && other is Cell_Num otherNumCell)
+        if (other is ICellWithText _other)
         {
-            Tip = $"This: {Text}\n\nSelected: {otherNumCell.Text}";
+            Tip = $"This: {Text}\n\nSelected: {_other.Text}";
+        }
 
-            var diff = (value / (float)otherNumCell.Value);
+        var diff = Value / other.Value;
 
-            if (float.IsFinite(diff))
-            {
-                Text = $"x {diff:0.0}";
-            }
+        if (float.IsFinite(diff))
+        {
+            Text = $"x {diff:0.0}";
         }
     }
 }
 
-public sealed class Cell_Str : Cell
+public sealed class Cell_Str : Cell<string>
 {
-    private string Text { get; }
     private string Tip { get; }
     public Cell_Str(string value, string tip = "")
     {
         Value = value;
-        Text = Value.ToString();
         Tip = tip;
     }
     public override void Draw(Rect targetRect, TextAnchor textAnchor)
     {
         using (new TextAnchorCtx(textAnchor))
         {
-            Widgets.Label(targetRect.ContractedBy(textPadding, 0), Text);
+            Widgets.Label(targetRect.ContractedBy(textPadding, 0), Value);
         }
 
         TooltipHandler.TipRegion(targetRect, new TipSignal(Tip));
     }
 }
 
-public sealed class Cell_Bool : Cell
+public sealed class Cell_Bool : Cell<bool>
 {
     private Texture2D Tex { get; }
     public Cell_Bool(bool value)
     {
         Value = value;
-        Tex = Widgets.GetCheckboxTexture(value);
+        Tex = Widgets.GetCheckboxTexture(Value);
     }
     public Cell_Bool(float value)
     {
-        var value_bool = value > 0f;
-
-        Value = value_bool;
-        Tex = Widgets.GetCheckboxTexture(value_bool);
+        Value = value > 0f;
+        Tex = Widgets.GetCheckboxTexture(Value);
     }
     public override void Draw(Rect targetRect, TextAnchor _)
     {
