@@ -109,7 +109,7 @@ internal class Table<DataType>
     private const float headersRowHeight = rowHeight;
     private const float cellPadding = 5f;
 
-    //private static Color columnSeparatorLineColor = new(1f, 1f, 1f, 0.04f);
+    //private static Color columnSeparatorLineColor = new(1f, 1f, 1f, 0.1f);
 
     public Table(List<IColumn<DataType>> columns, List<Row<DataType>> rows)
     {
@@ -205,6 +205,8 @@ internal class Table<DataType>
     {
         var currX = targetRect.x;
 
+        Widgets.DrawHighlight(targetRect);
+
         // Draw pinned headers
         DrawHeaderColumns(
             targetRect.CutFromX(ref currX, pinnedLeftColumnsWidth),
@@ -232,10 +234,22 @@ internal class Table<DataType>
 
         foreach (var column in columns)
         {
+            var columnWidth = column.MinWidth + extraCellWidth;
+            // Culling
+            if (currX + columnWidth <= 0)
+            {
+                currX += columnWidth;
+                continue;
+            }
+            else if (currX > targetRect.width)
+            {
+                break;
+            }
+
             var cellRect = new Rect(
                 currX,
                 0,
-                column.MinWidth + extraCellWidth,
+                columnWidth,
                 targetRect.height
             );
 
@@ -244,38 +258,38 @@ internal class Table<DataType>
                 SortColumn = column;
             }
 
-            currX += cellRect.width;
+            currX += columnWidth;
         }
 
         Widgets.EndGroup();
     }
     private bool DrawHeaderCell(Rect targetRect, IColumn<DataType> column)
     {
-        //Widgets.DrawHighlight(targetRect);
+        if (SortColumn == column)
+        {
+            Widgets.DrawBoxSolid(
+                sortDirection == SortDirection.Ascending
+                    ? targetRect.BottomPartPixels(4f)
+                    : targetRect.TopPartPixels(4f),
+                Color.yellow
+            );
+        }
+
         using (new TextAnchorCtx(column.TextAnchor))
         {
             Widgets.Label(targetRect.ContractedBy(cellPadding, 0), column.Label);
         }
 
-        if (SortColumn == column)
-        {
-            Widgets.DrawTextureRotated(
-                targetRect.RightPartPixels(targetRect.height),
-                TexButton.Reveal,
-                (int)sortDirection * -90f
-            );
-        }
-
-        //GUIUtils.DrawLineVertical(
-        //    targetRect.xMax,
-        //    targetRect.y,
-        //    targetRect.height,
-        //    Table.columnSeparatorLineColor
-        //);
-
         TooltipHandler.TipRegion(targetRect, new TipSignal(column.Description));
 
         Widgets.DrawHighlightIfMouseover(targetRect);
+
+        //GUIWidgets.DrawLineVertical(
+        //    targetRect.xMax,
+        //    targetRect.y,
+        //    targetRect.height,
+        //    columnSeparatorLineColor
+        //);
 
         return Widgets.ButtonInvisible(targetRect);
     }
@@ -305,6 +319,32 @@ internal class Table<DataType>
     )
     {
         Widgets.BeginGroup(targetRect);
+
+        //float currSepX = -scrollPosition.x;
+        //// Separators
+        //for (int i = 0; i < columns.Count - 1; i++)
+        //{
+        //    var columnWidth = columns[i].MinWidth + extraCellWidth;
+        //    // Culling
+        //    if (currSepX + columnWidth <= 0)
+        //    {
+        //        currSepX += columnWidth;
+        //        continue;
+        //    }
+        //    else if (currSepX > targetRect.width)
+        //    {
+        //        break;
+        //    }
+
+        //    currSepX += columnWidth;
+
+        //    GUIWidgets.DrawLineVertical(
+        //        currSepX,
+        //        0f,
+        //        targetRect.height,
+        //        columnSeparatorLineColor
+        //    );
+        //}
 
         float currY = -scrollPosition.y;
         int debug_rowsDrawn = 0;
@@ -340,10 +380,11 @@ internal class Table<DataType>
             // Cells
             foreach (var column in columns)
             {
+                var columnWidth = column.MinWidth + extraCellWidth;
                 // Culling
-                if (currX + column.MinWidth <= 0)
+                if (currX + columnWidth <= 0)
                 {
-                    currX += column.MinWidth;
+                    currX += columnWidth;
                     continue;
                 }
                 else if (currX > targetRect.width)
@@ -354,13 +395,13 @@ internal class Table<DataType>
                 var cellRect = new Rect(
                     currX,
                     currY,
-                    column.MinWidth + extraCellWidth,
+                    columnWidth,
                     rowHeight
                 );
 
                 GetRowCell(row, column)?.Draw(cellRect, column.TextAnchor);
 
-                currX += cellRect.width;
+                currX += columnWidth;
                 debug_columnsDrawn++;
             }
 
