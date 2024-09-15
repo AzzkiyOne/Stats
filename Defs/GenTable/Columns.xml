@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <Defs>
 
-    <Stats.GenTable.ColumnDef Name="LabelColumnBase" Abstract="True">
+    <Stats.GenTable.ColumnDef Class="Stats.GenTable.Column_Label">
+        <defName>Label</defName>
         <label>name</label>
         <minWidth>250</minWidth>
         <type>String</type>

@@ -1,4 +1,6 @@
-﻿using RimWorld;
+﻿using System.Collections.Generic;
+using System.Linq;
+using RimWorld;
 using UnityEngine;
 using Verse;
 
@@ -25,25 +27,48 @@ public class StatsMainTabWindow : MainTabWindow
     private const float catPickerWidth = 300f;
 
     public static readonly Color borderLineColor = new(1f, 1f, 1f, 0.4f);
-
+    private Filters<ThingDefTable.ThingAlike> Filters { get; }
     public StatsMainTabWindow()
     {
         draggable = true;
         resizeable = true;
+        Filters = new((filters) =>
+        {
+            thingDefsTable.Rows = ThingDefTable.ThingAlike.All
+            .Where(thing => filters.All(filter => filter.Match(thing)))
+            .Select(thing => new GenTable.Row<ThingDefTable.ThingAlike>(thing, DefDatabase<GenTable.ColumnDef>.AllDefsListForReading.Count))
+            .ToList();
+        });
+        var tdfColumns = new List<GenTable.IColumn<ThingDefTable.ThingAlike>>();
 
-        thingDefsTable = new(
-            DefDatabase<ThingDefTable.ColumnDef>.AllDefsListForReading,
-            ThingDefTable.ThingAlike.All
-        );
-        geneDefsTable = new(
-            DefDatabase<GeneDefTable.ColumnDef>.AllDefsListForReading,
-            DefDatabase<GeneDef>.AllDefsListForReading
-        );
+        foreach (var column in DefDatabase<GenTable.ColumnDef>.AllDefs)
+        {
+            if (column is GenTable.IColumn<ThingDefTable.ThingAlike> _column)
+            {
+                tdfColumns.Add(_column);
+            }
+        }
+
+        thingDefsTable = new(tdfColumns, ThingDefTable.ThingAlike.All);
+
+        var gdtColumns = new List<GenTable.IColumn<GeneDef>>();
+
+        foreach (var column in DefDatabase<GenTable.ColumnDef>.AllDefs)
+        {
+            if (column is GenTable.IColumn<GeneDef> _column)
+            {
+                gdtColumns.Add(_column);
+            }
+        }
+
+        geneDefsTable = new(gdtColumns, DefDatabase<GeneDef>.AllDefsListForReading);
     }
 
     private void DrawContent(Rect targetRect)
     {
         var currX = targetRect.x;
+        var filtersRect = targetRect.CutFromX(ref currX, 300f);
+        Filters.Draw(filtersRect);
 
         thingDefsTable.Draw(targetRect.CutFromX(ref currX));
         //geneDefsTable.Draw(targetRect.CutFromX(ref currX));

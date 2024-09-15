@@ -1,65 +1,63 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Defs>
 
-    <Stats.ThingDefTable.ColumnDef>
+    <Stats.GenTable.ColumnDef Class="Stats.ThingDefTable.Column_Stat">
         <defName>Bulk</defName>
         <stat>Bulk</stat>
         <reverseDiffModeColors>true</reverseDiffModeColors>
-    </Stats.ThingDefTable.ColumnDef>
+    </Stats.GenTable.ColumnDef>
 
-    <Stats.ThingDefTable.ColumnDef>
+    <Stats.GenTable.ColumnDef Class="Stats.ThingDefTable.Column_Stat">
         <defName>ShotSpread</defName>
         <stat>ShotSpread</stat>
         <reverseDiffModeColors>true</reverseDiffModeColors>
-    </Stats.ThingDefTable.ColumnDef>
+    </Stats.GenTable.ColumnDef>
 
-    <Stats.ThingDefTable.ColumnDef>
+    <Stats.GenTable.ColumnDef Class="Stats.ThingDefTable.Column_Stat">
         <defName>SwayFactor</defName>
         <stat>SwayFactor</stat>
         <label>sway</label>
         <reverseDiffModeColors>true</reverseDiffModeColors>
-    </Stats.ThingDefTable.ColumnDef>
+    </Stats.GenTable.ColumnDef>
 
-    <Stats.ThingDefTable.ColumnDef>
+    <Stats.GenTable.ColumnDef Class="Stats.ThingDefTable.Column_Stat">
         <defName>Recoil</defName>
         <stat>Recoil</stat>
         <label>recoil</label>
         <reverseDiffModeColors>true</reverseDiffModeColors>
-    </Stats.ThingDefTable.ColumnDef>
+    </Stats.GenTable.ColumnDef>
 
-    <Stats.ThingDefTable.ColumnDef>
+    <Stats.GenTable.ColumnDef Class="Stats.ThingDefTable.Column_Stat">
         <defName>SightsEfficiency</defName>
         <stat>SightsEfficiency</stat>
         <label>sights</label>
-    </Stats.ThingDefTable.ColumnDef>
+    </Stats.GenTable.ColumnDef>
 
-    <Stats.ThingDefTable.ColumnDef>
+    <Stats.GenTable.ColumnDef Class="Stats.ThingDefTable.Column_Stat">
         <defName>MagazineCapacity</defName>
         <stat>MagazineCapacity</stat>
         <label>mag. cap</label>
         <formatValue>false</formatValue>
-    </Stats.ThingDefTable.ColumnDef>
+    </Stats.GenTable.ColumnDef>
 
-    <Stats.ThingDefTable.ColumnDef>
+    <Stats.GenTable.ColumnDef Class="Stats.Compat.CE.Column_ReloadTime">
         <defName>ReloadTime</defName>
         <stat>ReloadTime</stat>
         <reverseDiffModeColors>true</reverseDiffModeColors>
-        <workerClass>Stats.Compat.CE.ColumnWorker_ReloadTime</workerClass>
-    </Stats.ThingDefTable.ColumnDef>
+    </Stats.GenTable.ColumnDef>
 
-    <Stats.ThingDefTable.ColumnDef>
+    <Stats.GenTable.ColumnDef Class="Stats.ThingDefTable.Column_Stat">
         <defName>OneHandedness</defName>
         <stat>OneHandedness</stat>
         <label>one-handed</label>
         <type>Boolean</type>
-    </Stats.ThingDefTable.ColumnDef>
+    </Stats.GenTable.ColumnDef>
 
-    <Stats.ThingDefTable.ColumnDef>
+    <Stats.GenTable.ColumnDef Class="Stats.Compat.CE.Column_Caliber">
         <defName>Caliber</defName>
         <stat>Caliber</stat>
         <type>String</type>
         <minWidth>150</minWidth>
-        <workerClass>Stats.Compat.CE.ColumnWorker_Caliber</workerClass>
-    </Stats.ThingDefTable.ColumnDef>
+    </Stats.GenTable.ColumnDef>
 
 </Defs>

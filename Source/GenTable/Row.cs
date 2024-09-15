@@ -4,16 +4,14 @@ using Verse;
 
 namespace Stats.GenTable;
 
-public class Row<Key, DataType> :
-    Dictionary<Key, ICell?>
-    where Key : IRowKey<DataType>
+public class Row<DataType> : Dictionary<IColumn<DataType>, ICell?>
 {
-    private DataType Data { get; }
+    public DataType Data { get; }
     public Row(DataType data, int size) : base(size)
     {
         Data = data;
     }
-    public ICell? GetCell(Key key, ICell? comparedTo = null)
+    public ICell? GetCell(IColumn<DataType> key, ICell? comparedTo = null)
     {
         var containsCell = TryGetValue(key, out var cell);
 
@@ -21,7 +19,7 @@ public class Row<Key, DataType> :
         {
             try
             {
-                cell = key.Worker.GetCell(Data);
+                cell = key.GetCell(Data);
 
                 if (
                     comparedTo is ICell<float> to
@@ -41,10 +39,4 @@ public class Row<Key, DataType> :
 
         return cell;
     }
-}
-
-public interface IRowKey<DataType>
-{
-    public bool ReverseDiffModeColors { get; }
-    public ColumnWorker<DataType> Worker { get; }
 }

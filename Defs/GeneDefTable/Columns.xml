@@ -1,9 +1,4 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <Defs>
 
-    <Stats.GenTable.ColumnDef ParentName="LabelColumnBase" Class="Stats.GeneDefTable.ColumnDef">
-        <defName>GeneLabel</defName>
-        <workerClass>Stats.GeneDefTable.ColumnWorker_Label</workerClass>
-    </Stats.GenTable.ColumnDef>
-
 </Defs>

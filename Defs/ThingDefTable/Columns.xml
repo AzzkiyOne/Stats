@@ -1,35 +1,29 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <Defs>
 
-    <Stats.GenTable.ColumnDef ParentName="LabelColumnBase" Class="Stats.ThingDefTable.ColumnDef">
-        <defName>ThingLabel</defName>
-        <workerClass>Stats.ThingDefTable.ColumnWorker_Label</workerClass>
-    </Stats.GenTable.ColumnDef>
-
-    <Stats.ThingDefTable.ColumnDef>
+    <Stats.GenTable.ColumnDef Class="Stats.ThingDefTable.Column_Stat">
         <defName>MaxHitPoints</defName>
         <stat>MaxHitPoints</stat>
         <label>max HP</label>
-    </Stats.ThingDefTable.ColumnDef>
+    </Stats.GenTable.ColumnDef>
 
-    <Stats.ThingDefTable.ColumnDef>
+    <Stats.GenTable.ColumnDef Class="Stats.ThingDefTable.Column_Stat">
         <defName>Mass</defName>
         <stat>Mass</stat>
         <reverseDiffModeColors>true</reverseDiffModeColors>
         <minWidth>100</minWidth>
-    </Stats.ThingDefTable.ColumnDef>
+    </Stats.GenTable.ColumnDef>
 
-    <Stats.ThingDefTable.ColumnDef>
+    <Stats.GenTable.ColumnDef Class="Stats.ThingDefTable.Column_Stat">
         <defName>MarketValue</defName>
         <stat>MarketValue</stat>
         <label>$$$</label>
-    </Stats.ThingDefTable.ColumnDef>
+    </Stats.GenTable.ColumnDef>
 
-    <Stats.ThingDefTable.ColumnDef>
+    <Stats.GenTable.ColumnDef Class="Stats.ThingDefTable.Column_WeaponRange">
         <defName>WeaponRange</defName>
         <labelKey>Range</labelKey>
         <descriptionKey>Stat_Thing_Weapon_Range_Desc</descriptionKey>
-        <workerClass>Stats.ThingDefTable.ColumnWorker_WeaponRange</workerClass>
-    </Stats.ThingDefTable.ColumnDef>
+    </Stats.GenTable.ColumnDef>
 
 </Defs>

@@ -5,11 +5,10 @@ using Verse;
 
 namespace Stats.Compat.CE;
 
-public class ColumnWorker_Caliber : ColumnWorker
+public class Column_Caliber : Column_Stat
 {
     public override GenTable.ICell? GetCell(ThingAlike thing)
     {
-        var stat = DefDatabase<StatDef>.GetNamed("Caliber");
         var statReq = StatRequest.For(thing.Def, thing.Stuff);
 
         if (stat.Worker.ShouldShowFor(statReq) == false)
@@ -33,11 +32,10 @@ public class ColumnWorker_Caliber : ColumnWorker
     }
 }
 
-public class ColumnWorker_ReloadTime : ColumnWorker
+public class Column_ReloadTime : Column_Stat
 {
     public override GenTable.ICell? GetCell(ThingAlike thing)
     {
-        var stat = CE_StatDefOf.ReloadTime;
         var statReq = StatRequest.For(thing.Def, thing.Stuff);
 
         if (CE_StatDefOf.MagazineCapacity.Worker.ShouldShowFor(statReq) == false)

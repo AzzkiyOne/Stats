@@ -4,12 +4,12 @@ using Verse;
 
 namespace Stats.GeneDefTable;
 
-internal class Table : GenTable.Table<ColumnDef, GeneDef>
+internal class Table : GenTable.Table<GeneDef>
 {
     public Table(
-        List<ColumnDef> columns,
+        List<GenTable.IColumn<GeneDef>> columns,
         List<GeneDef> genes
-    ) : base(columns, genes.Select(gene => new GenTable.Row<ColumnDef, GeneDef>(gene, columns.Count)).ToList())
+    ) : base(columns, genes.Select(gene => new GenTable.Row<GeneDef>(gene, columns.Count)).ToList())
     {
     }
 }

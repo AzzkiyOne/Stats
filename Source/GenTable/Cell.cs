@@ -59,6 +59,8 @@ public sealed class Cell_DefRef : Cell<string>
     private ThingDef? Stuff { get; }
     public Cell_DefRef(Def def, ThingDef? stuff = null)
     {
+        // This is the only cell that calculates its own value.
+        // Either this is wrong or other cells are wrong.
         Value = stuff != null ? $"{def.LabelCap} ({stuff.LabelCap})" : def.LabelCap;
         Def = def;
         Stuff = stuff;

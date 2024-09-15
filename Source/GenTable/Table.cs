@@ -10,11 +10,10 @@ using Verse;
 
 namespace Stats.GenTable;
 
-internal class Table<ColumnType, DataType>
-    where ColumnType : class, IColumn<DataType>
+internal class Table<DataType>
 {
     private Vector2 scrollPosition = new();
-    public List<ColumnType> Columns
+    public List<IColumn<DataType>> Columns
     {
         set
         {
@@ -46,10 +45,10 @@ internal class Table<ColumnType, DataType>
             }
         }
     }
-    private readonly List<ColumnType> middleColumns = [];
-    private readonly List<ColumnType> pinnedLeftColumns = [];
-    private List<Row<ColumnType, DataType>> _rows = [];
-    public List<Row<ColumnType, DataType>> Rows
+    private readonly List<IColumn<DataType>> middleColumns = [];
+    private readonly List<IColumn<DataType>> pinnedLeftColumns = [];
+    private List<Row<DataType>> _rows = [];
+    public List<Row<DataType>> Rows
     {
         get
         {
@@ -68,8 +67,8 @@ internal class Table<ColumnType, DataType>
     private float minRowWidth = 0f;
     private float totalRowsHeight = 0f;
     private int? mouseOverRowIndex = null;
-    private ColumnType? _sortColumn;
-    private ColumnType? SortColumn
+    private IColumn<DataType>? _sortColumn;
+    private IColumn<DataType>? SortColumn
     {
         get
         {
@@ -91,8 +90,8 @@ internal class Table<ColumnType, DataType>
         }
     }
     private SortDirection sortDirection = SortDirection.Ascending;
-    private Row<ColumnType, DataType>? selectedRow = null;
-    public Row<ColumnType, DataType>? SelectedRow
+    private Row<DataType>? selectedRow = null;
+    public Row<DataType>? SelectedRow
     {
         get => selectedRow;
         private set
@@ -112,7 +111,7 @@ internal class Table<ColumnType, DataType>
 
     //private static Color columnSeparatorLineColor = new(1f, 1f, 1f, 0.04f);
 
-    public Table(List<ColumnType> columns, List<Row<ColumnType, DataType>> rows)
+    public Table(List<IColumn<DataType>> columns, List<Row<DataType>> rows)
     {
         Columns = columns;
         Rows = rows;
@@ -222,7 +221,7 @@ internal class Table<ColumnType, DataType>
     }
     private void DrawHeaderColumns(
         Rect targetRect,
-        List<ColumnType> columns,
+        List<IColumn<DataType>> columns,
         Vector2 scrollPosition,
         float extraCellWidth = 0f
     )
@@ -250,7 +249,7 @@ internal class Table<ColumnType, DataType>
 
         Widgets.EndGroup();
     }
-    private bool DrawHeaderCell(Rect targetRect, ColumnType column)
+    private bool DrawHeaderCell(Rect targetRect, IColumn<DataType> column)
     {
         //Widgets.DrawHighlight(targetRect);
         using (new TextAnchorCtx(column.TextAnchor))
@@ -300,7 +299,7 @@ internal class Table<ColumnType, DataType>
     }
     private void DrawRows(
         Rect targetRect,
-        List<ColumnType> columns,
+        List<IColumn<DataType>> columns,
         Vector2 scrollPosition,
         float extraCellWidth = 0f
     )
@@ -436,7 +435,7 @@ internal class Table<ColumnType, DataType>
             return result * (int)sortDirection;
         });
     }
-    private ICell? GetRowCell(Row<ColumnType, DataType> row, ColumnType column)
+    private ICell? GetRowCell(Row<DataType> row, IColumn<DataType> column)
     {
         return row.GetCell(column, SelectedRow?.GetCell(column));
     }
