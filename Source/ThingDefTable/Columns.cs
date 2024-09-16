@@ -1,4 +1,4 @@
-﻿using System.Linq;
+﻿using System;
 using RimWorld;
 using Verse;
 
@@ -8,7 +8,7 @@ public class Column_Stat : GenTable.ColumnDef, GenTable.IColumn<ThingAlike>, IFi
 {
     public StatDef stat;
     public bool formatValue = true;
-    private float? GetValue(ThingAlike thing)
+    protected virtual float? GetValue(ThingAlike thing)
     {
         var statReq = StatRequest.For(thing.Def, thing.Stuff);
 
@@ -39,10 +39,10 @@ public class Column_Stat : GenTable.ColumnDef, GenTable.IColumn<ThingAlike>, IFi
                 );
             }
 
-            //if (Column.Type == GenTable.ColumnType.Boolean)
-            //{
-            //    return new GenTable.Cell_Bool(statValue_num);
-            //}
+            if (Type == GenTable.ColumnType.Boolean)
+            {
+                return new GenTable.Cell_Bool(_statValue_num);
+            }
 
             return new GenTable.Cell_Num(_statValue_num, statValue_str);
         }
@@ -51,7 +51,12 @@ public class Column_Stat : GenTable.ColumnDef, GenTable.IColumn<ThingAlike>, IFi
     }
     public IFilter<ThingAlike> GetFilter()
     {
-        return new FilterNum<ThingAlike>(this, GetValue);
+        if (Type == GenTable.ColumnType.Boolean)
+        {
+            return new Filter_Bool<ThingAlike>(this, (t) => GetValue(t) > 0f);
+        }
+
+        return new Filter_Num<ThingAlike>(this, GetValue);
     }
     public override void ResolveReferences()
     {
@@ -69,30 +74,32 @@ public class Column_Stat : GenTable.ColumnDef, GenTable.IColumn<ThingAlike>, IFi
     }
 }
 
-public class Column_WeaponRange : GenTable.ColumnDef, GenTable.IColumn<ThingAlike>, IFilterProvider<ThingAlike>
+public class Column_Num : GenTable.ColumnDef, GenTable.IColumn<ThingAlike>, IFilterProvider<ThingAlike>
 {
-    private float? GetValue(ThingAlike thing)
-    {
-        if (thing.Def.IsRangedWeapon && thing.Def.Verbs.Count > 0)
-        {
-            var range = thing.Def.Verbs.First(v => v.isPrimary)?.range;
-
-            if (range is float _range)
-            {
-                return _range;
-            }
-        }
-
-        return null;
-    }
+    public Func<ThingAlike, float?> getValue;
     public GenTable.ICell? GetCell(ThingAlike thing)
     {
-        var value = GetValue(thing);
+        var value = getValue(thing);
 
         return value is float _value ? new GenTable.Cell_Num(_value) : null;
     }
     public IFilter<ThingAlike> GetFilter()
     {
-        return new FilterNum<ThingAlike>(this, GetValue);
+        return new Filter_Num<ThingAlike>(this, getValue);
+    }
+}
+
+public class Column_Bool : GenTable.ColumnDef, GenTable.IColumn<ThingAlike>, IFilterProvider<ThingAlike>
+{
+    public Func<ThingAlike, bool?> getValue;
+    public GenTable.ICell? GetCell(ThingAlike thing)
+    {
+        var value = getValue(thing);
+
+        return value is bool _value ? new GenTable.Cell_Bool(_value) : null;
+    }
+    public IFilter<ThingAlike> GetFilter()
+    {
+        return new Filter_Bool<ThingAlike>(this, getValue);
     }
 }

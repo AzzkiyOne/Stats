@@ -20,10 +20,37 @@
         <label>$$$</label>
     </Stats.GenTable.ColumnDef>
 
-    <Stats.GenTable.ColumnDef Class="Stats.ThingDefTable.Column_WeaponRange">
+    <Stats.GenTable.ColumnDef Class="Stats.ThingDefTable.Column_Stat">
+        <defName>Nutrition</defName>
+        <stat>Nutrition</stat>
+    </Stats.GenTable.ColumnDef>
+
+    <Stats.GenTable.ColumnDef Class="Stats.ThingDefTable.Column_Num">
         <defName>WeaponRange</defName>
         <labelKey>Range</labelKey>
         <descriptionKey>Stat_Thing_Weapon_Range_Desc</descriptionKey>
+        <getValue>Stats.ThingDefTable.ThingAlike.GetWeaponRange</getValue>
+    </Stats.GenTable.ColumnDef>
+
+    <Stats.GenTable.ColumnDef Class="Stats.ThingDefTable.Column_Bool">
+        <defName>IsMeal</defName>
+        <label>is meal</label>
+        <description>Is Meal</description>
+        <getValue>Stats.ThingDefTable.ThingAlike.IsMeal</getValue>
+    </Stats.GenTable.ColumnDef>
+
+    <Stats.GenTable.ColumnDef Class="Stats.ThingDefTable.Column_Bool">
+        <defName>IsProduce</defName>
+        <label>is produce</label>
+        <description>Is produce</description>
+        <getValue>Stats.ThingDefTable.ThingAlike.IsProduce</getValue>
+    </Stats.GenTable.ColumnDef>
+
+    <Stats.GenTable.ColumnDef Class="Stats.ThingDefTable.Column_Bool">
+        <defName>IsMeat</defName>
+        <label>is meat</label>
+        <description>Is meat</description>
+        <getValue>Stats.ThingDefTable.ThingAlike.IsMeat</getValue>
     </Stats.GenTable.ColumnDef>
 
 </Defs>

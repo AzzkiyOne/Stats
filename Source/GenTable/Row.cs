@@ -31,7 +31,7 @@ public class Row<DataType> : Dictionary<IColumn<DataType>, ICell?>
             }
             catch (Exception ex)
             {
-                Log.Warning(ex.Message);
+                Log.Warning($"{key.Label}: {ex.Message}");
             }
 
             this[key] = cell;

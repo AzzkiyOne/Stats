@@ -34,7 +34,7 @@ public class Column_Caliber : Column_Stat
 
 public class Column_ReloadTime : Column_Stat
 {
-    public override GenTable.ICell? GetCell(ThingAlike thing)
+    protected override float? GetValue(ThingAlike thing)
     {
         var statReq = StatRequest.For(thing.Def, thing.Stuff);
 
@@ -43,14 +43,6 @@ public class Column_ReloadTime : Column_Stat
             return null;
         }
 
-        var statValue_Num = stat.Worker.GetValue(statReq);
-        var statValue_Str = stat.Worker.GetStatDrawEntryLabel(
-            stat,
-            statValue_Num,
-            ToStringNumberSense.Absolute,
-            StatRequest.For(thing.Def, thing.Stuff)
-        );
-
-        return new GenTable.Cell_Num(statValue_Num, statValue_Str);
+        return stat.Worker.GetValue(statReq);
     }
 }

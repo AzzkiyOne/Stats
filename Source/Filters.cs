@@ -29,7 +29,11 @@ internal class Filters<T>
             {
                 menuOptions.Add(new(
                     column.Label,
-                    () => { CurFilters.Add(_column.GetFilter()); }
+                    () =>
+                    {
+                        CurFilters.Add(_column.GetFilter());
+                        OnUpdate(CurFilters);
+                    }
                 ));
             }
         }
@@ -40,20 +44,36 @@ internal class Filters<T>
     {
         var curY = targetRect.y;
 
-        foreach (var filter in CurFilters)
-        {
-            filter.Draw(targetRect.CutFromY(ref curY, 25f));
-            curY += 5f;
-        }
-
         if (Widgets.ButtonText(targetRect.CutFromY(ref curY, 30f), "Add"))
         {
             Find.WindowStack.Add(Menu);
         }
 
-        if (Widgets.ButtonText(targetRect.CutFromY(ref curY, 30f), "Update"))
+        //if (Widgets.ButtonText(targetRect.CutFromY(ref curY, 30f), "Update"))
+        //{
+        //    OnUpdate(CurFilters);
+        //}
+
+        foreach (var filter in CurFilters)
         {
-            OnUpdate(CurFilters);
+            var labelRect = targetRect.CutFromY(ref curY, 30);
+            var curX = labelRect.x;
+            using (new TextAnchorCtx(TextAnchor.LowerLeft))
+            {
+                Widgets.Label(labelRect.CutFromX(ref curX, labelRect.width - labelRect.height).ContractedBy(5f, 0f), filter.Column.Label);
+            }
+            if (Widgets.ButtonImageFitted(labelRect.CutFromX(ref curX), Widgets.CheckboxOffTex))
+            {
+                CurFilters.Remove(filter);
+                OnUpdate(CurFilters);
+
+                return;
+            }
+
+            if (filter.Draw(targetRect.CutFromY(ref curY, 30f)))
+            {
+                OnUpdate(CurFilters);
+            }
         }
     }
 }

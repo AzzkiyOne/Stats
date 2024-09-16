@@ -1,4 +1,5 @@
 ﻿using System;
+using RimWorld;
 using UnityEngine;
 using Verse;
 
@@ -11,7 +12,8 @@ public interface IFilterProvider<T>
 
 public interface IFilter
 {
-    void Draw(Rect targetRect);
+    GenTable.ColumnDef Column { get; }
+    bool Draw(Rect targetRect);
 }
 
 public interface IFilter<T> : IFilter
@@ -19,15 +21,28 @@ public interface IFilter<T> : IFilter
     bool Match(T obj);
 }
 
-public class FilterNum<T> : IFilter<T>
+public class Filter_Num<T> : IFilter<T>
 {
-    private float curValue = default;
+    private float curValue = 0f;
     private string curValueStrBuffer = "";
-    private string CurOperator { get; set; } = "=";
+    private bool WasUpdated { get; set; } = false;
+    private string curOperator = "=";
+    private string CurOperator
+    {
+        get => curOperator;
+        set
+        {
+            if (curOperator != value)
+            {
+                curOperator = value;
+                WasUpdated = true;
+            }
+        }
+    }
     private FloatMenu Menu { get; }
     Func<T, float?> GetValue { get; }
-    private GenTable.ColumnDef Column { get; }
-    public FilterNum(GenTable.ColumnDef column, Func<T, float?> getValue)
+    public GenTable.ColumnDef Column { get; }
+    public Filter_Num(GenTable.ColumnDef column, Func<T, float?> getValue)
     {
         Column = column;
         GetValue = getValue;
@@ -42,42 +57,105 @@ public class FilterNum<T> : IFilter<T>
     }
     public bool Match(T obj)
     {
-        if (curValueStrBuffer == "")
-        {
-            return CurOperator switch
-            {
-                "=" => GetValue(obj) == null,
-                "!=" => GetValue(obj) != null,
-                _ => true,
-            };
-        }
-
         return CurOperator switch
         {
-            "=" => GetValue(obj) == curValue,
-            "!=" => GetValue(obj) != curValue,
-            ">" => GetValue(obj) > curValue,
-            "<" => GetValue(obj) < curValue,
-            ">=" => GetValue(obj) >= curValue,
-            "<=" => GetValue(obj) <= curValue,
+            "=" => (GetValue(obj) ?? 0f) == curValue,
+            "!=" => (GetValue(obj) ?? 0f) != curValue,
+            ">" => (GetValue(obj) ?? 0f) > curValue,
+            "<" => (GetValue(obj) ?? 0f) < curValue,
+            ">=" => (GetValue(obj) ?? 0f) >= curValue,
+            "<=" => (GetValue(obj) ?? 0f) <= curValue,
             //_ => throw new NotImplementedException("Unknown operator."),
             _ => true,
         };
     }
-    public void Draw(Rect targetRect)
+    public bool Draw(Rect targetRect)
     {
         var curX = targetRect.x;
-
-        using (new TextAnchorCtx(TextAnchor.LowerRight))
-        {
-            Widgets.Label(targetRect.CutFromX(ref curX, targetRect.width / 3).ContractedBy(5f, 0f), Column.Label);
-        }
 
         if (Widgets.ButtonText(targetRect.CutFromX(ref curX, targetRect.height), CurOperator))
         {
             Find.WindowStack.Add(Menu);
         }
+        curX += 5f;
+
+        var curValue = this.curValue;
 
         Widgets.TextFieldNumeric(targetRect.CutFromX(ref curX), ref curValue, ref curValueStrBuffer);
+
+        if (this.curValue != curValue)
+        {
+            this.curValue = curValue;
+            WasUpdated = true;
+        }
+
+        if (WasUpdated)
+        {
+            WasUpdated = false;
+
+            return true;
+        }
+
+        return false;
+    }
+}
+
+public class Filter_Bool<T> : IFilter<T>
+{
+    private bool curValue = true;
+    Func<T, bool?> GetValue { get; }
+    public GenTable.ColumnDef Column { get; }
+    public Filter_Bool(GenTable.ColumnDef column, Func<T, bool?> getValue)
+    {
+        Column = column;
+        GetValue = getValue;
+    }
+    public bool Match(T obj)
+    {
+        return (GetValue(obj) ?? false) == curValue;
+    }
+    public bool Draw(Rect targetRect)
+    {
+        var curX = targetRect.x;
+        var trueRect = targetRect.CutFromX(ref curX, targetRect.width / 2);
+        var falseRect = targetRect.CutFromX(ref curX);
+
+        Widgets.DrawHighlight(curValue ? trueRect : falseRect);
+
+        Widgets.DrawTextureFitted(trueRect, Widgets.CheckboxOnTex, 0.7f);
+        Widgets.DrawTextureFitted(falseRect, Widgets.CheckboxOffTex, 0.7f);
+
+        Widgets.DrawHighlightIfMouseover(!curValue ? trueRect : falseRect);
+        if (Widgets.ButtonInvisible(!curValue ? trueRect : falseRect))
+        {
+            curValue = !curValue;
+
+            return true;
+        }
+
+        return false;
+    }
+}
+
+public class Filter_Str<T> : IFilter<T>
+{
+    private string? curValue = default;
+    private string CurOperator { get; set; } = "=";
+    Func<T, string?> GetValue { get; }
+    public GenTable.ColumnDef Column { get; }
+    public Filter_Str(GenTable.ColumnDef column, Func<T, string?> getValue)
+    {
+        Column = column;
+        GetValue = getValue;
+    }
+    public bool Match(T obj)
+    {
+        return true;
+    }
+    public bool Draw(Rect targetRect)
+    {
+        var curX = targetRect.x;
+
+        return false;
     }
 }
