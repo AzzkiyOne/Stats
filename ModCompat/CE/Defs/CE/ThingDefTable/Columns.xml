@@ -4,6 +4,7 @@
     <Stats.GenTable.ColumnDef Class="Stats.ThingDefTable.Column_Stat">
         <defName>Bulk</defName>
         <stat>Bulk</stat>
+        <minWidth>75</minWidth>
         <reverseDiffModeColors>true</reverseDiffModeColors>
     </Stats.GenTable.ColumnDef>
 

@@ -5,14 +5,18 @@ using Verse;
 
 namespace Stats.GenTable;
 
-public interface IColumn<DataType>
+public interface IColumn
 {
-    public string Label { get; }
-    public string Description { get; }
-    public float MinWidth { get; }
-    public bool IsPinned { get; }
-    public TextAnchor TextAnchor { get; }
-    public bool ReverseDiffModeColors { get; }
+    string Label { get; }
+    string Description { get; }
+    float MinWidth { get; }
+    bool IsPinned { get; }
+    TextAnchor TextAnchor { get; }
+    bool ReverseDiffModeColors { get; }
+}
+
+public interface IColumn<DataType> : IColumn
+{
     ICell? GetCell(DataType data);
 }
 
@@ -22,7 +26,7 @@ public abstract class ColumnDef : Def
     public string? labelKey;
     public string Description => description;
     public string? descriptionKey;
-    public float minWidth = 75f;
+    public float minWidth = 50f;
     private float? adjMinWidth = null;
     /// <summary>
     /// This should only be accessed in GUI context. Otherwise the game will crash.

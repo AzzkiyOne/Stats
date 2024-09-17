@@ -18,6 +18,7 @@
         <defName>MarketValue</defName>
         <stat>MarketValue</stat>
         <label>$$$</label>
+        <minWidth>75</minWidth>
     </Stats.GenTable.ColumnDef>
 
     <Stats.GenTable.ColumnDef Class="Stats.ThingDefTable.Column_Stat">

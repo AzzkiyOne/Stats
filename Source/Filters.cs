@@ -1,9 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Stats.ThingDefTable;
 using UnityEngine;
 using Verse;
 
@@ -22,10 +18,7 @@ internal class Filters<T>
 
         foreach (var column in DefDatabase<GenTable.ColumnDef>.AllDefs)
         {
-            if (
-                column is GenTable.IColumn<T>
-                && column is IFilterProvider<T> _column
-            )
+            if (column is IFilterProvider<T> _column)
             {
                 menuOptions.Add(new(
                     column.Label,
@@ -49,19 +42,16 @@ internal class Filters<T>
             Find.WindowStack.Add(Menu);
         }
 
-        //if (Widgets.ButtonText(targetRect.CutFromY(ref curY, 30f), "Update"))
-        //{
-        //    OnUpdate(CurFilters);
-        //}
-
         foreach (var filter in CurFilters)
         {
             var labelRect = targetRect.CutFromY(ref curY, 30);
             var curX = labelRect.x;
+
             using (new TextAnchorCtx(TextAnchor.LowerLeft))
             {
                 Widgets.Label(labelRect.CutFromX(ref curX, labelRect.width - labelRect.height).ContractedBy(5f, 0f), filter.Column.Label);
             }
+
             if (Widgets.ButtonImageFitted(labelRect.CutFromX(ref curX), Widgets.CheckboxOffTex))
             {
                 CurFilters.Remove(filter);

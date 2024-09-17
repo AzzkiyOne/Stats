@@ -1,5 +1,4 @@
 ﻿using System;
-using RimWorld;
 using UnityEngine;
 using Verse;
 
@@ -12,7 +11,7 @@ public interface IFilterProvider<T>
 
 public interface IFilter
 {
-    GenTable.ColumnDef Column { get; }
+    GenTable.IColumn Column { get; }
     bool Draw(Rect targetRect);
 }
 
@@ -40,9 +39,9 @@ public class Filter_Num<T> : IFilter<T>
         }
     }
     private FloatMenu Menu { get; }
-    Func<T, float?> GetValue { get; }
-    public GenTable.ColumnDef Column { get; }
-    public Filter_Num(GenTable.ColumnDef column, Func<T, float?> getValue)
+    private Func<T, float?> GetValue { get; }
+    public GenTable.IColumn Column { get; }
+    public Filter_Num(GenTable.IColumn column, Func<T, float?> getValue)
     {
         Column = column;
         GetValue = getValue;
@@ -103,9 +102,9 @@ public class Filter_Num<T> : IFilter<T>
 public class Filter_Bool<T> : IFilter<T>
 {
     private bool curValue = true;
-    Func<T, bool?> GetValue { get; }
-    public GenTable.ColumnDef Column { get; }
-    public Filter_Bool(GenTable.ColumnDef column, Func<T, bool?> getValue)
+    private Func<T, bool?> GetValue { get; }
+    public GenTable.IColumn Column { get; }
+    public Filter_Bool(GenTable.IColumn column, Func<T, bool?> getValue)
     {
         Column = column;
         GetValue = getValue;
@@ -141,9 +140,9 @@ public class Filter_Str<T> : IFilter<T>
 {
     private string? curValue = default;
     private string CurOperator { get; set; } = "=";
-    Func<T, string?> GetValue { get; }
-    public GenTable.ColumnDef Column { get; }
-    public Filter_Str(GenTable.ColumnDef column, Func<T, string?> getValue)
+    private Func<T, string?> GetValue { get; }
+    public GenTable.IColumn Column { get; }
+    public Filter_Str(GenTable.IColumn column, Func<T, string?> getValue)
     {
         Column = column;
         GetValue = getValue;
