@@ -2,7 +2,7 @@
 using RimWorld;
 using Verse;
 
-namespace Stats.ThingDefTable;
+namespace Stats;
 
 // Implement GetHashCode (and Equals) just in case?
 public class ThingAlike
@@ -33,12 +33,12 @@ public class ThingAlike
                     || thingDef.IsFrame
                     || thingDef.isUnfinishedThing
                     || thingDef.IsCorpse
-                    || (
+                    ||
                         thingDef.category != ThingCategory.Pawn
                         && thingDef.category != ThingCategory.Item
                         && thingDef.category != ThingCategory.Building
                         && thingDef.category != ThingCategory.Plant
-                    )
+
                 )
                 {
                     continue;

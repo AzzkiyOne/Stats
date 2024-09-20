@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Stats.Table.Columns;
 using UnityEngine;
 using Verse;
 
@@ -8,27 +9,27 @@ using Verse;
 // If our columns witdhs and rows heights are static we can precalculate start/end index from which to start/end draw rows/columns.
 // The only issue would be, if the viewport gets resized. But then we can just update cached indices.
 
-namespace Stats.GenTable;
+namespace Stats.Table;
 
-internal class Table<DataType>
+internal class Table
 {
     private Vector2 scrollPosition = new();
-    public List<IColumn<DataType>> Columns
+    public List<Column> Columns
     {
         set
         {
-            pinnedLeftColumns.Clear();
+            leftColumns.Clear();
             middleColumns.Clear();
-            pinnedLeftColumnsWidth = 0;
+            leftColumnsWidth = 0;
             middleColumnsWidth = 0;
-            minRowWidth = 0;
+            totalColumnsMinWidth = 0;
 
             foreach (var column in value)
             {
                 if (column.IsPinned)
                 {
-                    pinnedLeftColumns.Add(column);
-                    pinnedLeftColumnsWidth += column.MinWidth;
+                    leftColumns.Add(column);
+                    leftColumnsWidth += column.MinWidth;
                 }
                 else
                 {
@@ -36,44 +37,26 @@ internal class Table<DataType>
                     middleColumnsWidth += column.MinWidth;
                 }
 
-                minRowWidth += column.MinWidth;
+                totalColumnsMinWidth += column.MinWidth;
             }
 
-            if (SortColumn is null && pinnedLeftColumns.First() != null)
+            if (SortColumn is null && leftColumns.First() != null)
             {
-                SortColumn = pinnedLeftColumns.First();
+                SortColumn = leftColumns.First();
             }
         }
     }
-    private readonly List<IColumn<DataType>> middleColumns = [];
-    private readonly List<IColumn<DataType>> pinnedLeftColumns = [];
-    private List<Row<DataType>> _rows = [];
-    public List<Row<DataType>> Rows
-    {
-        get
-        {
-            return _rows;
-        }
-        set
-        {
-            _rows = value;
-            totalRowsHeight = value.Count * rowHeight;
-
-            SortRows();
-        }
-    }
+    private readonly List<IColumn> middleColumns = [];
+    private readonly List<IColumn> leftColumns = [];
     private float middleColumnsWidth = 0f;
-    private float pinnedLeftColumnsWidth = 0f;
-    private float minRowWidth = 0f;
+    private float leftColumnsWidth = 0f;
+    private float totalColumnsMinWidth = 0f;
     private float totalRowsHeight = 0f;
     private int? mouseOverRowIndex = null;
-    private IColumn<DataType>? _sortColumn;
-    private IColumn<DataType>? SortColumn
+    private IColumn? sortColumn;
+    private IColumn? SortColumn
     {
-        get
-        {
-            return _sortColumn;
-        }
+        get => sortColumn;
         set
         {
             if (value == SortColumn)
@@ -83,123 +66,145 @@ internal class Table<DataType>
             else
             {
                 //sortDirection = SortDirection.Ascending;
-                _sortColumn = value;
+                sortColumn = value;
             }
 
-            SortRows();
+            SortThings();
         }
     }
     private SortDirection sortDirection = SortDirection.Ascending;
-    private Row<DataType>? selectedRow = null;
-    public Row<DataType>? SelectedRow
+    private Dictionary<IColumn, ICell?>? selectedRow = null;
+    private Dictionary<IColumn, ICell?>? SelectedRow
     {
         get => selectedRow;
-        private set
+        set
         {
             selectedRow = value;
-
-            foreach (var row in Rows)
-            {
-                row.Clear();
-            }
         }
     }
-
     private const float rowHeight = 30f;
     private const float headersRowHeight = rowHeight;
     private const float cellPadding = 5f;
-
     //private static Color columnSeparatorLineColor = new(1f, 1f, 1f, 0.1f);
+    private List<Dictionary<IColumn, ICell?>> rows = [];
+    public List<Dictionary<IColumn, ICell?>> Rows
+    {
+        get => rows;
+        set
+        {
+            rows = value;
+            totalRowsHeight = value.Count * rowHeight;
 
-    public Table(List<IColumn<DataType>> columns, List<Row<DataType>> rows)
+            // This can cause double sorting.
+            SortThings();
+        }
+    }
+    public Table(List<ThingAlike> things, List<Column> columns)
     {
         Columns = columns;
+
+        var rows = new List<Dictionary<IColumn, ICell?>>();
+
+        foreach (var thing in things)
+        {
+            var row = new Dictionary<IColumn, ICell?>(columns.Count);
+
+            foreach (var column in columns)
+            {
+                try
+                {
+                    row.Add(column, column.GetCell(thing));
+                }
+                catch (Exception e)
+                {
+                    Log.Error(e.Message);
+                }
+            }
+
+            rows.Add(row);
+        }
+
         Rows = rows;
     }
-
     public void Draw(Rect targetRect)
     {
-        using (new GameFontCtx(GameFont.Small))
-        using (new TextAnchorCtx(TextAnchor.MiddleLeft))
+        var willHorScroll = totalRowsHeight + headersRowHeight > targetRect.height;
+        var adjTargetRectWidth = willHorScroll
+            ? targetRect.width - GenUI.ScrollBarWidth
+            : targetRect.width;
+        var contentRect = new Rect(
+            0f,
+            0f,
+            Math.Max(totalColumnsMinWidth, adjTargetRectWidth),
+            totalRowsHeight + headersRowHeight
+        );
+        var extraCellWidth = CalcExtraMiddleCellsWidth(adjTargetRectWidth);
+
+        if (
+            Event.current.isScrollWheel
+            && Event.current.control
+            && Mouse.IsOver(targetRect)
+        )
         {
-            var willHorScroll = totalRowsHeight + headersRowHeight > targetRect.height;
-            var adjTargetRectWidth = willHorScroll
-                ? targetRect.width - GenUI.ScrollBarWidth
-                : targetRect.width;
-            var contentRect = new Rect(
-                0f,
-                0f,
-                Math.Max(minRowWidth, adjTargetRectWidth),
-                totalRowsHeight + headersRowHeight
-            );
-            var extraCellWidth = CalcExtraMiddleCellsWidth(adjTargetRectWidth);
+            var scrollAmount = Event.current.delta.y * 10;
+            var newScrollX = scrollPosition.x + scrollAmount;
 
-            if (
-                Event.current.isScrollWheel
-                && Event.current.control
-                && Mouse.IsOver(targetRect)
-            )
+            if (newScrollX >= 0)
             {
-                var scrollAmount = Event.current.delta.y * 10;
-                var newScrollX = scrollPosition.x + scrollAmount;
-
-                if (newScrollX >= 0)
-                {
-                    scrollPosition.x = newScrollX;
-                }
-                else
-                {
-                    scrollPosition.x = 0;
-                }
-
-                Event.current.Use();
+                scrollPosition.x = newScrollX;
+            }
+            else
+            {
+                scrollPosition.x = 0;
             }
 
-            Widgets.BeginScrollView(targetRect, ref scrollPosition, contentRect, true);
-
-            var headersRect = new Rect(
-                scrollPosition.x,
-                scrollPosition.y,
-                adjTargetRectWidth,
-                headersRowHeight
-            );
-            DrawHeaders(headersRect, extraCellWidth);
-
-            var bodyRect = new Rect(
-                scrollPosition.x,
-                scrollPosition.y + headersRowHeight,
-                adjTargetRectWidth,
-                targetRect.height - headersRowHeight
-            );
-            DrawBody(bodyRect, extraCellWidth);
-
-            // Separators
-            GUIWidgets.DrawLineVertical(
-                scrollPosition.x,
-                scrollPosition.y,
-                targetRect.height,
-                StatsMainTabWindow.borderLineColor
-            );
-            Widgets.DrawLineHorizontal(
-                scrollPosition.x,
-                headersRowHeight + scrollPosition.y,
-                targetRect.width,
-                StatsMainTabWindow.borderLineColor
-            );
-            GUIWidgets.DrawLineVertical(
-                pinnedLeftColumnsWidth + scrollPosition.x,
-                scrollPosition.y,
-                targetRect.height,
-                StatsMainTabWindow.borderLineColor
-            );
-
-            if (!Mouse.IsOver(bodyRect))
-            {
-                mouseOverRowIndex = null;
-            }
-
-            Widgets.EndScrollView();
+            Event.current.Use();
         }
+
+        Widgets.BeginScrollView(targetRect, ref scrollPosition, contentRect, true);
+
+        var headersRect = new Rect(
+            scrollPosition.x,
+            scrollPosition.y,
+            adjTargetRectWidth,
+            headersRowHeight
+        );
+        DrawHeaders(headersRect, extraCellWidth);
+
+        var bodyRect = new Rect(
+            scrollPosition.x,
+            scrollPosition.y + headersRowHeight,
+            adjTargetRectWidth,
+            targetRect.height - headersRowHeight
+        );
+        DrawBody(bodyRect, extraCellWidth);
+
+        // Separators
+        GUIWidgets.DrawLineVertical(
+            scrollPosition.x,
+            scrollPosition.y,
+            targetRect.height,
+            StatsMainTabWindow.borderLineColor
+        );
+        Widgets.DrawLineHorizontal(
+            scrollPosition.x,
+            headersRowHeight + scrollPosition.y,
+            targetRect.width,
+            StatsMainTabWindow.borderLineColor
+        );
+        GUIWidgets.DrawLineVertical(
+            leftColumnsWidth + scrollPosition.x,
+            scrollPosition.y,
+            targetRect.height,
+            StatsMainTabWindow.borderLineColor
+        );
+
+        if (!Mouse.IsOver(bodyRect))
+        {
+            mouseOverRowIndex = null;
+        }
+
+        Widgets.EndScrollView();
     }
     private void DrawHeaders(Rect targetRect, float extraCellWidth)
     {
@@ -209,8 +214,8 @@ internal class Table<DataType>
 
         // Draw pinned headers
         DrawHeaderColumns(
-            targetRect.CutFromX(ref currX, pinnedLeftColumnsWidth),
-            pinnedLeftColumns,
+            targetRect.CutFromX(ref currX, leftColumnsWidth),
+            leftColumns,
             Vector2.zero
         );
         // Draw middle headers
@@ -223,7 +228,7 @@ internal class Table<DataType>
     }
     private void DrawHeaderColumns(
         Rect targetRect,
-        List<IColumn<DataType>> columns,
+        List<IColumn> columns,
         Vector2 scrollPosition,
         float extraCellWidth = 0f
     )
@@ -263,7 +268,7 @@ internal class Table<DataType>
 
         Widgets.EndGroup();
     }
-    private bool DrawHeaderCell(Rect targetRect, IColumn<DataType> column)
+    private bool DrawHeaderCell(Rect targetRect, IColumn column)
     {
         if (SortColumn == column)
         {
@@ -299,8 +304,8 @@ internal class Table<DataType>
 
         // Draw pinned rows
         DrawRows(
-            targetRect.CutFromX(ref currX, pinnedLeftColumnsWidth),
-            pinnedLeftColumns,
+            targetRect.CutFromX(ref currX, leftColumnsWidth),
+            leftColumns,
             new Vector2(0, scrollPosition.y)
         );
         // Draw middle rows
@@ -313,7 +318,7 @@ internal class Table<DataType>
     }
     private void DrawRows(
         Rect targetRect,
-        List<IColumn<DataType>> columns,
+        List<IColumn> columns,
         Vector2 scrollPosition,
         float extraCellWidth = 0f
     )
@@ -351,7 +356,7 @@ internal class Table<DataType>
         int debug_columnsDrawn = 0;
 
         // Rows
-        for (int i = 0; i < Rows.Count; i++)
+        for (int rowIndex = 0; rowIndex < rows.Count; rowIndex++)
         {
             // Culling
             if (currY + rowHeight <= 0)
@@ -366,9 +371,9 @@ internal class Table<DataType>
 
             debug_columnsDrawn = 0;
 
-            var row = Rows[i];
-            var isEven = i % 2 == 0;
-            var isMouseOver = mouseOverRowIndex == i;
+            var row = rows[rowIndex];
+            var isEven = rowIndex % 2 == 0;
+            var isMouseOver = mouseOverRowIndex == rowIndex;
             var rowRect = new Rect(0, currY, targetRect.width, rowHeight);
             float currX = -scrollPosition.x;
 
@@ -380,11 +385,11 @@ internal class Table<DataType>
             // Cells
             foreach (var column in columns)
             {
-                var columnWidth = column.MinWidth + extraCellWidth;
+                var cellWidth = column.MinWidth + extraCellWidth;
                 // Culling
-                if (currX + columnWidth <= 0)
+                if (currX + cellWidth <= 0)
                 {
-                    currX += columnWidth;
+                    currX += cellWidth;
                     continue;
                 }
                 else if (currX > targetRect.width)
@@ -395,19 +400,23 @@ internal class Table<DataType>
                 var cellRect = new Rect(
                     currX,
                     currY,
-                    columnWidth,
+                    cellWidth,
                     rowHeight
                 );
 
-                GetRowCell(row, column)?.Draw(cellRect, column.TextAnchor);
+                row[column]?.Draw(
+                    cellRect,
+                    cellRect.ContractedBy(cellPadding, 0f),
+                    column.TextAnchor
+                );
 
-                currX += columnWidth;
+                currX += cellRect.width;
                 debug_columnsDrawn++;
             }
 
             if (Mouse.IsOver(rowRect))
             {
-                mouseOverRowIndex = i;
+                mouseOverRowIndex = rowIndex;
             }
 
             if (Widgets.ButtonInvisible(rowRect))
@@ -432,17 +441,17 @@ internal class Table<DataType>
                 Widgets.DrawHighlight(rowRect);
             }
 
-            currY += rowHeight;
+            currY += rowRect.height;
             debug_rowsDrawn++;
         }
 
-        Debug.TryDrawUIDebugInfo(targetRect, debug_rowsDrawn + "/" + debug_columnsDrawn);
+        //Debug.TryDrawUIDebugInfo(targetRect, debug_rowsDrawn + "/" + debug_columnsDrawn);
 
         Widgets.EndGroup();
     }
     private float CalcExtraMiddleCellsWidth(float parentRectWidth)
     {
-        parentRectWidth -= pinnedLeftColumnsWidth;
+        parentRectWidth -= leftColumnsWidth;
 
         if (middleColumnsWidth < parentRectWidth)
         {
@@ -451,34 +460,22 @@ internal class Table<DataType>
 
         return 0f;
     }
-    private void SortRows()
+    private void SortThings()
     {
-        if (SortColumn is null)
+        if (SortColumn == null)
         {
             return;
         }
 
         Rows.Sort((r1, r2) =>
         {
-            var r1c = GetRowCell(r1, SortColumn);
-            var r2c = GetRowCell(r2, SortColumn);
-            int result = 0;
-
-            if (r1c is not null)
+            if (r1[SortColumn] == null && r2[SortColumn] == null)
             {
-                result = r1c.CompareTo(r2c);
-            }
-            else if (r2c is not null)
-            {
-                result = -1;
+                return 0;
             }
 
-            return result * (int)sortDirection;
+            return (r1[SortColumn]?.CompareTo(r2[SortColumn]) ?? -1) * (int)sortDirection;
         });
-    }
-    private ICell? GetRowCell(Row<DataType> row, IColumn<DataType> column)
-    {
-        return row.GetCell(column, SelectedRow?.GetCell(column));
     }
 }
 

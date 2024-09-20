@@ -1,26 +1,22 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 using Verse;
 
 namespace Stats;
 
-public interface IFilterProvider<T>
+public interface IFilter<T>
 {
-    IFilter<T> GetFilter();
-}
-
-public interface IFilter
-{
-    GenTable.IColumn Column { get; }
+    IFilterProvider<T> Column { get; }
+    bool Match(ThingAlike thing);
     bool Draw(Rect targetRect);
 }
 
-public interface IFilter<T> : IFilter
+public interface IFilterProvider<T> : Table.IColumn
 {
-    bool Match(T obj);
+    T GetValue(ThingAlike thing);
+    IFilter<T> GetFilter();
 }
 
-public class Filter_Num<T> : IFilter<T>
+public class Filter_Num : IFilter<float?>
 {
     private float curValue = 0f;
     private string curValueStrBuffer = "";
@@ -39,12 +35,10 @@ public class Filter_Num<T> : IFilter<T>
         }
     }
     private FloatMenu Menu { get; }
-    private Func<T, float?> GetValue { get; }
-    public GenTable.IColumn Column { get; }
-    public Filter_Num(GenTable.IColumn column, Func<T, float?> getValue)
+    public IFilterProvider<float?> Column { get; }
+    public Filter_Num(IFilterProvider<float?> column)
     {
         Column = column;
-        GetValue = getValue;
         Menu = new([
             new( "=", () => CurOperator = "=" ),
             new("!=", () => CurOperator = "!="),
@@ -54,16 +48,16 @@ public class Filter_Num<T> : IFilter<T>
             new("<=", () => CurOperator = "<="),
         ]);
     }
-    public bool Match(T obj)
+    public bool Match(ThingAlike thing)
     {
         return CurOperator switch
         {
-            "=" => (GetValue(obj) ?? 0f) == curValue,
-            "!=" => (GetValue(obj) ?? 0f) != curValue,
-            ">" => (GetValue(obj) ?? 0f) > curValue,
-            "<" => (GetValue(obj) ?? 0f) < curValue,
-            ">=" => (GetValue(obj) ?? 0f) >= curValue,
-            "<=" => (GetValue(obj) ?? 0f) <= curValue,
+            "=" => (Column.GetValue(thing) ?? 0f) == curValue,
+            "!=" => (Column.GetValue(thing) ?? 0f) != curValue,
+            ">" => (Column.GetValue(thing) ?? 0f) > curValue,
+            "<" => (Column.GetValue(thing) ?? 0f) < curValue,
+            ">=" => (Column.GetValue(thing) ?? 0f) >= curValue,
+            "<=" => (Column.GetValue(thing) ?? 0f) <= curValue,
             //_ => throw new NotImplementedException("Unknown operator."),
             _ => true,
         };
@@ -99,19 +93,17 @@ public class Filter_Num<T> : IFilter<T>
     }
 }
 
-public class Filter_Bool<T> : IFilter<T>
+public class Filter_Bool : IFilter<bool?>
 {
     private bool curValue = true;
-    private Func<T, bool?> GetValue { get; }
-    public GenTable.IColumn Column { get; }
-    public Filter_Bool(GenTable.IColumn column, Func<T, bool?> getValue)
+    public IFilterProvider<bool?> Column { get; }
+    public Filter_Bool(IFilterProvider<bool?> column)
     {
         Column = column;
-        GetValue = getValue;
     }
-    public bool Match(T obj)
+    public bool Match(ThingAlike thing)
     {
-        return (GetValue(obj) ?? false) == curValue;
+        return (Column.GetValue(thing) ?? false) == curValue;
     }
     public bool Draw(Rect targetRect)
     {
@@ -136,24 +128,22 @@ public class Filter_Bool<T> : IFilter<T>
     }
 }
 
-public class Filter_Str<T> : IFilter<T>
+public class Filter_Str : IFilter<string?>
 {
     private string? curValue = default;
     private string CurOperator { get; set; } = "=";
-    private Func<T, string?> GetValue { get; }
-    public GenTable.IColumn Column { get; }
-    public Filter_Str(GenTable.IColumn column, Func<T, string?> getValue)
+    public IFilterProvider<string?> Column { get; }
+    public Filter_Str(IFilterProvider<string?> column)
     {
         Column = column;
-        GetValue = getValue;
     }
-    public bool Match(T obj)
+    public bool Match(ThingAlike thing)
     {
         return true;
     }
     public bool Draw(Rect targetRect)
     {
-        var curX = targetRect.x;
+        //var curX = targetRect.x;
 
         return false;
     }

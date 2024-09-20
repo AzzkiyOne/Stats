@@ -1,57 +1,61 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <Defs>
 
-    <Stats.GenTable.ColumnDef Class="Stats.ThingDefTable.Column_Stat">
+    <Stats.Table.Columns.Column Class="Stats.Table.Columns.Column_Label">
+        <defName>Label</defName>
+        <label>name</label>
+        <minWidth>250</minWidth>
+        <type>String</type>
+        <isPinned>true</isPinned>
+    </Stats.Table.Columns.Column>
+
+    <Stats.Table.Columns.Column Class="Stats.Table.Columns.Column_Stat">
         <defName>MaxHitPoints</defName>
         <stat>MaxHitPoints</stat>
         <label>max HP</label>
-    </Stats.GenTable.ColumnDef>
+    </Stats.Table.Columns.Column>
 
-    <Stats.GenTable.ColumnDef Class="Stats.ThingDefTable.Column_Stat">
+    <Stats.Table.Columns.Column Class="Stats.Table.Columns.Column_Stat">
         <defName>Mass</defName>
         <stat>Mass</stat>
         <reverseDiffModeColors>true</reverseDiffModeColors>
         <minWidth>100</minWidth>
-    </Stats.GenTable.ColumnDef>
+    </Stats.Table.Columns.Column>
 
-    <Stats.GenTable.ColumnDef Class="Stats.ThingDefTable.Column_Stat">
+    <Stats.Table.Columns.Column Class="Stats.Table.Columns.Column_Stat">
         <defName>MarketValue</defName>
         <stat>MarketValue</stat>
         <label>$$$</label>
         <minWidth>75</minWidth>
-    </Stats.GenTable.ColumnDef>
+    </Stats.Table.Columns.Column>
 
-    <Stats.GenTable.ColumnDef Class="Stats.ThingDefTable.Column_Stat">
+    <Stats.Table.Columns.Column Class="Stats.Table.Columns.Column_Stat">
         <defName>Nutrition</defName>
         <stat>Nutrition</stat>
-    </Stats.GenTable.ColumnDef>
+    </Stats.Table.Columns.Column>
 
-    <Stats.GenTable.ColumnDef Class="Stats.ThingDefTable.Column_Num">
+    <!-- <Stats.Table.Columns.Column Class="Stats.Table.Columns.Column_WeaponRange">
         <defName>WeaponRange</defName>
         <labelKey>Range</labelKey>
         <descriptionKey>Stat_Thing_Weapon_Range_Desc</descriptionKey>
-        <getValue>Stats.ThingDefTable.ThingAlike.GetWeaponRange</getValue>
-    </Stats.GenTable.ColumnDef>
+    </Stats.Table.Columns.Column> -->
 
-    <Stats.GenTable.ColumnDef Class="Stats.ThingDefTable.Column_Bool">
+    <!-- <Stats.Table.Columns.Column Class="Stats.Table.Columns.Column_IsMeat">
         <defName>IsMeal</defName>
         <label>is meal</label>
         <description>Is Meal</description>
-        <getValue>Stats.ThingDefTable.ThingAlike.IsMeal</getValue>
-    </Stats.GenTable.ColumnDef>
+    </Stats.Table.Columns.Column>
 
-    <Stats.GenTable.ColumnDef Class="Stats.ThingDefTable.Column_Bool">
+    <Stats.Table.Columns.Column Class="Stats.Table.Columns.Column_IsProduce">
         <defName>IsProduce</defName>
         <label>is produce</label>
         <description>Is produce</description>
-        <getValue>Stats.ThingDefTable.ThingAlike.IsProduce</getValue>
-    </Stats.GenTable.ColumnDef>
+    </Stats.Table.Columns.Column>
 
-    <Stats.GenTable.ColumnDef Class="Stats.ThingDefTable.Column_Bool">
+    <Stats.Table.Columns.Column Class="Stats.Table.Columns.Column_IsMeat">
         <defName>IsMeat</defName>
         <label>is meat</label>
         <description>Is meat</description>
-        <getValue>Stats.ThingDefTable.ThingAlike.IsMeat</getValue>
-    </Stats.GenTable.ColumnDef>
+    </Stats.Table.Columns.Column> -->
 
 </Defs>

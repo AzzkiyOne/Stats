@@ -1,40 +1,24 @@
 ﻿using System;
-using RimWorld;
 using UnityEngine;
 using Verse;
 
-namespace Stats.GenTable;
+namespace Stats.Table.Columns;
 
-public interface IColumn
-{
-    string Label { get; }
-    string Description { get; }
-    float MinWidth { get; }
-    bool IsPinned { get; }
-    TextAnchor TextAnchor { get; }
-    bool ReverseDiffModeColors { get; }
-}
-
-public interface IColumn<DataType> : IColumn
-{
-    ICell? GetCell(DataType data);
-}
-
-public abstract class ColumnDef : Def
+public abstract class Column : Def, IColumn
 {
     public string Label => LabelCap;
     public string? labelKey;
     public string Description => description;
     public string? descriptionKey;
     public float minWidth = 50f;
-    private float? adjMinWidth = null;
+    internal float? adjMinWidth = null;
     /// <summary>
     /// This should only be accessed in GUI context. Otherwise the game will crash.
     /// </summary>
     public float MinWidth => adjMinWidth ??= Math.Max(Text.CalcSize(label).x + 15f, minWidth);
     public ColumnType type = ColumnType.Number;
     public ColumnType Type => type;
-    private TextAnchor textAnchor;
+    internal TextAnchor textAnchor;
     public TextAnchor TextAnchor => textAnchor;
     public bool reverseDiffModeColors = false;
     public bool ReverseDiffModeColors => reverseDiffModeColors;
@@ -58,33 +42,5 @@ public abstract class ColumnDef : Def
             description = descriptionKey.Translate();
         }
     }
-}
-
-public enum ColumnType
-{
-    Number,
-    String,
-    Boolean,
-}
-
-public class Column_Label : ColumnDef, IColumn<GeneDef>, IColumn<ThingDefTable.ThingAlike>
-{
-    public ICell? GetCell(ThingDefTable.ThingAlike thing)
-    {
-        return new Cell_DefRef(thing.Def, thing.Stuff);
-    }
-    public ICell? GetCell(GeneDef gene)
-    {
-        return new Cell_DefRef(gene);
-    }
-}
-
-[DefOf]
-public static class ColumnDefOf
-{
-    public static Column_Label Label;
-    static ColumnDefOf()
-    {
-        DefOfHelper.EnsureInitializedInCtor(typeof(ColumnDefOf));
-    }
+    public abstract ICell? GetCell(ThingAlike thing);
 }

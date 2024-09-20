@@ -1,22 +1,24 @@
 ﻿using System;
 using System.Collections.Generic;
+using Stats.Table;
+using Stats.Table.Columns;
 using UnityEngine;
 using Verse;
 
 namespace Stats;
 
-internal class Filters<T>
+internal class FiltersEditor<T>
 {
     private List<IFilter<T>> CurFilters { get; } = [];
     private FloatMenu Menu { get; }
     private Action<List<IFilter<T>>> OnUpdate { get; }
-    public Filters(Action<List<IFilter<T>>> onUpdate)
+    public FiltersEditor(Action<List<IFilter<T>>> onUpdate)
     {
         OnUpdate = onUpdate;
 
         var menuOptions = new List<FloatMenuOption>();
 
-        foreach (var column in DefDatabase<GenTable.ColumnDef>.AllDefs)
+        foreach (var column in DefDatabase<Column>.AllDefs)
         {
             if (column is IFilterProvider<T> _column)
             {

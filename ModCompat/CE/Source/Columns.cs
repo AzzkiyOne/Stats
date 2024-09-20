@@ -1,13 +1,12 @@
 ﻿using CombatExtended;
 using RimWorld;
-using Stats.ThingDefTable;
 using Verse;
 
 namespace Stats.Compat.CE;
 
-public class Column_Caliber : Column_Stat
+public class Column_Caliber : Table.Columns.Column_Stat
 {
-    public override GenTable.ICell? GetCell(ThingAlike thing)
+    public override Table.ICell? GetCell(ThingAlike thing)
     {
         var statReq = StatRequest.For(thing.Def, thing.Stuff);
 
@@ -28,11 +27,11 @@ public class Column_Caliber : Column_Stat
             stat.Worker.GetValue(statReq)
         );
 
-        return new GenTable.Cell_Str(cellText, cellTip);
+        return new Table.Cells.Cell<string>(cellText, cellTip);
     }
 }
 
-public class Column_ReloadTime : Column_Stat
+public class Column_ReloadTime : Table.Columns.Column_Stat
 {
     protected override float? GetValue(ThingAlike thing)
     {

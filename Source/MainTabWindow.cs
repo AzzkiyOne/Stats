@@ -1,6 +1,5 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using RimWorld;
+﻿using RimWorld;
+using Stats.Table.Columns;
 using UnityEngine;
 using Verse;
 
@@ -10,9 +9,6 @@ public class StatsMainTabWindow : MainTabWindow
 {
     protected override float Margin { get => 1f; }
     public override Vector2 RequestedTabSize => new(UI.screenWidth, base.RequestedTabSize.y);
-
-    private ThingDefTable.Table thingDefsTable;
-    private GeneDefTable.Table geneDefsTable;
     private Rect? preCloseRect = null;
     private Rect? preExpandRect = null;
     private bool IsExpanded => preExpandRect != null;
@@ -22,56 +18,47 @@ public class StatsMainTabWindow : MainTabWindow
         UI.screenWidth,
         windowRect.height = UI.screenHeight - MainButtonDef.ButtonHeight
     );
-
     private const float titleBarHeight = 30f;
-    private const float catPickerWidth = 300f;
-
+    //private const float tablesBrowserWidth = 300f;
     public static readonly Color borderLineColor = new(1f, 1f, 1f, 0.4f);
-    private Filters<ThingDefTable.ThingAlike> Filters { get; }
+    private Table.Table table;
     public StatsMainTabWindow()
     {
         draggable = true;
         resizeable = true;
-        Filters = new((filters) =>
-        {
-            thingDefsTable.Rows = ThingDefTable.ThingAlike.All
-            .Where(thing => filters.All(filter => filter.Match(thing)))
-            .Select(thing => new GenTable.Row<ThingDefTable.ThingAlike>(thing, DefDatabase<GenTable.ColumnDef>.AllDefsListForReading.Count))
-            .ToList();
-        });
-        var tdfColumns = new List<GenTable.IColumn<ThingDefTable.ThingAlike>>();
-
-        foreach (var column in DefDatabase<GenTable.ColumnDef>.AllDefs)
-        {
-            if (column is GenTable.IColumn<ThingDefTable.ThingAlike> _column)
-            {
-                tdfColumns.Add(_column);
-            }
-        }
-
-        thingDefsTable = new(tdfColumns, ThingDefTable.ThingAlike.All);
-
-        var gdtColumns = new List<GenTable.IColumn<GeneDef>>();
-
-        foreach (var column in DefDatabase<GenTable.ColumnDef>.AllDefs)
-        {
-            if (column is GenTable.IColumn<GeneDef> _column)
-            {
-                gdtColumns.Add(_column);
-            }
-        }
-
-        geneDefsTable = new(gdtColumns, DefDatabase<GeneDef>.AllDefsListForReading);
+        table = new(ThingAlike.All, DefDatabase<Column>.AllDefsListForReading);
     }
+    public override void DoWindowContents(Rect targetRect)
+    {
+        var titleBarText = "Things";
+        var currY = targetRect.y;
 
+        using (new TextWordWrapCtx(false))
+        {
+            switch (TitleBar.Draw(
+                targetRect.CutFromY(ref currY, titleBarHeight),
+                titleBarText
+            ))
+            {
+                case TitleBarEvent.Minimize:
+                    Minimize();
+                    break;
+                case TitleBarEvent.Expand:
+                    ExpandOrCollapse();
+                    break;
+                case TitleBarEvent.Close:
+                    Close();
+                    break;
+            }
+
+            DrawContent(targetRect.CutFromY(ref currY));
+        }
+    }
     private void DrawContent(Rect targetRect)
     {
         var currX = targetRect.x;
-        var filtersRect = targetRect.CutFromX(ref currX, 300f);
-        Filters.Draw(filtersRect);
 
-        thingDefsTable.Draw(targetRect.CutFromX(ref currX));
-        //geneDefsTable.Draw(targetRect.CutFromX(ref currX));
+        table.Draw(targetRect.CutFromX(ref currX));
     }
     private void ExpandOrCollapse()
     {
@@ -111,7 +98,6 @@ public class StatsMainTabWindow : MainTabWindow
 
         SetInitialSizeAndPosition();
     }
-
     public override void PreOpen()
     {
         base.PreOpen();
@@ -131,42 +117,16 @@ public class StatsMainTabWindow : MainTabWindow
 
         preCloseRect = windowRect;
     }
-    public override void DoWindowContents(Rect targetRect)
-    {
-        var titleBarText = "Things";
-        var currY = targetRect.y;
-
-        using (new TextWordWrapCtx(false))
-        {
-            switch (TitleBar.Draw(
-                targetRect.CutFromY(ref currY, titleBarHeight),
-                titleBarText
-            ))
-            {
-                case TitleBarEvent.Minimize:
-                    Minimize();
-                    break;
-                case TitleBarEvent.Expand:
-                    ExpandOrCollapse();
-                    break;
-                case TitleBarEvent.Close:
-                    Close();
-                    break;
-            }
-
-            DrawContent(targetRect.CutFromY(ref currY));
-        }
-    }
 }
 
-enum TitleBarEvent
+internal enum TitleBarEvent
 {
     Minimize,
     Expand,
     Close,
 }
 
-static class TitleBar
+internal static class TitleBar
 {
     public static TitleBarEvent? Draw(Rect targetRect, string text)
     {
