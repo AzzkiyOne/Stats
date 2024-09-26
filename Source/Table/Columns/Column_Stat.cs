@@ -37,10 +37,6 @@ public class Column_Stat : Column_Num
 
         return base.GetCell(thing);
     }
-    //public virtual IFilter<ThingAlike> GetFilter()
-    //{
-    //    return new Filter_Num<ThingAlike>(this, GetValue);
-    //}
     public override void ResolveReferences()
     {
         base.ResolveReferences();

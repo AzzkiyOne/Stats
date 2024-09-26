@@ -3,26 +3,15 @@ using Verse;
 
 namespace Stats.Table.Cells;
 
-public sealed class Cell_Bool : ICell<bool>
+public sealed class Cell_Bool : Cell<bool>
 {
-    public bool Value { get; }
     private Texture2D Tex { get; }
-    public Cell_Bool(bool value)
+    public Cell_Bool(bool value) : base(value, "")
     {
-        Value = value;
-        Tex = Widgets.GetCheckboxTexture(value);
+        Tex = Widgets.GetCheckboxTexture(Value);
     }
-    public void Draw(Rect targetRect, Rect contentRect, TextAnchor _)
+    public override void Draw(Rect targetRect, Rect contentRect, TextAnchor _)
     {
         Widgets.DrawTextureFitted(targetRect, Tex, 0.7f);
-    }
-    public int CompareTo(ICell? other)
-    {
-        if (other == null)
-        {
-            return 1;
-        }
-
-        return Value.CompareTo(((ICell<bool>)other).Value);
     }
 }

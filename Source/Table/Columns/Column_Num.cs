@@ -9,12 +9,8 @@ public abstract class Column_Num : Column
     }
     public override ICell? GetCell(ThingAlike thing)
     {
-        return GetValue(thing) is float value
-            ? new Cells.Cell<float>(value, FormatValue(value))
+        return GetValue(thing) is float value && float.IsFinite(value)
+            ? new Cells.Cell_Num(value, FormatValue(value))
             : null;
     }
-    //public virtual IFilter GetFilter()
-    //{
-    //    return new Filter_Num(this, GetValue);
-    //}
 }

@@ -6,11 +6,7 @@ public abstract class Column_Str : Column
     public override ICell? GetCell(ThingAlike thing)
     {
         return GetValue(thing) is { Length: > 0 } value
-            ? new Cells.Cell<string>(value)
+            ? new Cells.Cell_Str(value)
             : null;
     }
-    //public virtual IFilter GetFilter()
-    //{
-    //    return new Filter_Str(this, GetValue);
-    //}
 }

@@ -5,7 +5,8 @@ namespace Stats.Table;
 
 public interface ICell : IComparable<ICell?>
 {
-    public void Draw(Rect targetRect, Rect contentRect, TextAnchor textAnchor);
+    string Text { get; }
+    void Draw(Rect targetRect, Rect contentRect, TextAnchor textAnchor);
 }
 
 public interface ICell<T> : ICell where T : IComparable<T>

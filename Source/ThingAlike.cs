@@ -5,7 +5,7 @@ using Verse;
 namespace Stats;
 
 // Implement GetHashCode (and Equals) just in case?
-public class ThingAlike
+public sealed class ThingAlike
 {
     public ThingDef Def { get; }
     public ThingDef? Stuff { get; }
@@ -14,17 +14,17 @@ public class ThingAlike
         Def = def;
         Stuff = stuff;
     }
-    private static List<ThingAlike> all;
+    private static List<ThingAlike> _all;
     public static List<ThingAlike> All
     {
         get
         {
-            if (all != null)
+            if (_all != null)
             {
-                return all;
+                return _all;
             }
 
-            all = [];
+            _all = [];
 
             foreach (var thingDef in DefDatabase<ThingDef>.AllDefs)
             {
@@ -50,32 +50,32 @@ public class ThingAlike
 
                     foreach (var stuffDef in allowedStuffs)
                     {
-                        all.Add(new ThingAlike(thingDef, stuffDef));
+                        _all.Add(new ThingAlike(thingDef, stuffDef));
                     }
                 }
                 else
                 {
-                    all.Add(new ThingAlike(thingDef));
+                    _all.Add(new ThingAlike(thingDef));
                 }
             }
 
-            return all;
+            return _all;
         }
     }
-    public static float? GetWeaponRange(ThingAlike thing)
-    {
-        return thing.Def.Verbs.FirstOrFallback(v => v?.isPrimary ?? false)?.range;
-    }
-    public static bool? IsMeal(ThingAlike thing)
-    {
-        return thing.Def.IsWithinCategory(DefDatabase<ThingCategoryDef>.GetNamed("FoodMeals"));
-    }
-    public static bool? IsProduce(ThingAlike thing)
-    {
-        return thing.Def.IsWithinCategory(ThingCategoryDefOf.PlantFoodRaw);
-    }
-    public static bool? IsMeat(ThingAlike thing)
-    {
-        return thing.Def.IsMeat;
-    }
+    //public static float? GetWeaponRange(ThingAlike thing)
+    //{
+    //    return thing.Def.Verbs.FirstOrFallback(v => v?.isPrimary ?? false)?.range;
+    //}
+    //public static bool? IsMeal(ThingAlike thing)
+    //{
+    //    return thing.Def.IsWithinCategory(DefDatabase<ThingCategoryDef>.GetNamed("FoodMeals"));
+    //}
+    //public static bool? IsProduce(ThingAlike thing)
+    //{
+    //    return thing.Def.IsWithinCategory(ThingCategoryDefOf.PlantFoodRaw);
+    //}
+    //public static bool? IsMeat(ThingAlike thing)
+    //{
+    //    return thing.Def.IsMeat;
+    //}
 }

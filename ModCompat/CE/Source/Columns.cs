@@ -27,7 +27,7 @@ public class Column_Caliber : Table.Columns.Column_Stat
             stat.Worker.GetValue(statReq)
         );
 
-        return new Table.Cells.Cell<string>(cellText, cellTip);
+        return new Table.Cells.Cell_Gen<string>(cellText, cellText, cellTip);
     }
 }
 

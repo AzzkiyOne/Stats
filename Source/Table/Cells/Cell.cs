@@ -1,35 +1,18 @@
 ﻿using System;
 using UnityEngine;
-using Verse;
 
 namespace Stats.Table.Cells;
 
-public sealed class Cell<T> : ICell<T> where T : notnull, IComparable<T>
+public abstract class Cell<T> : ICell<T> where T : IComparable<T>
 {
     public T Value { get; }
-    private string Text { get; }
-    private string Tip { get; }
-    public Cell(T value, string text, string tip = "")
+    public string Text { get; }
+    public Cell(T value, string text)
     {
         Value = value;
         Text = text;
-        Tip = tip;
     }
-    public Cell(T value, string tip = "")
-    {
-        Value = value;
-        Text = Value.ToString();
-        Tip = tip;
-    }
-    public void Draw(Rect targetRect, Rect contentRect, TextAnchor textAnchor)
-    {
-        using (new TextAnchorCtx(textAnchor))
-        {
-            Widgets.Label(contentRect, Text);
-        }
-
-        TooltipHandler.TipRegion(targetRect, new TipSignal(Tip));
-    }
+    public abstract void Draw(Rect targetRect, Rect contentRect, TextAnchor textAnchor);
     public int CompareTo(ICell? other)
     {
         if (other == null)

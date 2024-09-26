@@ -13,90 +13,138 @@ namespace Stats.Table;
 
 internal class Table
 {
-    private Vector2 scrollPosition = new();
+    private Vector2 ScrollPosition = new();
+    private List<Column> _columns;
     public List<Column> Columns
     {
+        private get => _columns;
         set
         {
-            leftColumns.Clear();
-            middleColumns.Clear();
-            leftColumnsWidth = 0;
-            middleColumnsWidth = 0;
-            totalColumnsMinWidth = 0;
+            _columns = value;
+
+            LeftColumns.Clear();
+            MiddleColumns.Clear();
+            LeftColumnsWidth = 0;
+            MiddleColumnsWidth = 0;
+            TotalColumnsMinWidth = 0;
 
             foreach (var column in value)
             {
                 if (column.IsPinned)
                 {
-                    leftColumns.Add(column);
-                    leftColumnsWidth += column.MinWidth;
+                    LeftColumns.Add(column);
+                    LeftColumnsWidth += column.MinWidth;
                 }
                 else
                 {
-                    middleColumns.Add(column);
-                    middleColumnsWidth += column.MinWidth;
+                    MiddleColumns.Add(column);
+                    MiddleColumnsWidth += column.MinWidth;
                 }
 
-                totalColumnsMinWidth += column.MinWidth;
+                TotalColumnsMinWidth += column.MinWidth;
             }
 
-            if (SortColumn is null && leftColumns.First() != null)
+            if (SortColumn is null && LeftColumns.First() != null)
             {
-                SortColumn = leftColumns.First();
+                SortColumn = LeftColumns.First();
             }
         }
     }
-    private readonly List<IColumn> middleColumns = [];
-    private readonly List<IColumn> leftColumns = [];
-    private float middleColumnsWidth = 0f;
-    private float leftColumnsWidth = 0f;
-    private float totalColumnsMinWidth = 0f;
-    private float totalRowsHeight = 0f;
-    private int? mouseOverRowIndex = null;
-    private IColumn? sortColumn;
+    private List<IColumn> MiddleColumns { get; } = [];
+    private List<IColumn> LeftColumns { get; } = [];
+    private float MiddleColumnsWidth { get; set; } = 0f;
+    private float LeftColumnsWidth { get; set; } = 0f;
+    private float TotalColumnsMinWidth { get; set; } = 0f;
+    private float TotalRowsHeight { get; set; } = 0f;
+    private int? MouseOverRowIndex { get; set; } = null;
+    private IColumn? _sortColumn;
     private IColumn? SortColumn
     {
-        get => sortColumn;
+        get => _sortColumn;
         set
         {
             if (value == SortColumn)
             {
-                sortDirection = (SortDirection)((int)sortDirection * -1);
+                SortDirection = (SortDirection)((int)SortDirection * -1);
             }
             else
             {
                 //sortDirection = SortDirection.Ascending;
-                sortColumn = value;
+                _sortColumn = value;
             }
 
-            SortThings();
+            SortRows();
         }
     }
-    private SortDirection sortDirection = SortDirection.Ascending;
-    private Dictionary<IColumn, ICell?>? selectedRow = null;
+    private SortDirection SortDirection { get; set; } = SortDirection.Ascending;
+    private Dictionary<IColumn, ICell?>? _selectedRow = null;
     private Dictionary<IColumn, ICell?>? SelectedRow
     {
-        get => selectedRow;
+        get => _selectedRow;
         set
         {
-            selectedRow = value;
+            if (value == _selectedRow)
+            {
+                value = null;
+            }
+
+            _selectedRow = value;
+
+            if (_selectedRow == null)
+            {
+                foreach (var row in Rows)
+                {
+                    foreach (var column in Columns)
+                    {
+                        var cell = row[column];
+
+                        if (cell is Cells.Cell_Diff diffCell)
+                        {
+                            diffCell.Reset();
+                        }
+                    }
+                }
+            }
+            else
+            {
+                foreach (var row in Rows)
+                {
+                    foreach (var column in Columns)
+                    {
+                        var cell = row[column];
+                        var selRowCell = _selectedRow[column];
+
+                        if (cell is Cells.Cell_Diff diffCell)
+                        {
+                            if (row == _selectedRow || selRowCell == null)
+                            {
+                                diffCell.Reset();
+                            }
+                            else if (selRowCell is Cells.Cell_Diff otherCell)
+                            {
+                                diffCell.Switch(otherCell, column.ReverseDiffModeColors);
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
-    private const float rowHeight = 30f;
-    private const float headersRowHeight = rowHeight;
-    private const float cellPadding = 5f;
-    //private static Color columnSeparatorLineColor = new(1f, 1f, 1f, 0.1f);
-    private List<Dictionary<IColumn, ICell?>> rows = [];
+    private const float RowHeight = 30f;
+    private const float HeadersRowHeight = RowHeight;
+    private const float CellPadding = 5f;
+    //private static Color ColumnSeparatorLineColor = new(1f, 1f, 1f, 0.1f);
+    private List<Dictionary<IColumn, ICell?>> _rows = [];
     public List<Dictionary<IColumn, ICell?>> Rows
     {
-        get => rows;
+        get => _rows;
         set
         {
-            rows = value;
-            totalRowsHeight = value.Count * rowHeight;
+            _rows = value;
+            TotalRowsHeight = value.Count * RowHeight;
 
             // This can cause double sorting.
-            SortThings();
+            SortRows();
         }
     }
     public Table(List<ThingAlike> things, List<Column> columns)
@@ -113,7 +161,14 @@ internal class Table
             {
                 try
                 {
-                    row.Add(column, column.GetCell(thing));
+                    var cell = column.GetCell(thing);
+
+                    if (cell is ICell<float> numCell)
+                    {
+                        cell = new Cells.Cell_Diff(numCell);
+                    }
+
+                    row.Add(column, cell);
                 }
                 catch (Exception e)
                 {
@@ -128,15 +183,16 @@ internal class Table
     }
     public void Draw(Rect targetRect)
     {
-        var willHorScroll = totalRowsHeight + headersRowHeight > targetRect.height;
-        var adjTargetRectWidth = willHorScroll
+        var totalContentHeight = TotalRowsHeight + HeadersRowHeight;
+        var willVerScroll = totalContentHeight > targetRect.height;
+        var adjTargetRectWidth = willVerScroll
             ? targetRect.width - GenUI.ScrollBarWidth
             : targetRect.width;
         var contentRect = new Rect(
             0f,
             0f,
-            Math.Max(totalColumnsMinWidth, adjTargetRectWidth),
-            totalRowsHeight + headersRowHeight
+            Math.Max(TotalColumnsMinWidth, adjTargetRectWidth),
+            totalContentHeight
         );
         var extraCellWidth = CalcExtraMiddleCellsWidth(adjTargetRectWidth);
 
@@ -146,62 +202,55 @@ internal class Table
             && Mouse.IsOver(targetRect)
         )
         {
-            var scrollAmount = Event.current.delta.y * 10;
-            var newScrollX = scrollPosition.x + scrollAmount;
+            var scrollAmount = Event.current.delta.y * 10f;
+            var newScrollX = ScrollPosition.x + scrollAmount;
 
-            if (newScrollX >= 0)
-            {
-                scrollPosition.x = newScrollX;
-            }
-            else
-            {
-                scrollPosition.x = 0;
-            }
+            ScrollPosition.x = newScrollX >= 0f ? newScrollX : 0f;
 
             Event.current.Use();
         }
 
-        Widgets.BeginScrollView(targetRect, ref scrollPosition, contentRect, true);
+        Widgets.BeginScrollView(targetRect, ref ScrollPosition, contentRect, true);
 
         var headersRect = new Rect(
-            scrollPosition.x,
-            scrollPosition.y,
+            ScrollPosition.x,
+            ScrollPosition.y,
             adjTargetRectWidth,
-            headersRowHeight
+            HeadersRowHeight
         );
         DrawHeaders(headersRect, extraCellWidth);
 
         var bodyRect = new Rect(
-            scrollPosition.x,
-            scrollPosition.y + headersRowHeight,
+            ScrollPosition.x,
+            ScrollPosition.y + HeadersRowHeight,
             adjTargetRectWidth,
-            targetRect.height - headersRowHeight
+            targetRect.height - HeadersRowHeight
         );
         DrawBody(bodyRect, extraCellWidth);
 
         // Separators
         GUIWidgets.DrawLineVertical(
-            scrollPosition.x,
-            scrollPosition.y,
+            ScrollPosition.x,
+            ScrollPosition.y,
             targetRect.height,
-            StatsMainTabWindow.borderLineColor
+            StatsMainTabWindow.BorderLineColor
         );
         Widgets.DrawLineHorizontal(
-            scrollPosition.x,
-            headersRowHeight + scrollPosition.y,
+            ScrollPosition.x,
+            HeadersRowHeight + ScrollPosition.y,
             targetRect.width,
-            StatsMainTabWindow.borderLineColor
+            StatsMainTabWindow.BorderLineColor
         );
         GUIWidgets.DrawLineVertical(
-            leftColumnsWidth + scrollPosition.x,
-            scrollPosition.y,
+            LeftColumnsWidth + ScrollPosition.x,
+            ScrollPosition.y,
             targetRect.height,
-            StatsMainTabWindow.borderLineColor
+            StatsMainTabWindow.BorderLineColor
         );
 
         if (!Mouse.IsOver(bodyRect))
         {
-            mouseOverRowIndex = null;
+            MouseOverRowIndex = null;
         }
 
         Widgets.EndScrollView();
@@ -214,15 +263,15 @@ internal class Table
 
         // Draw pinned headers
         DrawHeaderColumns(
-            targetRect.CutFromX(ref currX, leftColumnsWidth),
-            leftColumns,
+            targetRect.CutFromX(ref currX, LeftColumnsWidth),
+            LeftColumns,
             Vector2.zero
         );
         // Draw middle headers
         DrawHeaderColumns(
             targetRect.CutFromX(ref currX),
-            middleColumns,
-            scrollPosition,
+            MiddleColumns,
+            ScrollPosition,
             extraCellWidth
         );
     }
@@ -273,7 +322,7 @@ internal class Table
         if (SortColumn == column)
         {
             Widgets.DrawBoxSolid(
-                sortDirection == SortDirection.Ascending
+                SortDirection == SortDirection.Ascending
                     ? targetRect.BottomPartPixels(4f)
                     : targetRect.TopPartPixels(4f),
                 Color.yellow
@@ -282,7 +331,7 @@ internal class Table
 
         using (new TextAnchorCtx(column.TextAnchor))
         {
-            Widgets.Label(targetRect.ContractedBy(cellPadding, 0), column.Label);
+            Widgets.Label(targetRect.ContractedBy(CellPadding, 0), column.Label);
         }
 
         TooltipHandler.TipRegion(targetRect, new TipSignal(column.Description));
@@ -293,7 +342,7 @@ internal class Table
         //    targetRect.xMax,
         //    targetRect.y,
         //    targetRect.height,
-        //    columnSeparatorLineColor
+        //    ColumnSeparatorLineColor
         //);
 
         return Widgets.ButtonInvisible(targetRect);
@@ -304,15 +353,15 @@ internal class Table
 
         // Draw pinned rows
         DrawRows(
-            targetRect.CutFromX(ref currX, leftColumnsWidth),
-            leftColumns,
-            new Vector2(0, scrollPosition.y)
+            targetRect.CutFromX(ref currX, LeftColumnsWidth),
+            LeftColumns,
+            new Vector2(0, ScrollPosition.y)
         );
         // Draw middle rows
         DrawRows(
             targetRect.CutFromX(ref currX),
-            middleColumns,
-            scrollPosition,
+            MiddleColumns,
+            ScrollPosition,
             extraCellWidth
         );
     }
@@ -347,21 +396,20 @@ internal class Table
         //        currSepX,
         //        0f,
         //        targetRect.height,
-        //        columnSeparatorLineColor
+        //        ColumnSeparatorLineColor
         //    );
         //}
 
         float currY = -scrollPosition.y;
         int debug_rowsDrawn = 0;
-        int debug_columnsDrawn = 0;
 
         // Rows
-        for (int rowIndex = 0; rowIndex < rows.Count; rowIndex++)
+        for (int rowIndex = 0; rowIndex < _rows.Count; rowIndex++)
         {
             // Culling
-            if (currY + rowHeight <= 0)
+            if (currY + RowHeight <= 0)
             {
-                currY += rowHeight;
+                currY += RowHeight;
                 continue;
             }
             else if (currY >= targetRect.height)
@@ -369,12 +417,12 @@ internal class Table
                 break;
             }
 
-            debug_columnsDrawn = 0;
+            int debug_columnsDrawn = 0;
 
-            var row = rows[rowIndex];
+            var row = _rows[rowIndex];
             var isEven = rowIndex % 2 == 0;
-            var isMouseOver = mouseOverRowIndex == rowIndex;
-            var rowRect = new Rect(0, currY, targetRect.width, rowHeight);
+            var isMouseOver = MouseOverRowIndex == rowIndex;
+            var rowRect = new Rect(0, currY, targetRect.width, RowHeight);
             float currX = -scrollPosition.x;
 
             if (isEven && !isMouseOver)
@@ -401,12 +449,12 @@ internal class Table
                     currX,
                     currY,
                     cellWidth,
-                    rowHeight
+                    RowHeight
                 );
 
                 row[column]?.Draw(
                     cellRect,
-                    cellRect.ContractedBy(cellPadding, 0f),
+                    cellRect.ContractedBy(CellPadding, 0f),
                     column.TextAnchor
                 );
 
@@ -416,19 +464,12 @@ internal class Table
 
             if (Mouse.IsOver(rowRect))
             {
-                mouseOverRowIndex = rowIndex;
+                MouseOverRowIndex = rowIndex;
             }
 
             if (Widgets.ButtonInvisible(rowRect))
             {
-                if (SelectedRow == row)
-                {
-                    SelectedRow = null;
-                }
-                else
-                {
-                    SelectedRow = row;
-                }
+                SelectedRow = row;
             }
 
             if (SelectedRow == row)
@@ -451,16 +492,16 @@ internal class Table
     }
     private float CalcExtraMiddleCellsWidth(float parentRectWidth)
     {
-        parentRectWidth -= leftColumnsWidth;
+        parentRectWidth -= LeftColumnsWidth;
 
-        if (middleColumnsWidth < parentRectWidth)
+        if (MiddleColumnsWidth < parentRectWidth)
         {
-            return (parentRectWidth - middleColumnsWidth) / middleColumns.Count;
+            return (parentRectWidth - MiddleColumnsWidth) / MiddleColumns.Count;
         }
 
         return 0f;
     }
-    private void SortThings()
+    private void SortRows()
     {
         if (SortColumn == null)
         {
@@ -474,7 +515,7 @@ internal class Table
                 return 0;
             }
 
-            return (r1[SortColumn]?.CompareTo(r2[SortColumn]) ?? -1) * (int)sortDirection;
+            return (r1[SortColumn]?.CompareTo(r2[SortColumn]) ?? -1) * (int)SortDirection;
         });
     }
 }
