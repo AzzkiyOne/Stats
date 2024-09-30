@@ -4,7 +4,7 @@ using Verse;
 
 namespace Stats.Table.Cells;
 
-public sealed class Cell_Gen<T> : Cell<T> where T : notnull, IComparable<T>
+internal sealed class Cell_Gen<T> : Cell<T> where T : notnull, IComparable<T>
 {
     private string Tip { get; }
     private ThingIcon? Icon { get; }

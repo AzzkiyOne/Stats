@@ -1,37 +1,39 @@
 ﻿using System;
+using RimWorld;
 using UnityEngine;
 using Verse;
 
 namespace Stats.Table.Columns;
 
-public abstract class Column : Def, IColumn
+public abstract class Column : Def
 {
-    public string Label => LabelCap;
+    // Public API
+    public StatDef? stat;
     public string? labelKey;
-    public string Description => description;
     public string? descriptionKey;
     public float minWidth = 50f;
-    internal float? adjMinWidth = null;
+    public bool bestIsHighest = true;
+    // Internal API
+    internal string Label => LabelCap;
+    internal string Description => description;
+    private float? _minWidth = null;
     /// <summary>
     /// This should only be accessed in GUI context. Otherwise the game will crash.
     /// </summary>
-    public float MinWidth => adjMinWidth ??= Math.Max(Text.CalcSize(label).x + 15f, minWidth);
-    public ColumnType type = ColumnType.Number;
-    public ColumnType Type => type;
-    internal TextAnchor textAnchor;
-    public TextAnchor TextAnchor => textAnchor;
-    public bool reverseDiffModeColors = false;
-    public bool ReverseDiffModeColors => reverseDiffModeColors;
-    public bool isPinned = false;
-    public bool IsPinned => isPinned;
+    internal float MinWidth => _minWidth ??= Math.Max(Text.CalcSize(label).x + 15f, minWidth);
+    internal bool BestIsHighest => bestIsHighest;
+    internal TextAnchor CellTextAnchor { get; }
+    internal Column(ColumnStyle style = ColumnStyle.String)
+    {
+        CellTextAnchor = style switch
+        {
+            ColumnStyle.Number => TextAnchor.LowerRight,
+            ColumnStyle.Boolean => TextAnchor.LowerCenter,
+            _ => TextAnchor.LowerLeft,
+        };
+    }
     public override void ResolveReferences()
     {
-        textAnchor = type == ColumnType.Number
-            ? TextAnchor.LowerRight
-            : type == ColumnType.Boolean
-            ? TextAnchor.LowerCenter
-            : TextAnchor.LowerLeft;
-
         if (labelKey != null && string.IsNullOrEmpty(label))
         {
             label = labelKey.Translate();
@@ -41,6 +43,19 @@ public abstract class Column : Def, IColumn
         {
             description = descriptionKey.Translate();
         }
+
+        if (stat != null)
+        {
+            if (string.IsNullOrEmpty(label))
+            {
+                label = stat.label;
+            }
+
+            if (string.IsNullOrEmpty(description))
+            {
+                description = stat.description;
+            }
+        }
     }
-    public abstract ICell? GetCell(ThingAlike thing);
+    internal abstract ICell? GetCell(ThingAlike thing);
 }

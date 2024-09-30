@@ -1,6 +1,6 @@
 ﻿namespace Stats.Table;
 
-public enum ColumnType
+internal enum ColumnStyle
 {
     Number,
     String,

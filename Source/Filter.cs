@@ -3,20 +3,20 @@ using Verse;
 
 namespace Stats;
 
-public interface IFilter<T>
+internal interface IFilter<T>
 {
     IFilterProvider<T> Column { get; }
     bool Match(ThingAlike thing);
     bool Draw(Rect targetRect);
 }
 
-public interface IFilterProvider<T> : Table.IColumn
+internal interface IFilterProvider<T> : Table.IColumn
 {
     T GetValue(ThingAlike thing);
     IFilter<T> GetFilter();
 }
 
-public class Filter_Num : IFilter<float?>
+internal class Filter_Num : IFilter<float?>
 {
     private float curValue = 0f;
     private string curValueStrBuffer = "";
@@ -93,7 +93,7 @@ public class Filter_Num : IFilter<float?>
     }
 }
 
-public class Filter_Bool : IFilter<bool?>
+internal class Filter_Bool : IFilter<bool?>
 {
     private bool curValue = true;
     public IFilterProvider<bool?> Column { get; }
@@ -128,7 +128,7 @@ public class Filter_Bool : IFilter<bool?>
     }
 }
 
-public class Filter_Str : IFilter<string?>
+internal class Filter_Str : IFilter<string?>
 {
     private string? curValue = default;
     private string CurOperator { get; set; } = "=";

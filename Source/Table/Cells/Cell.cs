@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Stats.Table.Cells;
 
-public abstract class Cell<T> : ICell<T> where T : IComparable<T>
+internal abstract class Cell<T> : ICell<T> where T : IComparable<T>
 {
     public T Value { get; }
     public string Text { get; }

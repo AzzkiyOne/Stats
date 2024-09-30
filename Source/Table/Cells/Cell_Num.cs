@@ -3,7 +3,7 @@ using Verse;
 
 namespace Stats.Table.Cells;
 
-public sealed class Cell_Num : Cell<float>
+internal sealed class Cell_Num : Cell<float>
 {
     public Cell_Num(float value, string text) : base(value, text)
     {

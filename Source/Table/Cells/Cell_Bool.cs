@@ -3,7 +3,7 @@ using Verse;
 
 namespace Stats.Table.Cells;
 
-public sealed class Cell_Bool : Cell<bool>
+internal sealed class Cell_Bool : Cell<bool>
 {
     private Texture2D Tex { get; }
     public Cell_Bool(bool value) : base(value, "")

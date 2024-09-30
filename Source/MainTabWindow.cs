@@ -20,7 +20,7 @@ public class StatsMainTabWindow : MainTabWindow
     );
     private const float TitleBarHeight = 30f;
     //private const float tablesBrowserWidth = 300f;
-    public static readonly Color BorderLineColor = new(1f, 1f, 1f, 0.4f);
+    internal static readonly Color BorderLineColor = new(1f, 1f, 1f, 0.4f);
     private Table.Table Table;
     public StatsMainTabWindow()
     {

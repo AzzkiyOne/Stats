@@ -3,11 +3,11 @@ using Verse;
 
 namespace Stats;
 
-public sealed class ThingIcon
+internal sealed class ThingIcon
 {
     ThingDef ThingDef { get; }
     ThingDef? StuffDef { get; }
-    public ThingIcon(ThingDef thingDef, ThingDef? stuffDef)
+    public ThingIcon(ThingDef thingDef, ThingDef? stuffDef = null)
     {
         ThingDef = thingDef;
         StuffDef = stuffDef;

@@ -30,7 +30,7 @@ internal class Table
 
             foreach (var column in value)
             {
-                if (column.IsPinned)
+                if (column == ColumnDefOf.Id)
                 {
                     LeftColumns.Add(column);
                     LeftColumnsWidth += column.MinWidth;
@@ -50,15 +50,15 @@ internal class Table
             }
         }
     }
-    private List<IColumn> MiddleColumns { get; } = [];
-    private List<IColumn> LeftColumns { get; } = [];
+    private List<Column> MiddleColumns { get; } = [];
+    private List<Column> LeftColumns { get; } = [];
     private float MiddleColumnsWidth { get; set; } = 0f;
     private float LeftColumnsWidth { get; set; } = 0f;
     private float TotalColumnsMinWidth { get; set; } = 0f;
     private float TotalRowsHeight { get; set; } = 0f;
     private int? MouseOverRowIndex { get; set; } = null;
-    private IColumn? _sortColumn;
-    private IColumn? SortColumn
+    private Column? _sortColumn;
+    private Column? SortColumn
     {
         get => _sortColumn;
         set
@@ -77,8 +77,8 @@ internal class Table
         }
     }
     private SortDirection SortDirection { get; set; } = SortDirection.Ascending;
-    private Dictionary<IColumn, ICell?>? _selectedRow = null;
-    private Dictionary<IColumn, ICell?>? SelectedRow
+    private Dictionary<Column, ICell?>? _selectedRow = null;
+    private Dictionary<Column, ICell?>? SelectedRow
     {
         get => _selectedRow;
         set
@@ -122,7 +122,7 @@ internal class Table
                             }
                             else if (selRowCell is Cells.Cell_Diff otherCell)
                             {
-                                diffCell.Switch(otherCell, column.ReverseDiffModeColors);
+                                diffCell.Switch(otherCell, column.BestIsHighest);
                             }
                         }
                     }
@@ -134,8 +134,8 @@ internal class Table
     private const float HeadersRowHeight = RowHeight;
     private const float CellPadding = 5f;
     //private static Color ColumnSeparatorLineColor = new(1f, 1f, 1f, 0.1f);
-    private List<Dictionary<IColumn, ICell?>> _rows = [];
-    public List<Dictionary<IColumn, ICell?>> Rows
+    private List<Dictionary<Column, ICell?>> _rows = [];
+    public List<Dictionary<Column, ICell?>> Rows
     {
         get => _rows;
         set
@@ -151,11 +151,11 @@ internal class Table
     {
         Columns = columns;
 
-        var rows = new List<Dictionary<IColumn, ICell?>>();
+        var rows = new List<Dictionary<Column, ICell?>>();
 
         foreach (var thing in things)
         {
-            var row = new Dictionary<IColumn, ICell?>(columns.Count);
+            var row = new Dictionary<Column, ICell?>(columns.Count);
 
             foreach (var column in columns)
             {
@@ -277,7 +277,7 @@ internal class Table
     }
     private void DrawHeaderColumns(
         Rect targetRect,
-        List<IColumn> columns,
+        List<Column> columns,
         Vector2 scrollPosition,
         float extraCellWidth = 0f
     )
@@ -317,7 +317,7 @@ internal class Table
 
         Widgets.EndGroup();
     }
-    private bool DrawHeaderCell(Rect targetRect, IColumn column)
+    private bool DrawHeaderCell(Rect targetRect, Column column)
     {
         if (SortColumn == column)
         {
@@ -329,7 +329,7 @@ internal class Table
             );
         }
 
-        using (new TextAnchorCtx(column.TextAnchor))
+        using (new TextAnchorCtx(column.CellTextAnchor))
         {
             Widgets.Label(targetRect.ContractedBy(CellPadding, 0), column.Label);
         }
@@ -367,7 +367,7 @@ internal class Table
     }
     private void DrawRows(
         Rect targetRect,
-        List<IColumn> columns,
+        List<Column> columns,
         Vector2 scrollPosition,
         float extraCellWidth = 0f
     )
@@ -455,7 +455,7 @@ internal class Table
                 row[column]?.Draw(
                     cellRect,
                     cellRect.ContractedBy(CellPadding, 0f),
-                    column.TextAnchor
+                    column.CellTextAnchor
                 );
 
                 currX += cellRect.width;

@@ -4,7 +4,7 @@ using Verse;
 
 namespace Stats;
 
-public static class GUIWidgets
+internal static class GUIWidgets
 {
     private static readonly FieldInfo dialogInfoCardStuffField =
         typeof(Dialog_InfoCard)

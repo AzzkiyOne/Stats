@@ -2,7 +2,7 @@
 
 namespace Stats.Table;
 
-public interface IColumn
+internal interface IColumn
 {
     string Label { get; }
     string Description { get; }

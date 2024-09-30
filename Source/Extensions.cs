@@ -2,7 +2,7 @@
 
 namespace Stats;
 
-public static class UnityEngine_Rect
+internal static class UnityEngine_Rect
 {
     public static Rect CutFromX(this Rect rect, ref float x, float? amount = null)
     {

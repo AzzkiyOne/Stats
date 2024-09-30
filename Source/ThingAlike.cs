@@ -7,12 +7,14 @@ namespace Stats;
 // Implement GetHashCode (and Equals) just in case?
 public sealed class ThingAlike
 {
+    public string Label { get; }
     public ThingDef Def { get; }
     public ThingDef? Stuff { get; }
     public ThingAlike(ThingDef def, ThingDef? stuff = null)
     {
         Def = def;
         Stuff = stuff;
+        Label = Stuff == null ? Def.LabelCap : $"{Def.LabelCap} ({Stuff.LabelCap})";
     }
     private static List<ThingAlike> _all;
     public static List<ThingAlike> All
@@ -62,20 +64,4 @@ public sealed class ThingAlike
             return _all;
         }
     }
-    //public static float? GetWeaponRange(ThingAlike thing)
-    //{
-    //    return thing.Def.Verbs.FirstOrFallback(v => v?.isPrimary ?? false)?.range;
-    //}
-    //public static bool? IsMeal(ThingAlike thing)
-    //{
-    //    return thing.Def.IsWithinCategory(DefDatabase<ThingCategoryDef>.GetNamed("FoodMeals"));
-    //}
-    //public static bool? IsProduce(ThingAlike thing)
-    //{
-    //    return thing.Def.IsWithinCategory(ThingCategoryDefOf.PlantFoodRaw);
-    //}
-    //public static bool? IsMeat(ThingAlike thing)
-    //{
-    //    return thing.Def.IsMeat;
-    //}
 }

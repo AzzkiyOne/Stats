@@ -4,7 +4,7 @@ using Verse;
 
 namespace Stats;
 
-public readonly record struct GameFontCtx : IDisposable
+internal readonly record struct GameFontCtx : IDisposable
 {
     private readonly GameFont prevFont;
     public GameFontCtx(GameFont font)
@@ -18,7 +18,7 @@ public readonly record struct GameFontCtx : IDisposable
     }
 }
 
-public readonly record struct TextAnchorCtx : IDisposable
+internal readonly record struct TextAnchorCtx : IDisposable
 {
     private readonly TextAnchor prevAnchor;
     public TextAnchorCtx(TextAnchor anchor)
@@ -32,7 +32,7 @@ public readonly record struct TextAnchorCtx : IDisposable
     }
 }
 
-public readonly record struct ColorCtx : IDisposable
+internal readonly record struct ColorCtx : IDisposable
 {
     private readonly Color prevColor;
     public ColorCtx(Color color)
@@ -46,7 +46,7 @@ public readonly record struct ColorCtx : IDisposable
     }
 }
 
-public readonly record struct TextWordWrapCtx : IDisposable
+internal readonly record struct TextWordWrapCtx : IDisposable
 {
     private readonly bool prevWordWrap;
     public TextWordWrapCtx(bool wordWrap)

@@ -1,61 +1,81 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <Defs>
 
-    <Stats.Table.Columns.Column Class="Stats.Table.Columns.Column_Label">
-        <defName>Label</defName>
+    <Stats.Table.Columns.Column Class="Stats.Table.Columns.Column_Thing">
+        <defName>Id</defName>
         <label>name</label>
         <minWidth>250</minWidth>
-        <type>String</type>
-        <isPinned>true</isPinned>
     </Stats.Table.Columns.Column>
 
-    <Stats.Table.Columns.Column Class="Stats.Table.Columns.Column_Stat">
+    <Stats.Table.Columns.Column Class="Stats.Table.Columns.Column_Num">
         <defName>MaxHitPoints</defName>
         <stat>MaxHitPoints</stat>
         <label>max HP</label>
     </Stats.Table.Columns.Column>
 
-    <Stats.Table.Columns.Column Class="Stats.Table.Columns.Column_Stat">
+    <Stats.Table.Columns.Column Class="Stats.Table.Columns.Column_Num">
         <defName>Mass</defName>
         <stat>Mass</stat>
-        <reverseDiffModeColors>true</reverseDiffModeColors>
+        <bestIsHighest>false</bestIsHighest>
         <minWidth>100</minWidth>
     </Stats.Table.Columns.Column>
 
-    <Stats.Table.Columns.Column Class="Stats.Table.Columns.Column_Stat">
+    <Stats.Table.Columns.Column Class="Stats.Table.Columns.Column_Num">
         <defName>MarketValue</defName>
         <stat>MarketValue</stat>
         <label>$$$</label>
         <minWidth>75</minWidth>
     </Stats.Table.Columns.Column>
 
-    <Stats.Table.Columns.Column Class="Stats.Table.Columns.Column_Stat">
+    <Stats.Table.Columns.Column Class="Stats.Table.Columns.Column_Num">
         <defName>Nutrition</defName>
         <stat>Nutrition</stat>
     </Stats.Table.Columns.Column>
 
-    <!-- <Stats.Table.Columns.Column Class="Stats.Table.Columns.Column_WeaponRange">
+    <Stats.Table.Columns.Column Class="Stats.Table.Columns.Column_ThingDef">
+        <defName>Stuff</defName>
+        <prop>Stats.ThingProps.Stuff</prop>
+        <label>stuff</label>
+        <description>Stuff type.</description>
+        <minWidth>150</minWidth>
+    </Stats.Table.Columns.Column>
+
+    <Stats.Table.Columns.Column Class="Stats.Table.Columns.Column_Num">
+        <defName>MeatAmount</defName>
+        <stat>MeatAmount</stat>
+    </Stats.Table.Columns.Column>
+
+    <Stats.Table.Columns.Column Class="Stats.Table.Columns.Column_Num">
+        <defName>LeatherAmount</defName>
+        <stat>LeatherAmount</stat>
+    </Stats.Table.Columns.Column>
+
+    <Stats.Table.Columns.Column Class="Stats.Table.Columns.Column_Num">
         <defName>WeaponRange</defName>
+        <prop>Stats.ThingProps.WeaponRange</prop>
         <labelKey>Range</labelKey>
         <descriptionKey>Stat_Thing_Weapon_Range_Desc</descriptionKey>
-    </Stats.Table.Columns.Column> -->
+    </Stats.Table.Columns.Column>
 
-    <!-- <Stats.Table.Columns.Column Class="Stats.Table.Columns.Column_IsMeat">
+    <Stats.Table.Columns.Column Class="Stats.Table.Columns.Column_Bool">
         <defName>IsMeal</defName>
+        <prop>Stats.ThingProps.IsMeal</prop>
         <label>is meal</label>
         <description>Is Meal</description>
     </Stats.Table.Columns.Column>
 
-    <Stats.Table.Columns.Column Class="Stats.Table.Columns.Column_IsProduce">
+    <Stats.Table.Columns.Column Class="Stats.Table.Columns.Column_Bool">
         <defName>IsProduce</defName>
+        <prop>Stats.ThingProps.IsProduce</prop>
         <label>is produce</label>
         <description>Is produce</description>
     </Stats.Table.Columns.Column>
 
-    <Stats.Table.Columns.Column Class="Stats.Table.Columns.Column_IsMeat">
+    <Stats.Table.Columns.Column Class="Stats.Table.Columns.Column_Bool">
         <defName>IsMeat</defName>
+        <prop>Stats.ThingProps.IsMeat</prop>
         <label>is meat</label>
         <description>Is meat</description>
-    </Stats.Table.Columns.Column> -->
+    </Stats.Table.Columns.Column>
 
 </Defs>
