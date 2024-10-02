@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+
+    <Stats.ColumnDef Class="Stats.ColumnDef_Num">
+        <defName>MaxHitPoints</defName>
+        <stat>MaxHitPoints</stat>
+        <label>max HP</label>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef Class="Stats.ColumnDef_Num">
+        <defName>Mass</defName>
+        <stat>Mass</stat>
+        <bestIsHighest>false</bestIsHighest>
+        <minWidth>100</minWidth>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef Class="Stats.ColumnDef_Num">
+        <defName>MarketValue</defName>
+        <stat>MarketValue</stat>
+        <label>$$$</label>
+        <minWidth>75</minWidth>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef Class="Stats.ColumnDef_Num">
+        <defName>Nutrition</defName>
+        <stat>Nutrition</stat>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef Class="Stats.ColumnDef_ThingDef">
+        <defName>Stuff</defName>
+        <prop>Stats.ThingProps.Stuff</prop>
+        <label>stuff</label>
+        <description>Stuff type.</description>
+        <minWidth>150</minWidth>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef Class="Stats.ColumnDef_Num">
+        <defName>MeatAmount</defName>
+        <stat>MeatAmount</stat>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef Class="Stats.ColumnDef_Num">
+        <defName>LeatherAmount</defName>
+        <stat>LeatherAmount</stat>
+    </Stats.ColumnDef>
+
+</Defs>

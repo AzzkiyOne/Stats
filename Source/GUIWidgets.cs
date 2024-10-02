@@ -6,7 +6,7 @@ namespace Stats;
 
 internal static class GUIWidgets
 {
-    private static readonly FieldInfo dialogInfoCardStuffField =
+    private static readonly FieldInfo DialogInfoCardStuffField =
         typeof(Dialog_InfoCard)
         .GetField("stuff", BindingFlags.Instance | BindingFlags.NonPublic);
 
@@ -23,7 +23,7 @@ internal static class GUIWidgets
 
         if (stuff is not null)
         {
-            dialogInfoCardStuffField.SetValue(dialog, stuff);
+            DialogInfoCardStuffField.SetValue(dialog, stuff);
         }
 
         Find.WindowStack.Add(dialog);

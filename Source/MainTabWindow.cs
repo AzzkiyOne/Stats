@@ -1,5 +1,4 @@
 ﻿using RimWorld;
-using Stats.Table.Columns;
 using UnityEngine;
 using Verse;
 
@@ -21,32 +20,31 @@ public class StatsMainTabWindow : MainTabWindow
     private const float TitleBarHeight = 30f;
     //private const float tablesBrowserWidth = 300f;
     internal static readonly Color BorderLineColor = new(1f, 1f, 1f, 0.4f);
-    private Table.Table Table;
+    private TablesBrowserWidget TablesBrowser { get; }
     public StatsMainTabWindow()
     {
         draggable = true;
         resizeable = true;
-        Table = new(ThingAlike.All, DefDatabase<Column>.AllDefsListForReading);
+        TablesBrowser = new();
     }
     public override void DoWindowContents(Rect targetRect)
     {
-        var titleBarText = "Things";
         var currY = targetRect.y;
 
         using (new TextWordWrapCtx(false))
         {
-            switch (TitleBar.Draw(
+            switch (WindowTitleBarWidget.Draw(
                 targetRect.CutFromY(ref currY, TitleBarHeight),
-                titleBarText
+                TablesBrowser.CurTable.LabelCap
             ))
             {
-                case TitleBarEvent.Minimize:
+                case WindowTitleBarWidgetEvent.Minimize:
                     Minimize();
                     break;
-                case TitleBarEvent.Expand:
+                case WindowTitleBarWidgetEvent.Expand:
                     ExpandOrCollapse();
                     break;
-                case TitleBarEvent.Close:
+                case WindowTitleBarWidgetEvent.Close:
                     Close();
                     break;
             }
@@ -58,7 +56,8 @@ public class StatsMainTabWindow : MainTabWindow
     {
         var currX = targetRect.x;
 
-        Table.Draw(targetRect.CutFromX(ref currX));
+        TablesBrowser.Draw(targetRect.CutFromX(ref currX, 300f));
+        TablesBrowser.CurTable.Widget.Draw(targetRect.CutFromX(ref currX));
     }
     private void ExpandOrCollapse()
     {
@@ -116,78 +115,5 @@ public class StatsMainTabWindow : MainTabWindow
         base.PostClose();
 
         PreCloseRect = windowRect;
-    }
-}
-
-internal enum TitleBarEvent
-{
-    Minimize,
-    Expand,
-    Close,
-}
-
-internal static class TitleBar
-{
-    public static TitleBarEvent? Draw(Rect targetRect, string text)
-    {
-        var buttonWidth = targetRect.height;
-        var labelWidth = targetRect.width - buttonWidth * 4;
-        var currX = targetRect.x;
-        TitleBarEvent? Event = null;
-
-        using (new TextAnchorCtx(TextAnchor.MiddleLeft))
-        {
-            Widgets.DrawLightHighlight(targetRect);
-
-            Widgets.DrawLineHorizontal(
-                targetRect.x,
-                targetRect.yMax,
-                targetRect.width,
-                StatsMainTabWindow.BorderLineColor
-            );
-
-            Widgets.Label(
-                targetRect
-                    .CutFromX(ref currX, labelWidth)
-                    .ContractedBy(GenUI.Pad, 0f),
-                text
-            );
-
-            Widgets.ButtonImage(
-                targetRect.CutFromX(ref currX, buttonWidth),
-                TexButton.Info,
-                tooltip: "How to use:"
-            );
-
-            if (GUIWidgets.ButtonImage(
-                targetRect.CutFromX(ref currX, buttonWidth),
-                TexButton.Reveal,
-                angle: 90f
-            ))
-            {
-                Event = TitleBarEvent.Minimize;
-            }
-
-            if (GUIWidgets.ButtonImage(
-                targetRect.CutFromX(ref currX, buttonWidth),
-                TexButton.ShowZones,
-                "Maximize/restore window",
-                90f
-            ))
-            {
-
-                Event = TitleBarEvent.Expand;
-            }
-
-            if (Widgets.ButtonImage(
-                targetRect.CutFromX(ref currX, buttonWidth),
-                TexButton.CloseXSmall
-            ))
-            {
-                Event = TitleBarEvent.Close;
-            }
-        }
-
-        return Event;
     }
 }

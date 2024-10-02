@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+
+    <Stats.ColumnDef Class="Stats.ColumnDef_Num">
+        <defName>WeaponRangedDamage</defName>
+        <prop>Stats.ThingProps.WeaponRangedDamage</prop>
+        <labelKey>Damage</labelKey>
+        <descriptionKey>Stat_Thing_Damage_Desc</descriptionKey>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef Class="Stats.ColumnDef_Num">
+        <defName>WeaponRangedStoppingPower</defName>
+        <prop>Stats.ThingProps.WeaponRangedStoppingPower</prop>
+        <labelKey>StoppingPower</labelKey>
+        <descriptionKey>StoppingPowerExplanation</descriptionKey>
+        <formatString>F1</formatString>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef Class="Stats.ColumnDef_Num">
+        <defName>WeaponRangedAP</defName>
+        <prop>Stats.ThingProps.WeaponRangedAP</prop>
+        <label>AP</label>
+        <descriptionKey>ArmorPenetrationExplanation</descriptionKey>
+        <formatString>0%</formatString>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef Class="Stats.ColumnDef_Num">
+        <defName>WeaponRangedRPM</defName>
+        <prop>Stats.ThingProps.WeaponRangedRPM</prop>
+        <labelKey>BurstShotFireRate</labelKey>
+        <descriptionKey>Stat_Thing_Weapon_BurstShotFireRate_Desc</descriptionKey>
+        <formatString>0 rpm</formatString>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef Class="Stats.ColumnDef_Num">
+        <defName>WeaponRangedBurstShotCount</defName>
+        <prop>Stats.ThingProps.WeaponRangedBurstShotCount</prop>
+        <labelKey>BurstShotCount</labelKey>
+        <descriptionKey>Stat_Thing_Weapon_BurstShotCount_Desc</descriptionKey>
+        <formatString>0</formatString>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef Class="Stats.ColumnDef_Num">
+        <defName>WeaponRange</defName>
+        <prop>Stats.ThingProps.WeaponRange</prop>
+        <labelKey>Range</labelKey>
+        <descriptionKey>Stat_Thing_Weapon_Range_Desc</descriptionKey>
+        <formatString>F0</formatString>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef Class="Stats.ColumnDef_Num">
+        <defName>AccuracyTouch</defName>
+        <stat>AccuracyTouch</stat>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef Class="Stats.ColumnDef_Num">
+        <defName>AccuracyShort</defName>
+        <stat>AccuracyShort</stat>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef Class="Stats.ColumnDef_Num">
+        <defName>AccuracyMedium</defName>
+        <stat>AccuracyMedium</stat>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef Class="Stats.ColumnDef_Num">
+        <defName>AccuracyLong</defName>
+        <stat>AccuracyLong</stat>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef Class="Stats.ColumnDef_Num">
+        <defName>RangedWeapon_Cooldown</defName>
+        <stat>RangedWeapon_Cooldown</stat>
+        <bestIsHighest>false</bestIsHighest>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef Class="Stats.ColumnDef_Num">
+        <defName>WeaponRangedAimingTime</defName>
+        <prop>Stats.ThingProps.WeaponRangedAimingTime</prop>
+        <labelKey>RangedWarmupTime</labelKey>
+        <descriptionKey>Stat_Thing_Weapon_RangedWarmupTime_Desc</descriptionKey>
+        <formatString>0.00 s</formatString>
+        <bestIsHighest>false</bestIsHighest>
+    </Stats.ColumnDef>
+
+</Defs>

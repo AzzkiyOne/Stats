@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+
+    <Stats.ColumnDef Class="Stats.ColumnDef_Thing">
+        <defName>Id</defName>
+        <label>name</label>
+        <minWidth>250</minWidth>
+    </Stats.ColumnDef>
+
+</Defs>

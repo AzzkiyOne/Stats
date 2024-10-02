@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+
+    <Stats.ColumnDef Class="Stats.ColumnDef_Num">
+        <defName>ShotSpread</defName>
+        <stat>ShotSpread</stat>
+        <bestIsHighest>false</bestIsHighest>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef Class="Stats.ColumnDef_Num">
+        <defName>SwayFactor</defName>
+        <stat>SwayFactor</stat>
+        <label>sway</label>
+        <bestIsHighest>false</bestIsHighest>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef Class="Stats.ColumnDef_Num">
+        <defName>Recoil</defName>
+        <stat>Recoil</stat>
+        <label>recoil</label>
+        <bestIsHighest>false</bestIsHighest>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef Class="Stats.ColumnDef_Num">
+        <defName>SightsEfficiency</defName>
+        <stat>SightsEfficiency</stat>
+        <label>sights</label>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef Class="Stats.ColumnDef_Num">
+        <defName>MagazineCapacity</defName>
+        <stat>MagazineCapacity</stat>
+        <label>mag. cap</label>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef Class="Stats.ColumnDef_Num">
+        <defName>ReloadTime</defName>
+        <stat>ReloadTime</stat>
+        <prop>Stats.Compat.CE.ThingProps.ReloadTime</prop>
+        <formatString>0.00 s</formatString>
+        <bestIsHighest>false</bestIsHighest>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef Class="Stats.ColumnDef_Bool">
+        <defName>OneHandedness</defName>
+        <stat>OneHandedness</stat>
+        <label>one-handed</label>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef Class="Stats.ColumnDef_Str">
+        <defName>Caliber</defName>
+        <stat>Caliber</stat>
+        <minWidth>150</minWidth>
+    </Stats.ColumnDef>
+
+</Defs>

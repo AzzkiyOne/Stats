@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+
+    <Stats.ColumnDef Class="Stats.ColumnDef_Num">
+        <defName>Bulk</defName>
+        <stat>Bulk</stat>
+        <minWidth>75</minWidth>
+        <bestIsHighest>false</bestIsHighest>
+    </Stats.ColumnDef>
+
+</Defs>

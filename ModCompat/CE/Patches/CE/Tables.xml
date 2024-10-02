@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Patch>
+
+    <Operation Class="PatchOperationAdd">
+        <xpath>Defs/Stats.TableDef[defName="WeaponsRanged"]/columns</xpath>
+        <value>
+            <li>
+                <def>ShotSpread</def>
+                <order>100</order>
+            </li>
+            <li>
+                <def>SwayFactor</def>
+                <order>110</order>
+            </li>
+            <li>
+                <def>Recoil</def>
+                <order>120</order>
+            </li>
+            <li>
+                <def>SightsEfficiency</def>
+                <order>130</order>
+            </li>
+            <li>
+                <def>MagazineCapacity</def>
+                <order>140</order>
+            </li>
+            <li>
+                <def>ReloadTime</def>
+                <order>150</order>
+            </li>
+            <li>
+                <def>OneHandedness</def>
+                <order>160</order>
+            </li>
+            <li>
+                <def>Caliber</def>
+                <order>170</order>
+            </li>
+        </value>
+    </Operation>
+
+</Patch>
