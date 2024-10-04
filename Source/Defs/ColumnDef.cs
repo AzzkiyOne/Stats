@@ -1,5 +1,4 @@
-﻿using System;
-using RimWorld;
+﻿using RimWorld;
 using UnityEngine;
 using Verse;
 
@@ -11,18 +10,26 @@ public abstract class ColumnDef : Def
     public StatDef? stat;
     public string? labelKey;
     public string? descriptionKey;
-    public float minWidth = 50f;
     public bool bestIsHighest = true;
+    public string? icon;
     // Internal API
     internal string Label => LabelCap;
     internal string Description => description;
-    private float? _minWidth = null;
-    /// <summary>
-    /// This should only be accessed in GUI context. Otherwise the game will crash.
-    /// </summary>
-    internal float MinWidth => _minWidth ??= Math.Max(Text.CalcSize(label).x + 15f, minWidth);
     internal bool BestIsHighest => bestIsHighest;
     internal TextAnchor CellTextAnchor { get; }
+    private Texture2D? _iconTex;
+    internal Texture2D? Icon
+    {
+        get
+        {
+            if (_iconTex == null && icon is { Length: > 0 })
+            {
+                _iconTex = ContentFinder<Texture2D>.Get(icon);
+            }
+
+            return _iconTex;
+        }
+    }
     internal ColumnDef(ColumnStyle style = ColumnStyle.String)
     {
         CellTextAnchor = style switch

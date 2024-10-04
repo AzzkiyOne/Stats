@@ -6,17 +6,11 @@ using Verse;
 
 namespace Stats;
 
-public class ColumnEntry
-{
-    public ColumnDef def;
-    public int order = int.MaxValue;
-}
-
 public class TableDef : Def
 {
     public TableDef? parent;
     public Func<ThingAlike, bool?>? filter;
-    public List<ColumnEntry> columns;
+    public List<ColumnDef> columns;
     private TableWidget? _widget;
     internal TableWidget Widget
     {
@@ -27,16 +21,8 @@ public class TableDef : Def
                 var things = filter == null
                     ? ThingAlike.All
                     : ThingAlike.All.Where(thing => filter(thing) ?? false).ToList();
-                var tableColumns = new List<ColumnDef>() { ColumnDefOf.Id };
 
-                columns.SortBy(columnEntry => columnEntry.order);
-
-                foreach (var column in columns)
-                {
-                    tableColumns.Add(column.def);
-                }
-
-                _widget = new(things, tableColumns);
+                _widget = new(things, [ColumnDefOf.Id, .. columns]);
             }
 
             return _widget;

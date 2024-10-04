@@ -50,7 +50,6 @@
     <Stats.ColumnDef Class="Stats.ColumnDef_Str">
         <defName>Caliber</defName>
         <stat>Caliber</stat>
-        <minWidth>150</minWidth>
     </Stats.ColumnDef>
 
 </Defs>

@@ -32,15 +32,15 @@ internal class TableWidget
                 if (column == ColumnDefOf.Id)
                 {
                     LeftColumns.Add(column);
-                    LeftColumnsWidth += column.MinWidth;
+                    LeftColumnsWidth += ColumnMinWidths[column];
                 }
                 else
                 {
                     MiddleColumns.Add(column);
-                    MiddleColumnsWidth += column.MinWidth;
+                    MiddleColumnsWidth += ColumnMinWidths[column];
                 }
 
-                TotalColumnsMinWidth += column.MinWidth;
+                TotalColumnsMinWidth += ColumnMinWidths[column];
             }
 
             if (SortColumn is null && LeftColumns.First() != null)
@@ -95,7 +95,7 @@ internal class TableWidget
                 {
                     foreach (var column in Columns)
                     {
-                        var cell = row[column];
+                        var cell = row.TryGetValue(column);
 
                         if (cell is CellWidget_Diff diffCell)
                         {
@@ -110,8 +110,8 @@ internal class TableWidget
                 {
                     foreach (var column in Columns)
                     {
-                        var cell = row[column];
-                        var selRowCell = _selectedRow[column];
+                        var cell = row.TryGetValue(column);
+                        var selRowCell = _selectedRow.TryGetValue(column);
 
                         if (cell is CellWidget_Diff diffCell)
                         {
@@ -129,9 +129,9 @@ internal class TableWidget
             }
         }
     }
-    private const float RowHeight = 30f;
+    public const float RowHeight = 30f;
     private const float HeadersRowHeight = RowHeight;
-    private const float CellPadding = 5f;
+    public const float CellPadding = 10f;
     //private static Color ColumnSeparatorLineColor = new(1f, 1f, 1f, 0.1f);
     private List<Dictionary<ColumnDef, ICellWidget?>> _rows = [];
     public List<Dictionary<ColumnDef, ICellWidget?>> Rows
@@ -146,9 +146,20 @@ internal class TableWidget
             SortRows();
         }
     }
+    private Dictionary<ColumnDef, float> ColumnMinWidths = [];
     public TableWidget(List<ThingAlike> things, List<ColumnDef> columns)
     {
-        Columns = columns;
+        foreach (var column in columns)
+        {
+            if (column.Icon != null)
+            {
+                ColumnMinWidths[column] = RowHeight + CellPadding * 2;
+            }
+            else
+            {
+                ColumnMinWidths[column] = Text.CalcSize(column.Label).x + CellPadding * 2;
+            }
+        }
 
         var rows = new List<Dictionary<ColumnDef, ICellWidget?>>();
 
@@ -167,7 +178,12 @@ internal class TableWidget
                         cell = new CellWidget_Diff(numCell);
                     }
 
-                    row.Add(column, cell);
+                    if (cell != null)
+                    {
+                        row.Add(column, cell);
+
+                        ColumnMinWidths[column] = Math.Max(ColumnMinWidths[column], cell.MinWidth + CellPadding * 2);
+                    }
                 }
                 catch (Exception e)
                 {
@@ -178,6 +194,7 @@ internal class TableWidget
             rows.Add(row);
         }
 
+        Columns = columns;
         Rows = rows;
     }
     public void Draw(Rect targetRect)
@@ -228,7 +245,7 @@ internal class TableWidget
         DrawBody(bodyRect, extraCellWidth);
 
         // Separators
-        GUIWidgets.DrawLineVertical(
+        LineVerticalWidget.Draw(
             ScrollPosition.x,
             ScrollPosition.y,
             targetRect.height,
@@ -240,7 +257,7 @@ internal class TableWidget
             targetRect.width,
             StatsMainTabWindow.BorderLineColor
         );
-        GUIWidgets.DrawLineVertical(
+        LineVerticalWidget.Draw(
             LeftColumnsWidth + ScrollPosition.x,
             ScrollPosition.y,
             targetRect.height,
@@ -287,7 +304,7 @@ internal class TableWidget
 
         foreach (var column in columns)
         {
-            var columnWidth = column.MinWidth + extraCellWidth;
+            var columnWidth = ColumnMinWidths[column] + extraCellWidth;
             // Culling
             if (currX + columnWidth <= 0)
             {
@@ -318,6 +335,8 @@ internal class TableWidget
     }
     private bool DrawHeaderCell(Rect targetRect, ColumnDef column)
     {
+        var contentRect = targetRect.ContractedBy(CellPadding, 0);
+
         if (SortColumn == column)
         {
             Widgets.DrawBoxSolid(
@@ -328,9 +347,23 @@ internal class TableWidget
             );
         }
 
-        using (new TextAnchorCtx(column.CellTextAnchor))
+        if (column.Icon != null)
         {
-            Widgets.Label(targetRect.ContractedBy(CellPadding, 0), column.Label);
+            var iconRect = column.CellTextAnchor switch
+            {
+                TextAnchor.LowerRight => contentRect.RightPartPixels(RowHeight),
+                TextAnchor.LowerCenter => contentRect,
+                _ => contentRect.LeftPartPixels(RowHeight)
+            };
+
+            Widgets.DrawTextureFitted(iconRect, column.Icon, 1f);
+        }
+        else
+        {
+            using (new TextAnchorCtx(column.CellTextAnchor))
+            {
+                Widgets.Label(contentRect, column.Label);
+            }
         }
 
         TooltipHandler.TipRegion(targetRect, new TipSignal(column.Description));
@@ -432,7 +465,7 @@ internal class TableWidget
             // Cells
             foreach (var column in columns)
             {
-                var cellWidth = column.MinWidth + extraCellWidth;
+                var cellWidth = ColumnMinWidths[column] + extraCellWidth;
                 // Culling
                 if (currX + cellWidth <= 0)
                 {
@@ -451,7 +484,7 @@ internal class TableWidget
                     RowHeight
                 );
 
-                row[column]?.Draw(
+                row.TryGetValue(column)?.Draw(
                     cellRect,
                     cellRect.ContractedBy(CellPadding, 0f),
                     column.CellTextAnchor
@@ -509,12 +542,15 @@ internal class TableWidget
 
         Rows.Sort((r1, r2) =>
         {
-            if (r1[SortColumn] == null && r2[SortColumn] == null)
+            var r1c = r1.TryGetValue(SortColumn);
+            var r2c = r2.TryGetValue(SortColumn);
+
+            if (r1c == null && r2c == null)
             {
                 return 0;
             }
 
-            return (r1[SortColumn]?.CompareTo(r2[SortColumn]) ?? -1) * (int)SortDirection;
+            return (r1c?.CompareTo(r2c) ?? -1) * (int)SortDirection;
         });
     }
 }

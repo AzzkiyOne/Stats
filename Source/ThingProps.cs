@@ -1,13 +1,15 @@
-﻿using RimWorld;
+﻿using System.Collections.Generic;
+using System.Linq;
+using RimWorld;
 using Verse;
 
 namespace Stats;
 
 public static class ThingProps
 {
-    public static float? WeaponRangedDamage(ThingAlike thing)
+    public static float? WeaponRanged_Damage(ThingAlike thing)
     {
-        var verb = thing.Def.Verbs.FirstOrFallback(v => v is { isPrimary: true });
+        var verb = thing.Def.Verbs.FirstOrFallback(v => v?.isPrimary == true);
         var defaultProj = verb?.defaultProjectile?.projectile;
 
         if (defaultProj?.damageDef?.harmsHealth == true)
@@ -17,9 +19,9 @@ public static class ThingProps
 
         return null;
     }
-    public static float? WeaponRangedStoppingPower(ThingAlike thing)
+    public static float? WeaponRanged_StoppingPower(ThingAlike thing)
     {
-        var verb = thing.Def.Verbs.FirstOrFallback(v => v is { isPrimary: true });
+        var verb = thing.Def.Verbs.FirstOrFallback(v => v?.isPrimary == true);
         var defaultProj = verb?.defaultProjectile?.projectile;
 
         if (defaultProj?.stoppingPower != 0f)
@@ -29,9 +31,9 @@ public static class ThingProps
 
         return null;
     }
-    public static float? WeaponRangedAP(ThingAlike thing)
+    public static float? WeaponRanged_AP(ThingAlike thing)
     {
-        var verb = thing.Def.Verbs.FirstOrFallback(v => v is { isPrimary: true });
+        var verb = thing.Def.Verbs.FirstOrFallback(v => v?.isPrimary == true);
         var defaultProj = verb?.defaultProjectile?.projectile;
 
         if (defaultProj?.damageDef is { harmsHealth: true, armorCategory: not null })
@@ -45,9 +47,9 @@ public static class ThingProps
 
         return null;
     }
-    public static float? WeaponRangedRPM(ThingAlike thing)
+    public static float? WeaponRanged_RPM(ThingAlike thing)
     {
-        var verb = thing.Def.Verbs.FirstOrFallback(v => v is { isPrimary: true });
+        var verb = thing.Def.Verbs.FirstOrFallback(v => v?.isPrimary == true);
 
         if (verb is { Ranged: true, showBurstShotStats: true, burstShotCount: > 1 })
         {
@@ -56,9 +58,9 @@ public static class ThingProps
 
         return null;
     }
-    public static float? WeaponRangedBurstShotCount(ThingAlike thing)
+    public static float? WeaponRanged_BurstShotCount(ThingAlike thing)
     {
-        var verb = thing.Def.Verbs.FirstOrFallback(v => v is { isPrimary: true });
+        var verb = thing.Def.Verbs.FirstOrFallback(v => v?.isPrimary == true);
 
         if (verb is { Ranged: true, showBurstShotStats: true, burstShotCount: > 1 })
         {
@@ -67,13 +69,13 @@ public static class ThingProps
 
         return null;
     }
-    public static float? WeaponRange(ThingAlike thing)
+    public static float? WeaponRanged_Range(ThingAlike thing)
     {
-        return thing.Def.Verbs.FirstOrFallback(v => v is { isPrimary: true })?.range;
+        return thing.Def.Verbs.FirstOrFallback(v => v?.isPrimary == true)?.range;
     }
-    public static float? WeaponRangedAimingTime(ThingAlike thing)
+    public static float? WeaponRanged_AimingTime(ThingAlike thing)
     {
-        var verb = thing.Def.Verbs.FirstOrFallback(v => v is { isPrimary: true });
+        var verb = thing.Def.Verbs.FirstOrFallback(v => v?.isPrimary == true);
 
         if (verb?.warmupTime > 0f)
         {
@@ -81,6 +83,26 @@ public static class ThingProps
         }
 
         return null;
+    }
+    public static List<ThingDef> CreatedAt(ThingAlike thing)
+    {
+        var result = new List<ThingDef>();
+
+        foreach (var recipe in DefDatabase<RecipeDef>.AllDefs)
+        {
+            if (recipe is { products.Count: 1, IsSurgery: false })
+            {
+                if (recipe.products.First().thingDef == thing.Def)
+                {
+                    foreach (var recipeUser in recipe.AllRecipeUsers)
+                    {
+                        result.AddDistinct(recipeUser);
+                    }
+                }
+            }
+        }
+
+        return result;
     }
     //public static bool? IsFood(ThingDef def)
     //{

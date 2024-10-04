@@ -36,7 +36,7 @@ internal static class WindowTitleBarWidget
                 tooltip: "How to use:"
             );
 
-            if (GUIWidgets.ButtonImage(
+            if (ButtonImageWidget.Draw(
                 targetRect.CutFromX(ref currX, buttonWidth),
                 TexButton.Reveal,
                 angle: 90f
@@ -45,7 +45,7 @@ internal static class WindowTitleBarWidget
                 Event = WindowTitleBarWidgetEvent.Minimize;
             }
 
-            if (GUIWidgets.ButtonImage(
+            if (ButtonImageWidget.Draw(
                 targetRect.CutFromX(ref currX, buttonWidth),
                 TexButton.ShowZones,
                 "Maximize/restore window",

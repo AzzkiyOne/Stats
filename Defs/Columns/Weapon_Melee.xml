@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+
+    <Stats.ColumnDef Class="Stats.ColumnDef_Num">
+        <defName>WeaponMelee_DPS</defName>
+        <label>DPS (M)</label>
+        <stat>MeleeWeapon_AverageDPS</stat>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef Class="Stats.ColumnDef_Num">
+        <defName>WeaponMelee_AP</defName>
+        <label>AP (M)</label>
+        <stat>MeleeWeapon_AverageArmorPenetration</stat>
+    </Stats.ColumnDef>
+
+</Defs>

@@ -8,6 +8,7 @@ internal sealed class CellWidget_Diff : ICellWidget<float>
     private ICellWidget<float> CurCell { get; set; }
     public float Value => OrigCell.Value;
     public string Text => CurCell.Text;
+    public float MinWidth => OrigCell.MinWidth;
     public CellWidget_Diff(ICellWidget<float> cell)
     {
         OrigCell = CurCell = cell;
@@ -43,6 +44,15 @@ internal sealed class CellWidget_Diff : ICellWidget<float>
         CurCell.Draw(targetRect, contentRect, textAnchor);
     }
     public int CompareTo(ICellWidget? other)
+    {
+        if (other == null)
+        {
+            return 1;
+        }
+
+        return CompareTo((ICellWidget<float>)other);
+    }
+    public int CompareTo(ICellWidget<float>? other)
     {
         return OrigCell.CompareTo(other);
     }

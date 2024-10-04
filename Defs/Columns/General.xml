@@ -1,5 +1,11 @@
-<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="utf-8"?>
 <Defs>
+
+    <Stats.ColumnDef Class="Stats.ColumnDef_Num">
+        <defName>MarketValue</defName>
+        <stat>MarketValue</stat>
+        <label>$$$</label>
+    </Stats.ColumnDef>
 
     <Stats.ColumnDef Class="Stats.ColumnDef_Num">
         <defName>MaxHitPoints</defName>
@@ -8,40 +14,51 @@
     </Stats.ColumnDef>
 
     <Stats.ColumnDef Class="Stats.ColumnDef_Num">
+        <defName>Flammability</defName>
+        <stat>Flammability</stat>
+        <icon>UI/Icons/PassionMajor</icon>
+        <bestIsHighest>false</bestIsHighest>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef Class="Stats.ColumnDef_Num">
         <defName>Mass</defName>
         <stat>Mass</stat>
         <bestIsHighest>false</bestIsHighest>
-        <minWidth>100</minWidth>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef Class="Stats.ColumnDef_ThingDefs">
+        <defName>CreatedAt</defName>
+        <labelKey>CreatedAt</labelKey>
+        <descriptionKey>Stat_Thing_CreatedAt_Desc</descriptionKey>
+        <prop>Stats.ThingProps.CreatedAt</prop>
+    </Stats.ColumnDef>
+
+    <!-- Ingredients? -->
+
+    <Stats.ColumnDef Class="Stats.ColumnDef_Num">
+        <defName>WorkToMake</defName>
+        <stat>WorkToMake</stat>
+        <label>work</label>
+        <bestIsHighest>false</bestIsHighest>
     </Stats.ColumnDef>
 
     <Stats.ColumnDef Class="Stats.ColumnDef_Num">
-        <defName>MarketValue</defName>
-        <stat>MarketValue</stat>
-        <label>$$$</label>
-        <minWidth>75</minWidth>
+        <defName>Beauty</defName>
+        <stat>Beauty</stat>
     </Stats.ColumnDef>
 
     <Stats.ColumnDef Class="Stats.ColumnDef_Num">
-        <defName>Nutrition</defName>
-        <stat>Nutrition</stat>
-    </Stats.ColumnDef>
-
-    <Stats.ColumnDef Class="Stats.ColumnDef_ThingDef">
-        <defName>Stuff</defName>
-        <prop>Stats.ThingProps.Stuff</prop>
-        <label>stuff</label>
-        <description>Stuff type.</description>
-        <minWidth>150</minWidth>
+        <defName>SellPriceFactor</defName>
+        <stat>SellPriceFactor</stat>
+        <label>$$$ %</label>
     </Stats.ColumnDef>
 
     <Stats.ColumnDef Class="Stats.ColumnDef_Num">
-        <defName>MeatAmount</defName>
-        <stat>MeatAmount</stat>
-    </Stats.ColumnDef>
-
-    <Stats.ColumnDef Class="Stats.ColumnDef_Num">
-        <defName>LeatherAmount</defName>
-        <stat>LeatherAmount</stat>
+        <defName>DeteriorationRate</defName>
+        <stat>DeteriorationRate</stat>
+        <label>-HP / d</label>
+        <formatString>0.00 / d</formatString>
+        <bestIsHighest>false</bestIsHighest>
     </Stats.ColumnDef>
 
 </Defs>

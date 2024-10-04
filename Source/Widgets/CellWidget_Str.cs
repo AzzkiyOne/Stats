@@ -15,4 +15,13 @@ internal sealed class CellWidget_Str : CellWidget_Base<string>
             Widgets.Label(contentRect, Text);
         }
     }
+    public override int CompareTo(ICellWidget<string>? other)
+    {
+        if (other == null)
+        {
+            return 1;
+        }
+
+        return Value.CompareTo(other.Value);
+    }
 }

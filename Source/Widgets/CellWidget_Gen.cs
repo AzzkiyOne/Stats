@@ -23,6 +23,11 @@ internal sealed class CellWidget_Gen<T> : CellWidget_Base<T> where T : notnull, 
         Icon = icon;
         Thing = thing;
         Color = color ?? Color.white;
+
+        if (Icon != null)
+        {
+            MinWidth += TableWidget.RowHeight + TableWidget.CellPadding;
+        }
     }
     public override void Draw(Rect targetRect, Rect contentRect, TextAnchor textAnchor)
     {
@@ -31,7 +36,7 @@ internal sealed class CellWidget_Gen<T> : CellWidget_Base<T> where T : notnull, 
         if (Icon != null)
         {
             Icon.Draw(contentRect.CutFromX(ref currX, contentRect.height));
-            currX += GenUI.Pad;
+            currX += TableWidget.CellPadding;
         }
 
         using (new ColorCtx(Color))
@@ -46,10 +51,19 @@ internal sealed class CellWidget_Gen<T> : CellWidget_Base<T> where T : notnull, 
 
             if (Widgets.ButtonInvisible(targetRect))
             {
-                GUIWidgets.DefInfoDialog(Thing.Def, Thing.Stuff);
+                DefInfoDialogWidget.Draw(Thing.Def, Thing.Stuff);
             }
         }
 
-        TooltipHandler.TipRegion(targetRect, new TipSignal(Tip));
+        TooltipHandler.TipRegion(targetRect, Tip);
+    }
+    public override int CompareTo(ICellWidget<T>? other)
+    {
+        if (other == null)
+        {
+            return 1;
+        }
+
+        return Value.CompareTo(other.Value);
     }
 }
