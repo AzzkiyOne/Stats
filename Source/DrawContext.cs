@@ -6,56 +6,56 @@ namespace Stats;
 
 internal readonly record struct GameFontCtx : IDisposable
 {
-    private readonly GameFont prevFont;
+    private readonly GameFont OrigFont;
     public GameFontCtx(GameFont font)
     {
-        prevFont = Text.Font;
+        OrigFont = Text.Font;
         Text.Font = font;
     }
     public void Dispose()
     {
-        Text.Font = prevFont;
+        Text.Font = OrigFont;
     }
 }
 
 internal readonly record struct TextAnchorCtx : IDisposable
 {
-    private readonly TextAnchor prevAnchor;
+    private readonly TextAnchor OrigAnchor;
     public TextAnchorCtx(TextAnchor anchor)
     {
-        prevAnchor = Text.Anchor;
+        OrigAnchor = Text.Anchor;
         Text.Anchor = anchor;
     }
     public void Dispose()
     {
-        Text.Anchor = prevAnchor;
+        Text.Anchor = OrigAnchor;
     }
 }
 
 internal readonly record struct ColorCtx : IDisposable
 {
-    private readonly Color prevColor;
+    private readonly Color OrigColor;
     public ColorCtx(Color color)
     {
-        prevColor = GUI.color;
+        OrigColor = GUI.color;
         GUI.color = color;
     }
     public void Dispose()
     {
-        GUI.color = prevColor;
+        GUI.color = OrigColor;
     }
 }
 
 internal readonly record struct TextWordWrapCtx : IDisposable
 {
-    private readonly bool prevWordWrap;
+    private readonly bool OrigWordWrap;
     public TextWordWrapCtx(bool wordWrap)
     {
-        prevWordWrap = Text.WordWrap;
+        OrigWordWrap = Text.WordWrap;
         Text.WordWrap = wordWrap;
     }
     public void Dispose()
     {
-        Text.WordWrap = prevWordWrap;
+        Text.WordWrap = OrigWordWrap;
     }
 }

@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
+using Verse;
 
 namespace Stats;
 
@@ -19,5 +21,12 @@ internal static class UnityEngine_Rect
         y = result.yMax;
 
         return result;
+    }
+}
+internal static class VerbList
+{
+    public static VerbProperties? Primary(this List<VerbProperties> verbs)
+    {
+        return verbs.FirstOrFallback(v => v?.isPrimary == true);
     }
 }

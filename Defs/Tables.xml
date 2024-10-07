@@ -20,19 +20,11 @@
     <Stats.TableDef>
         <defName>Weapons</defName>
         <label>weapons</label>
+        <parent>All</parent>
         <filter>Stats.ThingProps.IsWeapon</filter>
         <columns>
             <li>WeaponMelee_DPS</li>
-            <li>WeaponMelee_AP</li>
-            <li>MarketValue</li>
-            <li>MaxHitPoints</li>
-            <li>Flammability</li>
-            <li>Mass</li>
-            <li>CreatedAt</li>
-            <li>WorkToMake</li>
-            <li>Beauty</li>
-            <li>SellPriceFactor</li>
-            <li>DeteriorationRate</li>
+            <li>WeaponMelee_ArmorPenetration</li>
         </columns>
     </Stats.TableDef>
 
@@ -44,27 +36,20 @@
         <columns>
             <li>WeaponRanged_Damage</li>
             <li>WeaponRanged_StoppingPower</li>
-            <li>WeaponRanged_AP</li>
+            <li>WeaponRanged_ArmorPenetration</li>
+            <li>WeaponRanged_BuildingDamageFactor_Passable</li>
+            <li>WeaponRanged_BuildingDamageFactor_Impassable</li>
             <li>WeaponRanged_RPM</li>
             <li>WeaponRanged_BurstShotCount</li>
+            <li>WeaponRanged_Cooldown</li>
+            <li>WeaponRanged_AimingTime</li>
             <li>WeaponRanged_Range</li>
             <li>WeaponRanged_AccuracyTouch</li>
             <li>WeaponRanged_AccuracyShort</li>
             <li>WeaponRanged_AccuracyMedium</li>
             <li>WeaponRanged_AccuracyLong</li>
-            <li>WeaponRanged_Cooldown</li>
-            <li>WeaponRanged_AimingTime</li>
-            <li>WeaponMelee_DPS</li>
-            <li>WeaponMelee_AP</li>
-            <li>MarketValue</li>
-            <li>MaxHitPoints</li>
-            <li>Flammability</li>
-            <li>Mass</li>
-            <li>CreatedAt</li>
-            <li>WorkToMake</li>
-            <li>Beauty</li>
-            <li>SellPriceFactor</li>
-            <li>DeteriorationRate</li>
+            <li>WeaponRanged_DirectHitChance</li>
+            <li>WeaponRanged_MissRadius</li>
         </columns>
     </Stats.TableDef>
 
@@ -74,17 +59,6 @@
         <parent>Weapons</parent>
         <filter>Stats.ThingProps.IsMeleeWeapon</filter>
         <columns>
-            <li>WeaponMelee_DPS</li>
-            <li>WeaponMelee_AP</li>
-            <li>MarketValue</li>
-            <li>MaxHitPoints</li>
-            <li>Flammability</li>
-            <li>Mass</li>
-            <li>CreatedAt</li>
-            <li>WorkToMake</li>
-            <li>Beauty</li>
-            <li>SellPriceFactor</li>
-            <li>DeteriorationRate</li>
         </columns>
     </Stats.TableDef>
 

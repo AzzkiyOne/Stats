@@ -3,25 +3,28 @@ using Verse;
 
 namespace Stats;
 
-internal sealed class CellWidget_Bool : CellWidget_Base<bool>
+internal sealed class CellWidget_Bool : ICellWidget<bool>
 {
-    private Texture2D Tex { get; }
-    public CellWidget_Bool(bool value) : base(value, "")
+    public bool Value { get; }
+    public float MinWidth { get; }
+    private readonly Texture2D Tex;
+    public CellWidget_Bool(bool value)
     {
-        Tex = Widgets.GetCheckboxTexture(Value);
+        Value = value;
         MinWidth = TableWidget.RowHeight;
+        Tex = Widgets.GetCheckboxTexture(Value);
     }
-    public override void Draw(Rect targetRect, Rect contentRect, TextAnchor _)
+    public void Draw(Rect targetRect, Rect contentRect, TextAnchor _)
     {
         Widgets.DrawTextureFitted(targetRect, Tex, 0.7f);
     }
-    public override int CompareTo(ICellWidget<bool>? other)
+    public int CompareTo(ICellWidget? other)
     {
         if (other == null)
         {
             return 1;
         }
 
-        return Value.CompareTo(other.Value);
+        return Value.CompareTo(((ICellWidget<bool>)other).Value);
     }
 }

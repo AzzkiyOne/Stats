@@ -4,22 +4,23 @@
     <Stats.ColumnDef Class="Stats.ColumnDef_Num">
         <defName>WeaponRanged_Damage</defName>
         <prop>Stats.ThingProps.WeaponRanged_Damage</prop>
-        <label>dmg</label>
-        <!-- <labelKey>Damage</labelKey> -->
+        <labelKey>Damage</labelKey>
         <descriptionKey>Stat_Thing_Damage_Desc</descriptionKey>
+        <icon>UI/Commands/Attack</icon>
     </Stats.ColumnDef>
 
     <Stats.ColumnDef Class="Stats.ColumnDef_Num">
         <defName>WeaponRanged_StoppingPower</defName>
         <prop>Stats.ThingProps.WeaponRanged_StoppingPower</prop>
-        <label>pwr</label>
+        <label>power</label>
         <descriptionKey>StoppingPowerExplanation</descriptionKey>
+        <icon>UI/Icons/Trainables/Obedience</icon>
         <formatString>F1</formatString>
     </Stats.ColumnDef>
 
     <Stats.ColumnDef Class="Stats.ColumnDef_Num">
-        <defName>WeaponRanged_AP</defName>
-        <prop>Stats.ThingProps.WeaponRanged_AP</prop>
+        <defName>WeaponRanged_ArmorPenetration</defName>
+        <prop>Stats.ThingProps.WeaponRanged_ArmorPenetration</prop>
         <label>AP</label>
         <descriptionKey>ArmorPenetrationExplanation</descriptionKey>
         <formatString>0%</formatString>
@@ -36,7 +37,7 @@
     <Stats.ColumnDef Class="Stats.ColumnDef_Num">
         <defName>WeaponRanged_BurstShotCount</defName>
         <prop>Stats.ThingProps.WeaponRanged_BurstShotCount</prop>
-        <label>shots</label>
+        <label>BSC</label>
         <descriptionKey>Stat_Thing_Weapon_BurstShotCount_Desc</descriptionKey>
         <formatString>0</formatString>
     </Stats.ColumnDef>
@@ -87,6 +88,38 @@
         <descriptionKey>Stat_Thing_Weapon_RangedWarmupTime_Desc</descriptionKey>
         <formatString>0.00 s</formatString>
         <bestIsHighest>false</bestIsHighest>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef Class="Stats.ColumnDef_Num">
+        <defName>WeaponRanged_BuildingDamageFactor_Passable</defName>
+        <label>BDF (P)</label>
+        <descriptionKey>BuildingDamageFactorPassableExplanation</descriptionKey>
+        <prop>Stats.ThingProps.WeaponRanged_BuildingDamageFactor_Passable</prop>
+        <formatString>0%</formatString>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef Class="Stats.ColumnDef_Num">
+        <defName>WeaponRanged_BuildingDamageFactor_Impassable</defName>
+        <label>BDF (I)</label>
+        <descriptionKey>BuildingDamageFactorImpassableExplanation</descriptionKey>
+        <prop>Stats.ThingProps.WeaponRanged_BuildingDamageFactor_Impassable</prop>
+        <formatString>0%</formatString>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef Class="Stats.ColumnDef_Num">
+        <defName>WeaponRanged_DirectHitChance</defName>
+        <label>DH %</label>
+        <descriptionKey>Stat_Thing_Weapon_DirectHitChance_Desc</descriptionKey>
+        <prop>Stats.ThingProps.WeaponRanged_DirectHitChance</prop>
+        <formatString>0.0%</formatString>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef Class="Stats.ColumnDef_Num">
+        <defName>WeaponRanged_MissRadius</defName>
+        <label>MR</label>
+        <descriptionKey>Stat_Thing_Weapon_MissRadius_Desc</descriptionKey>
+        <prop>Stats.ThingProps.WeaponRanged_MissRadius</prop>
+        <formatString>0.0</formatString>
     </Stats.ColumnDef>
 
 </Defs>

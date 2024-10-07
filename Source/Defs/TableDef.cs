@@ -21,8 +21,17 @@ public class TableDef : Def
                 var things = filter == null
                     ? ThingAlike.All
                     : ThingAlike.All.Where(thing => filter(thing) ?? false).ToList();
+                var tableWidgetColumns = new List<ColumnDef>([ColumnDefOf.Id, .. columns]);
+                var curParent = parent;
 
-                _widget = new(things, [ColumnDefOf.Id, .. columns]);
+                while (curParent != null)
+                {
+                    tableWidgetColumns.AddRange(curParent.columns);
+
+                    curParent = curParent.parent;
+                }
+
+                _widget = new(things, tableWidgetColumns);
             }
 
             return _widget;

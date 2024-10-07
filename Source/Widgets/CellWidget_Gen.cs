@@ -4,45 +4,47 @@ using Verse;
 
 namespace Stats;
 
-internal sealed class CellWidget_Gen<T> : CellWidget_Base<T> where T : notnull, IComparable<T>
+internal sealed class CellWidget_Gen<T> : ICellWidget<T> where T : notnull, IComparable<T>
 {
-    private string Tip { get; }
-    private ThingIconWidget? Icon { get; }
-    private ThingAlike? Thing { get; }
-    private Color Color { get; }
+    public T Value { get; }
+    public float MinWidth { get; }
+    private readonly string Text;
+    private readonly string Tip;
+    private readonly ThingIconWidget? Icon;
+    private readonly ThingAlike? Thing;
     public CellWidget_Gen(
         T value,
         string text,
         string tip = "",
         ThingIconWidget? icon = null,
-        ThingAlike? thing = null,
-        Color? color = null
-    ) : base(value, text)
+        ThingAlike? thing = null
+    )
     {
+        Value = value;
+        MinWidth = Verse.Text.CalcSize(text).x;
+        Text = text;
         Tip = tip;
         Icon = icon;
         Thing = thing;
-        Color = color ?? Color.white;
 
         if (Icon != null)
         {
             MinWidth += TableWidget.RowHeight + TableWidget.CellPadding;
         }
     }
-    public override void Draw(Rect targetRect, Rect contentRect, TextAnchor textAnchor)
+    public void Draw(Rect targetRect, Rect contentRect, TextAnchor textAnchor)
     {
-        var currX = contentRect.x;
+        var curX = contentRect.x;
 
         if (Icon != null)
         {
-            Icon.Draw(contentRect.CutFromX(ref currX, contentRect.height));
-            currX += TableWidget.CellPadding;
+            Icon.Draw(contentRect.CutFromX(ref curX, contentRect.height));
+            curX += TableWidget.CellPadding;
         }
 
-        using (new ColorCtx(Color))
         using (new TextAnchorCtx(textAnchor))
         {
-            Widgets.Label(contentRect.CutFromX(ref currX), Text);
+            Widgets.Label(contentRect.CutFromX(ref curX), Text);
         }
 
         if (Thing != null)
@@ -57,13 +59,13 @@ internal sealed class CellWidget_Gen<T> : CellWidget_Base<T> where T : notnull, 
 
         TooltipHandler.TipRegion(targetRect, Tip);
     }
-    public override int CompareTo(ICellWidget<T>? other)
+    public int CompareTo(ICellWidget? other)
     {
         if (other == null)
         {
             return 1;
         }
 
-        return Value.CompareTo(other.Value);
+        return Value.CompareTo(((ICellWidget<T>)other).Value);
     }
 }

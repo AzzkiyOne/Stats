@@ -3,25 +3,29 @@ using Verse;
 
 namespace Stats;
 
-internal sealed class CellWidget_Str : CellWidget_Base<string>
+internal sealed class CellWidget_Str : ICellWidget<string>
 {
-    public CellWidget_Str(string value) : base(value, value)
+    public string Value { get; }
+    public float MinWidth { get; }
+    public CellWidget_Str(string value)
     {
+        Value = value;
+        MinWidth = Text.CalcSize(value).x;
     }
-    public override void Draw(Rect targetRect, Rect contentRect, TextAnchor textAnchor)
+    public void Draw(Rect targetRect, Rect contentRect, TextAnchor textAnchor)
     {
         using (new TextAnchorCtx(textAnchor))
         {
-            Widgets.Label(contentRect, Text);
+            Widgets.Label(contentRect, Value);
         }
     }
-    public override int CompareTo(ICellWidget<string>? other)
+    public int CompareTo(ICellWidget? other)
     {
         if (other == null)
         {
             return 1;
         }
 
-        return Value.CompareTo(other.Value);
+        return Value.CompareTo(((ICellWidget<string>)other).Value);
     }
 }

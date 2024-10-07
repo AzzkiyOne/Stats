@@ -20,7 +20,7 @@ public class StatsMainTabWindow : MainTabWindow
     private const float TitleBarHeight = 30f;
     //private const float tablesBrowserWidth = 300f;
     internal static readonly Color BorderLineColor = new(1f, 1f, 1f, 0.4f);
-    private TablesBrowserWidget TablesBrowser { get; }
+    private TablesBrowserWidget TablesBrowser;
     public StatsMainTabWindow()
     {
         draggable = true;
@@ -54,10 +54,18 @@ public class StatsMainTabWindow : MainTabWindow
     }
     private void DrawContent(Rect targetRect)
     {
-        var currX = targetRect.x;
+        var curX = targetRect.x;
 
-        TablesBrowser.Draw(targetRect.CutFromX(ref currX, 300f));
-        TablesBrowser.CurTable.Widget.Draw(targetRect.CutFromX(ref currX));
+        TablesBrowser.Draw(targetRect.CutFromX(ref curX, 300f));
+
+        LineVerticalWidget.Draw(
+            curX,
+            targetRect.y,
+            targetRect.height,
+            BorderLineColor
+        );
+
+        TablesBrowser.CurTable.Widget.Draw(targetRect.CutFromX(ref curX));
     }
     private void ExpandOrCollapse()
     {

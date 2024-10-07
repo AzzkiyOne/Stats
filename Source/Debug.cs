@@ -5,7 +5,7 @@ namespace Stats;
 
 internal static class Debug
 {
-    static public void TryDrawUIDebugInfo(Rect targetRect, string text)
+    public static void TryDrawUIDebugInfo(Rect targetRect, string text)
     {
         if (!InDebugMode)
         {
@@ -30,5 +30,5 @@ internal static class Debug
             Widgets.Label(rect.ContractedBy(padding), text);
         }
     }
-    static public bool InDebugMode => Event.current.alt;
+    public static bool InDebugMode => Event.current.alt;
 }

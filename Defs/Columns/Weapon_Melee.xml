@@ -5,10 +5,11 @@
         <defName>WeaponMelee_DPS</defName>
         <label>DPS (M)</label>
         <stat>MeleeWeapon_AverageDPS</stat>
+        <icon>UI/Commands/AttackMelee</icon>
     </Stats.ColumnDef>
 
     <Stats.ColumnDef Class="Stats.ColumnDef_Num">
-        <defName>WeaponMelee_AP</defName>
+        <defName>WeaponMelee_ArmorPenetration</defName>
         <label>AP (M)</label>
         <stat>MeleeWeapon_AverageArmorPenetration</stat>
     </Stats.ColumnDef>

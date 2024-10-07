@@ -16,13 +16,13 @@ public abstract class ColumnDef : Def
     internal string Label => LabelCap;
     internal string Description => description;
     internal bool BestIsHighest => bestIsHighest;
-    internal TextAnchor CellTextAnchor { get; }
+    internal TextAnchor CellTextAnchor;
     private Texture2D? _iconTex;
     internal Texture2D? Icon
     {
         get
         {
-            if (_iconTex == null && icon is { Length: > 0 })
+            if (_iconTex == null && icon?.Length > 0)
             {
                 _iconTex = ContentFinder<Texture2D>.Get(icon);
             }
