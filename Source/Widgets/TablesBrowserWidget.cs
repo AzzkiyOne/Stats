@@ -14,7 +14,7 @@ internal class TablesBrowserWidget
     public TableDef CurTable { get; private set; }
     private int debug_rowsDrawn = 0;
     private int TotalRowsDisplayed = 0;
-    private List<TableDef> RootTableDefs;
+    private readonly List<TableDef> RootTableDefs;
     public TablesBrowserWidget()
     {
         CurTable = TableDefOf.All;
@@ -22,35 +22,32 @@ internal class TablesBrowserWidget
     }
     public void Draw(Rect targetRect)
     {
-        using (new TextAnchorCtx(TextAnchor.MiddleLeft))
+        // Scroll area size correction only works because of how rows are "culled" at the top.
+        // We don't render them, but still counting.
+        var displayedRowsHeight = RowHeight * TotalRowsDisplayed;
+        var contentRect = new Rect(
+            0f,
+            0f,
+            targetRect.width,
+            displayedRowsHeight >= targetRect.height
+                ? displayedRowsHeight + targetRect.height
+                : displayedRowsHeight
+        );
+        var currY = 0f;
+
+        Widgets.BeginScrollView(targetRect, ref ScrollPosition, contentRect);
+        debug_rowsDrawn = 0;
+        TotalRowsDisplayed = 0;
+        Text.Anchor = TextAnchor.MiddleLeft;
+
+        foreach (var tableDef in RootTableDefs)
         {
-            // Scroll area size correction only works because of how rows are "culled" at the top.
-            // We don't render them, but still counting.
-            var displayedRowsHeight = RowHeight * TotalRowsDisplayed;
-            var contentRect = new Rect(
-                0f,
-                0f,
-                targetRect.width,
-                displayedRowsHeight >= targetRect.height
-                    ? displayedRowsHeight + targetRect.height
-                    : displayedRowsHeight
-            );
-            var currY = 0f;
-
-            Widgets.BeginScrollView(targetRect, ref ScrollPosition, contentRect);
-
-            debug_rowsDrawn = 0;
-            TotalRowsDisplayed = 0;
-
-            foreach (var tableDef in RootTableDefs)
-            {
-                DrawRows(targetRect, ref currY, tableDef);
-            }
-
-            Widgets.EndScrollView();
-
-            Debug.TryDrawUIDebugInfo(targetRect, debug_rowsDrawn + "");
+            DrawRows(targetRect, ref currY, tableDef);
         }
+
+        Text.Anchor = Constants.DefaultTextAnchor;
+        Widgets.EndScrollView();
+        Debug.TryDrawUIDebugInfo(targetRect, debug_rowsDrawn + "");
     }
     private void DrawRows(
         Rect parentRect,
@@ -85,7 +82,6 @@ internal class TablesBrowserWidget
 
             Widgets.DrawTextureFitted(iconRect, tableDef.Icon, 0.9f);
             Widgets.Label(labelRect, labelText);
-
             Widgets.DrawHighlightIfMouseover(rowRect);
 
             if (Widgets.ButtonInvisible(rowRect))

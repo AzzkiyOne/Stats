@@ -13,9 +13,7 @@ internal static class ButtonImageWidget
     )
     {
         GUI.color = Mouse.IsOver(targetRect) ? GenUI.MouseoverColor : Color.white;
-
         Widgets.DrawTextureRotated(targetRect, tex, angle);
-
         GUI.color = Color.white;
 
         if (tooltip != "")

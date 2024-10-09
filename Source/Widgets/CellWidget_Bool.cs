@@ -6,15 +6,15 @@ namespace Stats;
 internal sealed class CellWidget_Bool : ICellWidget<bool>
 {
     public bool Value { get; }
-    public float MinWidth { get; }
+    public float MinWidth { get; } = TableWidget.CellMinWidth;
     private readonly Texture2D Tex;
     public CellWidget_Bool(bool value)
     {
         Value = value;
-        MinWidth = TableWidget.RowHeight;
+        MinWidth += TableWidget.RowHeight;
         Tex = Widgets.GetCheckboxTexture(Value);
     }
-    public void Draw(Rect targetRect, Rect contentRect, TextAnchor _)
+    public void Draw(Rect targetRect)
     {
         Widgets.DrawTextureFitted(targetRect, Tex, 0.7f);
     }

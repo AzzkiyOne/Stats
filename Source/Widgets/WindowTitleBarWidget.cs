@@ -12,57 +12,53 @@ internal static class WindowTitleBarWidget
         var currX = targetRect.x;
         WindowTitleBarWidgetEvent? Event = null;
 
-        using (new TextAnchorCtx(TextAnchor.MiddleLeft))
+        Widgets.DrawLightHighlight(targetRect);
+        Widgets.DrawLineHorizontal(
+            targetRect.x,
+            targetRect.yMax,
+            targetRect.width,
+            StatsMainTabWindow.BorderLineColor
+        );
+        Text.Anchor = TextAnchor.MiddleLeft;
+        Widgets.Label(
+            targetRect
+                .CutFromX(ref currX, labelWidth)
+                .ContractedBy(GenUI.Pad, 0f),
+            text
+        );
+        Text.Anchor = Constants.DefaultTextAnchor;
+        Widgets.ButtonImage(
+            targetRect.CutFromX(ref currX, buttonWidth),
+            TexButton.Info,
+            tooltip: "How to use:"
+        );
+
+        if (ButtonImageWidget.Draw(
+            targetRect.CutFromX(ref currX, buttonWidth),
+            TexButton.Reveal,
+            angle: 90f
+        ))
         {
-            Widgets.DrawLightHighlight(targetRect);
+            Event = WindowTitleBarWidgetEvent.Minimize;
+        }
 
-            Widgets.DrawLineHorizontal(
-                targetRect.x,
-                targetRect.yMax,
-                targetRect.width,
-                StatsMainTabWindow.BorderLineColor
-            );
+        if (ButtonImageWidget.Draw(
+            targetRect.CutFromX(ref currX, buttonWidth),
+            TexButton.ShowZones,
+            "Maximize/restore window",
+            90f
+        ))
+        {
 
-            Widgets.Label(
-                targetRect
-                    .CutFromX(ref currX, labelWidth)
-                    .ContractedBy(GenUI.Pad, 0f),
-                text
-            );
+            Event = WindowTitleBarWidgetEvent.Expand;
+        }
 
-            Widgets.ButtonImage(
-                targetRect.CutFromX(ref currX, buttonWidth),
-                TexButton.Info,
-                tooltip: "How to use:"
-            );
-
-            if (ButtonImageWidget.Draw(
-                targetRect.CutFromX(ref currX, buttonWidth),
-                TexButton.Reveal,
-                angle: 90f
-            ))
-            {
-                Event = WindowTitleBarWidgetEvent.Minimize;
-            }
-
-            if (ButtonImageWidget.Draw(
-                targetRect.CutFromX(ref currX, buttonWidth),
-                TexButton.ShowZones,
-                "Maximize/restore window",
-                90f
-            ))
-            {
-
-                Event = WindowTitleBarWidgetEvent.Expand;
-            }
-
-            if (Widgets.ButtonImage(
-                targetRect.CutFromX(ref currX, buttonWidth),
-                TexButton.CloseXSmall
-            ))
-            {
-                Event = WindowTitleBarWidgetEvent.Close;
-            }
+        if (Widgets.ButtonImage(
+            targetRect.CutFromX(ref currX, buttonWidth),
+            TexButton.CloseXSmall
+        ))
+        {
+            Event = WindowTitleBarWidgetEvent.Close;
         }
 
         return Event;

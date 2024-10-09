@@ -7,9 +7,8 @@ internal static class LineVerticalWidget
 {
     public static void Draw(float x, float y, float length, Color color)
     {
-        using (new ColorCtx(color))
-        {
-            Widgets.DrawLineVertical(x, y, length);
-        }
+        GUI.color = color;
+        Widgets.DrawLineVertical(x, y, length);
+        GUI.color = Color.white;
     }
 }

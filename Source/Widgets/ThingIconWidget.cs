@@ -52,17 +52,15 @@ public sealed class ThingIconWidget
     public void Draw(Rect targetRect, float scale = 1f)
     {
         targetRect.position += Offset * targetRect.size;
-
-        using (new ColorCtx(Color))
-        {
-            Widgets.DrawTextureFitted(
-                targetRect,
-                Texture,
-                Scale * scale,
-                Proportions,
-                Coords,
-                Angle
-            );
-        }
+        GUI.color = Color;
+        Widgets.DrawTextureFitted(
+            targetRect,
+            Texture,
+            Scale * scale,
+            Proportions,
+            Coords,
+            Angle
+        );
+        GUI.color = Color.white;
     }
 }

@@ -20,7 +20,7 @@ public class StatsMainTabWindow : MainTabWindow
     private const float TitleBarHeight = 30f;
     //private const float tablesBrowserWidth = 300f;
     internal static readonly Color BorderLineColor = new(1f, 1f, 1f, 0.4f);
-    private TablesBrowserWidget TablesBrowser;
+    private readonly TablesBrowserWidget TablesBrowser;
     public StatsMainTabWindow()
     {
         draggable = true;
@@ -31,40 +31,38 @@ public class StatsMainTabWindow : MainTabWindow
     {
         var currY = targetRect.y;
 
-        using (new TextWordWrapCtx(false))
-        {
-            switch (WindowTitleBarWidget.Draw(
-                targetRect.CutFromY(ref currY, TitleBarHeight),
-                TablesBrowser.CurTable.LabelCap
-            ))
-            {
-                case WindowTitleBarWidgetEvent.Minimize:
-                    Minimize();
-                    break;
-                case WindowTitleBarWidgetEvent.Expand:
-                    ExpandOrCollapse();
-                    break;
-                case WindowTitleBarWidgetEvent.Close:
-                    Close();
-                    break;
-            }
+        Text.WordWrap = false;
 
-            DrawContent(targetRect.CutFromY(ref currY));
+        switch (WindowTitleBarWidget.Draw(
+            targetRect.CutFromY(ref currY, TitleBarHeight),
+            TablesBrowser.CurTable.LabelCap
+        ))
+        {
+            case WindowTitleBarWidgetEvent.Minimize:
+                Minimize();
+                break;
+            case WindowTitleBarWidgetEvent.Expand:
+                ExpandOrCollapse();
+                break;
+            case WindowTitleBarWidgetEvent.Close:
+                Close();
+                break;
         }
+
+        DrawContent(targetRect.CutFromY(ref currY));
+        Text.WordWrap = true;
     }
     private void DrawContent(Rect targetRect)
     {
         var curX = targetRect.x;
 
         TablesBrowser.Draw(targetRect.CutFromX(ref curX, 300f));
-
         LineVerticalWidget.Draw(
             curX,
             targetRect.y,
             targetRect.height,
             BorderLineColor
         );
-
         TablesBrowser.CurTable.Widget.Draw(targetRect.CutFromX(ref curX));
     }
     private void ExpandOrCollapse()
@@ -82,7 +80,6 @@ public class StatsMainTabWindow : MainTabWindow
     {
         draggable = false;
         resizeable = false;
-
         PreExpandRect = windowRect;
         windowRect = ExpandRect;
     }
@@ -102,7 +99,6 @@ public class StatsMainTabWindow : MainTabWindow
         draggable = true;
         resizeable = true;
         PreExpandRect = null;
-
         SetInitialSizeAndPosition();
     }
     public override void PreOpen()
@@ -113,15 +109,14 @@ public class StatsMainTabWindow : MainTabWindow
         {
             windowRect = ExpandRect;
         }
-        else if (PreCloseRect is Rect _preCloseRect)
+        else if (PreCloseRect is Rect preCloseRect)
         {
-            windowRect = _preCloseRect;
+            windowRect = preCloseRect;
         }
     }
     public override void PostClose()
     {
         base.PostClose();
-
         PreCloseRect = windowRect;
     }
 }

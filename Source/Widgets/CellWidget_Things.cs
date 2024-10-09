@@ -7,14 +7,17 @@ namespace Stats;
 internal sealed class CellWidget_Things : ICellWidget<List<ThingAlike>>
 {
     public List<ThingAlike> Value { get; }
-    public float MinWidth { get; }
+    public float MinWidth { get; } = TableWidget.CellMinWidth;
     public CellWidget_Things(List<ThingAlike> value)
     {
         Value = value;
-        MinWidth = value.Count * TableWidget.RowHeight + (Value.Count - 1) * TableWidget.CellPadding;
+        MinWidth += value.Count * TableWidget.RowHeight + (Value.Count - 1) * TableWidget.CellPadding;
+
+        Value.SortBy(thing => thing.Label);
     }
-    public void Draw(Rect targetRect, Rect contentRect, TextAnchor textAnchor)
+    public void Draw(Rect targetRect)
     {
+        var contentRect = targetRect.ContractedBy(TableWidget.CellPadding, 0f);
         var curX = contentRect.x;
 
         for (int i = 0; i < Value.Count; i++)
@@ -24,12 +27,13 @@ internal sealed class CellWidget_Things : ICellWidget<List<ThingAlike>>
 
             thing.Icon.Draw(iconRect);
             Widgets.DrawHighlightIfMouseover(iconRect);
+
             if (Widgets.ButtonInvisible(iconRect))
             {
                 DefInfoDialogWidget.Draw(thing.Def, thing.Stuff);
             }
-            TooltipHandler.TipRegion(iconRect, thing.Label);
 
+            TooltipHandler.TipRegion(iconRect, thing.Label);
             curX += TableWidget.CellPadding;
         }
     }

@@ -8,10 +8,10 @@ public abstract class ColumnDef : Def
 {
     // Public API
     public StatDef? stat;
-    public string? labelKey;
-    public string? descriptionKey;
+    public string labelKey = "";
+    public string descriptionKey = "";
     public bool bestIsHighest = true;
-    public string? icon;
+    public string icon = "";
     // Internal API
     internal string Label => LabelCap;
     internal string Description => description;
@@ -41,12 +41,12 @@ public abstract class ColumnDef : Def
     }
     public override void ResolveReferences()
     {
-        if (labelKey != null && string.IsNullOrEmpty(label))
+        if (labelKey != "" && string.IsNullOrEmpty(label))
         {
             label = labelKey.Translate();
         }
 
-        if (descriptionKey != null && string.IsNullOrEmpty(description))
+        if (descriptionKey != "" && string.IsNullOrEmpty(description))
         {
             description = descriptionKey.Translate();
         }

@@ -12,7 +12,7 @@ internal static class DefInfoDialogWidget
     {
         var dialog = new Dialog_InfoCard(def);
 
-        if (stuff is not null)
+        if (stuff != null)
         {
             DialogInfoCardStuffField.SetValue(dialog, stuff);
         }

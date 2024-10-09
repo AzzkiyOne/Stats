@@ -244,8 +244,8 @@ public static class ThingProps
     //{
     //    return thing.Def.plant?.IsTree;
     //}
-    public static ThingDef? Stuff(ThingAlike thing)
-    {
-        return thing.Stuff;
-    }
+    //public static ThingDef? Stuff(ThingAlike thing)
+    //{
+    //    return thing.Stuff;
+    //}
 }

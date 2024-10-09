@@ -6,7 +6,7 @@ namespace Stats;
 internal interface ICellWidget : IComparable<ICellWidget?>
 {
     float MinWidth { get; }
-    void Draw(Rect targetRect, Rect contentRect, TextAnchor textAnchor);
+    void Draw(Rect targetRect);
 }
 
 internal interface ICellWidget<T> : ICellWidget
