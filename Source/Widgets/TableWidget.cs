@@ -274,7 +274,7 @@ internal sealed class TableWidget
         {
             Parent = parent;
             HeaderCells = headerCells;
-            CurFrameHeaderCells = new(headerCells.Count);
+            CurFrameHeaderCells = [.. headerCells];
 
             foreach (var headerCell in headerCells)
             {
@@ -287,11 +287,17 @@ internal sealed class TableWidget
             HeaderCellWidget? clickedHeaderCell
         ) Draw(Rect targetRect, Vector2 scrollPosition)
         {
-            var cellExtraWidth = Math.Max((targetRect.width - MinWidth) / HeaderCells.Count, 0f);
+            var cellExtraWidth = Math.Max(
+                (targetRect.width - MinWidth) / HeaderCells.Count,
+                0f
+            );
 
             if (
-                PrevFrameScrollPosX != scrollPosition.x
-                || PrevFrameTargetRectWidth != targetRect.width
+                cellExtraWidth == 0f &&
+                (
+                    PrevFrameScrollPosX != scrollPosition.x
+                    || PrevFrameTargetRectWidth != targetRect.width
+                )
             )
             {
                 UpdateCurFrameState(targetRect, scrollPosition, cellExtraWidth);
@@ -378,7 +384,7 @@ internal sealed class TableWidget
                 // Cells
                 foreach (var headerCell in CurFrameHeaderCells)
                 {
-                    var cell = row.TryGetValue(headerCell.Column);
+                    row.TryGetValue(headerCell.Column, out var cell);
                     var cellWidth = headerCell.MinWidth + cellExtraWidth;
                     // We do not create a separate variable for cell's rect because it is
                     // created conditionally (cell?.Draw).
