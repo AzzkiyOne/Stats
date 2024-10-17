@@ -78,7 +78,6 @@
         <defName>WeaponRanged_Cooldown</defName>
         <stat>RangedWeapon_Cooldown</stat>
         <label>RCD</label>
-        <bestIsHighest>false</bestIsHighest>
     </Stats.ColumnDef>
 
     <Stats.ColumnDef Class="Stats.ColumnDef_Num">
@@ -87,7 +86,6 @@
         <label>Aim t.</label>
         <descriptionKey>Stat_Thing_Weapon_RangedWarmupTime_Desc</descriptionKey>
         <formatString>0.00 s</formatString>
-        <bestIsHighest>false</bestIsHighest>
     </Stats.ColumnDef>
 
     <Stats.ColumnDef Class="Stats.ColumnDef_Num">

@@ -4,7 +4,6 @@
     <Stats.ColumnDef Class="Stats.ColumnDef_Num">
         <defName>Bulk</defName>
         <stat>Bulk</stat>
-        <bestIsHighest>false</bestIsHighest>
     </Stats.ColumnDef>
 
 </Defs>

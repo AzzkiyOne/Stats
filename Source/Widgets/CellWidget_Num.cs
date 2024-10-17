@@ -8,7 +8,6 @@ internal sealed class CellWidget_Num : ICellWidget<float>
     public float Value { get; }
     public float MinWidth { get; } = TableWidget.CellMinWidth;
     private readonly string Text;
-    public Color Color { get; set; } = Color.white;
     public CellWidget_Num(float value, string text)
     {
         Value = value;
@@ -17,10 +16,8 @@ internal sealed class CellWidget_Num : ICellWidget<float>
     }
     public void Draw(Rect targetRect)
     {
-        GUI.color = Color;
         Verse.Text.Anchor = TextAnchor.LowerRight;
         Widgets.Label(targetRect.ContractedBy(TableWidget.CellPadding, 0f), Text);
-        GUI.color = Color.white;
         Verse.Text.Anchor = Constants.DefaultTextAnchor;
     }
     public int CompareTo(ICellWidget? other)
@@ -31,9 +28,5 @@ internal sealed class CellWidget_Num : ICellWidget<float>
         }
 
         return Value.CompareTo(((ICellWidget<float>)other).Value);
-    }
-    public void Reset()
-    {
-        Color = Color.white;
     }
 }

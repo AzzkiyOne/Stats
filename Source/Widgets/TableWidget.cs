@@ -1,16 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Common;
 using System.Linq;
+using RimWorld;
 using UnityEngine;
 using Verse;
+using TableWidgetRow = (Verse.ThingDef thingDef, Verse.ThingDef? stuffDef);
 
 namespace Stats;
 
 internal sealed class TableWidget
 {
     private Vector2 ScrollPosition = new();
-    private readonly List<HeaderCellWidget> HeaderCells;
-    private int? MouseOverRowIndex = null;
+    //private readonly List<HeaderCellWidget> Columns;
+    private readonly List<ColumnDef> Columns;
+    private readonly Dictionary<ColumnDef, float> ColumnsWidths = [];
     private ColumnDef? _sortColumn;
     private ColumnDef? SortColumn
     {
@@ -31,141 +35,74 @@ internal sealed class TableWidget
         }
     }
     private SortDirection SortDirection = SortDirection.Ascending;
-    private Dictionary<ColumnDef, ICellWidget?>? _selectedRow = null;
-    private Dictionary<ColumnDef, ICellWidget?>? SelectedRow
-    {
-        get => _selectedRow;
-        set
-        {
-            if (value == _selectedRow)
-            {
-                value = null;
-            }
-
-            _selectedRow = value;
-
-            if (_selectedRow == null)
-            {
-                foreach (var row in Rows)
-                {
-                    foreach (var headerCell in HeaderCells)
-                    {
-                        var cell = row.TryGetValue(headerCell.Column);
-
-                        if (cell is CellWidget_Num numCell)
-                        {
-                            numCell.Reset();
-                        }
-                    }
-                }
-            }
-            else
-            {
-                foreach (var row in Rows)
-                {
-                    foreach (var headerCell in HeaderCells)
-                    {
-                        var cell = row.TryGetValue(headerCell.Column);
-                        var selRowCell = _selectedRow.TryGetValue(headerCell.Column);
-
-                        if (cell is CellWidget_Num numCell)
-                        {
-                            if (row == _selectedRow || selRowCell == null)
-                            {
-                                numCell.Reset();
-                            }
-                            else if (selRowCell is CellWidget_Num otherCell)
-                            {
-                                numCell.Color = (numCell.CompareTo(otherCell) * (headerCell.Column.BestIsHighest ? 1 : -1)) switch
-                                {
-                                    < 0 => Color.red,
-                                    > 0 => Color.green,
-                                    0 => Color.yellow,
-                                };
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
     public const float RowHeight = 30f;
     private const float HeadersRowHeight = RowHeight;
     public const float CellPadding = 10f;
     public const float CellMinWidth = CellPadding * 2f;
     private static Color ColumnSeparatorLineColor = new(1f, 1f, 1f, 0.05f);
-    private List<Dictionary<ColumnDef, ICellWidget?>> _rows = [];
-    public List<Dictionary<ColumnDef, ICellWidget?>> Rows
-    {
-        get => _rows;
-        set
-        {
-            _rows = value;
-            // This can cause double sorting.
-            SortRows();
-        }
-    }
+    private readonly List<TableWidgetRow> Rows = [];
+    private readonly List<TableWidgetRow> SelectedRows = [];
+    private List<TableWidgetRow> CurRows;
+    private TableWidgetRow? MouseOverRow = null;
     private readonly TablePart Left;
     private readonly TablePart Right;
-    public TableWidget(List<ThingAlike> things, List<ColumnDef> columns)
+    public TableWidget(TableDef tableDef)
     {
-        HeaderCells = new(columns.Count);
+        Columns = tableDef.AllColumns;
 
-        var leftHeaderCells = new List<HeaderCellWidget>();
-        var rightHeaderCells = new List<HeaderCellWidget>();
+        var columnsLeft = new List<ColumnDef>();
+        var columnsRight = new List<ColumnDef>();
 
-        foreach (var column in columns)
+        foreach (var column in tableDef.AllColumns)
         {
-            var headerCell = new HeaderCellWidget(column);
-
-            HeaderCells.Add(headerCell);
-
             if (column == ColumnDefOf.Id)
             {
-                leftHeaderCells.Add(headerCell);
+                columnsLeft.Add(column);
             }
             else
             {
-                rightHeaderCells.Add(headerCell);
+                columnsRight.Add(column);
             }
+
+            ColumnsWidths[column] =
+                CellMinWidth
+                + (column.Icon != null ? RowHeight : Text.CalcSize(column.Label).x);
         }
 
-        if (leftHeaderCells.First() != null)
+        foreach (var thingDef in DefDatabase<ThingDef>.AllDefs)
         {
-            SortColumn = leftHeaderCells.First().Column;
-        }
-
-        var rows = new List<Dictionary<ColumnDef, ICellWidget?>>();
-
-        foreach (var thing in things)
-        {
-            var row = new Dictionary<ColumnDef, ICellWidget?>(HeaderCells.Count);
-
-            foreach (var headerCell in HeaderCells)
+            if (
+                StatsMod.IsReasonableThingDef(thingDef) == false
+                || tableDef.filter(thingDef, null) == false
+            )
             {
-                try
-                {
-                    var cell = headerCell.Column.GetCellWidget(thing);
-
-                    if (cell != null)
-                    {
-                        row.Add(headerCell.Column, cell);
-
-                        headerCell.MinWidth = Math.Max(headerCell.MinWidth, cell.MinWidth);
-                    }
-                }
-                catch (Exception e)
-                {
-                    Log.Error(e.Message);
-                }
+                continue;
             }
 
-            rows.Add(row);
+            if (thingDef.MadeFromStuff)
+            {
+                var allowedStuffs = GenStuff.AllowedStuffsFor(thingDef);
+
+                foreach (var stuffDef in allowedStuffs)
+                {
+                    AddRow(thingDef, stuffDef);
+                }
+            }
+            else
+            {
+                AddRow(thingDef);
+            }
         }
 
-        Rows = rows;
-        Left = new(this, leftHeaderCells);
-        Right = new(this, rightHeaderCells);
+        // There is an opportunity here to weed out empty columns.
+        // If we'll only record widths of columns that returned a cell at least once
+        // then after we've processed all of the cells we can look into ColumnsWidths
+        // and see what columns are empty.
+
+        SortColumn = columnsLeft.First();
+        CurRows = Rows;
+        Left = new(this, columnsLeft);
+        Right = new(this, columnsRight);
     }
     public void Draw(Rect targetRect)
     {
@@ -184,7 +121,7 @@ internal sealed class TableWidget
 
         var contentSizeMax = new Vector2(
             Left.MinWidth + Right.MinWidth,
-            Rows.Count * RowHeight + HeadersRowHeight
+            CurRows.Count * RowHeight + HeadersRowHeight
         );
         var willScrollHor = contentSizeMax.x > targetRect.width;
         var willScrollVer = contentSizeMax.y > targetRect.height;
@@ -226,75 +163,116 @@ internal sealed class TableWidget
 
         Widgets.EndScrollView();
 
-        var clickedRowIndex = signalsLeft.clickedRowIndex ?? signalsRight.clickedRowIndex;
-        var clickedHeaderCell = signalsLeft.clickedHeaderCell ?? signalsRight.clickedHeaderCell;
+        var clickedRow = signalsLeft.clickedRow ?? signalsRight.clickedRow;
+        var clickedColumn = signalsLeft.clickedColumn ?? signalsRight.clickedColumn;
 
-        MouseOverRowIndex = signalsLeft.mouseOverRowIndex ?? signalsRight.mouseOverRowIndex;
+        MouseOverRow = signalsLeft.mouseOverRow ?? signalsRight.mouseOverRow;
+        SortColumn = clickedColumn;
 
-        if (clickedRowIndex is int rowIndex)
+        if (clickedRow is TableWidgetRow row)
         {
-            SelectedRow = Rows[rowIndex];
+            if (CurRows == SelectedRows)
+            {
+                SelectedRows.Remove(row);
+            }
+            else
+            {
+                if (SelectedRows.Contains(row))
+                {
+                    SelectedRows.Remove(row);
+                }
+                else
+                {
+                    SelectedRows.Add(row);
+                }
+            }
         }
 
-        if (clickedHeaderCell != null)
+        if (Event.current.type == EventType.KeyDown && Event.current.alt)
         {
-            SortColumn = clickedHeaderCell.Column;
+            if (CurRows == Rows)
+            {
+                CurRows = SelectedRows;
+            }
+            else
+            {
+                CurRows = Rows;
+            }
         }
     }
     private void SortRows()
     {
-        if (SortColumn == null)
+        if (SortColumn != null)
         {
-            return;
-        }
-
-        Rows.Sort((r1, r2) =>
-        {
-            var r1c = r1.TryGetValue(SortColumn);
-            var r2c = r2.TryGetValue(SortColumn);
-
-            if (r1c == null && r2c == null)
+            Rows.Sort((r1, r2) =>
             {
-                return 0;
-            }
+                var r1c = SortColumn.GetCellWidget(r1.thingDef, r1.stuffDef);
+                var r2c = SortColumn.GetCellWidget(r2.thingDef, r2.stuffDef);
 
-            return (r1c?.CompareTo(r2c) ?? -1) * (int)SortDirection;
-        });
+                if (r1c == null && r2c == null)
+                {
+                    return 0;
+                }
+
+                return (r1c?.CompareTo(r2c) ?? -1) * (int)SortDirection;
+            });
+        }
+    }
+    private void AddRow(ThingDef thingDef, ThingDef? stuffDef = null)
+    {
+        Rows.Add((thingDef, stuffDef));
+
+        foreach (var column in Columns)
+        {
+            try
+            {
+                var cell = column.GetCellWidget(thingDef, stuffDef);
+
+                ColumnsWidths[column] = Math.Max(
+                    ColumnsWidths[column],
+                    cell?.MinWidth ?? 0f
+                );
+            }
+            catch (Exception e)
+            {
+                Log.Error(e.Message);
+            }
+        }
     }
     private sealed class TablePart
     {
         private readonly TableWidget Parent;
-        private readonly List<HeaderCellWidget> HeaderCells;
+        private readonly List<ColumnDef> Columns;
         public float MinWidth { get; } = 0f;
         private float PrevFrameScrollPosX = 0f;
         private float PrevFrameTargetRectWidth = 0f;
         private float CurFrameCellOffsetX = 0f;
-        private readonly List<HeaderCellWidget> CurFrameHeaderCells;
-        public TablePart(TableWidget parent, List<HeaderCellWidget> headerCells)
+        private readonly List<ColumnDef> CurFrameColumns;
+        public TablePart(TableWidget parent, List<ColumnDef> columns)
         {
             Parent = parent;
-            HeaderCells = headerCells;
-            CurFrameHeaderCells = [.. headerCells];
+            Columns = CurFrameColumns = columns;
 
-            foreach (var headerCell in headerCells)
+            foreach (var column in columns)
             {
-                MinWidth += headerCell.MinWidth;
+                MinWidth += parent.ColumnsWidths[column];
             }
         }
         public (
-            int? mouseOverRowIndex,
-            int? clickedRowIndex,
-            HeaderCellWidget? clickedHeaderCell
+            TableWidgetRow? mouseOverRow,
+            TableWidgetRow? clickedRow,
+            ColumnDef? clickedColumn
         ) Draw(Rect targetRect, Vector2 scrollPosition)
         {
             var cellExtraWidth = Math.Max(
-                (targetRect.width - MinWidth) / HeaderCells.Count,
+                (targetRect.width - MinWidth) / Columns.Count,
                 0f
             );
 
             if (
-                cellExtraWidth == 0f &&
-                (
+                Event.current.type == EventType.Repaint
+                && cellExtraWidth == 0f
+                && (
                     PrevFrameScrollPosX != scrollPosition.x
                     || PrevFrameTargetRectWidth != targetRect.width
                 )
@@ -304,51 +282,90 @@ internal sealed class TableWidget
             }
 
             var curY = targetRect.y;
-
-            var clickedHeaderCell = DrawHeaders(
+            var clickedColumn = DrawHeaders(
                 targetRect.CutFromY(ref curY, HeadersRowHeight),
                 cellExtraWidth
             );
-            var (mouseOverRowIndex, clickedRowIndex) = DrawBody(
+            var (mouseOverRow, clickedRow) = DrawBody(
                 targetRect.CutFromY(ref curY),
                 scrollPosition.y,
                 cellExtraWidth
             );
-            DrawColumnSeparators(targetRect, cellExtraWidth);
 
-            return (mouseOverRowIndex, clickedRowIndex, clickedHeaderCell);
+            if (Event.current.type == EventType.Repaint)
+            {
+                DrawColumnSeparators(targetRect, cellExtraWidth);
+            }
+
+            return (mouseOverRow, clickedRow, clickedColumn);
         }
-        private HeaderCellWidget? DrawHeaders(Rect targetRect, float cellExtraWidth)
+        private ColumnDef? DrawHeaders(Rect targetRect, float cellExtraWidth)
         {
             Widgets.BeginGroup(targetRect);
 
             var curX = CurFrameCellOffsetX;
-            HeaderCellWidget? clickedCell = null;
+            ColumnDef? clickedColumn = null;
 
-            foreach (var cell in CurFrameHeaderCells)
+            foreach (var column in CurFrameColumns)
             {
                 var cellRect = new Rect(
                     curX,
                     0f,
-                    cell.MinWidth + cellExtraWidth,
+                    Parent.ColumnsWidths[column] + cellExtraWidth,
                     targetRect.height
                 );
 
                 curX = cellRect.xMax;
 
-                if (cell.Draw(cellRect, Parent.SortColumn, Parent.SortDirection))
+                if (DrawHeaderCell(cellRect, column))
                 {
-                    clickedCell = cell;
+                    clickedColumn = column;
                 }
             }
 
             Widgets.EndGroup();
 
-            return clickedCell;
+            return clickedColumn;
+        }
+        private bool DrawHeaderCell(Rect targetRect, ColumnDef column)
+        {
+            if (Parent.SortColumn == column)
+            {
+                Widgets.DrawBoxSolid(
+                    Parent.SortDirection == SortDirection.Ascending
+                        ? targetRect.BottomPartPixels(4f)
+                        : targetRect.TopPartPixels(4f),
+                    Color.yellow
+                );
+            }
+
+            var contentRect = targetRect.ContractedBy(CellPadding, 0f);
+
+            if (column.Icon != null)
+            {
+                contentRect = column.CellTextAnchor switch
+                {
+                    TextAnchor.LowerRight => contentRect.RightPartPixels(RowHeight),
+                    TextAnchor.LowerCenter => contentRect,
+                    _ => contentRect.LeftPartPixels(RowHeight)
+                };
+                Widgets.DrawTextureFitted(contentRect, column.Icon, 1f);
+            }
+            else
+            {
+                Text.Anchor = column.CellTextAnchor;
+                Widgets.Label(contentRect, column.Label);
+                Text.Anchor = Constants.DefaultTextAnchor;
+            }
+
+            TooltipHandler.TipRegion(targetRect, new TipSignal(column.Description));
+            Widgets.DrawHighlightIfMouseover(targetRect);
+
+            return Widgets.ButtonInvisible(targetRect);
         }
         private (
-            int? mouseOverRowIndex,
-            int? clickedRowIndex
+            TableWidgetRow? mouseOverRow,
+            TableWidgetRow? clickedRow
         ) DrawBody(
             Rect targetRect,
             float scrollPositionY,
@@ -357,13 +374,12 @@ internal sealed class TableWidget
         {
             Widgets.BeginGroup(targetRect);
 
-            // For some reason returning a row object makes performance around 2 times worse.
-            int? clickedRowIndex = null;
-            int? mouseOverRowIndex = null;
+            TableWidgetRow? clickedRow = null;
+            TableWidgetRow? mouseOverRow = null;
             var rowIndexStart = (int)Math.Floor(scrollPositionY / RowHeight);
             var rowIndexEnd = Math.Min(
                 (int)Math.Ceiling((scrollPositionY + targetRect.height) / RowHeight),
-                Parent.Rows.Count
+                Parent.CurRows.Count
             );
 
             // Rows
@@ -371,39 +387,10 @@ internal sealed class TableWidget
             {
                 var curY = rowIndex * RowHeight - scrollPositionY;
                 var rowRect = new Rect(0f, curY, targetRect.width, RowHeight);
-                var isMouseOver = Parent.MouseOverRowIndex == rowIndex;
+                var row = Parent.CurRows[rowIndex];
+                var isMouseOver = Parent.MouseOverRow == row;
 
-                if (rowIndex % 2 == 0 && !isMouseOver)
-                {
-                    Widgets.DrawLightHighlight(rowRect);
-                }
-
-                var row = Parent.Rows[rowIndex];
-                var curX = CurFrameCellOffsetX;
-
-                // Cells
-                foreach (var headerCell in CurFrameHeaderCells)
-                {
-                    row.TryGetValue(headerCell.Column, out var cell);
-                    var cellWidth = headerCell.MinWidth + cellExtraWidth;
-                    // We do not create a separate variable for cell's rect because it is
-                    // created conditionally (cell?.Draw).
-                    cell?.Draw(new Rect(curX, curY, cellWidth, RowHeight));
-
-                    curX += cellWidth;
-                }
-
-                if (Mouse.IsOver(rowRect))
-                {
-                    mouseOverRowIndex = rowIndex;
-                }
-
-                if (Widgets.ButtonInvisible(rowRect))
-                {
-                    clickedRowIndex = rowIndex;
-                }
-
-                if (Parent.SelectedRow == row)
+                if (Parent.CurRows == Parent.Rows && Parent.SelectedRows.Contains(row))
                 {
                     Widgets.DrawHighlightSelected(rowRect);
                 }
@@ -412,21 +399,48 @@ internal sealed class TableWidget
                 {
                     Widgets.DrawHighlight(rowRect);
                 }
+                else if (rowIndex % 2 == 0)
+                {
+                    Widgets.DrawLightHighlight(rowRect);
+                }
+
+                if (Mouse.IsOver(rowRect))
+                {
+                    mouseOverRow = row;
+                }
+
+                var curX = CurFrameCellOffsetX;
+
+                // Cells
+                foreach (var column in CurFrameColumns)
+                {
+                    var cellWidth = Parent.ColumnsWidths[column] + cellExtraWidth;
+
+                    column
+                        .GetCellWidget(row.thingDef, row.stuffDef)
+                        ?.Draw(new Rect(curX, curY, cellWidth, RowHeight));
+                    curX += cellWidth;
+                }
+
+                if (Widgets.ButtonInvisible(rowRect))
+                {
+                    clickedRow = row;
+                }
             }
 
-            //Debug.TryDrawUIDebugInfo(targetRect, rowIndexEnd - rowIndexStart + "/" + CurFrameHeaderCells.Count);
+            //Debug.TryDrawUIDebugInfo(targetRect, rowIndexEnd - rowIndexStart + "/" + CurFrameColumns.Count);
 
             Widgets.EndGroup();
 
-            return (mouseOverRowIndex, clickedRowIndex);
+            return (mouseOverRow, clickedRow);
         }
         private void DrawColumnSeparators(Rect targetRect, float cellExtraWidth)
         {
             var curSepX = CurFrameCellOffsetX + targetRect.x;
             // Separators
-            for (int i = 0; i < CurFrameHeaderCells.Count - 1; i++)
+            for (int i = 0; i < CurFrameColumns.Count - 1; i++)
             {
-                curSepX += CurFrameHeaderCells[i].MinWidth + cellExtraWidth;
+                curSepX += Parent.ColumnsWidths[CurFrameColumns[i]] + cellExtraWidth;
 
                 LineVerticalWidget.Draw(
                     curSepX,
@@ -445,14 +459,14 @@ internal sealed class TableWidget
             PrevFrameScrollPosX = scrollPosition.x;
             PrevFrameTargetRectWidth = targetRect.width;
             CurFrameCellOffsetX = -scrollPosition.x;
-            CurFrameHeaderCells.Clear();
+            CurFrameColumns.Clear();
 
             var curX = CurFrameCellOffsetX;
 
-            for (int i = 0; i < HeaderCells.Count && curX < targetRect.width; i++)
+            for (int i = 0; i < Columns.Count && curX < targetRect.width; i++)
             {
-                var headerCell = HeaderCells[i];
-                var cellWidth = headerCell.MinWidth + cellExtraWidth;
+                var column = Columns[i];
+                var cellWidth = Parent.ColumnsWidths[column] + cellExtraWidth;
 
                 if (curX + cellWidth <= 0f)
                 {
@@ -462,7 +476,7 @@ internal sealed class TableWidget
                 }
 
                 curX += cellWidth;
-                CurFrameHeaderCells.Add(headerCell);
+                CurFrameColumns.Add(column);
             }
         }
     }

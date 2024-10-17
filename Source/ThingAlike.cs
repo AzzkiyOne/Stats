@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using RimWorld;
 using Verse;
 
@@ -18,7 +17,7 @@ public sealed class ThingAlike : IEquatable<ThingAlike>
         Stuff = stuff ?? GenStuff.DefaultStuffFor(Def);
         Label = Stuff == null ? Def.LabelCap : $"{Def.LabelCap} ({Stuff.LabelCap})";
         Icon = new(Def, Stuff);
-        Hash = HashCode.Combine(Def, Stuff);
+        Hash = HashCode.Combine(Def.GetHashCode(), Stuff?.GetHashCode());
     }
     public override bool Equals(object obj)
     {
@@ -63,51 +62,4 @@ public sealed class ThingAlike : IEquatable<ThingAlike>
     }
     public static bool operator !=(ThingAlike? lhs, ThingAlike? rhs) => !(lhs == rhs);
     public static implicit operator ThingAlike(ThingDef thingDef) => new(thingDef);
-    private static List<ThingAlike> _all;
-    public static List<ThingAlike> All
-    {
-        get
-        {
-            if (_all != null)
-            {
-                return _all;
-            }
-
-            _all = [];
-
-            foreach (var thingDef in DefDatabase<ThingDef>.AllDefs)
-            {
-                if (
-                    thingDef.IsBlueprint
-                    || thingDef.IsFrame
-                    || thingDef.isUnfinishedThing
-                    || thingDef.IsCorpse
-                    ||
-                        thingDef.category != ThingCategory.Pawn
-                        && thingDef.category != ThingCategory.Item
-                        && thingDef.category != ThingCategory.Building
-                        && thingDef.category != ThingCategory.Plant
-                )
-                {
-                    continue;
-                }
-
-                if (thingDef.MadeFromStuff)
-                {
-                    var allowedStuffs = GenStuff.AllowedStuffsFor(thingDef);
-
-                    foreach (var stuffDef in allowedStuffs)
-                    {
-                        _all.Add(new ThingAlike(thingDef, stuffDef));
-                    }
-                }
-                else
-                {
-                    _all.Add(new ThingAlike(thingDef));
-                }
-            }
-
-            return _all;
-        }
-    }
 }

@@ -1,39 +1,52 @@
-﻿using System;
+﻿using System.Collections.Generic;
 using RimWorld;
+using Verse;
 
 namespace Stats;
 
 public sealed class ColumnDef_Bool : ColumnDef
 {
-    public Func<ThingAlike, bool?>? prop;
+    public PropDelegate<bool>? prop;
+    private readonly Dictionary<
+        (ThingDef thingDef, ThingDef? stuffDef),
+        CellWidget_Bool?
+    > Cells = [];
     public ColumnDef_Bool() : base(ColumnStyle.Boolean) { }
-    private bool? GetValue(ThingAlike thing)
+    private bool GetValue(ThingDef thingDef, ThingDef? stuffDef)
     {
         if (prop != null)
         {
-            return prop(thing);
+            return prop(thingDef, stuffDef);
         }
         else if (stat != null)
         {
-            var statReq = StatRequest.For(thing.Def, thing.Stuff);
+            var statReq = StatRequest.For(thingDef, stuffDef);
 
-            if (stat.Worker.ShouldShowFor(statReq) == false)
+            if (stat.Worker.ShouldShowFor(statReq) == true)
             {
-                return null;
+                return stat.Worker.GetValue(statReq) > 0f;
+            }
+        }
+
+        return false;
+    }
+    internal override ICellWidget? GetCellWidget(ThingDef thingDef, ThingDef? stuffDef)
+    {
+        var key = (thingDef, stuffDef);
+        var exists = Cells.TryGetValue(key, out var cell);
+
+        if (exists == false)
+        {
+            var value = GetValue(thingDef, stuffDef);
+
+            if (value)
+            {
+                cell = new(value);
             }
 
-            return stat.Worker.GetValue(statReq) > 0f;
+            Cells[key] = cell;
         }
 
-        return null;
-    }
-    internal override ICellWidget? GetCellWidget(ThingAlike thing)
-    {
-        if (GetValue(thing) is bool value)
-        {
-            return new CellWidget_Bool(value);
-        }
-
-        return null;
+        return cell;
     }
 }

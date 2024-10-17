@@ -4,21 +4,18 @@
     <Stats.ColumnDef Class="Stats.ColumnDef_Num">
         <defName>ShotSpread</defName>
         <stat>ShotSpread</stat>
-        <bestIsHighest>false</bestIsHighest>
     </Stats.ColumnDef>
 
     <Stats.ColumnDef Class="Stats.ColumnDef_Num">
         <defName>SwayFactor</defName>
         <stat>SwayFactor</stat>
         <label>sway</label>
-        <bestIsHighest>false</bestIsHighest>
     </Stats.ColumnDef>
 
     <Stats.ColumnDef Class="Stats.ColumnDef_Num">
         <defName>Recoil</defName>
         <stat>Recoil</stat>
         <label>recoil</label>
-        <bestIsHighest>false</bestIsHighest>
     </Stats.ColumnDef>
 
     <Stats.ColumnDef Class="Stats.ColumnDef_Num">
@@ -38,13 +35,13 @@
         <stat>ReloadTime</stat>
         <prop>Stats.Compat.CE.ThingProps.ReloadTime</prop>
         <formatString>0.00 s</formatString>
-        <bestIsHighest>false</bestIsHighest>
     </Stats.ColumnDef>
 
     <Stats.ColumnDef Class="Stats.ColumnDef_Bool">
         <defName>OneHandedness</defName>
         <stat>OneHandedness</stat>
         <label>one-handed</label>
+        <icon>Things/Apparel/BallisticShield/CE_BallisticShield</icon>
     </Stats.ColumnDef>
 
     <Stats.ColumnDef Class="Stats.ColumnDef_Str">

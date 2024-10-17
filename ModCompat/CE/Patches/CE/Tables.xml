@@ -1,6 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Patch>
 
+    <Operation Class="PatchOperationInsert">
+        <xpath>Defs/Stats.TableDef[defName="All"]/columns/li[text() = "Mass"]</xpath>
+        <value>
+            <li>Bulk</li>
+        </value>
+    </Operation>
+
+    <Operation Class="PatchOperationReplace">
+        <xpath>Defs/Stats.TableDef[defName="WeaponsRanged"]/columns/li[text() = "WeaponRanged_Damage"]</xpath>
+        <value>
+            <li>Caliber</li>
+        </value>
+    </Operation>
+
     <Operation Class="PatchOperationAdd">
         <xpath>Defs/Stats.TableDef[defName="WeaponsRanged"]/columns</xpath>
         <value>
@@ -11,8 +25,20 @@
             <li>MagazineCapacity</li>
             <li>ReloadTime</li>
             <li>OneHandedness</li>
-            <li>Caliber</li>
         </value>
+    </Operation>
+
+    <Operation Class="PatchOperationRemove">
+        <xpath>Defs/Stats.TableDef[defName="WeaponsRanged"]/columns/li[
+            text() = "WeaponRanged_StoppingPower"
+            or text() = "WeaponRanged_ArmorPenetration"
+            or text() = "WeaponRanged_AccuracyTouch"
+            or text() = "WeaponRanged_AccuracyShort"
+            or text() = "WeaponRanged_AccuracyMedium"
+            or text() = "WeaponRanged_AccuracyLong"
+            or text() = "WeaponRanged_DirectHitChance"
+            or text() = "WeaponRanged_MissRadius"
+        ]</xpath>
     </Operation>
 
 </Patch>

@@ -62,4 +62,13 @@
         </columns>
     </Stats.TableDef>
 
+    <Stats.TableDef>
+        <defName>Apparel</defName>
+        <label>apparel</label>
+        <parent>All</parent>
+        <filter>Stats.ThingProps.IsApparel</filter>
+        <columns>
+        </columns>
+    </Stats.TableDef>
+
 </Defs>

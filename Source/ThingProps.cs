@@ -1,39 +1,33 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using RimWorld;
 using Verse;
 
 namespace Stats;
 
 public static class ThingProps
 {
-    public static float? WeaponRanged_Damage(ThingAlike thing)
+    public static float WeaponRanged_Damage(ThingDef thingDef, ThingDef? stuffDef)
     {
-        var verb = thing.Def.Verbs.Primary();
+        var verb = thingDef.Verbs.Primary();
         var defaultProj = verb?.defaultProjectile?.projectile;
 
         if (defaultProj?.damageDef?.harmsHealth == true)
         {
-            return defaultProj.GetDamageAmount(thing.Def, thing.Stuff);
+            return defaultProj.GetDamageAmount(thingDef, stuffDef);
         }
 
-        return null;
+        return 0f;
     }
-    public static float? WeaponRanged_StoppingPower(ThingAlike thing)
+    public static float WeaponRanged_StoppingPower(ThingDef thingDef, ThingDef? _)
     {
-        var verb = thing.Def.Verbs.Primary();
+        var verb = thingDef.Verbs.Primary();
         var defaultProj = verb?.defaultProjectile?.projectile;
 
-        if (defaultProj?.stoppingPower != 0f)
-        {
-            return defaultProj?.stoppingPower;
-        }
-
-        return null;
+        return defaultProj?.stoppingPower ?? 0f;
     }
-    public static float? WeaponRanged_ArmorPenetration(ThingAlike thing)
+    public static float WeaponRanged_ArmorPenetration(ThingDef thingDef, ThingDef? _)
     {
-        var verb = thing.Def.Verbs.Primary();
+        var verb = thingDef.Verbs.Primary();
         var defaultProj = verb?.defaultProjectile?.projectile;
 
         if (defaultProj?.damageDef is { harmsHealth: true, armorCategory: not null })
@@ -45,46 +39,46 @@ public static class ThingProps
             return verb.beamDamageDef.defaultArmorPenetration;
         }
 
-        return null;
+        return 0f;
     }
-    public static float? WeaponRanged_RPM(ThingAlike thing)
+    public static float WeaponRanged_RPM(ThingDef thingDef, ThingDef? _)
     {
-        var verb = thing.Def.Verbs.Primary();
+        var verb = thingDef.Verbs.Primary();
 
         if (verb is { Ranged: true, showBurstShotStats: true, burstShotCount: > 1 })
         {
             return 60f / verb.ticksBetweenBurstShots.TicksToSeconds();
         }
 
-        return null;
+        return 0f;
     }
-    public static float? WeaponRanged_BurstShotCount(ThingAlike thing)
+    public static float WeaponRanged_BurstShotCount(ThingDef thingDef, ThingDef? _)
     {
-        var verb = thing.Def.Verbs.Primary();
+        var verb = thingDef.Verbs.Primary();
 
         if (verb is { Ranged: true, showBurstShotStats: true, burstShotCount: > 1 })
         {
             return verb.burstShotCount;
         }
 
-        return null;
+        return 0f;
     }
-    public static float? WeaponRanged_Range(ThingAlike thing)
+    public static float WeaponRanged_Range(ThingDef thingDef, ThingDef? _)
     {
-        return thing.Def.Verbs.FirstOrFallback(v => v?.isPrimary == true)?.range;
+        return thingDef.Verbs.FirstOrFallback(v => v?.isPrimary == true)?.range ?? 0f;
     }
-    public static float? WeaponRanged_AimingTime(ThingAlike thing)
+    public static float WeaponRanged_AimingTime(ThingDef thingDef, ThingDef? _)
     {
-        var verb = thing.Def.Verbs.Primary();
+        var verb = thingDef.Verbs.Primary();
 
         if (verb?.warmupTime > 0f)
         {
             return verb.warmupTime;
         }
 
-        return null;
+        return 0f;
     }
-    public static List<ThingAlike> CreatedAt(ThingAlike thing)
+    public static List<ThingAlike> CreatedAt(ThingDef thingDef, ThingDef? _)
     {
         var result = new HashSet<ThingAlike>();
 
@@ -92,7 +86,7 @@ public static class ThingProps
         {
             if (recipe is { products.Count: 1, IsSurgery: false })
             {
-                if (recipe.products.First().thingDef == thing.Def)
+                if (recipe.products.First().thingDef == thingDef)
                 {
                     foreach (var recipeUser in recipe.AllRecipeUsers)
                     {
@@ -104,9 +98,9 @@ public static class ThingProps
 
         return result.ToList();
     }
-    public static float? WeaponRanged_BuildingDamageFactor_Passable(ThingAlike thing)
+    public static float WeaponRanged_BuildingDamageFactor_Passable(ThingDef thingDef, ThingDef? _)
     {
-        var verb = thing.Def.Verbs.Primary();
+        var verb = thingDef.Verbs.Primary();
         var defaultProj = verb?.defaultProjectile?.projectile;
 
         if (defaultProj?.damageDef?.harmsHealth == true)
@@ -114,11 +108,11 @@ public static class ThingProps
             return defaultProj.damageDef.buildingDamageFactorPassable;
         }
 
-        return null;
+        return 0f;
     }
-    public static float? WeaponRanged_BuildingDamageFactor_Impassable(ThingAlike thing)
+    public static float WeaponRanged_BuildingDamageFactor_Impassable(ThingDef thingDef, ThingDef? _)
     {
-        var verb = thing.Def.Verbs.Primary();
+        var verb = thingDef.Verbs.Primary();
         var defaultProj = verb?.defaultProjectile?.projectile;
 
         if (defaultProj?.damageDef?.harmsHealth == true)
@@ -126,29 +120,45 @@ public static class ThingProps
             return defaultProj.damageDef.buildingDamageFactorImpassable;
         }
 
-        return null;
+        return 0f;
     }
-    public static float? WeaponRanged_DirectHitChance(ThingAlike thing)
+    public static float WeaponRanged_DirectHitChance(ThingDef thingDef, ThingDef? _)
     {
-        var verb = thing.Def.Verbs.Primary();
+        var verb = thingDef.Verbs.Primary();
 
         if (verb?.ForcedMissRadius > 0f)
         {
             return 1f / GenRadial.NumCellsInRadius(verb.ForcedMissRadius);
         }
 
-        return null;
+        return 0f;
     }
-    public static float? WeaponRanged_MissRadius(ThingAlike thing)
+    public static float WeaponRanged_MissRadius(ThingDef thingDef, ThingDef? _)
     {
-        var verb = thing.Def.Verbs.Primary();
+        var verb = thingDef.Verbs.Primary();
 
         if (verb?.ForcedMissRadius > 0f)
         {
             return verb.ForcedMissRadius;
         }
 
-        return null;
+        return 0f;
+    }
+    public static bool IsWeapon(ThingDef thingDef, ThingDef? _)
+    {
+        return thingDef.IsWeapon;
+    }
+    public static bool IsMeleeWeapon(ThingDef thingDef, ThingDef? _)
+    {
+        return thingDef.IsMeleeWeapon;
+    }
+    public static bool IsRangedWeapon(ThingDef thingDef, ThingDef? _)
+    {
+        return thingDef.IsRangedWeapon;
+    }
+    public static bool IsApparel(ThingDef thingDef, ThingDef? _)
+    {
+        return thingDef.IsApparel;
     }
     //public static bool? IsFood(ThingDef def)
     //{
@@ -173,18 +183,6 @@ public static class ThingProps
     //{
     //    return thing.Def.IsAnimalProduct;
     //}
-    public static bool? IsWeapon(ThingAlike thing)
-    {
-        return thing.Def.IsWeapon;
-    }
-    public static bool? IsMeleeWeapon(ThingAlike thing)
-    {
-        return thing.Def.IsMeleeWeapon;
-    }
-    public static bool? IsRangedWeapon(ThingAlike thing)
-    {
-        return thing.Def.IsRangedWeapon;
-    }
     //public static bool? IsGun(ThingAlike thing)
     //{
     //    return !IsGrenade(thing);
@@ -192,10 +190,6 @@ public static class ThingProps
     //public static bool? IsGrenade(ThingAlike thing)
     //{
     //    return thing.Def.IsWithinCategory(DefDatabase<ThingCategoryDef>.GetNamed("Grenades"));
-    //}
-    //public static bool? IsApparel(ThingAlike thing)
-    //{
-    //    return thing.Def.IsApparel;
     //}
     //public static bool? IsBuilding(ThingAlike thing)
     //{

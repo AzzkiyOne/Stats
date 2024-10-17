@@ -10,12 +10,10 @@ public abstract class ColumnDef : Def
     public StatDef? stat;
     public string labelKey = "";
     public string descriptionKey = "";
-    public bool bestIsHighest = true;
     public string icon = "";
     // Internal API
     internal string Label => LabelCap;
     internal string Description => description;
-    internal bool BestIsHighest => bestIsHighest;
     internal TextAnchor CellTextAnchor;
     private Texture2D? _iconTex;
     internal Texture2D? Icon
@@ -64,5 +62,5 @@ public abstract class ColumnDef : Def
             }
         }
     }
-    internal abstract ICellWidget? GetCellWidget(ThingAlike thing);
+    internal abstract ICellWidget? GetCellWidget(ThingDef thingDef, ThingDef? stuffDef);
 }

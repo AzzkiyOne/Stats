@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using Verse;
 
@@ -9,34 +7,12 @@ namespace Stats;
 public class TableDef : Def
 {
     public TableDef? parent;
-    public Func<ThingAlike, bool?>? filter;
+    public PropDelegate<bool> filter = (ThingDef thingDef, ThingDef? stuffDef) => true;
     public List<ColumnDef> columns;
+    internal List<ColumnDef> AllColumns { get; } = [];
     public string icon = "";
     private TableWidget? _widget;
-    internal TableWidget Widget
-    {
-        get
-        {
-            if (_widget == null)
-            {
-                var things = filter == null
-                    ? ThingAlike.All
-                    : ThingAlike.All.Where(thing => filter(thing) ?? false).ToList();
-                var tableWidgetColumns = new List<ColumnDef>([ColumnDefOf.Id, .. columns]);
-                var curParent = parent;
-
-                while (curParent != null)
-                {
-                    tableWidgetColumns.AddRange(curParent.columns);
-                    curParent = curParent.parent;
-                }
-
-                _widget = new(things, tableWidgetColumns);
-            }
-
-            return _widget;
-        }
-    }
+    internal TableWidget Widget => _widget ??= new(this);
     internal List<TableDef> Children = [];
     public override void ResolveReferences()
     {
@@ -48,6 +24,17 @@ public class TableDef : Def
             {
                 Children.Add(tableDef);
             }
+        }
+
+        AllColumns.Add(ColumnDefOf.Id);
+        AllColumns.AddRange(columns);
+
+        var curParent = parent;
+
+        while (curParent != null)
+        {
+            AllColumns.AddRange(curParent.columns);
+            curParent = curParent.parent;
         }
     }
     private Texture2D _iconTex = BaseContent.BadTex;

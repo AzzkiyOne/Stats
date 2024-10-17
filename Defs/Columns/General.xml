@@ -17,13 +17,11 @@
         <defName>Flammability</defName>
         <stat>Flammability</stat>
         <icon>UI/Icons/ColonistBar/Burning</icon>
-        <bestIsHighest>false</bestIsHighest>
     </Stats.ColumnDef>
 
     <Stats.ColumnDef Class="Stats.ColumnDef_Num">
         <defName>Mass</defName>
         <stat>Mass</stat>
-        <bestIsHighest>false</bestIsHighest>
     </Stats.ColumnDef>
 
     <Stats.ColumnDef Class="Stats.ColumnDef_Things">
@@ -39,7 +37,6 @@
         <defName>WorkToMake</defName>
         <stat>WorkToMake</stat>
         <label>work</label>
-        <bestIsHighest>false</bestIsHighest>
     </Stats.ColumnDef>
 
     <Stats.ColumnDef Class="Stats.ColumnDef_Num">
@@ -58,7 +55,6 @@
         <stat>DeteriorationRate</stat>
         <label>-HP / d</label>
         <formatString>0.00 / d</formatString>
-        <bestIsHighest>false</bestIsHighest>
     </Stats.ColumnDef>
 
 </Defs>
