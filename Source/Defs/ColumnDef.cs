@@ -1,22 +1,22 @@
-﻿using RimWorld;
+﻿using System;
+using RimWorld;
 using UnityEngine;
 using Verse;
 
 namespace Stats;
 
-public abstract class ColumnDef : Def
+public class ColumnDef : Def
 {
-    // Public API
+    public ColumnStyle style = ColumnStyle.Number;
+    internal TextAnchor CellTextAnchor { get; private set; }
     public StatDef? stat;
     public string labelKey = "";
     public string descriptionKey = "";
     public string icon = "";
-    // Internal API
-    internal string Label => LabelCap;
-    internal string Description => description;
-    internal TextAnchor CellTextAnchor;
+    public string formatString = "";
+    public Type workerClass;
     private Texture2D? _iconTex;
-    internal Texture2D? Icon
+    public Texture2D? Icon
     {
         get
         {
@@ -28,14 +28,19 @@ public abstract class ColumnDef : Def
             return _iconTex;
         }
     }
-    internal ColumnDef(ColumnStyle style = ColumnStyle.String)
+    private IColumnWorker _worker;
+    public IColumnWorker Worker
     {
-        CellTextAnchor = style switch
+        get
         {
-            ColumnStyle.Number => TextAnchor.LowerRight,
-            ColumnStyle.Boolean => TextAnchor.LowerCenter,
-            _ => TextAnchor.LowerLeft,
-        };
+            if (_worker == null)
+            {
+                _worker = (IColumnWorker)Activator.CreateInstance(workerClass);
+                _worker.ColumnDef = this;
+            }
+
+            return _worker;
+        }
     }
     public override void ResolveReferences()
     {
@@ -61,6 +66,12 @@ public abstract class ColumnDef : Def
                 description = stat.description;
             }
         }
+
+        CellTextAnchor = style switch
+        {
+            ColumnStyle.Number => TextAnchor.MiddleRight,
+            ColumnStyle.Boolean => TextAnchor.MiddleCenter,
+            _ => TextAnchor.MiddleLeft,
+        };
     }
-    internal abstract ICellWidget? GetCellWidget(ThingDef thingDef, ThingDef? stuffDef);
 }

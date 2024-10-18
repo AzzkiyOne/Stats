@@ -74,7 +74,7 @@ internal class Filter_Num : IFilterWidget<float?>
 
         var curValue = this.curValue;
 
-        Widgets.TextFieldNumeric(targetRect.CutFromX(ref curX), ref curValue, ref curValueStrBuffer);
+        Widgets.TextFieldNumeric(targetRect.CutFromX(curX), ref curValue, ref curValueStrBuffer);
 
         if (this.curValue != curValue)
         {
@@ -109,7 +109,7 @@ internal class Filter_Bool : IFilterWidget<bool?>
     {
         var curX = targetRect.x;
         var trueRect = targetRect.CutFromX(ref curX, targetRect.width / 2);
-        var falseRect = targetRect.CutFromX(ref curX);
+        var falseRect = targetRect.CutFromX(curX);
 
         Widgets.DrawHighlight(curValue ? trueRect : falseRect);
 

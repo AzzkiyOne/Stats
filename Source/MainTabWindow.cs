@@ -18,25 +18,21 @@ public class StatsMainTabWindow : MainTabWindow
         windowRect.height = UI.screenHeight - MainButtonDef.ButtonHeight
     );
     private const float TitleBarHeight = 30f;
-    //private const float tablesBrowserWidth = 300f;
     internal static readonly Color BorderLineColor = new(1f, 1f, 1f, 0.4f);
-    private readonly TablesBrowserWidget TablesBrowser;
+    private readonly WindowTitleBarWidget TitleBar;
+    private readonly TableSelectorWidget TableSelector;
     public StatsMainTabWindow()
     {
         draggable = true;
         resizeable = true;
-        TablesBrowser = new();
+        TableSelector = new();
+        TitleBar = new(TableSelector);
     }
     public override void DoWindowContents(Rect targetRect)
     {
-        var currY = targetRect.y;
-
         Text.WordWrap = false;
 
-        switch (WindowTitleBarWidget.Draw(
-            targetRect.CutFromY(ref currY, TitleBarHeight),
-            TablesBrowser.CurTable.LabelCap
-        ))
+        switch (TitleBar.Draw(targetRect.CutByY(TitleBarHeight)))
         {
             case WindowTitleBarWidgetEvent.Minimize:
                 Minimize();
@@ -49,21 +45,9 @@ public class StatsMainTabWindow : MainTabWindow
                 break;
         }
 
-        DrawContent(targetRect.CutFromY(ref currY));
-        Text.WordWrap = true;
-    }
-    private void DrawContent(Rect targetRect)
-    {
-        var curX = targetRect.x;
+        TableSelector.CurTableDef.Widget.Draw(targetRect);
 
-        TablesBrowser.Draw(targetRect.CutFromX(ref curX, 300f));
-        LineVerticalWidget.Draw(
-            curX,
-            targetRect.y,
-            targetRect.height,
-            BorderLineColor
-        );
-        TablesBrowser.CurTable.Widget.Draw(targetRect.CutFromX(ref curX));
+        Text.WordWrap = true;
     }
     private void ExpandOrCollapse()
     {

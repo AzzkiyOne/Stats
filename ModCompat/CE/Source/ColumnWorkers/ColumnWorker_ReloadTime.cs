@@ -3,10 +3,9 @@ using RimWorld;
 using Verse;
 
 namespace Stats.Compat.CE;
-
-public static class ThingProps
+public class ColumnWorker_ReloadTime : ColumnWorker_Num
 {
-    public static float ReloadTime(ThingDef thingDef, ThingDef? stuffDef)
+    protected override float GetValue(ThingDef thingDef, ThingDef? stuffDef)
     {
         var stat = CE_StatDefOf.ReloadTime;
         var statReq = StatRequest.For(thingDef, stuffDef);

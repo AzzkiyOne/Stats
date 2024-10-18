@@ -3,13 +3,17 @@ using Verse;
 
 namespace Stats;
 
-internal static class WindowTitleBarWidget
+internal class WindowTitleBarWidget
 {
-    public static WindowTitleBarWidgetEvent? Draw(Rect targetRect, string text)
+    private readonly TableSelectorWidget TableSelector;
+    public WindowTitleBarWidget(TableSelectorWidget tableSelector)
+    {
+        TableSelector = tableSelector;
+    }
+    public WindowTitleBarWidgetEvent? Draw(Rect targetRect)
     {
         var buttonWidth = targetRect.height;
         var labelWidth = targetRect.width - buttonWidth * 4;
-        var currX = targetRect.x;
         WindowTitleBarWidgetEvent? Event = null;
 
         Widgets.DrawLightHighlight(targetRect);
@@ -20,21 +24,16 @@ internal static class WindowTitleBarWidget
             StatsMainTabWindow.BorderLineColor
         );
         Text.Anchor = TextAnchor.MiddleLeft;
-        Widgets.Label(
-            targetRect
-                .CutFromX(ref currX, labelWidth)
-                .ContractedBy(GenUI.Pad, 0f),
-            text
-        );
+        TableSelector.Draw(targetRect.CutByX(labelWidth));
         Text.Anchor = Constants.DefaultTextAnchor;
         Widgets.ButtonImage(
-            targetRect.CutFromX(ref currX, buttonWidth),
+            targetRect.CutByX(buttonWidth),
             TexButton.Info,
             tooltip: "How to use:"
         );
 
         if (ButtonImageWidget.Draw(
-            targetRect.CutFromX(ref currX, buttonWidth),
+            targetRect.CutByX(buttonWidth),
             TexButton.Reveal,
             angle: 90f
         ))
@@ -43,7 +42,7 @@ internal static class WindowTitleBarWidget
         }
 
         if (ButtonImageWidget.Draw(
-            targetRect.CutFromX(ref currX, buttonWidth),
+            targetRect.CutByX(buttonWidth),
             TexButton.ShowZones,
             "Maximize/restore window",
             90f
@@ -54,7 +53,7 @@ internal static class WindowTitleBarWidget
         }
 
         if (Widgets.ButtonImage(
-            targetRect.CutFromX(ref currX, buttonWidth),
+            targetRect.CutByX(buttonWidth),
             TexButton.CloseXSmall
         ))
         {

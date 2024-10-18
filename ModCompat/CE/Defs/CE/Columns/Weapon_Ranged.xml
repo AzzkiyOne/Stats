@@ -1,52 +1,61 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Defs>
 
-    <Stats.ColumnDef Class="Stats.ColumnDef_Num">
+    <Stats.ColumnDef>
         <defName>ShotSpread</defName>
         <stat>ShotSpread</stat>
+        <workerClass>Stats.ColumnWorker_Num</workerClass>
     </Stats.ColumnDef>
 
-    <Stats.ColumnDef Class="Stats.ColumnDef_Num">
+    <Stats.ColumnDef>
         <defName>SwayFactor</defName>
-        <stat>SwayFactor</stat>
         <label>sway</label>
+        <stat>SwayFactor</stat>
+        <workerClass>Stats.ColumnWorker_Num</workerClass>
     </Stats.ColumnDef>
 
-    <Stats.ColumnDef Class="Stats.ColumnDef_Num">
+    <Stats.ColumnDef>
         <defName>Recoil</defName>
-        <stat>Recoil</stat>
         <label>recoil</label>
+        <stat>Recoil</stat>
+        <workerClass>Stats.ColumnWorker_Num</workerClass>
     </Stats.ColumnDef>
 
-    <Stats.ColumnDef Class="Stats.ColumnDef_Num">
+    <Stats.ColumnDef>
         <defName>SightsEfficiency</defName>
-        <stat>SightsEfficiency</stat>
         <label>sights</label>
+        <stat>SightsEfficiency</stat>
+        <workerClass>Stats.ColumnWorker_Num</workerClass>
     </Stats.ColumnDef>
 
-    <Stats.ColumnDef Class="Stats.ColumnDef_Num">
+    <Stats.ColumnDef>
         <defName>MagazineCapacity</defName>
-        <stat>MagazineCapacity</stat>
         <label>mag. cap</label>
+        <stat>MagazineCapacity</stat>
+        <workerClass>Stats.ColumnWorker_Num</workerClass>
     </Stats.ColumnDef>
 
-    <Stats.ColumnDef Class="Stats.ColumnDef_Num">
+    <Stats.ColumnDef>
         <defName>ReloadTime</defName>
         <stat>ReloadTime</stat>
-        <prop>Stats.Compat.CE.ThingProps.ReloadTime</prop>
+        <workerClass>Stats.Compat.CE.ColumnWorker_ReloadTime</workerClass>
         <formatString>0.00 s</formatString>
     </Stats.ColumnDef>
 
-    <Stats.ColumnDef Class="Stats.ColumnDef_Bool">
+    <Stats.ColumnDef>
         <defName>OneHandedness</defName>
-        <stat>OneHandedness</stat>
         <label>one-handed</label>
         <icon>Things/Apparel/BallisticShield/CE_BallisticShield</icon>
+        <style>Boolean</style>
+        <stat>OneHandedness</stat>
+        <workerClass>Stats.ColumnWorker_Bool</workerClass>
     </Stats.ColumnDef>
 
-    <Stats.ColumnDef Class="Stats.ColumnDef_Str">
+    <Stats.ColumnDef>
         <defName>Caliber</defName>
+        <style>String</style>
         <stat>Caliber</stat>
+        <workerClass>Stats.Compat.CE.ColumnWorker_Caliber</workerClass>
     </Stats.ColumnDef>
 
 </Defs>

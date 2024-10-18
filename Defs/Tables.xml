@@ -2,30 +2,9 @@
 <Defs>
 
     <Stats.TableDef>
-        <defName>All</defName>
-        <label>all</label>
-        <columns>
-            <li>MarketValue</li>
-            <li>MaxHitPoints</li>
-            <li>Flammability</li>
-            <li>Mass</li>
-            <li>CreatedAt</li>
-            <li>WorkToMake</li>
-            <li>Beauty</li>
-            <li>SellPriceFactor</li>
-            <li>DeteriorationRate</li>
-        </columns>
-    </Stats.TableDef>
-
-    <Stats.TableDef>
         <defName>Weapons</defName>
         <label>weapons</label>
-        <parent>All</parent>
-        <filter>Stats.ThingProps.IsWeapon</filter>
-        <columns>
-            <li>WeaponMelee_DPS</li>
-            <li>WeaponMelee_ArmorPenetration</li>
-        </columns>
+        <columns></columns>
     </Stats.TableDef>
 
     <Stats.TableDef>
@@ -50,6 +29,18 @@
             <li>WeaponRanged_AccuracyLong</li>
             <li>WeaponRanged_DirectHitChance</li>
             <li>WeaponRanged_MissRadius</li>
+            <li>WeaponMelee_DPS</li>
+            <li>WeaponMelee_ArmorPenetration</li>
+            <li>MarketValue</li>
+            <li>MaxHitPoints</li>
+            <li>Flammability</li>
+            <li>Mass</li>
+            <li>CreatedAt</li>
+            <li>WorkToMake</li>
+            <li>Beauty</li>
+            <li>SellPriceFactor</li>
+            <li>DeteriorationRate</li>
+            <li>ContentSource</li>
         </columns>
     </Stats.TableDef>
 
@@ -59,15 +50,36 @@
         <parent>Weapons</parent>
         <filter>Stats.ThingProps.IsMeleeWeapon</filter>
         <columns>
+            <li>WeaponMelee_DPS</li>
+            <li>WeaponMelee_ArmorPenetration</li>
+            <li>MarketValue</li>
+            <li>MaxHitPoints</li>
+            <li>Flammability</li>
+            <li>Mass</li>
+            <li>CreatedAt</li>
+            <li>WorkToMake</li>
+            <li>Beauty</li>
+            <li>SellPriceFactor</li>
+            <li>DeteriorationRate</li>
+            <li>ContentSource</li>
         </columns>
     </Stats.TableDef>
 
     <Stats.TableDef>
         <defName>Apparel</defName>
         <label>apparel</label>
-        <parent>All</parent>
         <filter>Stats.ThingProps.IsApparel</filter>
         <columns>
+            <li>MarketValue</li>
+            <li>MaxHitPoints</li>
+            <li>Flammability</li>
+            <li>Mass</li>
+            <li>CreatedAt</li>
+            <li>WorkToMake</li>
+            <li>Beauty</li>
+            <li>SellPriceFactor</li>
+            <li>DeteriorationRate</li>
+            <li>ContentSource</li>
         </columns>
     </Stats.TableDef>
 

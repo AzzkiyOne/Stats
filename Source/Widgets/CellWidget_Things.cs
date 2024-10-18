@@ -4,7 +4,7 @@ using Verse;
 
 namespace Stats;
 
-internal sealed class CellWidget_Things : ICellWidget<List<ThingAlike>>
+public sealed class CellWidget_Things : ICellWidget<List<ThingAlike>>
 {
     public List<ThingAlike> Value { get; }
     public float MinWidth { get; } = TableWidget.CellMinWidth;
@@ -18,12 +18,11 @@ internal sealed class CellWidget_Things : ICellWidget<List<ThingAlike>>
     public void Draw(Rect targetRect)
     {
         var contentRect = targetRect.ContractedBy(TableWidget.CellPadding, 0f);
-        var curX = contentRect.x;
 
         for (int i = 0; i < Value.Count; i++)
         {
             var thing = Value[i];
-            var iconRect = contentRect.CutFromX(ref curX, contentRect.height);
+            var iconRect = contentRect.CutByX(contentRect.height);
 
             thing.Icon.Draw(iconRect);
             Widgets.DrawHighlightIfMouseover(iconRect);
@@ -34,7 +33,7 @@ internal sealed class CellWidget_Things : ICellWidget<List<ThingAlike>>
             }
 
             TooltipHandler.TipRegion(iconRect, thing.Label);
-            curX += TableWidget.CellPadding;
+            contentRect.PadLeft(TableWidget.CellPadding);
         }
     }
     public int CompareTo(ICellWidget? other)

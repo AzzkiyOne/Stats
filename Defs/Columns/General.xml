@@ -1,60 +1,76 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Defs>
 
-    <Stats.ColumnDef Class="Stats.ColumnDef_Num">
+    <Stats.ColumnDef>
         <defName>MarketValue</defName>
-        <stat>MarketValue</stat>
         <label>$$$</label>
+        <stat>MarketValue</stat>
+        <workerClass>Stats.ColumnWorker_Num</workerClass>
     </Stats.ColumnDef>
 
-    <Stats.ColumnDef Class="Stats.ColumnDef_Num">
+    <Stats.ColumnDef>
         <defName>MaxHitPoints</defName>
-        <stat>MaxHitPoints</stat>
         <label>max HP</label>
+        <stat>MaxHitPoints</stat>
+        <workerClass>Stats.ColumnWorker_Num</workerClass>
     </Stats.ColumnDef>
 
-    <Stats.ColumnDef Class="Stats.ColumnDef_Num">
+    <Stats.ColumnDef>
         <defName>Flammability</defName>
-        <stat>Flammability</stat>
         <icon>UI/Icons/ColonistBar/Burning</icon>
+        <stat>Flammability</stat>
+        <workerClass>Stats.ColumnWorker_Num</workerClass>
     </Stats.ColumnDef>
 
-    <Stats.ColumnDef Class="Stats.ColumnDef_Num">
+    <Stats.ColumnDef>
         <defName>Mass</defName>
         <stat>Mass</stat>
+        <workerClass>Stats.ColumnWorker_Num</workerClass>
     </Stats.ColumnDef>
 
-    <Stats.ColumnDef Class="Stats.ColumnDef_Things">
+    <Stats.ColumnDef>
         <defName>CreatedAt</defName>
         <labelKey>CreatedAt</labelKey>
         <descriptionKey>Stat_Thing_CreatedAt_Desc</descriptionKey>
-        <prop>Stats.ThingProps.CreatedAt</prop>
+        <style>String</style>
+        <workerClass>Stats.ColumnWorker_CreatedAt</workerClass>
     </Stats.ColumnDef>
 
     <!-- Ingredients? -->
 
-    <Stats.ColumnDef Class="Stats.ColumnDef_Num">
+    <Stats.ColumnDef>
         <defName>WorkToMake</defName>
-        <stat>WorkToMake</stat>
         <label>work</label>
+        <stat>WorkToMake</stat>
+        <workerClass>Stats.ColumnWorker_Num</workerClass>
     </Stats.ColumnDef>
 
-    <Stats.ColumnDef Class="Stats.ColumnDef_Num">
+    <Stats.ColumnDef>
         <defName>Beauty</defName>
         <stat>Beauty</stat>
+        <workerClass>Stats.ColumnWorker_Num</workerClass>
     </Stats.ColumnDef>
 
-    <Stats.ColumnDef Class="Stats.ColumnDef_Num">
+    <Stats.ColumnDef>
         <defName>SellPriceFactor</defName>
-        <stat>SellPriceFactor</stat>
         <label>$$$ %</label>
+        <stat>SellPriceFactor</stat>
+        <workerClass>Stats.ColumnWorker_Num</workerClass>
     </Stats.ColumnDef>
 
-    <Stats.ColumnDef Class="Stats.ColumnDef_Num">
+    <Stats.ColumnDef>
         <defName>DeteriorationRate</defName>
-        <stat>DeteriorationRate</stat>
         <label>-HP / d</label>
+        <stat>DeteriorationRate</stat>
+        <workerClass>Stats.ColumnWorker_Num</workerClass>
         <formatString>0.00 / d</formatString>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef>
+        <defName>ContentSource</defName>
+        <labelKey>Stat_Source_Label</labelKey>
+        <style>String</style>
+        <workerClass>Stats.ColumnWorker_ContentSource</workerClass>
     </Stats.ColumnDef>
 
 </Defs>

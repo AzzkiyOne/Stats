@@ -3,7 +3,7 @@ using Verse;
 
 namespace Stats;
 
-internal sealed class CellWidget_Num : ICellWidget<float>
+public sealed class CellWidget_Num : ICellWidget<float>
 {
     public float Value { get; }
     public float MinWidth { get; } = TableWidget.CellMinWidth;

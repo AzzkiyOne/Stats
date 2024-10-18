@@ -5,7 +5,7 @@ namespace Stats;
 [DefOf]
 public static class ColumnDefOf
 {
-    public static ColumnDef_Thing Id;
+    public static ColumnDef Id;
     static ColumnDefOf()
     {
         DefOfHelper.EnsureInitializedInCtor(typeof(ColumnDefOf));

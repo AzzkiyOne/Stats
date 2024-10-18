@@ -1,122 +1,127 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Defs>
 
-    <Stats.ColumnDef Class="Stats.ColumnDef_Num">
+    <Stats.ColumnDef>
         <defName>WeaponRanged_Damage</defName>
-        <prop>Stats.ThingProps.WeaponRanged_Damage</prop>
         <labelKey>Damage</labelKey>
         <descriptionKey>Stat_Thing_Damage_Desc</descriptionKey>
         <icon>UI/Commands/Attack</icon>
+        <workerClass>Stats.ColumnWorker_WeaponRanged_Damage</workerClass>
     </Stats.ColumnDef>
 
-    <Stats.ColumnDef Class="Stats.ColumnDef_Num">
+    <Stats.ColumnDef>
         <defName>WeaponRanged_StoppingPower</defName>
-        <prop>Stats.ThingProps.WeaponRanged_StoppingPower</prop>
         <label>power</label>
         <descriptionKey>StoppingPowerExplanation</descriptionKey>
         <icon>UI/Icons/Trainables/Obedience</icon>
+        <workerClass>Stats.ColumnWorker_WeaponRanged_StoppingPower</workerClass>
         <formatString>F1</formatString>
     </Stats.ColumnDef>
 
-    <Stats.ColumnDef Class="Stats.ColumnDef_Num">
+    <Stats.ColumnDef>
         <defName>WeaponRanged_ArmorPenetration</defName>
-        <prop>Stats.ThingProps.WeaponRanged_ArmorPenetration</prop>
         <label>AP</label>
         <descriptionKey>ArmorPenetrationExplanation</descriptionKey>
+        <workerClass>Stats.ColumnWorker_WeaponRanged_ArmorPenetration</workerClass>
         <formatString>0%</formatString>
     </Stats.ColumnDef>
 
-    <Stats.ColumnDef Class="Stats.ColumnDef_Num">
+    <Stats.ColumnDef>
         <defName>WeaponRanged_RPM</defName>
-        <prop>Stats.ThingProps.WeaponRanged_RPM</prop>
         <labelKey>BurstShotFireRate</labelKey>
         <descriptionKey>Stat_Thing_Weapon_BurstShotFireRate_Desc</descriptionKey>
+        <workerClass>Stats.ColumnWorker_WeaponRanged_RPM</workerClass>
         <formatString>0 rpm</formatString>
     </Stats.ColumnDef>
 
-    <Stats.ColumnDef Class="Stats.ColumnDef_Num">
+    <Stats.ColumnDef>
         <defName>WeaponRanged_BurstShotCount</defName>
-        <prop>Stats.ThingProps.WeaponRanged_BurstShotCount</prop>
         <label>BSC</label>
         <descriptionKey>Stat_Thing_Weapon_BurstShotCount_Desc</descriptionKey>
+        <workerClass>Stats.ColumnWorker_WeaponRanged_BurstShotCount</workerClass>
         <formatString>0</formatString>
     </Stats.ColumnDef>
 
-    <Stats.ColumnDef Class="Stats.ColumnDef_Num">
+    <Stats.ColumnDef>
         <defName>WeaponRanged_Range</defName>
-        <prop>Stats.ThingProps.WeaponRanged_Range</prop>
         <labelKey>Range</labelKey>
         <descriptionKey>Stat_Thing_Weapon_Range_Desc</descriptionKey>
+        <workerClass>Stats.ColumnWorker_WeaponRanged_Range</workerClass>
         <formatString>F0</formatString>
     </Stats.ColumnDef>
 
-    <Stats.ColumnDef Class="Stats.ColumnDef_Num">
+    <Stats.ColumnDef>
         <defName>WeaponRanged_AccuracyTouch</defName>
-        <stat>AccuracyTouch</stat>
         <label>acc. (3)</label>
+        <stat>AccuracyTouch</stat>
+        <workerClass>Stats.ColumnWorker_Num</workerClass>
     </Stats.ColumnDef>
 
-    <Stats.ColumnDef Class="Stats.ColumnDef_Num">
+    <Stats.ColumnDef>
         <defName>WeaponRanged_AccuracyShort</defName>
-        <stat>AccuracyShort</stat>
         <label>acc. (12)</label>
+        <stat>AccuracyShort</stat>
+        <workerClass>Stats.ColumnWorker_Num</workerClass>
     </Stats.ColumnDef>
 
-    <Stats.ColumnDef Class="Stats.ColumnDef_Num">
+    <Stats.ColumnDef>
         <defName>WeaponRanged_AccuracyMedium</defName>
-        <stat>AccuracyMedium</stat>
         <label>acc. (25)</label>
+        <stat>AccuracyMedium</stat>
+        <workerClass>Stats.ColumnWorker_Num</workerClass>
     </Stats.ColumnDef>
 
-    <Stats.ColumnDef Class="Stats.ColumnDef_Num">
+    <Stats.ColumnDef>
         <defName>WeaponRanged_AccuracyLong</defName>
-        <stat>AccuracyLong</stat>
         <label>acc. (40)</label>
+        <stat>AccuracyLong</stat>
+        <workerClass>Stats.ColumnWorker_Num</workerClass>
     </Stats.ColumnDef>
 
-    <Stats.ColumnDef Class="Stats.ColumnDef_Num">
+    <Stats.ColumnDef>
         <defName>WeaponRanged_Cooldown</defName>
-        <stat>RangedWeapon_Cooldown</stat>
         <label>RCD</label>
+        <stat>RangedWeapon_Cooldown</stat>
+        <workerClass>Stats.ColumnWorker_Num</workerClass>
     </Stats.ColumnDef>
 
-    <Stats.ColumnDef Class="Stats.ColumnDef_Num">
+    <Stats.ColumnDef>
         <defName>WeaponRanged_AimingTime</defName>
-        <prop>Stats.ThingProps.WeaponRanged_AimingTime</prop>
         <label>Aim t.</label>
         <descriptionKey>Stat_Thing_Weapon_RangedWarmupTime_Desc</descriptionKey>
+        <workerClass>Stats.ColumnWorker_WeaponRanged_AimingTime</workerClass>
         <formatString>0.00 s</formatString>
     </Stats.ColumnDef>
 
-    <Stats.ColumnDef Class="Stats.ColumnDef_Num">
+    <Stats.ColumnDef>
         <defName>WeaponRanged_BuildingDamageFactor_Passable</defName>
         <label>BDF (P)</label>
         <descriptionKey>BuildingDamageFactorPassableExplanation</descriptionKey>
-        <prop>Stats.ThingProps.WeaponRanged_BuildingDamageFactor_Passable</prop>
+        <workerClass>Stats.ColumnWorker_WeaponRanged_BuildingDamageFactor_Passable</workerClass>
         <formatString>0%</formatString>
     </Stats.ColumnDef>
 
-    <Stats.ColumnDef Class="Stats.ColumnDef_Num">
+    <Stats.ColumnDef>
         <defName>WeaponRanged_BuildingDamageFactor_Impassable</defName>
         <label>BDF (I)</label>
         <descriptionKey>BuildingDamageFactorImpassableExplanation</descriptionKey>
-        <prop>Stats.ThingProps.WeaponRanged_BuildingDamageFactor_Impassable</prop>
+        <workerClass>Stats.ColumnWorker_WeaponRanged_BuildingDamageFactor_Impassable</workerClass>
         <formatString>0%</formatString>
     </Stats.ColumnDef>
 
-    <Stats.ColumnDef Class="Stats.ColumnDef_Num">
+    <Stats.ColumnDef>
         <defName>WeaponRanged_DirectHitChance</defName>
         <label>DH %</label>
         <descriptionKey>Stat_Thing_Weapon_DirectHitChance_Desc</descriptionKey>
-        <prop>Stats.ThingProps.WeaponRanged_DirectHitChance</prop>
+        <workerClass>Stats.ColumnWorker_WeaponRanged_DirectHitChance</workerClass>
         <formatString>0.0%</formatString>
     </Stats.ColumnDef>
 
-    <Stats.ColumnDef Class="Stats.ColumnDef_Num">
+    <Stats.ColumnDef>
         <defName>WeaponRanged_MissRadius</defName>
         <label>MR</label>
         <descriptionKey>Stat_Thing_Weapon_MissRadius_Desc</descriptionKey>
-        <prop>Stats.ThingProps.WeaponRanged_MissRadius</prop>
+        <workerClass>Stats.ColumnWorker_WeaponRanged_MissRadius</workerClass>
         <formatString>0.0</formatString>
     </Stats.ColumnDef>
 

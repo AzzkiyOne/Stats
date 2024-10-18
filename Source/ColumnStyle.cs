@@ -1,6 +1,6 @@
 ﻿namespace Stats;
 
-internal enum ColumnStyle
+public enum ColumnStyle
 {
     Number,
     String,

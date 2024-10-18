@@ -2,7 +2,7 @@
 <Patch>
 
     <Operation Class="PatchOperationInsert">
-        <xpath>Defs/Stats.TableDef[defName="All"]/columns/li[text() = "Mass"]</xpath>
+        <xpath>Defs/Stats.TableDef/columns/li[text() = "Mass"]</xpath>
         <value>
             <li>Bulk</li>
         </value>
@@ -15,8 +15,9 @@
         </value>
     </Operation>
 
-    <Operation Class="PatchOperationAdd">
-        <xpath>Defs/Stats.TableDef[defName="WeaponsRanged"]/columns</xpath>
+    <Operation Class="PatchOperationInsert">
+        <xpath>Defs/Stats.TableDef[defName="WeaponsRanged"]/columns/li[text() = "WeaponRanged_Range"]</xpath>
+        <order>Append</order>
         <value>
             <li>ShotSpread</li>
             <li>SwayFactor</li>
@@ -38,7 +39,13 @@
             or text() = "WeaponRanged_AccuracyLong"
             or text() = "WeaponRanged_DirectHitChance"
             or text() = "WeaponRanged_MissRadius"
+            or text() = "WeaponMelee_DPS"
+            or text() = "WeaponMelee_ArmorPenetration"
         ]</xpath>
+    </Operation>
+
+    <Operation Class="PatchOperationRemove">
+        <xpath>Defs/Stats.TableDef[defName="WeaponsMelee"]/columns/li[text() = "WeaponMelee_ArmorPenetration"]</xpath>
     </Operation>
 
 </Patch>

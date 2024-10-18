@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Defs>
 
-    <Stats.ColumnDef Class="Stats.ColumnDef_Thing">
+    <Stats.ColumnDef>
         <defName>Id</defName>
         <label>name</label>
+        <style>String</style>
+        <workerClass>Stats.ColumnWorker_Name</workerClass>
     </Stats.ColumnDef>
 
 </Defs>

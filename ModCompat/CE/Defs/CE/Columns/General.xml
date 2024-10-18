@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Defs>
 
-    <Stats.ColumnDef Class="Stats.ColumnDef_Num">
+    <Stats.ColumnDef>
         <defName>Bulk</defName>
         <stat>Bulk</stat>
+        <workerClass>Stats.ColumnWorker_Num</workerClass>
     </Stats.ColumnDef>
 
 </Defs>
