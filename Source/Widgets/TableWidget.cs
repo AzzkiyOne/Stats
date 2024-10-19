@@ -308,12 +308,13 @@ internal sealed class TableWidget
             foreach (var column in Columns)
             {
                 var cellWidth = Parent.ColumnsWidths[column] + cellExtraWidth;
-                var xMax = x + cellWidth;
 
-                if (xMax > targetRect.width)
+                if (x > targetRect.width)
                 {
                     break;
                 }
+
+                var xMax = x + cellWidth;
 
                 if (xMax > 0f)
                 {
@@ -420,12 +421,13 @@ internal sealed class TableWidget
                 foreach (var column in Columns)
                 {
                     var cellWidth = Parent.ColumnsWidths[column] + cellExtraWidth;
-                    var xMax = x + cellWidth;
 
-                    if (xMax > targetRect.width)
+                    if (x > targetRect.width)
                     {
                         break;
                     }
+
+                    var xMax = x + cellWidth;
 
                     if (xMax > 0f)
                     {

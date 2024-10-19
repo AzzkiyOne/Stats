@@ -10,10 +10,10 @@ public class ColumnDef : Def
     public ColumnStyle style = ColumnStyle.Number;
     internal TextAnchor CellTextAnchor { get; private set; }
     public StatDef? stat;
-    public string labelKey = "";
-    public string descriptionKey = "";
-    public string icon = "";
-    public string formatString = "";
+    public string? labelKey;
+    public string? descriptionKey;
+    public string? icon;
+    public string? formatString;
     public Type workerClass;
     private Texture2D? _iconTex;
     public Texture2D? Icon
@@ -44,12 +44,12 @@ public class ColumnDef : Def
     }
     public override void ResolveReferences()
     {
-        if (labelKey != "" && string.IsNullOrEmpty(label))
+        if (labelKey?.Length > 0 && string.IsNullOrEmpty(label))
         {
             label = labelKey.Translate();
         }
 
-        if (descriptionKey != "" && string.IsNullOrEmpty(description))
+        if (descriptionKey?.Length > 0 && string.IsNullOrEmpty(description))
         {
             description = descriptionKey.Translate();
         }
@@ -69,9 +69,9 @@ public class ColumnDef : Def
 
         CellTextAnchor = style switch
         {
-            ColumnStyle.Number => TextAnchor.MiddleRight,
-            ColumnStyle.Boolean => TextAnchor.MiddleCenter,
-            _ => TextAnchor.MiddleLeft,
+            ColumnStyle.Number => TextAnchor.LowerRight,
+            ColumnStyle.Boolean => TextAnchor.LowerCenter,
+            _ => TextAnchor.LowerLeft,
         };
     }
 }

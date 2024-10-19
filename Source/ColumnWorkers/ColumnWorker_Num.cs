@@ -21,7 +21,7 @@ public class ColumnWorker_Num : ColumnWorker<ICellWidget<float>>
 
         if (value != 0f && float.IsNaN(value) == false)
         {
-            var valueStr = ColumnDef.formatString == ""
+            var valueStr = string.IsNullOrEmpty(ColumnDef.formatString)
                 ? ColumnDef.stat!.Worker.ValueToString(value, true)
                 : value.ToString(ColumnDef.formatString);
 

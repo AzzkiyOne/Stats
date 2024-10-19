@@ -40,7 +40,7 @@ internal static class UnityEngine_Rect
     public static Rect CutByY(ref this Rect rect, float amount)
     {
         var result = new Rect(rect.x, rect.y, rect.width, amount);
-        // Changing "yMin" also auto corrects width. Changing "y" don't.
+        // Changing "yMin" also auto corrects height. Changing "y" don't.
         rect.yMin = rect.yMin + amount;
 
         return result;

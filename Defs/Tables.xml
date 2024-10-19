@@ -10,14 +10,13 @@
     <Stats.TableDef>
         <defName>WeaponsRanged</defName>
         <label>ranged</label>
+        <iconThingDef>Gun_Revolver</iconThingDef>
         <parent>Weapons</parent>
-        <filter>Stats.ThingProps.IsRangedWeapon</filter>
+        <filter>Stats.TableFilters.IsWeaponRanged</filter>
         <columns>
             <li>WeaponRanged_Damage</li>
             <li>WeaponRanged_StoppingPower</li>
             <li>WeaponRanged_ArmorPenetration</li>
-            <li>WeaponRanged_BuildingDamageFactor_Passable</li>
-            <li>WeaponRanged_BuildingDamageFactor_Impassable</li>
             <li>WeaponRanged_RPM</li>
             <li>WeaponRanged_BurstShotCount</li>
             <li>WeaponRanged_Cooldown</li>
@@ -31,6 +30,8 @@
             <li>WeaponRanged_MissRadius</li>
             <li>WeaponMelee_DPS</li>
             <li>WeaponMelee_ArmorPenetration</li>
+            <li>WeaponRanged_BuildingDamageFactor_Passable</li>
+            <li>WeaponRanged_BuildingDamageFactor_Impassable</li>
             <li>MarketValue</li>
             <li>MaxHitPoints</li>
             <li>Flammability</li>
@@ -47,8 +48,9 @@
     <Stats.TableDef>
         <defName>WeaponsMelee</defName>
         <label>melee</label>
+        <iconThingDef>MeleeWeapon_Club</iconThingDef>
         <parent>Weapons</parent>
-        <filter>Stats.ThingProps.IsMeleeWeapon</filter>
+        <filter>Stats.TableFilters.IsWeaponMelee</filter>
         <columns>
             <li>WeaponMelee_DPS</li>
             <li>WeaponMelee_ArmorPenetration</li>
@@ -68,7 +70,15 @@
     <Stats.TableDef>
         <defName>Apparel</defName>
         <label>apparel</label>
-        <filter>Stats.ThingProps.IsApparel</filter>
+        <columns></columns>
+    </Stats.TableDef>
+
+    <Stats.TableDef>
+        <defName>ApparelClothing</defName>
+        <label>clothing</label>
+        <iconThingDef>Apparel_Duster</iconThingDef>
+        <parent>Apparel</parent>
+        <filter>Stats.TableFilters.IsApparelClothing</filter>
         <columns>
             <li>MarketValue</li>
             <li>MaxHitPoints</li>
@@ -78,6 +88,125 @@
             <li>WorkToMake</li>
             <li>Beauty</li>
             <li>SellPriceFactor</li>
+            <li>DeteriorationRate</li>
+            <li>ContentSource</li>
+        </columns>
+    </Stats.TableDef>
+
+    <Stats.TableDef>
+        <defName>ApparelArmor</defName>
+        <label>armor</label>
+        <iconThingDef>Apparel_PowerArmor</iconThingDef>
+        <parent>Apparel</parent>
+        <filter>Stats.TableFilters.IsApparelArmor</filter>
+        <columns>
+            <li>MarketValue</li>
+            <li>MaxHitPoints</li>
+            <li>Flammability</li>
+            <li>Mass</li>
+            <li>CreatedAt</li>
+            <li>WorkToMake</li>
+            <li>Beauty</li>
+            <li>DeteriorationRate</li>
+            <li>ContentSource</li>
+        </columns>
+    </Stats.TableDef>
+
+    <Stats.TableDef>
+        <defName>ApparelUtility</defName>
+        <label>utility</label>
+        <iconThingDef>Apparel_FirefoampopPack</iconThingDef>
+        <parent>Apparel</parent>
+        <filter>Stats.TableFilters.IsApparelUtility</filter>
+        <columns>
+            <li>MarketValue</li>
+            <li>MaxHitPoints</li>
+            <li>Flammability</li>
+            <li>Mass</li>
+            <li>CreatedAt</li>
+            <li>WorkToMake</li>
+            <li>Beauty</li>
+            <li>DeteriorationRate</li>
+            <li>ContentSource</li>
+        </columns>
+    </Stats.TableDef>
+
+    <Stats.TableDef>
+        <defName>Animals</defName>
+        <label>animals</label>
+        <iconThingDef>Cow</iconThingDef>
+        <filter>Stats.TableFilters.IsAnimal</filter>
+        <columns>
+            <li>MarketValue</li>
+            <li>ContentSource</li>
+        </columns>
+    </Stats.TableDef>
+
+    <Stats.TableDef>
+        <defName>Stuff</defName>
+        <label>stuff</label>
+        <iconThingDef>Cloth</iconThingDef>
+        <filter>Stats.TableFilters.IsStuff</filter>
+        <columns>
+            <li>Stuff_Category</li>
+            <li>MarketValue</li>
+            <li>MaxHitPoints</li>
+            <li>Flammability</li>
+            <li>Mass</li>
+            <li>CreatedAt</li>
+            <li>Beauty</li>
+            <li>DeteriorationRate</li>
+            <li>ContentSource</li>
+        </columns>
+    </Stats.TableDef>
+
+    <Stats.TableDef>
+        <defName>Plants</defName>
+        <label>plants</label>
+        <iconThingDef>Plant_TreeOak</iconThingDef>
+        <filter>Stats.TableFilters.IsPlant</filter>
+        <columns>
+            <li>MaxHitPoints</li>
+            <li>Flammability</li>
+            <li>Mass</li>
+            <li>Beauty</li>
+            <li>ContentSource</li>
+        </columns>
+    </Stats.TableDef>
+
+    <Stats.TableDef>
+        <defName>Food</defName>
+        <label>food</label>
+        <iconThingDef>MealLavish</iconThingDef>
+        <filter>Stats.TableFilters.IsFood</filter>
+        <columns>
+            <li>Food_Nutrition</li>
+            <li>MarketValue</li>
+            <li>MaxHitPoints</li>
+            <li>Flammability</li>
+            <li>Mass</li>
+            <li>CreatedAt</li>
+            <li>WorkToMake</li>
+            <li>Beauty</li>
+            <li>DeteriorationRate</li>
+            <li>ContentSource</li>
+        </columns>
+    </Stats.TableDef>
+
+    <Stats.TableDef>
+        <defName>Drugs</defName>
+        <label>drugs</label>
+        <iconThingDef>Yayo</iconThingDef>
+        <filter>Stats.TableFilters.IsDrug</filter>
+        <columns>
+            <li>Food_Nutrition</li>
+            <li>MarketValue</li>
+            <li>MaxHitPoints</li>
+            <li>Flammability</li>
+            <li>Mass</li>
+            <li>CreatedAt</li>
+            <li>WorkToMake</li>
+            <li>Beauty</li>
             <li>DeteriorationRate</li>
             <li>ContentSource</li>
         </columns>

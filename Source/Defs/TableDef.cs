@@ -10,7 +10,8 @@ public class TableDef : Def
     public TableDef? parent;
     public Func<ThingDef, bool>? filter;
     public List<ColumnDef> columns;
-    public string icon = "";
+    public string? iconPath;
+    public ThingDef? iconThingDef;
     private TableWidget? _widget;
     internal TableWidget Widget => _widget ??= new(this);
     private Texture2D _iconTex = BaseContent.BadTex;
@@ -18,9 +19,9 @@ public class TableDef : Def
     {
         get
         {
-            if (icon.Length > 0)
+            if (iconPath?.Length > 0)
             {
-                _iconTex = ContentFinder<Texture2D>.Get(icon);
+                _iconTex = ContentFinder<Texture2D>.Get(iconPath);
             }
 
             return _iconTex;

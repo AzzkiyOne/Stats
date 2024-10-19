@@ -16,9 +16,20 @@ internal class TableSelectorWidget
             .Where(tableDef => tableDef.columns.Count > 0)
             .OrderBy(tableDef => tableDef.Path);
         List<FloatMenuOption> menuOptions = tables
-            .Select(tableDef =>
-                new FloatMenuOption(tableDef.Path, () => CurTableDef = tableDef)
-            )
+            .Select(tableDef => tableDef switch
+            {
+                { iconThingDef: not null } => new FloatMenuOption(
+                    tableDef.Path,
+                    () => CurTableDef = tableDef,
+                    tableDef.iconThingDef
+                ),
+                _ => new FloatMenuOption(
+                    tableDef.Path,
+                    () => CurTableDef = tableDef,
+                    tableDef.Icon,
+                    Color.white
+                )
+            })
             .ToList();
 
         CurTableDef = tables.First();
@@ -35,11 +46,22 @@ internal class TableSelectorWidget
 
         targetRect.PadLeft(GenUI.Pad);
 
-        Widgets.DrawTextureFitted(
-            targetRect.CutByX(targetRect.height),
-            CurTableDef.Icon,
-            0.9f
-        );
+        if (CurTableDef.iconThingDef != null)
+        {
+            Widgets.DefIcon(
+                targetRect.CutByX(targetRect.height),
+                CurTableDef.iconThingDef
+            );
+        }
+        else
+        {
+            Widgets.DrawTextureFitted(
+                targetRect.CutByX(targetRect.height),
+                CurTableDef.Icon,
+                1f
+            );
+        }
+
         Widgets.Label(
             targetRect.ContractedBy(GenUI.Pad, 0f),
             CurTableDef.Path

@@ -73,4 +73,12 @@
         <workerClass>Stats.ColumnWorker_ContentSource</workerClass>
     </Stats.ColumnDef>
 
+    <Stats.ColumnDef>
+        <defName>Food_Nutrition</defName>
+        <label>nutrition</label>
+        <style>Number</style>
+        <stat>Nutrition</stat>
+        <workerClass>Stats.ColumnWorker_Num</workerClass>
+    </Stats.ColumnDef>
+
 </Defs>
