@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 using Verse;
 
@@ -15,7 +16,7 @@ internal static class UnityEngine_Rect
     }
     public static Rect CutFromX(this Rect rect, float x)
     {
-        return new Rect(x, rect.y, rect.xMax - x, rect.height);
+        return new Rect(x, rect.y, Math.Max(rect.xMax - x, 0f), rect.height);
     }
     public static Rect CutFromY(this Rect rect, ref float y, float amount)
     {
@@ -26,7 +27,7 @@ internal static class UnityEngine_Rect
     }
     public static Rect CutFromY(this Rect rect, float y)
     {
-        return new Rect(rect.x, y, rect.width, rect.yMax - y);
+        return new Rect(rect.x, y, rect.width, Math.Max(rect.yMax - y, 0f));
     }
     public static Rect CutByX(ref this Rect rect, float amount)
     {

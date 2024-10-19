@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using RimWorld;
+using UnityEngine;
 using Verse;
 
 namespace Stats;
@@ -6,6 +7,8 @@ namespace Stats;
 internal class WindowTitleBarWidget
 {
     private readonly TableSelectorWidget TableSelector;
+    private static readonly Texture2D? _holdToDragTex;
+    private static Texture2D HoldToDragTex => _holdToDragTex ?? ContentFinder<Texture2D>.Get("UI/Icons/Trainables/Tameness");
     public WindowTitleBarWidget(TableSelectorWidget tableSelector)
     {
         TableSelector = tableSelector;
@@ -13,7 +16,7 @@ internal class WindowTitleBarWidget
     public WindowTitleBarWidgetEvent? Draw(Rect targetRect)
     {
         var buttonWidth = targetRect.height;
-        var labelWidth = targetRect.width - buttonWidth * 4;
+        var labelWidth = targetRect.width - buttonWidth * 5;
         WindowTitleBarWidgetEvent? Event = null;
 
         Widgets.DrawLightHighlight(targetRect);
@@ -26,6 +29,9 @@ internal class WindowTitleBarWidget
         Text.Anchor = TextAnchor.MiddleLeft;
         TableSelector.Draw(targetRect.CutByX(labelWidth));
         Text.Anchor = Constants.DefaultTextAnchor;
+        var rect = targetRect.CutByX(buttonWidth);
+        Widgets.DrawTextureFitted(rect, HoldToDragTex, 1f);
+        TooltipHandler.TipRegion(rect, "Hold to drag the window.");
         Widgets.ButtonImage(
             targetRect.CutByX(buttonWidth),
             TexButton.Info,

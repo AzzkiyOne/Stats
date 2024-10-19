@@ -231,7 +231,6 @@ internal sealed class TableWidget
 
         if (shouldApplyFilters)
         {
-            Log.Message("FooBar");
             foreach (var (_, filterWidget) in FilterWidgets)
             {
                 if (filterWidget.WasUpdated || filterWidget.HasValue)
@@ -285,17 +284,7 @@ internal sealed class TableWidget
                 0f
             );
 
-            if (
-                Event.current.type == EventType.Repaint
-                && cellExtraWidth == 0f
-                && (
-                    PrevFrameScrollPosX != scrollPosition.x
-                    || PrevFrameTargetRectWidth != targetRect.width
-                )
-            )
-            {
-                UpdateCurFrameState(targetRect, scrollPosition, cellExtraWidth);
-            }
+            UpdateCurFrameState(targetRect, scrollPosition, cellExtraWidth);
 
             var curY = targetRect.y;
 
@@ -308,11 +297,7 @@ internal sealed class TableWidget
                 scrollPosition.y,
                 cellExtraWidth
             );
-
-            if (Event.current.type == EventType.Repaint)
-            {
-                DrawColumnSeparators(targetRect, cellExtraWidth);
-            }
+            DrawColumnSeparators(targetRect, cellExtraWidth);
         }
         private void DrawHeaders(Rect targetRect, float cellExtraWidth)
         {
@@ -443,8 +428,13 @@ internal sealed class TableWidget
         }
         private void DrawColumnSeparators(Rect targetRect, float cellExtraWidth)
         {
+            if (Event.current.type != EventType.Repaint)
+            {
+                return;
+            }
+
             var curSepX = CurFrameCellOffsetX + targetRect.x;
-            // Separators
+
             for (int i = 0; i < CurFrameColumns.Count - 1; i++)
             {
                 curSepX += Parent.ColumnsWidths[CurFrameColumns[i]] + cellExtraWidth;
@@ -463,27 +453,37 @@ internal sealed class TableWidget
             float cellExtraWidth
         )
         {
-            PrevFrameScrollPosX = scrollPosition.x;
-            PrevFrameTargetRectWidth = targetRect.width;
-            CurFrameCellOffsetX = -scrollPosition.x;
-            CurFrameColumns.Clear();
-
-            var curX = CurFrameCellOffsetX;
-
-            for (int i = 0; i < Columns.Count && curX < targetRect.width; i++)
+            if (
+                Event.current.type == EventType.Repaint
+                && cellExtraWidth == 0f
+                && (
+                    PrevFrameScrollPosX != scrollPosition.x
+                    || PrevFrameTargetRectWidth != targetRect.width
+                )
+            )
             {
-                var column = Columns[i];
-                var cellWidth = Parent.ColumnsWidths[column] + cellExtraWidth;
+                PrevFrameScrollPosX = scrollPosition.x;
+                PrevFrameTargetRectWidth = targetRect.width;
+                CurFrameCellOffsetX = -scrollPosition.x;
+                CurFrameColumns.Clear();
 
-                if (curX + cellWidth <= 0f)
+                var curX = CurFrameCellOffsetX;
+
+                for (int i = 0; i < Columns.Count && curX < targetRect.width; i++)
                 {
-                    curX += cellWidth;
-                    CurFrameCellOffsetX = curX;
-                    continue;
-                }
+                    var column = Columns[i];
+                    var cellWidth = Parent.ColumnsWidths[column] + cellExtraWidth;
 
-                curX += cellWidth;
-                CurFrameColumns.Add(column);
+                    if (curX + cellWidth <= 0f)
+                    {
+                        curX += cellWidth;
+                        CurFrameCellOffsetX = curX;
+                        continue;
+                    }
+
+                    curX += cellWidth;
+                    CurFrameColumns.Add(column);
+                }
             }
         }
     }
