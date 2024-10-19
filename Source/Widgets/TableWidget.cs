@@ -261,16 +261,10 @@ internal sealed class TableWidget
         private readonly TableWidget Parent;
         private readonly List<ColumnDef> Columns;
         public float MinWidth { get; } = 0f;
-        private float PrevFrameScrollPosX = 0f;
-        private float PrevFrameTargetRectWidth = 0f;
-        private float CurFrameCellOffsetX = 0f;
-        private readonly List<ColumnDef> CurFrameColumns;
         public TablePart(TableWidget parent, List<ColumnDef> columns)
         {
             Parent = parent;
             Columns = columns;
-            // We have to make a copy because this list is mutated.
-            CurFrameColumns = [.. columns];
 
             foreach (var column in columns)
             {
@@ -283,41 +277,58 @@ internal sealed class TableWidget
                 (targetRect.width - MinWidth) / Columns.Count,
                 0f
             );
-
-            UpdateCurFrameState(targetRect, scrollPosition, cellExtraWidth);
-
             var curY = targetRect.y;
 
             DrawHeaders(
                 targetRect.CutFromY(ref curY, HeadersRowHeight),
+                scrollPosition.x,
                 cellExtraWidth
             );
             DrawBody(
                 targetRect.CutFromY(curY),
-                scrollPosition.y,
+                scrollPosition,
                 cellExtraWidth
             );
-            DrawColumnSeparators(targetRect, cellExtraWidth);
+            DrawColumnSeparators(
+                targetRect,
+                scrollPosition.x,
+                cellExtraWidth
+            );
         }
-        private void DrawHeaders(Rect targetRect, float cellExtraWidth)
+        private void DrawHeaders(
+            Rect targetRect,
+            float scrollPositionX,
+            float cellExtraWidth
+        )
         {
             Widgets.BeginGroup(targetRect);
 
-            var curX = CurFrameCellOffsetX;
+            var x = -scrollPositionX;
 
-            foreach (var column in CurFrameColumns)
+            foreach (var column in Columns)
             {
-                var cellRect = new Rect(
-                    curX,
-                    0f,
-                    Parent.ColumnsWidths[column] + cellExtraWidth,
-                    targetRect.height
-                );
+                var cellWidth = Parent.ColumnsWidths[column] + cellExtraWidth;
+                var xMax = x + cellWidth;
 
-                DrawHeaderCell(cellRect.TopHalf(), column);
-                Parent.FilterWidgets[column].Draw(cellRect.BottomHalf());
+                if (xMax > targetRect.width)
+                {
+                    break;
+                }
 
-                curX = cellRect.xMax;
+                if (xMax > 0f)
+                {
+                    var cellRect = new Rect(
+                        x,
+                        0f,
+                        cellWidth,
+                        targetRect.height
+                    );
+
+                    DrawHeaderCell(cellRect.TopHalf(), column);
+                    Parent.FilterWidgets[column].Draw(cellRect.BottomHalf());
+                }
+
+                x = xMax;
             }
 
             Widgets.EndGroup();
@@ -363,23 +374,23 @@ internal sealed class TableWidget
         }
         private void DrawBody(
             Rect targetRect,
-            float scrollPositionY,
+            Vector2 scrollPosition,
             float cellExtraWidth
         )
         {
             Widgets.BeginGroup(targetRect);
 
-            var rowIndexStart = (int)Math.Floor(scrollPositionY / RowHeight);
+            var rowIndexStart = (int)Math.Floor(scrollPosition.y / RowHeight);
             var rowIndexEnd = Math.Min(
-                (int)Math.Ceiling((scrollPositionY + targetRect.height) / RowHeight),
+                (int)Math.Ceiling((scrollPosition.y + targetRect.height) / RowHeight),
                 Parent.Rows.Count
             );
 
             // Rows
             for (int rowIndex = rowIndexStart; rowIndex < rowIndexEnd; rowIndex++)
             {
-                var curY = rowIndex * RowHeight - scrollPositionY;
-                var rowRect = new Rect(0f, curY, targetRect.width, RowHeight);
+                var y = rowIndex * RowHeight - scrollPosition.y;
+                var rowRect = new Rect(0f, y, targetRect.width, RowHeight);
                 var row = Parent.Rows[rowIndex];
 
                 //if (Parent.CurRows == Parent.Rows && Parent.SelectedRows.Contains(row))
@@ -403,87 +414,70 @@ internal sealed class TableWidget
                     Widgets.DrawLightHighlight(rowRect);
                 }
 
-                var curX = CurFrameCellOffsetX;
+                var x = -scrollPosition.x;
 
                 // Cells
-                foreach (var column in CurFrameColumns)
+                foreach (var column in Columns)
                 {
                     var cellWidth = Parent.ColumnsWidths[column] + cellExtraWidth;
+                    var xMax = x + cellWidth;
 
-                    column
-                        .Worker
-                        .DrawCell(new Rect(curX, curY, cellWidth, RowHeight), row);
-                    curX += cellWidth;
+                    if (xMax > targetRect.width)
+                    {
+                        break;
+                    }
+
+                    if (xMax > 0f)
+                    {
+                        column
+                            .Worker
+                            .DrawCell(new Rect(x, y, cellWidth, RowHeight), row);
+                    }
+
+                    x = xMax;
                 }
 
                 //if (Widgets.ButtonInvisible(rowRect))
                 //{
-
                 //}
             }
 
-            //Debug.TryDrawUIDebugInfo(targetRect, rowIndexEnd - rowIndexStart + "/" + CurFrameColumns.Count);
-
             Widgets.EndGroup();
         }
-        private void DrawColumnSeparators(Rect targetRect, float cellExtraWidth)
+        private void DrawColumnSeparators(
+            Rect targetRect,
+            float scrollPosX,
+            float cellExtraWidth
+        )
         {
             if (Event.current.type != EventType.Repaint)
             {
                 return;
             }
 
-            var curSepX = CurFrameCellOffsetX + targetRect.x;
+            var x = -scrollPosX;
 
-            for (int i = 0; i < CurFrameColumns.Count - 1; i++)
+            foreach (var column in Columns)
             {
-                curSepX += Parent.ColumnsWidths[CurFrameColumns[i]] + cellExtraWidth;
+                var cellWidth = Parent.ColumnsWidths[column] + cellExtraWidth;
+                var xMax = x + cellWidth;
 
-                LineVerticalWidget.Draw(
-                    curSepX,
-                    targetRect.y,
-                    targetRect.height,
-                    ColumnSeparatorLineColor
-                );
-            }
-        }
-        private void UpdateCurFrameState(
-            Rect targetRect,
-            Vector2 scrollPosition,
-            float cellExtraWidth
-        )
-        {
-            if (
-                Event.current.type == EventType.Repaint
-                && cellExtraWidth == 0f
-                && (
-                    PrevFrameScrollPosX != scrollPosition.x
-                    || PrevFrameTargetRectWidth != targetRect.width
-                )
-            )
-            {
-                PrevFrameScrollPosX = scrollPosition.x;
-                PrevFrameTargetRectWidth = targetRect.width;
-                CurFrameCellOffsetX = -scrollPosition.x;
-                CurFrameColumns.Clear();
-
-                var curX = CurFrameCellOffsetX;
-
-                for (int i = 0; i < Columns.Count && curX < targetRect.width; i++)
+                if (xMax >= targetRect.width)
                 {
-                    var column = Columns[i];
-                    var cellWidth = Parent.ColumnsWidths[column] + cellExtraWidth;
-
-                    if (curX + cellWidth <= 0f)
-                    {
-                        curX += cellWidth;
-                        CurFrameCellOffsetX = curX;
-                        continue;
-                    }
-
-                    curX += cellWidth;
-                    CurFrameColumns.Add(column);
+                    break;
                 }
+
+                if (xMax > 0f)
+                {
+                    LineVerticalWidget.Draw(
+                        xMax + targetRect.x,
+                        targetRect.y,
+                        targetRect.height,
+                        ColumnSeparatorLineColor
+                    );
+                }
+
+                x = xMax;
             }
         }
     }
