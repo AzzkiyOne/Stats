@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using Verse;
 
@@ -7,13 +8,14 @@ namespace Stats;
 public sealed class CellWidget_Things : ICellWidget<List<ThingAlike>>
 {
     public List<ThingAlike> Value { get; }
+    private readonly string ValueStr;
     public float MinWidth { get; } = TableWidget.CellMinWidth;
     public CellWidget_Things(List<ThingAlike> value)
     {
         Value = value;
         MinWidth += value.Count * TableWidget.RowHeight + (Value.Count - 1) * TableWidget.CellPadding;
-
         Value.SortBy(thing => thing.Label);
+        ValueStr = string.Join(", ", Value.Select(thing => thing.Label));
     }
     public void Draw(Rect targetRect)
     {
@@ -44,5 +46,9 @@ public sealed class CellWidget_Things : ICellWidget<List<ThingAlike>>
         }
 
         return Value.Count.CompareTo(((ICellWidget<List<ThingAlike>>)other).Value.Count);
+    }
+    public override string ToString()
+    {
+        return ValueStr;
     }
 }

@@ -34,4 +34,8 @@ public sealed class CellWidget_Str : ICellWidget<string>
 
         return Value.CompareTo(((ICellWidget<string>)other).Value);
     }
+    public override string ToString()
+    {
+        return Value;
+    }
 }

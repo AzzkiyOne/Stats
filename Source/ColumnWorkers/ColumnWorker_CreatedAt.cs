@@ -6,7 +6,7 @@ namespace Stats;
 
 public class ColumnWorker_CreatedAt : ColumnWorker<ICellWidget<List<ThingAlike>>>
 {
-    protected override ICellWidget<List<ThingAlike>>? CreateCell(ThingDef thingDef, ThingDef? stuffDef)
+    protected override ICellWidget<List<ThingAlike>>? CreateCell(ThingRec thing)
     {
         var things = new HashSet<ThingAlike>();
 
@@ -14,7 +14,7 @@ public class ColumnWorker_CreatedAt : ColumnWorker<ICellWidget<List<ThingAlike>>
         {
             if (
                 recipe is { products.Count: 1, IsSurgery: false }
-                && recipe.products.First().thingDef == thingDef
+                && recipe.products.First().thingDef == thing.Def
             )
             {
                 foreach (var recipeUser in recipe.AllRecipeUsers)

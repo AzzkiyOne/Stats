@@ -27,4 +27,8 @@ public sealed class CellWidget_Bool : ICellWidget<bool>
 
         return Value.CompareTo(((ICellWidget<bool>)other).Value);
     }
+    public override string ToString()
+    {
+        return Value.ToString();
+    }
 }

@@ -1,16 +1,14 @@
-﻿using Verse;
-
-namespace Stats;
+﻿namespace Stats;
 
 public class ColumnWorker_ContentSource : ColumnWorker<ICellWidget<string>>
 {
-    protected override ICellWidget<string>? CreateCell(ThingDef thingDef, ThingDef? stuffDef)
+    protected override ICellWidget<string>? CreateCell(ThingRec thing)
     {
-        if (thingDef.modContentPack != null)
+        if (thing.Def.modContentPack != null)
         {
             return new CellWidget_Str(
-                thingDef.modContentPack.Name,
-                thingDef.modContentPack.PackageIdPlayerFacing
+                thing.Def.modContentPack.Name,
+                thing.Def.modContentPack.PackageIdPlayerFacing
             );
         }
 

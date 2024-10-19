@@ -1,13 +1,12 @@
 ﻿using RimWorld;
-using Verse;
 
 namespace Stats;
 
 public class ColumnWorker_Num : ColumnWorker<ICellWidget<float>>
 {
-    protected virtual float GetValue(ThingDef thingDef, ThingDef? stuffDef)
+    protected virtual float GetValue(ThingRec thing)
     {
-        var statReq = StatRequest.For(thingDef, stuffDef);
+        var statReq = StatRequest.For(thing.Def, thing.StuffDef);
 
         if (ColumnDef.stat!.Worker.ShouldShowFor(statReq) == true)
         {
@@ -16,9 +15,9 @@ public class ColumnWorker_Num : ColumnWorker<ICellWidget<float>>
 
         return 0f;
     }
-    protected sealed override ICellWidget<float>? CreateCell(ThingDef thingDef, ThingDef? stuffDef)
+    protected sealed override ICellWidget<float>? CreateCell(ThingRec thing)
     {
-        var value = GetValue(thingDef, stuffDef);
+        var value = GetValue(thing);
 
         if (value != 0f && float.IsNaN(value) == false)
         {
@@ -30,5 +29,9 @@ public class ColumnWorker_Num : ColumnWorker<ICellWidget<float>>
         }
 
         return null;
+    }
+    public override IFilterWidget GetFilterWidget()
+    {
+        return new FilterWidget_Num(thing => GetCell(thing)?.Value);
     }
 }

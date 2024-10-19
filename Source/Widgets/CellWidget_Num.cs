@@ -29,4 +29,8 @@ public sealed class CellWidget_Num : ICellWidget<float>
 
         return Value.CompareTo(((ICellWidget<float>)other).Value);
     }
+    public override string ToString()
+    {
+        return Value.ToString();
+    }
 }

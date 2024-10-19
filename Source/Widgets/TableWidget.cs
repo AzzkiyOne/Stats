@@ -4,7 +4,6 @@ using System.Linq;
 using RimWorld;
 using UnityEngine;
 using Verse;
-using TableWidgetRow = (Verse.ThingDef thingDef, Verse.ThingDef? stuffDef);
 
 namespace Stats;
 
@@ -33,23 +32,30 @@ internal sealed class TableWidget
     }
     private SortDirection SortDirection = SortDirection.Ascending;
     public const float RowHeight = 30f;
-    private const float HeadersRowHeight = RowHeight;
-    public const float CellPadding = 10f;
+    private const float HeadersRowHeight = RowHeight * 2f;
+    public const float CellPadding = 15f;
     public const float CellMinWidth = CellPadding * 2f;
     private static Color ColumnSeparatorLineColor = new(1f, 1f, 1f, 0.05f);
-    private readonly List<TableWidgetRow> Rows = [];
-    private TableWidgetRow? MouseOverRow = null;
+    private readonly List<ThingRec> RowsOrig;
+    private readonly List<ThingRec> Rows = [];
+    private ThingRec? MouseOverRow = null;
     private readonly TablePart Left;
     private readonly TablePart Right;
+    private readonly Dictionary<ColumnDef, IFilterWidget> FilterWidgets;
+    private readonly List<IFilterWidget> TempFiltersToApply;
     public TableWidget(TableDef tableDef)
     {
-        List<ColumnDef> columns = [ColumnDefOf.Id, .. tableDef.columns];
+        List<ColumnDef> columns = [ColumnDefOf.Name, .. tableDef.columns];
         var columnsLeft = new List<ColumnDef>();
         var columnsRight = new List<ColumnDef>();
 
+        FilterWidgets = new(columns.Count);
+        // This of course needs to be a separate instance.
+        TempFiltersToApply = new(columns.Count);
+
         foreach (var column in columns)
         {
-            if (column == ColumnDefOf.Id)
+            if (column == ColumnDefOf.Name)
             {
                 columnsLeft.Add(column);
             }
@@ -60,7 +66,9 @@ internal sealed class TableWidget
 
             ColumnsWidths[column] =
                 CellMinWidth
-                + (column.Icon != null ? RowHeight : Text.CalcSize(column.LabelCap).x);
+                + (column.Icon != null ? RowHeight : Text.CalcSize(column.LabelCap).x)
+                + 5f;// To accomodate for padding inside filter inputs.
+            FilterWidgets[column] = column.Worker.GetFilterWidget();
         }
 
         if (tableDef.filter != null)
@@ -78,12 +86,12 @@ internal sealed class TableWidget
 
                     foreach (var stuffDef in allowedStuffs)
                     {
-                        AddRow(thingDef, stuffDef, columns);
+                        AddRow(new(thingDef, stuffDef), columns);
                     }
                 }
                 else
                 {
-                    AddRow(thingDef, null, columns);
+                    AddRow(new(thingDef, null), columns);
                 }
             }
         }
@@ -93,6 +101,7 @@ internal sealed class TableWidget
         // then after we've processed all of the cells we can look into ColumnsWidths
         // and see what columns are empty.
 
+        RowsOrig = [.. Rows];
         SortColumn = columnsLeft.First();
         Left = new(this, columnsLeft);
         Right = new(this, columnsRight);
@@ -131,7 +140,14 @@ internal sealed class TableWidget
 
         var contentRectVisible = new Rect(ScrollPosition, contentSizeVisible);
 
+        // Headers background stuff.
         Widgets.DrawHighlight(contentRectVisible.TopPartPixels(HeadersRowHeight));
+        Widgets.DrawLineHorizontal(
+            contentRectVisible.x,
+            contentRectVisible.y + HeadersRowHeight / 2f,
+            contentRectVisible.width,
+            StatsMainTabWindow.BorderLineColor
+        );
 
         var curX = contentRectVisible.x;
         var leftPartRect = contentRectVisible.CutFromX(ref curX, Left.MinWidth);
@@ -158,6 +174,8 @@ internal sealed class TableWidget
 
         Widgets.EndScrollView();
 
+        ApplyFiltersIfRequired();
+
         //if (Event.current.type == EventType.KeyDown && Event.current.alt)
         //{
         //}
@@ -168,37 +186,75 @@ internal sealed class TableWidget
         {
             Rows.Sort((r1, r2) =>
             {
-                var r1c = SortColumn.Worker.GetCell(r1.thingDef, r1.stuffDef);
-                var r2c = SortColumn.Worker.GetCell(r2.thingDef, r2.stuffDef);
-
-                if (r1c == null && r2c == null)
-                {
-                    return 0;
-                }
-
-                return (r1c?.CompareTo(r2c) ?? -1) * (int)SortDirection;
+                return SortColumn.Worker.Compare(r1, r2) * (int)SortDirection;
+            });
+            // I think it is a better idea to keep both lists in sync, than to sort
+            // current rows every time a user types something in a filter's input
+            // field.
+            RowsOrig.Sort((r1, r2) =>
+            {
+                return SortColumn.Worker.Compare(r1, r2) * (int)SortDirection;
             });
         }
     }
-    private void AddRow(ThingDef thingDef, ThingDef? stuffDef, List<ColumnDef> columns)
+    private void AddRow(ThingRec thing, List<ColumnDef> columns)
     {
-        Rows.Add((thingDef, stuffDef));
+        Rows.Add(thing);
 
         foreach (var column in columns)
         {
             try
             {
-                var cell = column.Worker.GetCell(thingDef, stuffDef);
+                var cellMinWidth = column.Worker.GetCellMinWidth(thing);
 
                 ColumnsWidths[column] = Math.Max(
                     ColumnsWidths[column],
-                    cell?.MinWidth ?? 0f
+                    cellMinWidth ?? 0f
                 );
             }
             catch (Exception e)
             {
                 Log.Error(e.Message);
             }
+        }
+    }
+    private void ApplyFiltersIfRequired()
+    {
+        if (Event.current.type != EventType.Repaint)
+        {
+            return;
+        }
+
+        // Note to myself: please refrain from optimizing this part.
+        bool shouldApplyFilters = FilterWidgets
+            .Any(widgetEntry => widgetEntry.Value.WasUpdated);
+
+        if (shouldApplyFilters)
+        {
+            Log.Message("FooBar");
+            foreach (var (_, filterWidget) in FilterWidgets)
+            {
+                if (filterWidget.WasUpdated || filterWidget.HasValue)
+                {
+                    TempFiltersToApply.Add(filterWidget);
+                    filterWidget.WasUpdated = false;
+                }
+            }
+
+            if (TempFiltersToApply.Count > 0)
+            {
+                Rows.Clear();
+
+                foreach (var row in RowsOrig)
+                {
+                    if (TempFiltersToApply.All(filter => filter.Match(row)))
+                    {
+                        Rows.Add(row);
+                    }
+                }
+            }
+
+            TempFiltersToApply.Clear();
         }
     }
     private sealed class TablePart
@@ -273,7 +329,8 @@ internal sealed class TableWidget
                     targetRect.height
                 );
 
-                DrawHeaderCell(cellRect, column);
+                DrawHeaderCell(cellRect.TopHalf(), column);
+                Parent.FilterWidgets[column].Draw(cellRect.BottomHalf());
 
                 curX = cellRect.xMax;
             }
@@ -370,8 +427,7 @@ internal sealed class TableWidget
 
                     column
                         .Worker
-                        .GetCell(row.thingDef, row.stuffDef)
-                        ?.Draw(new Rect(curX, curY, cellWidth, RowHeight));
+                        .DrawCell(new Rect(curX, curY, cellWidth, RowHeight), row);
                     curX += cellWidth;
                 }
 

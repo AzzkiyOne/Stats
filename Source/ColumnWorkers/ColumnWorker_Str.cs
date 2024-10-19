@@ -5,9 +5,9 @@ namespace Stats;
 
 public class ColumnWorker_Str : ColumnWorker<ICellWidget<string>>
 {
-    protected virtual string? GetValue(ThingDef thingDef, ThingDef? stuffDef)
+    protected virtual string? GetValue(ThingRec thing)
     {
-        var statReq = StatRequest.For(thingDef, stuffDef);
+        var statReq = StatRequest.For(thing.Def, thing.StuffDef);
 
         if (ColumnDef.stat!.Worker.ShouldShowFor(statReq) == true)
         {
@@ -21,9 +21,9 @@ public class ColumnWorker_Str : ColumnWorker<ICellWidget<string>>
 
         return null;
     }
-    protected sealed override ICellWidget<string>? CreateCell(ThingDef thingDef, ThingDef? stuffDef)
+    protected sealed override ICellWidget<string>? CreateCell(ThingRec thing)
     {
-        var value = GetValue(thingDef, stuffDef);
+        var value = GetValue(thing);
 
         if (value?.Length > 0)
         {

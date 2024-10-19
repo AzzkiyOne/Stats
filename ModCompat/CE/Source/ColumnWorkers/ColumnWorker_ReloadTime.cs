@@ -1,14 +1,13 @@
 ﻿using CombatExtended;
 using RimWorld;
-using Verse;
 
 namespace Stats.Compat.CE;
 public class ColumnWorker_ReloadTime : ColumnWorker_Num
 {
-    protected override float GetValue(ThingDef thingDef, ThingDef? stuffDef)
+    protected override float GetValue(ThingRec thing)
     {
         var stat = CE_StatDefOf.ReloadTime;
-        var statReq = StatRequest.For(thingDef, stuffDef);
+        var statReq = StatRequest.For(thing.Def, thing.StuffDef);
 
         if (CE_StatDefOf.MagazineCapacity.Worker.ShouldShowFor(statReq) == true)
         {

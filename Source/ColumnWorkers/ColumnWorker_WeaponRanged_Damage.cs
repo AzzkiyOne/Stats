@@ -1,17 +1,15 @@
-﻿using Verse;
-
-namespace Stats;
+﻿namespace Stats;
 
 public class ColumnWorker_WeaponRanged_Damage : ColumnWorker_Num
 {
-    protected override float GetValue(ThingDef thingDef, ThingDef? stuffDef)
+    protected override float GetValue(ThingRec thing)
     {
-        var verb = thingDef.Verbs.Primary();
+        var verb = thing.Def.Verbs.Primary();
         var defaultProj = verb?.defaultProjectile?.projectile;
 
         if (defaultProj?.damageDef?.harmsHealth == true)
         {
-            return defaultProj.GetDamageAmount(thingDef, stuffDef);
+            return defaultProj.GetDamageAmount(thing.Def, thing.StuffDef);
         }
 
         return 0f;

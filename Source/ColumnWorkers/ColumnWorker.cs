@@ -1,26 +1,51 @@
 ﻿using System.Collections.Generic;
-using Verse;
+using UnityEngine;
 
 namespace Stats;
 
-public abstract class ColumnWorker<CellType> : IColumnWorker<CellType> where CellType : ICellWidget
+public abstract class ColumnWorker<CellType> : IColumnWorker where CellType : ICellWidget
 {
     public ColumnDef ColumnDef { get; set; }
-    private readonly Dictionary<
-        (ThingDef thingDef, ThingDef? stuffDef),
-        CellType?
-    > Cells = [];
-    protected abstract CellType? CreateCell(ThingDef thingDef, ThingDef? stuffDef);
-    public ICellWidget? GetCell(ThingDef thingDef, ThingDef? stuffDef)
+    private readonly Dictionary<ThingRec, CellType?> Cells = [];
+    protected abstract CellType? CreateCell(ThingRec thing);
+    protected CellType? GetCell(ThingRec thing)
     {
-        var key = (thingDef, stuffDef);
-        var exists = Cells.TryGetValue(key, out var cell);
+        var exists = Cells.TryGetValue(thing, out var cell);
 
         if (exists == false)
         {
-            Cells[key] = cell = CreateCell(thingDef, stuffDef);
+            Cells[thing] = cell = CreateCell(thing);
         }
 
         return cell;
+    }
+    public void DrawCell(Rect targetRect, ThingRec thing)
+    {
+        GetCell(thing)?.Draw(targetRect);
+    }
+    public float? GetCellMinWidth(ThingRec thing)
+    {
+        return GetCell(thing)?.MinWidth;
+    }
+    public virtual IFilterWidget GetFilterWidget()
+    {
+        return new FilterWidget_Str(thing => GetCell(thing)?.ToString());
+    }
+    public int Compare(ThingRec thing1, ThingRec thing2)
+    {
+        var c1 = GetCell(thing1);
+        var c2 = GetCell(thing2);
+
+        if (c1 == null)
+        {
+            if (c2 == null)
+            {
+                return 0;
+            }
+
+            return -1;
+        }
+
+        return c1.CompareTo(c2);
     }
 }

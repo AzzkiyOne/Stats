@@ -5,9 +5,9 @@ namespace Stats.Compat.CE;
 
 public class ColumnWorker_Caliber : ColumnWorker<ICellWidget<string>>
 {
-    protected override ICellWidget<string>? CreateCell(ThingDef thingDef, ThingDef? stuffDef)
+    protected override ICellWidget<string>? CreateCell(ThingRec thing)
     {
-        var statReq = StatRequest.For(thingDef, stuffDef);
+        var statReq = StatRequest.For(thing.Def, thing.StuffDef);
 
         if (ColumnDef.stat!.Worker.ShouldShowFor(statReq) == true)
         {

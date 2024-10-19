@@ -1,11 +1,9 @@
-﻿using Verse;
-
-namespace Stats;
+﻿namespace Stats;
 
 public class ColumnWorker_Name : ColumnWorker<ICellWidget<ThingAlike>>
 {
-    protected override ICellWidget<ThingAlike>? CreateCell(ThingDef thingDef, ThingDef? stuffDef)
+    protected override ICellWidget<ThingAlike>? CreateCell(ThingRec thing)
     {
-        return new CellWidget_Thing(new ThingAlike(thingDef, stuffDef));
+        return new CellWidget_Thing(new ThingAlike(thing.Def, thing.StuffDef));
     }
 }

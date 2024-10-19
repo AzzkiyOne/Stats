@@ -39,4 +39,8 @@ public sealed class CellWidget_Thing : ICellWidget<ThingAlike>
 
         return Value.Label.CompareTo(((ICellWidget<ThingAlike>)other).Value.Label);
     }
+    public override string ToString()
+    {
+        return Value.Label;
+    }
 }

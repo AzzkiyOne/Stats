@@ -1,14 +1,12 @@
-﻿using Verse;
+﻿using UnityEngine;
 
 namespace Stats;
 
 public interface IColumnWorker
 {
     ColumnDef ColumnDef { get; set; }
-    ICellWidget? GetCell(ThingDef thingDef, ThingDef? stuffDef);
-}
-
-public interface IColumnWorker<CellType> : IColumnWorker where CellType : ICellWidget
-{
-    // TODO
+    void DrawCell(Rect targetRect, ThingRec thing);
+    float? GetCellMinWidth(ThingRec thing);
+    IFilterWidget GetFilterWidget();
+    int Compare(ThingRec thing1, ThingRec thing2);
 }

@@ -2,7 +2,7 @@
 <Defs>
 
     <Stats.ColumnDef>
-        <defName>Id</defName>
+        <defName>Name</defName>
         <label>name</label>
         <style>String</style>
         <workerClass>Stats.ColumnWorker_Name</workerClass>
