@@ -12,8 +12,8 @@ public class TableDef : Def
     public List<ColumnDef> columns;
     public string? iconPath;
     public ThingDef? iconThingDef;
-    private TableWidget? _widget;
-    internal TableWidget Widget => _widget ??= new(this);
+    private TableWidget_Main? _widget;
+    internal TableWidget_Main Widget => _widget ??= new(this);
     private Texture2D _iconTex = BaseContent.BadTex;
     public Texture2D Icon
     {

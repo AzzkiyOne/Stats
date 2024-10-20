@@ -2,7 +2,7 @@
 using RimWorld;
 
 namespace Stats.Compat.CE;
-public class ColumnWorker_ReloadTime : ColumnWorker_Num
+public class ColumnWorker_WeaponRanged_ReloadTime : ColumnWorker_Num
 {
     protected override float GetValue(ThingRec thing)
     {

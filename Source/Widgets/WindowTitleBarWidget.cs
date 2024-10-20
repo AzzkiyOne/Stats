@@ -58,7 +58,7 @@ internal class WindowTitleBarWidget
             Event = WindowTitleBarWidgetEvent.Expand;
         }
 
-        if (Widgets.ButtonImage(
+        if (Widgets.ButtonImageFitted(
             targetRect.CutByX(buttonWidth),
             TexButton.CloseXSmall
         ))

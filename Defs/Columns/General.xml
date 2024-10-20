@@ -19,12 +19,14 @@
         <defName>Flammability</defName>
         <icon>UI/Icons/ColonistBar/Burning</icon>
         <stat>Flammability</stat>
+        <bestIsHighest>false</bestIsHighest>
         <workerClass>Stats.ColumnWorker_Num</workerClass>
     </Stats.ColumnDef>
 
     <Stats.ColumnDef>
         <defName>Mass</defName>
         <stat>Mass</stat>
+        <bestIsHighest>false</bestIsHighest>
         <workerClass>Stats.ColumnWorker_Num</workerClass>
     </Stats.ColumnDef>
 
@@ -42,6 +44,7 @@
         <defName>WorkToMake</defName>
         <label>work</label>
         <stat>WorkToMake</stat>
+        <bestIsHighest>false</bestIsHighest>
         <workerClass>Stats.ColumnWorker_Num</workerClass>
     </Stats.ColumnDef>
 
@@ -55,6 +58,7 @@
         <defName>SellPriceFactor</defName>
         <label>$$$ %</label>
         <stat>SellPriceFactor</stat>
+        <bestIsHighest>false</bestIsHighest>
         <workerClass>Stats.ColumnWorker_Num</workerClass>
     </Stats.ColumnDef>
 
@@ -62,6 +66,7 @@
         <defName>DeteriorationRate</defName>
         <label>-HP / d</label>
         <stat>DeteriorationRate</stat>
+        <bestIsHighest>false</bestIsHighest>
         <workerClass>Stats.ColumnWorker_Num</workerClass>
         <formatString>0.00 / d</formatString>
     </Stats.ColumnDef>

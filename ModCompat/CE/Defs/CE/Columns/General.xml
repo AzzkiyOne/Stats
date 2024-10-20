@@ -2,8 +2,9 @@
 <Defs>
 
     <Stats.ColumnDef>
-        <defName>Bulk</defName>
+        <defName>CE_Bulk</defName>
         <stat>Bulk</stat>
+        <bestIsHighest>false</bestIsHighest>
         <workerClass>Stats.ColumnWorker_Num</workerClass>
     </Stats.ColumnDef>
 

@@ -2,7 +2,9 @@
 
 namespace Stats;
 
-public class ColumnWorker_Num : ColumnWorker<ICellWidget<float>>
+public class ColumnWorker_Num :
+    ColumnWorker<ICellWidget<float>>,
+    IColumnWorker_Num
 {
     protected virtual float GetValue(ThingRec thing)
     {
@@ -33,5 +35,9 @@ public class ColumnWorker_Num : ColumnWorker<ICellWidget<float>>
     public override IFilterWidget GetFilterWidget()
     {
         return new FilterWidget_Num(thing => GetCell(thing)?.Value);
+    }
+    public float? GetCellValue(ThingRec thing)
+    {
+        return GetCell(thing)?.Value;
     }
 }

@@ -7,12 +7,12 @@ using Verse;
 
 namespace Stats;
 
-internal sealed class TableWidget
+internal abstract class TableWidget_Base
 {
     private Vector2 ScrollPosition = new();
-    private readonly Dictionary<ColumnDef, float> ColumnsWidths = [];
+    private readonly Dictionary<ColumnDef, float> ColumnsWidths;
     private ColumnDef? _sortColumn;
-    private ColumnDef? SortColumn
+    protected ColumnDef? SortColumn
     {
         get => _sortColumn;
         set
@@ -34,43 +34,31 @@ internal sealed class TableWidget
     public const float RowHeight = 30f;
     private const float HeadersRowHeight = RowHeight * 2f;
     public const float CellPadding = 15f;
+    public const float IconGap = 5f;
     public const float CellMinWidth = CellPadding * 2f;
     private static Color ColumnSeparatorLineColor = new(1f, 1f, 1f, 0.05f);
-    private readonly List<ThingRec> RowsOrig;
-    private readonly List<ThingRec> Rows = [];
-    private ThingRec? MouseOverRow = null;
-    private readonly TablePart Left;
-    private readonly TablePart Right;
+    protected List<ThingRec> RowsAll { get; } = [];
+    protected List<ThingRec> RowsCur { get; } = [];
+    private ThingRec? MouseOverRow;
+    protected TablePart Left { get; init; }
+    protected TablePart Right { get; init; }
     private readonly Dictionary<ColumnDef, IFilterWidget> FilterWidgets;
     private readonly List<IFilterWidget> TempFiltersToApply;
-    public TableWidget(TableDef tableDef)
+    private const float FilterWidgetInputInternalPadding = 6f;
+    protected List<ColumnDef> Columns { get; }
+    public TableWidget_Base(List<ColumnDef> columns)
     {
-        List<ColumnDef> columns = [ColumnDefOf.Name, .. tableDef.columns];
-        var columnsLeft = new List<ColumnDef>();
-        var columnsRight = new List<ColumnDef>();
-
-        FilterWidgets = new(columns.Count);
+        Columns = columns;
+        SortColumn = columns.First();
+        ColumnsWidths = new(Columns.Count);
+        FilterWidgets = new(Columns.Count);
         // This of course needs to be a separate instance.
-        TempFiltersToApply = new(columns.Count);
+        TempFiltersToApply = new(Columns.Count);
 
-        foreach (var column in columns)
-        {
-            if (column == ColumnDefOf.Name)
-            {
-                columnsLeft.Add(column);
-            }
-            else
-            {
-                columnsRight.Add(column);
-            }
-
-            ColumnsWidths[column] =
-                CellMinWidth
-                + (column.Icon != null ? RowHeight : Text.CalcSize(column.LabelCap).x)
-                + 5f;// To accomodate for padding inside filter inputs.
-            FilterWidgets[column] = column.Worker.GetFilterWidget();
-        }
-
+        InitFilterWidgets();
+    }
+    protected void InitRows(TableDef tableDef)
+    {
         if (tableDef.filter != null)
         {
             foreach (var thingDef in DefDatabase<ThingDef>.AllDefs)
@@ -86,27 +74,45 @@ internal sealed class TableWidget
 
                     foreach (var stuffDef in allowedStuffs)
                     {
-                        AddRow(new(thingDef, stuffDef), columns);
+                        RowsAll.Add(new(thingDef, stuffDef));
                     }
                 }
                 else
                 {
-                    AddRow(new(thingDef, null), columns);
+                    RowsAll.Add(new(thingDef, null));
                 }
             }
         }
 
-        // There is an opportunity here to weed out empty columns.
-        // If we'll only record widths of columns that returned a cell at least once
-        // then after we've processed all of the cells we can look into ColumnsWidths
-        // and see what columns are empty.
-
-        RowsOrig = [.. Rows];
-        SortColumn = columnsLeft.First();
-        Left = new(this, columnsLeft);
-        Right = new(this, columnsRight);
+        RowsCur.AddRange(RowsAll);
+        SortRows();
     }
-    public void Draw(Rect targetRect)
+    protected void SyncLayout()
+    {
+        foreach (var column in Columns)
+        {
+            ColumnsWidths[column] =
+                CellMinWidth
+                + (column.Icon != null ? RowHeight : Text.CalcSize(column.LabelCap).x)
+                + FilterWidgetInputInternalPadding;
+        }
+
+        foreach (var row in RowsAll)
+        {
+            UpdateLayout(row);
+        }
+
+        Left.SyncLayout();
+        Right.SyncLayout();
+    }
+    private void InitFilterWidgets()
+    {
+        foreach (var column in Columns)
+        {
+            FilterWidgets[column] = column.Worker.GetFilterWidget();
+        }
+    }
+    public virtual void Draw(Rect targetRect)
     {
         if (
             Event.current.isScrollWheel
@@ -123,7 +129,7 @@ internal sealed class TableWidget
 
         var contentSizeMax = new Vector2(
             Left.MinWidth + Right.MinWidth,
-            Rows.Count * RowHeight + HeadersRowHeight
+            RowsCur.Count * RowHeight + HeadersRowHeight
         );
         var willScrollHor = contentSizeMax.x > targetRect.width;
         var willScrollVer = contentSizeMax.y > targetRect.height;
@@ -174,38 +180,42 @@ internal sealed class TableWidget
 
         Widgets.EndScrollView();
 
-        ApplyFiltersIfRequired();
+        if (Event.current.type == EventType.Repaint)
+        {
+            // Note to myself: please refrain from optimizing this part.
+            var wasAnyFilterUpdated = FilterWidgets
+                .Any(widgetEntry => widgetEntry.Value.WasUpdated);
 
-        //if (Event.current.type == EventType.KeyDown && Event.current.alt)
-        //{
-        //}
+            if (wasAnyFilterUpdated)
+            {
+                ApplyFilters();
+            }
+        }
     }
-    private void SortRows()
+    protected void SortRows()
     {
         if (SortColumn != null)
         {
-            Rows.Sort((r1, r2) =>
+            RowsCur.Sort((r1, r2) =>
             {
                 return SortColumn.Worker.Compare(r1, r2) * (int)SortDirection;
             });
             // I think it is a better idea to keep both lists in sync, than to sort
             // current rows every time a user types something in a filter's input
             // field.
-            RowsOrig.Sort((r1, r2) =>
+            RowsAll.Sort((r1, r2) =>
             {
                 return SortColumn.Worker.Compare(r1, r2) * (int)SortDirection;
             });
         }
     }
-    private void AddRow(ThingRec thing, List<ColumnDef> columns)
+    protected void UpdateLayout(ThingRec row)
     {
-        Rows.Add(thing);
-
-        foreach (var column in columns)
+        foreach (var column in Columns)
         {
             try
             {
-                var cellMinWidth = column.Worker.GetCellMinWidth(thing);
+                var cellMinWidth = column.Worker.GetCellMinWidth(row);
 
                 ColumnsWidths[column] = Math.Max(
                     ColumnsWidths[column],
@@ -218,57 +228,52 @@ internal sealed class TableWidget
             }
         }
     }
-    private void ApplyFiltersIfRequired()
+    protected abstract void HandleRowSelect(ThingRec row);
+    protected void ApplyFilters()
     {
-        if (Event.current.type != EventType.Repaint)
+        foreach (var (_, filterWidget) in FilterWidgets)
         {
-            return;
+            if (filterWidget.WasUpdated || filterWidget.HasValue)
+            {
+                TempFiltersToApply.Add(filterWidget);
+                filterWidget.WasUpdated = false;
+            }
         }
 
-        // Note to myself: please refrain from optimizing this part.
-        bool shouldApplyFilters = FilterWidgets
-            .Any(widgetEntry => widgetEntry.Value.WasUpdated);
-
-        if (shouldApplyFilters)
+        if (TempFiltersToApply.Count > 0)
         {
-            foreach (var (_, filterWidget) in FilterWidgets)
+            RowsCur.Clear();
+
+            foreach (var row in RowsAll)
             {
-                if (filterWidget.WasUpdated || filterWidget.HasValue)
+                if (TempFiltersToApply.All(filter => filter.Match(row)))
                 {
-                    TempFiltersToApply.Add(filterWidget);
-                    filterWidget.WasUpdated = false;
+                    RowsCur.Add(row);
                 }
             }
-
-            if (TempFiltersToApply.Count > 0)
-            {
-                Rows.Clear();
-
-                foreach (var row in RowsOrig)
-                {
-                    if (TempFiltersToApply.All(filter => filter.Match(row)))
-                    {
-                        Rows.Add(row);
-                    }
-                }
-            }
-
-            TempFiltersToApply.Clear();
         }
+
+        TempFiltersToApply.Clear();
     }
-    private sealed class TablePart
+    protected class TablePart
     {
-        private readonly TableWidget Parent;
-        private readonly List<ColumnDef> Columns;
-        public float MinWidth { get; } = 0f;
-        public TablePart(TableWidget parent, List<ColumnDef> columns)
+        protected TableWidget_Base Parent { get; }
+        public List<ColumnDef> Columns { get; }
+        public float MinWidth { get; private set; } = 0f;
+        protected bool ShouldDrawRowAddon { get; init; } = false;
+        protected bool ShouldDrawCellAddon { get; init; } = false;
+        public TablePart(TableWidget_Base parent, List<ColumnDef> columns)
         {
             Parent = parent;
             Columns = columns;
+        }
+        public void SyncLayout()
+        {
+            MinWidth = 0f;
 
-            foreach (var column in columns)
+            foreach (var column in Columns)
             {
-                MinWidth += parent.ColumnsWidths[column];
+                MinWidth += Parent.ColumnsWidths[column];
             }
         }
         public void Draw(Rect targetRect, Vector2 scrollPosition)
@@ -384,20 +389,21 @@ internal sealed class TableWidget
             var rowIndexStart = (int)Math.Floor(scrollPosition.y / RowHeight);
             var rowIndexEnd = Math.Min(
                 (int)Math.Ceiling((scrollPosition.y + targetRect.height) / RowHeight),
-                Parent.Rows.Count
+                Parent.RowsCur.Count
             );
+            ThingRec? clickedRow = null;
 
-            // Rows
+            // RowsCur
             for (int rowIndex = rowIndexStart; rowIndex < rowIndexEnd; rowIndex++)
             {
                 var y = rowIndex * RowHeight - scrollPosition.y;
                 var rowRect = new Rect(0f, y, targetRect.width, RowHeight);
-                var row = Parent.Rows[rowIndex];
+                var row = Parent.RowsCur[rowIndex];
 
-                //if (Parent.CurRows == Parent.Rows && Parent.SelectedRows.Contains(row))
-                //{
-                //    Widgets.DrawHighlightSelected(rowRect);
-                //}
+                if (ShouldDrawRowAddon)
+                {
+                    DrawRowAddon(rowRect, row);
+                }
 
                 if (Mouse.IsOver(rowRect))
                 {
@@ -431,20 +437,41 @@ internal sealed class TableWidget
 
                     if (xMax > 0f)
                     {
-                        column
-                            .Worker
-                            .DrawCell(new Rect(x, y, cellWidth, RowHeight), row);
+                        var cellRect = new Rect(x, y, cellWidth, RowHeight);
+
+                        column.Worker.DrawCell(cellRect, row);
+
+                        if (ShouldDrawCellAddon)
+                        {
+                            DrawCellAddon(cellRect, column, row);
+                        }
                     }
 
                     x = xMax;
                 }
 
-                //if (Widgets.ButtonInvisible(rowRect))
-                //{
-                //}
+                if (Widgets.ButtonInvisible(rowRect))
+                {
+                    clickedRow = row;
+                }
             }
 
             Widgets.EndGroup();
+
+            if (clickedRow != null)
+            {
+                Parent.HandleRowSelect(clickedRow);
+            }
+        }
+        protected virtual void DrawRowAddon(Rect rowRect, ThingRec row)
+        {
+        }
+        protected virtual void DrawCellAddon(
+            Rect cellRect,
+            ColumnDef column,
+            ThingRec row
+        )
+        {
         }
         private void DrawColumnSeparators(
             Rect targetRect,

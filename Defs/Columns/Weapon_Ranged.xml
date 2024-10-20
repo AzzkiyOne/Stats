@@ -89,6 +89,7 @@
         <defName>WeaponRanged_AimingTime</defName>
         <label>Aim t.</label>
         <descriptionKey>Stat_Thing_Weapon_RangedWarmupTime_Desc</descriptionKey>
+        <bestIsHighest>false</bestIsHighest>
         <workerClass>Stats.ColumnWorker_WeaponRanged_AimingTime</workerClass>
         <formatString>0.00 s</formatString>
     </Stats.ColumnDef>
@@ -121,6 +122,7 @@
         <defName>WeaponRanged_MissRadius</defName>
         <label>MR</label>
         <descriptionKey>Stat_Thing_Weapon_MissRadius_Desc</descriptionKey>
+        <bestIsHighest>false</bestIsHighest>
         <workerClass>Stats.ColumnWorker_WeaponRanged_MissRadius</workerClass>
         <formatString>0.0</formatString>
     </Stats.ColumnDef>

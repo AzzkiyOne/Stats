@@ -3,7 +3,7 @@ using Verse;
 
 namespace Stats.Compat.CE;
 
-public class ColumnWorker_Caliber : ColumnWorker<ICellWidget<string>>
+public class ColumnWorker_WeaponRanged_Caliber : ColumnWorker<ICellWidget<string>>
 {
     protected override ICellWidget<string>? CreateCell(ThingRec thing)
     {

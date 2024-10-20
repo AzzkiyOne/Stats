@@ -7,7 +7,7 @@ public sealed class CellWidget_Str : ICellWidget<string>
 {
     public string Value { get; }
     private readonly string? Explanation;
-    public float MinWidth { get; } = TableWidget.CellMinWidth;
+    public float MinWidth { get; } = TableWidget_Base.CellMinWidth;
     public CellWidget_Str(string value, string? explanation = null)
     {
         Value = value;
@@ -17,7 +17,7 @@ public sealed class CellWidget_Str : ICellWidget<string>
     public void Draw(Rect targetRect)
     {
         Text.Anchor = TextAnchor.LowerLeft;
-        Widgets.Label(targetRect.ContractedBy(TableWidget.CellPadding, 0f), Value);
+        Widgets.Label(targetRect.ContractedBy(TableWidget_Base.CellPadding, 0f), Value);
         Text.Anchor = Constants.DefaultTextAnchor;
 
         if (Explanation != null)

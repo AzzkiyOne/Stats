@@ -15,6 +15,7 @@ public class ColumnDef : Def
     public string? icon;
     public string? formatString;
     public Type workerClass;
+    public bool bestIsHighest = true;
     private Texture2D? _iconTex;
     public Texture2D? Icon
     {

@@ -9,17 +9,17 @@ public sealed class CellWidget_Things : ICellWidget<List<ThingAlike>>
 {
     public List<ThingAlike> Value { get; }
     private readonly string ValueStr;
-    public float MinWidth { get; } = TableWidget.CellMinWidth;
+    public float MinWidth { get; } = TableWidget_Base.CellMinWidth;
     public CellWidget_Things(List<ThingAlike> value)
     {
         Value = value;
-        MinWidth += value.Count * TableWidget.RowHeight + (Value.Count - 1) * TableWidget.CellPadding;
+        MinWidth += value.Count * TableWidget_Base.RowHeight + (Value.Count - 1) * TableWidget_Base.IconGap;
         Value.SortBy(thing => thing.Label);
         ValueStr = string.Join(", ", Value.Select(thing => thing.Label));
     }
     public void Draw(Rect targetRect)
     {
-        var contentRect = targetRect.ContractedBy(TableWidget.CellPadding, 0f);
+        var contentRect = targetRect.ContractedBy(TableWidget_Base.CellPadding, 0f);
 
         for (int i = 0; i < Value.Count; i++)
         {
@@ -35,7 +35,7 @@ public sealed class CellWidget_Things : ICellWidget<List<ThingAlike>>
             }
 
             TooltipHandler.TipRegion(iconRect, thing.Label);
-            contentRect.PadLeft(TableWidget.CellPadding);
+            contentRect.PadLeft(TableWidget_Base.IconGap);
         }
     }
     public int CompareTo(ICellWidget? other)

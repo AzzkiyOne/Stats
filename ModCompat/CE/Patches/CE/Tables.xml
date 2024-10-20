@@ -4,14 +4,14 @@
     <Operation Class="PatchOperationInsert">
         <xpath>Defs/Stats.TableDef/columns/li[text() = "Mass"]</xpath>
         <value>
-            <li>Bulk</li>
+            <li>CE_Bulk</li>
         </value>
     </Operation>
 
     <Operation Class="PatchOperationReplace">
         <xpath>Defs/Stats.TableDef[defName="WeaponsRanged"]/columns/li[text() = "WeaponRanged_Damage"]</xpath>
         <value>
-            <li>Caliber</li>
+            <li>CE_WeaponRanged_Caliber</li>
         </value>
     </Operation>
 
@@ -19,13 +19,13 @@
         <xpath>Defs/Stats.TableDef[defName="WeaponsRanged"]/columns/li[text() = "WeaponRanged_Range"]</xpath>
         <order>Append</order>
         <value>
-            <li>ShotSpread</li>
-            <li>SwayFactor</li>
-            <li>Recoil</li>
-            <li>SightsEfficiency</li>
-            <li>MagazineCapacity</li>
-            <li>ReloadTime</li>
-            <li>OneHandedness</li>
+            <li>CE_WeaponRanged_OneHandedness</li>
+            <li>CE_WeaponRanged_ReloadTime</li>
+            <li>CE_WeaponRanged_MagazineCapacity</li>
+            <li>CE_WeaponRanged_SightsEfficiency</li>
+            <li>CE_WeaponRanged_Recoil</li>
+            <li>CE_WeaponRanged_SwayFactor</li>
+            <li>CE_WeaponRanged_ShotSpread</li>
         </value>
     </Operation>
 

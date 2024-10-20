@@ -6,11 +6,11 @@ namespace Stats;
 public sealed class CellWidget_Thing : ICellWidget<ThingAlike>
 {
     public ThingAlike Value { get; }
-    public float MinWidth { get; } = TableWidget.CellMinWidth;
+    public float MinWidth { get; } = TableWidget_Base.CellMinWidth;
     public CellWidget_Thing(ThingAlike thing)
     {
         Value = thing;
-        MinWidth += TableWidget.RowHeight + TableWidget.CellPadding + Text.CalcSize(thing.Label).x;
+        MinWidth += TableWidget_Base.RowHeight + TableWidget_Base.IconGap + Text.CalcSize(thing.Label).x;
     }
     public void Draw(Rect targetRect)
     {
@@ -22,10 +22,10 @@ public sealed class CellWidget_Thing : ICellWidget<ThingAlike>
             DefInfoDialogWidget.Draw(Value.Def, Value.Stuff);
         }
 
-        var contentRect = targetRect.ContractedBy(TableWidget.CellPadding, 0f);
+        var contentRect = targetRect.ContractedBy(TableWidget_Base.CellPadding, 0f);
 
         Value.Icon.Draw(contentRect.CutByX(contentRect.height));
-        contentRect.PadLeft(TableWidget.CellPadding);
+        contentRect.PadLeft(TableWidget_Base.IconGap);
         Text.Anchor = TextAnchor.LowerLeft;
         Widgets.Label(contentRect, Value.Label);
         Text.Anchor = Constants.DefaultTextAnchor;

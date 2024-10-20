@@ -6,12 +6,12 @@ namespace Stats;
 public sealed class CellWidget_Bool : ICellWidget<bool>
 {
     public bool Value { get; }
-    public float MinWidth { get; } = TableWidget.CellMinWidth;
+    public float MinWidth { get; } = TableWidget_Base.CellMinWidth;
     private readonly Texture2D Tex;
     public CellWidget_Bool(bool value)
     {
         Value = value;
-        MinWidth += TableWidget.RowHeight;
+        MinWidth += TableWidget_Base.RowHeight;
         Tex = Widgets.GetCheckboxTexture(Value);
     }
     public void Draw(Rect targetRect)
