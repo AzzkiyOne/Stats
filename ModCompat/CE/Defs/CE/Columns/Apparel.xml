@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+
+    <Stats.ColumnDef>
+        <defName>CE_Apparel_Worn_Bulk</defName>
+        <label>bulk (W)</label>
+        <stat>WornBulk</stat>
+        <bestIsHighest>false</bestIsHighest>
+        <workerClass>Stats.ColumnWorker_Num</workerClass>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef>
+        <defName>CE_Apparel_ArmorRating_Electric</defName>
+        <label>armor (E)</label>
+        <stat>ArmorRating_Electric</stat>
+        <workerClass>Stats.ColumnWorker_Num</workerClass>
+    </Stats.ColumnDef>
+
+</Defs>

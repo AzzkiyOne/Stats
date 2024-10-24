@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 using Verse;
 
@@ -17,10 +18,13 @@ public class FilterWidget_Str : IFilterWidget
                 _curValue = value;
                 WasUpdated = true;
                 CurValueLower = value.ToLower();
+                CurValueLowerStrs.Clear();
+                CurValueLowerStrs.AddRange(CurValueLower.Split(','));
             }
         }
     }
     private string CurValueLower = "";
+    private readonly List<string> CurValueLowerStrs = [];
     public bool WasUpdated { get; set; } = false;
     public bool HasValue => CurOperator != Operator.Any;
     private Operator _curOperator = Operator.Any;
@@ -47,6 +51,7 @@ public class FilterWidget_Str : IFilterWidget
     private string CurOperatorStr = "Any";
     private readonly FloatMenu OperatorsMenu;
     private readonly Func<ThingRec, string?> ValueFunc;
+    private const string Description = "Use \",\" to search by multiple terms.";
     public FilterWidget_Str(Func<ThingRec, string?> valueFunc)
     {
         ValueFunc = valueFunc;
@@ -68,9 +73,13 @@ public class FilterWidget_Str : IFilterWidget
             Operator.Any    => true,
             Operator.Eq     => CurValueLower == ""
                 ? valueLower == ""
+                : CurValueLowerStrs.Count > 0
+                ? CurValueLowerStrs.Any(valueLower.Contains)
                 : valueLower.Contains(CurValueLower),
             Operator.EqNot  => CurValueLower == ""
                 ? valueLower != ""
+                : CurValueLowerStrs.Count > 0
+                ? !CurValueLowerStrs.Any(valueLower.Contains)
                 : !valueLower.Contains(CurValueLower),
             #pragma warning restore format
         };
@@ -90,6 +99,7 @@ public class FilterWidget_Str : IFilterWidget
         if (CurOperator != Operator.Any)
         {
             CurValue = Widgets.TextField(targetRect, CurValue);
+            TooltipHandler.TipRegion(targetRect, Description);
         }
     }
     private enum Operator

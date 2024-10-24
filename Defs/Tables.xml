@@ -28,19 +28,16 @@
             <li>WeaponRanged_AccuracyLong</li>
             <li>WeaponRanged_DirectHitChance</li>
             <li>WeaponRanged_MissRadius</li>
+            <li>EquippedStatOffsets</li>
             <li>WeaponMelee_DPS</li>
             <li>WeaponMelee_ArmorPenetration</li>
             <li>WeaponRanged_BuildingDamageFactor_Passable</li>
             <li>WeaponRanged_BuildingDamageFactor_Impassable</li>
-            <li>MarketValue</li>
-            <li>MaxHitPoints</li>
-            <li>Flammability</li>
             <li>Mass</li>
             <li>CreatedAt</li>
             <li>WorkToMake</li>
-            <li>Beauty</li>
-            <li>SellPriceFactor</li>
-            <li>DeteriorationRate</li>
+            <li>MarketValue</li>
+            <li>TechLevel</li>
             <li>ContentSource</li>
         </columns>
     </Stats.TableDef>
@@ -54,15 +51,13 @@
         <columns>
             <li>WeaponMelee_DPS</li>
             <li>WeaponMelee_ArmorPenetration</li>
-            <li>MarketValue</li>
+            <li>EquippedStatOffsets</li>
             <li>MaxHitPoints</li>
-            <li>Flammability</li>
             <li>Mass</li>
             <li>CreatedAt</li>
             <li>WorkToMake</li>
-            <li>Beauty</li>
-            <li>SellPriceFactor</li>
-            <li>DeteriorationRate</li>
+            <li>MarketValue</li>
+            <li>TechLevel</li>
             <li>ContentSource</li>
         </columns>
     </Stats.TableDef>
@@ -80,15 +75,21 @@
         <parent>Apparel</parent>
         <filter>Stats.TableFilters.IsApparelClothing</filter>
         <columns>
-            <li>MarketValue</li>
+            <li>Apparel_Insulation_Cold</li>
+            <li>Apparel_Insulation_Heat</li>
+            <li>Apparel_ArmorRating_Sharp</li>
+            <li>Apparel_ArmorRating_Blunt</li>
+            <li>Apparel_ArmorRating_Heat</li>
+            <li>Apparel_Layers</li>
+            <li>Apparel_Coverage</li>
+            <li>EquippedStatOffsets</li>
             <li>MaxHitPoints</li>
             <li>Flammability</li>
             <li>Mass</li>
             <li>CreatedAt</li>
             <li>WorkToMake</li>
-            <li>Beauty</li>
-            <li>SellPriceFactor</li>
-            <li>DeteriorationRate</li>
+            <li>MarketValue</li>
+            <li>TechLevel</li>
             <li>ContentSource</li>
         </columns>
     </Stats.TableDef>
@@ -100,14 +101,23 @@
         <parent>Apparel</parent>
         <filter>Stats.TableFilters.IsApparelArmor</filter>
         <columns>
-            <li>MarketValue</li>
+            <li>Apparel_ArmorRating_Sharp</li>
+            <li>Apparel_ArmorRating_Blunt</li>
+            <li>Apparel_ArmorRating_Heat</li>
+            <li>Apparel_Insulation_Cold</li>
+            <li>Apparel_Insulation_Heat</li>
+            <li>Apparel_Layers</li>
+            <li>Apparel_Coverage</li>
+            <li>EquippedStatOffsets</li>
+            <li>Apparel_Shield_EnergyMax</li>
+            <li>Apparel_Shield_RechargeRate</li>
             <li>MaxHitPoints</li>
             <li>Flammability</li>
             <li>Mass</li>
             <li>CreatedAt</li>
             <li>WorkToMake</li>
-            <li>Beauty</li>
-            <li>DeteriorationRate</li>
+            <li>MarketValue</li>
+            <li>TechLevel</li>
             <li>ContentSource</li>
         </columns>
     </Stats.TableDef>
@@ -119,14 +129,16 @@
         <parent>Apparel</parent>
         <filter>Stats.TableFilters.IsApparelUtility</filter>
         <columns>
-            <li>MarketValue</li>
+            <li>Apparel_Shield_EnergyMax</li>
+            <li>Apparel_Shield_RechargeRate</li>
+            <li>EquippedStatOffsets</li>
             <li>MaxHitPoints</li>
             <li>Flammability</li>
             <li>Mass</li>
             <li>CreatedAt</li>
             <li>WorkToMake</li>
-            <li>Beauty</li>
-            <li>DeteriorationRate</li>
+            <li>MarketValue</li>
+            <li>TechLevel</li>
             <li>ContentSource</li>
         </columns>
     </Stats.TableDef>
@@ -150,12 +162,9 @@
         <columns>
             <li>Stuff_Category</li>
             <li>MarketValue</li>
-            <li>MaxHitPoints</li>
             <li>Flammability</li>
             <li>Mass</li>
             <li>CreatedAt</li>
-            <li>Beauty</li>
-            <li>DeteriorationRate</li>
             <li>ContentSource</li>
         </columns>
     </Stats.TableDef>
@@ -168,7 +177,6 @@
         <columns>
             <li>MaxHitPoints</li>
             <li>Flammability</li>
-            <li>Mass</li>
             <li>Beauty</li>
             <li>ContentSource</li>
         </columns>
@@ -181,14 +189,10 @@
         <filter>Stats.TableFilters.IsFood</filter>
         <columns>
             <li>Food_Nutrition</li>
-            <li>MarketValue</li>
-            <li>MaxHitPoints</li>
-            <li>Flammability</li>
             <li>Mass</li>
             <li>CreatedAt</li>
             <li>WorkToMake</li>
-            <li>Beauty</li>
-            <li>DeteriorationRate</li>
+            <li>MarketValue</li>
             <li>ContentSource</li>
         </columns>
     </Stats.TableDef>
@@ -200,14 +204,10 @@
         <filter>Stats.TableFilters.IsDrug</filter>
         <columns>
             <li>Food_Nutrition</li>
-            <li>MarketValue</li>
-            <li>MaxHitPoints</li>
-            <li>Flammability</li>
             <li>Mass</li>
             <li>CreatedAt</li>
             <li>WorkToMake</li>
-            <li>Beauty</li>
-            <li>DeteriorationRate</li>
+            <li>MarketValue</li>
             <li>ContentSource</li>
         </columns>
     </Stats.TableDef>

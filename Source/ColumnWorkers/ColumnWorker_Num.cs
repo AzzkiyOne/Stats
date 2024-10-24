@@ -17,7 +17,7 @@ public class ColumnWorker_Num :
 
         return 0f;
     }
-    protected sealed override ICellWidget<float>? CreateCell(ThingRec thing)
+    protected override ICellWidget<float>? CreateCell(ThingRec thing)
     {
         var value = GetValue(thing);
 

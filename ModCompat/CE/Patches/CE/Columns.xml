@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Patch>
+
+    <Operation Class="PatchOperationReplace">
+        <xpath>Defs/Stats.ColumnDef[defName="Apparel_ArmorRating_Sharp" or defName="Apparel_ArmorRating_Blunt"]/workerClass</xpath>
+        <value>
+            <workerClass>Stats.Compat.CE.ColumnWorker_Apparel_ArmorRating</workerClass>
+        </value>
+    </Operation>
+
+</Patch>

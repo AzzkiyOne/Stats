@@ -30,22 +30,37 @@
     </Operation>
 
     <Operation Class="PatchOperationRemove">
-        <xpath>Defs/Stats.TableDef[defName="WeaponsRanged"]/columns/li[
-            text() = "WeaponRanged_StoppingPower"
-            or text() = "WeaponRanged_ArmorPenetration"
-            or text() = "WeaponRanged_AccuracyTouch"
-            or text() = "WeaponRanged_AccuracyShort"
-            or text() = "WeaponRanged_AccuracyMedium"
-            or text() = "WeaponRanged_AccuracyLong"
-            or text() = "WeaponRanged_DirectHitChance"
-            or text() = "WeaponRanged_MissRadius"
-            or text() = "WeaponMelee_DPS"
-            or text() = "WeaponMelee_ArmorPenetration"
+        <xpath>Defs/Stats.TableDef[defName="WeaponsRanged"]/columns/
+        li[ text()="WeaponRanged_StoppingPower"
+            or text()="WeaponRanged_ArmorPenetration"
+            or text()="WeaponRanged_AccuracyTouch"
+            or text()="WeaponRanged_AccuracyShort"
+            or text()="WeaponRanged_AccuracyMedium"
+            or text()="WeaponRanged_AccuracyLong"
+            or text()="WeaponRanged_DirectHitChance"
+            or text()="WeaponRanged_MissRadius"
+            or text()="WeaponMelee_DPS"
+            or text()="WeaponMelee_ArmorPenetration"
         ]</xpath>
     </Operation>
 
     <Operation Class="PatchOperationRemove">
-        <xpath>Defs/Stats.TableDef[defName="WeaponsMelee"]/columns/li[text() = "WeaponMelee_ArmorPenetration"]</xpath>
+        <xpath>Defs/Stats.TableDef[defName="WeaponsMelee"]/columns/li[text()="WeaponMelee_ArmorPenetration"]</xpath>
+    </Operation>
+
+    <Operation Class="PatchOperationInsert">
+        <xpath>Defs/Stats.TableDef/columns/li[text()="Apparel_ArmorRating_Heat"]</xpath>
+        <order>Append</order>
+        <value>
+            <li>CE_Apparel_ArmorRating_Electric</li>
+        </value>
+    </Operation>
+
+    <Operation Class="PatchOperationInsert">
+        <xpath>Defs/Stats.TableDef[defName="ApparelClothing" or defName="ApparelArmor" or defName="ApparelUtility"]/columns/li[text()="CE_Bulk"]</xpath>
+        <value>
+            <li>CE_Apparel_Worn_Bulk</li>
+        </value>
     </Operation>
 
 </Patch>

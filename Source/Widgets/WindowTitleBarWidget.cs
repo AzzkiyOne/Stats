@@ -9,6 +9,7 @@ internal class WindowTitleBarWidget
     private readonly TableSelectorWidget TableSelector;
     private static readonly Texture2D? _holdToDragTex;
     private static Texture2D HoldToDragTex => _holdToDragTex ?? ContentFinder<Texture2D>.Get("UI/Icons/Trainables/Tameness");
+    private const string Manual = "- Click on the title bar to select a table.\n- Click on any row to select it. You can select multiple rows.\n- Press \"Alt\" to compare selected rows.\n- Hold \"Ctrl\" to scroll horizontally.";
     public WindowTitleBarWidget(TableSelectorWidget tableSelector)
     {
         TableSelector = tableSelector;
@@ -35,7 +36,7 @@ internal class WindowTitleBarWidget
         Widgets.ButtonImage(
             targetRect.CutByX(buttonWidth),
             TexButton.Info,
-            tooltip: "How to use:"
+            tooltip: Manual
         );
 
         if (ButtonImageWidget.Draw(

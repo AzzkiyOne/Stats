@@ -20,11 +20,6 @@ internal sealed class TableWidget_Main : TableWidget_Base
         // Can't move this to base class (for now) because it requires for rows to be
         // initialized.
         SyncLayout();
-
-        // There is/was an opportunity somewhere around here to weed out empty columns.
-        // If we'll only record widths of columns that returned a cell at least once
-        // then after we've processed all of the cells we can look into ColumnsWidths
-        // and see what columns are empty.
     }
     public override void Draw(Rect targetRect)
     {

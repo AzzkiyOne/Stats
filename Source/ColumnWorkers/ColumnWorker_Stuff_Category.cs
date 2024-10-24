@@ -2,17 +2,10 @@
 
 namespace Stats;
 
-public class ColumnWorker_Stuff_Category : ColumnWorker<ICellWidget<string>>
+public class ColumnWorker_Stuff_Category : ColumnWorker_Str
 {
-    protected override ICellWidget<string>? CreateCell(ThingRec thing)
+    protected override string? GetValue(ThingRec thing)
     {
-        var value = thing.Def.stuffProps?.categories.FirstOrDefault();
-
-        if (value != null)
-        {
-            return new CellWidget_Str(value.LabelCap);
-        }
-
-        return null;
+        return thing.Def.stuffProps?.categories.FirstOrDefault().LabelCap;
     }
 }

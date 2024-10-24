@@ -56,6 +56,11 @@ internal abstract class TableWidget_Base
         TempFiltersToApply = new(Columns.Count);
 
         InitFilterWidgets();
+
+        // There is/was an opportunity somewhere around here to weed out empty columns.
+        // If we'll only record widths of columns that returned a cell at least once
+        // then after we've processed all of the cells we can look into ColumnsWidths
+        // and see what columns are empty.
     }
     protected void InitRows(TableDef tableDef)
     {
@@ -343,11 +348,16 @@ internal abstract class TableWidget_Base
         {
             if (Parent.SortColumn == column)
             {
-                Widgets.DrawBoxSolid(
+                //Widgets.DrawBoxSolid(
+                //    Parent.SortDirection == SortDirection.Ascending
+                //        ? targetRect.BottomPartPixels(5f)
+                //        : targetRect.TopPartPixels(5f),
+                //    Color.yellow
+                //);
+                Widgets.DrawHighlightSelected(
                     Parent.SortDirection == SortDirection.Ascending
-                        ? targetRect.BottomPartPixels(4f)
-                        : targetRect.TopPartPixels(4f),
-                    Color.yellow
+                        ? targetRect.BottomPartPixels(5f)
+                        : targetRect.TopPartPixels(5f)
                 );
             }
 

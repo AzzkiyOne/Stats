@@ -86,4 +86,11 @@
         <workerClass>Stats.ColumnWorker_Num</workerClass>
     </Stats.ColumnDef>
 
+    <Stats.ColumnDef>
+        <defName>TechLevel</defName>
+        <label>tech level</label>
+        <style>String</style>
+        <workerClass>Stats.ColumnWorker_TechLevel</workerClass>
+    </Stats.ColumnDef>
+
 </Defs>

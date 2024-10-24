@@ -6,12 +6,14 @@ namespace Stats;
 public sealed class CellWidget_Num : ICellWidget<float>
 {
     public float Value { get; }
+    private readonly string? Explanation;
     public float MinWidth { get; } = TableWidget_Base.CellMinWidth;
     private readonly string Text;
-    public CellWidget_Num(float value, string text)
+    public CellWidget_Num(float value, string text, string? explanation = null)
     {
         Value = value;
         Text = text;
+        Explanation = explanation;
         MinWidth += Verse.Text.CalcSize(text).x;
     }
     public void Draw(Rect targetRect)
@@ -19,6 +21,11 @@ public sealed class CellWidget_Num : ICellWidget<float>
         Verse.Text.Anchor = TextAnchor.LowerRight;
         Widgets.Label(targetRect.ContractedBy(TableWidget_Base.CellPadding, 0f), Text);
         Verse.Text.Anchor = Constants.DefaultTextAnchor;
+
+        if (Explanation != null)
+        {
+            TooltipHandler.TipRegion(targetRect, Explanation);
+        }
     }
     public int CompareTo(ICellWidget? other)
     {

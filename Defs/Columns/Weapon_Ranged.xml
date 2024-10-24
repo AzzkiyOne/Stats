@@ -82,6 +82,7 @@
         <defName>WeaponRanged_Cooldown</defName>
         <label>RCD</label>
         <stat>RangedWeapon_Cooldown</stat>
+        <bestIsHighest>false</bestIsHighest>
         <workerClass>Stats.ColumnWorker_Num</workerClass>
     </Stats.ColumnDef>
 
