@@ -101,7 +101,7 @@ internal sealed class TableWidget_Selected : TableWidget_Base
                     Widgets.DrawLineHorizontal(
                         cellRect.x + 5f,
                         cellRect.yMax,
-                        (cellRect.width * valuePct) - 10f,
+                        (cellRect.width - 10f) * valuePct,
                         column.bestIsHighest
                             ? valuePct == 1f ? Color.green : Color.red
                             : valuePct == 1f ? Color.red : Color.green
