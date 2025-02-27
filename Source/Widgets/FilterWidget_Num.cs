@@ -16,29 +16,28 @@ public class FilterWidget_Num : IFilterWidget
         get => _curOperator;
         set
         {
-            if (_curOperator != value)
+            if (_curOperator == value) return;
+
+            _curOperator = value;
+            CurOperatorStr = value switch
             {
-                _curOperator = value;
-                CurOperatorStr = value switch
-                {
-                    #pragma warning disable format
-                    Operator.Any    => "Any",
-                    Operator.Eq     => "==",
-                    Operator.EqNot  => "!=",
-                    Operator.GT     => ">",
-                    Operator.LT     => "<",
-                    Operator.GTorEq => ">=",
-                    Operator.LTorEq => "<=",
-                    #pragma warning restore format
-                };
-                WasUpdated = true;
-            }
+                #pragma warning disable format
+                Operator.Any    => "Any",
+                Operator.Eq     => "==",
+                Operator.EqNot  => "!=",
+                Operator.GT     => ">",
+                Operator.LT     => "<",
+                Operator.GTorEq => ">=",
+                Operator.LTorEq => "<=",
+                #pragma warning restore format
+            };
+            WasUpdated = true;
         }
     }
     private string CurOperatorStr = "Any";
     private readonly FloatMenu OperatorsMenu;
-    private readonly Func<ThingRec, float?> ValueFunc;
-    public FilterWidget_Num(Func<ThingRec, float?> valueFunc)
+    private readonly Func<ThingRec, float> ValueFunc;
+    public FilterWidget_Num(Func<ThingRec, float> valueFunc)
     {
         ValueFunc = valueFunc;
         OperatorsMenu = new([
@@ -55,7 +54,7 @@ public class FilterWidget_Num : IFilterWidget
     }
     public bool Match(ThingRec thing)
     {
-        var value = ValueFunc(thing) ?? 0f;
+        var value = ValueFunc(thing);
 
         return CurOperator switch
         {

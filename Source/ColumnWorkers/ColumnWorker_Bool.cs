@@ -1,34 +1,22 @@
-﻿using RimWorld;
+﻿namespace Stats;
 
-namespace Stats;
-
-public class ColumnWorker_Bool : ColumnWorker<ICellWidget<bool>>
+public abstract class ColumnWorker_Bool : ColumnWorker<bool>
 {
-    protected virtual bool GetValue(ThingRec thing)
+    public override ColumnCellStyle CellStyle => ColumnCellStyle.Boolean;
+    protected override bool ShouldShowValue(bool value)
     {
-        var statReq = StatRequest.For(thing.Def, thing.StuffDef);
-
-        if (ColumnDef.stat!.Worker.ShouldShowFor(statReq) == true)
-        {
-            return ColumnDef.stat!.Worker.GetValue(statReq) > 0f;
-        }
-
-        return false;
+        return value == true;
     }
-    protected sealed override ICellWidget<bool>? CreateCell(ThingRec thing)
+    protected override ICellWidget ValueToCellWidget(bool value, ThingRec thing)
     {
-        var value = GetValue(thing);
-
-        if (value)
-        {
-            return new CellWidget_Bool(value);
-        }
-
-        return null;
+        return new CellWidget_Bool(value);
     }
-
     public override IFilterWidget GetFilterWidget()
     {
-        return new FilterWidget_Bool(thing => GetCell(thing)?.Value);
+        return new FilterWidget_Bool(GetValue);
+    }
+    public override int Compare(ThingRec thing1, ThingRec thing2)
+    {
+        return GetValue(thing1).CompareTo(GetValue(thing2));
     }
 }

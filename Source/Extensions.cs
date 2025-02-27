@@ -33,7 +33,7 @@ internal static class UnityEngine_Rect
     {
         var result = new Rect(rect.x, rect.y, amount, rect.height);
         // Changing "xMin" also auto corrects width. Changing "x" don't.
-        rect.xMin = rect.xMin + amount;
+        rect.xMin += amount;
 
         return result;
     }
@@ -41,13 +41,13 @@ internal static class UnityEngine_Rect
     {
         var result = new Rect(rect.x, rect.y, rect.width, amount);
         // Changing "yMin" also auto corrects height. Changing "y" don't.
-        rect.yMin = rect.yMin + amount;
+        rect.yMin += amount;
 
         return result;
     }
     public static void PadLeft(ref this Rect rect, float amount)
     {
-        rect.xMin = rect.xMin + amount;
+        rect.xMin += amount;
     }
 }
 internal static class VerbList

@@ -4,16 +4,16 @@
     <Stats.ColumnDef>
         <defName>WeaponMelee_DPS</defName>
         <label>DPS (M)</label>
-        <icon>UI/Commands/AttackMelee</icon>
+        <iconPath>UI/Commands/AttackMelee</iconPath>
         <stat>MeleeWeapon_AverageDPS</stat>
-        <workerClass>Stats.ColumnWorker_Num</workerClass>
+        <workerClass>Stats.ColumnWorker_Stat</workerClass>
     </Stats.ColumnDef>
 
     <Stats.ColumnDef>
         <defName>WeaponMelee_ArmorPenetration</defName>
         <label>AP (M)</label>
         <stat>MeleeWeapon_AverageArmorPenetration</stat>
-        <workerClass>Stats.ColumnWorker_Num</workerClass>
+        <workerClass>Stats.ColumnWorker_Stat</workerClass>
     </Stats.ColumnDef>
 
 </Defs>

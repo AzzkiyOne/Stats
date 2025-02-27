@@ -2,18 +2,15 @@
 using RimWorld;
 
 namespace Stats.Compat.CE;
-public class ColumnWorker_WeaponRanged_ReloadTime : ColumnWorker_Num
+
+public class ColumnWorker_WeaponRanged_ReloadTime : ColumnWorker_Stat
 {
-    protected override float GetValue(ThingRec thing)
+    public override float GetValue(ThingRec thing)
     {
-        var stat = CE_StatDefOf.ReloadTime;
         var statReq = StatRequest.For(thing.Def, thing.StuffDef);
 
-        if (CE_StatDefOf.MagazineCapacity.Worker.ShouldShowFor(statReq) == true)
-        {
-            return stat.Worker.GetValue(statReq);
-        }
+        if (CE_StatDefOf.MagazineCapacity.Worker.ShouldShowFor(statReq) == false) return 0f;
 
-        return 0f;
+        return ColumnDef.stat!.Worker.GetValue(statReq);
     }
 }

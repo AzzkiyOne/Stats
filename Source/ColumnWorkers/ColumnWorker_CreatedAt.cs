@@ -4,11 +4,12 @@ using Verse;
 
 namespace Stats;
 
-public class ColumnWorker_CreatedAt : ColumnWorker<ICellWidget<List<ThingAlike>>>
+public class ColumnWorker_CreatedAt : ColumnWorker<IEnumerable<ThingDef>>
 {
-    protected override ICellWidget<List<ThingAlike>>? CreateCell(ThingRec thing)
+    public override ColumnCellStyle CellStyle => ColumnCellStyle.String;
+    public override IEnumerable<ThingDef> GetValue(ThingRec thing)
     {
-        var things = new HashSet<ThingAlike>();
+        var things = new HashSet<ThingDef>();
 
         foreach (var recipe in DefDatabase<RecipeDef>.AllDefs)
         {
@@ -24,11 +25,25 @@ public class ColumnWorker_CreatedAt : ColumnWorker<ICellWidget<List<ThingAlike>>
             }
         }
 
-        if (things.Count > 0)
-        {
-            return new CellWidget_Things(things.ToList());
-        }
-
-        return null;
+        return things;
+    }
+    protected override bool ShouldShowValue(IEnumerable<ThingDef> things)
+    {
+        return things.Count() > 0;
+    }
+    protected override ICellWidget ValueToCellWidget(
+        IEnumerable<ThingDef> things,
+        ThingRec thing
+    )
+    {
+        return new CellWidget_Things(things);
+    }
+    public override IFilterWidget GetFilterWidget()
+    {
+        return new FilterWidget_Str(thing => string.Join(", ", GetValue(thing).Select(thing => thing.LabelCap)));
+    }
+    public override int Compare(ThingRec thing1, ThingRec thing2)
+    {
+        return GetValue(thing1).Count().CompareTo(GetValue(thing2).Count());
     }
 }

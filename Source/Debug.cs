@@ -7,10 +7,7 @@ internal static class Debug
 {
     public static void TryDrawUIDebugInfo(Rect targetRect, string text)
     {
-        if (!InDebugMode)
-        {
-            return;
-        }
+        if (!InDebugMode) return;
 
         var textSize = Text.CalcSize(text);
         const float padding = 5f;

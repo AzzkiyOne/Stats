@@ -6,6 +6,8 @@ namespace Stats;
 
 public sealed class ThingIconWidget
 {
+    private readonly ThingDef ThingDef;
+    private readonly ThingDef? StuffDef;
     private readonly Texture2D Texture;
     private readonly Color Color;
     private readonly Vector2 Proportions;
@@ -13,8 +15,11 @@ public sealed class ThingIconWidget
     private readonly float Scale;
     private readonly float Angle;
     private readonly Vector2 Offset;
+    public ThingIconWidget(ThingRec thing) : this(thing.Def, thing.StuffDef) { }
     public ThingIconWidget(ThingDef thingDef, ThingDef? stuffDef = null)
     {
+        ThingDef = thingDef;
+        StuffDef = stuffDef;
         Texture = Widgets.GetIconFor(thingDef, stuffDef) ?? BaseContent.BadTex;
         Scale = GenUI.IconDrawScale(thingDef);
         Angle = thingDef.uiIconAngle;
@@ -52,6 +57,7 @@ public sealed class ThingIconWidget
     public void Draw(Rect targetRect, float scale = 1f)
     {
         targetRect.position += Offset * targetRect.size;
+        Widgets.DrawHighlightIfMouseover(targetRect);
         GUI.color = Color;
         Widgets.DrawTextureFitted(
             targetRect,
@@ -62,5 +68,12 @@ public sealed class ThingIconWidget
             Angle
         );
         GUI.color = Color.white;
+
+        if (Widgets.ButtonInvisible(targetRect))
+        {
+            DefInfoDialogWidget.Draw(ThingDef, StuffDef);
+        }
+
+        TooltipHandler.TipRegion(targetRect, ThingDef.description);
     }
 }

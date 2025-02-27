@@ -2,5 +2,5 @@
 
 namespace Stats;
 
-//public readonly record struct ThingRec(ThingDef Def, ThingDef? StuffDef);
-public record class ThingRec(ThingDef Def, ThingDef? StuffDef);
+//public readonly record struct ThingRec(ThingDef Def, ThingDef? StuffDef = null);
+public record class ThingRec(ThingDef Def, ThingDef? StuffDef = null);

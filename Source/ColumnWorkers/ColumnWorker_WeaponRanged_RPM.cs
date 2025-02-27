@@ -4,15 +4,12 @@ namespace Stats;
 
 public class ColumnWorker_WeaponRanged_RPM : ColumnWorker_Num
 {
-    protected override float GetValue(ThingRec thing)
+    public override float GetValue(ThingRec thing)
     {
         var verb = thing.Def.Verbs.Primary();
 
-        if (verb is { Ranged: true, showBurstShotStats: true, burstShotCount: > 1 })
-        {
-            return 60f / verb.ticksBetweenBurstShots.TicksToSeconds();
-        }
+        if (verb is not { Ranged: true, showBurstShotStats: true, burstShotCount: > 1 }) return 0f;
 
-        return 0f;
+        return 60f / verb.ticksBetweenBurstShots.TicksToSeconds();
     }
 }

@@ -3,39 +3,35 @@ using Verse;
 
 namespace Stats;
 
-public sealed class CellWidget_Str : ICellWidget<string>
+public sealed class CellWidget_Str : ICellWidget
 {
-    public string Value { get; }
-    private readonly string? Explanation;
-    public float MinWidth { get; } = TableWidget_Base.CellMinWidth;
-    public CellWidget_Str(string value, string? explanation = null)
+    private readonly string Text;
+    private readonly string? Tooltip;
+    private readonly ThingIconWidget? Icon;
+    public float MinWidth =>
+        Icon == null
+        ? Verse.Text.CalcSize(Text).x
+        : TableWidget_Base.RowHeight
+          + TableWidget_Base.IconGap
+          + Verse.Text.CalcSize(Text).x;
+    public CellWidget_Str(
+        string text,
+        string? tooltip = null,
+        ThingIconWidget? icon = null
+    )
     {
-        Value = value;
-        Explanation = explanation;
-        MinWidth += Text.CalcSize(value).x;
+        Text = text;
+        Tooltip = tooltip;
+        Icon = icon;
     }
     public void Draw(Rect targetRect)
     {
-        Text.Anchor = TextAnchor.LowerLeft;
-        Widgets.Label(targetRect.ContractedBy(TableWidget_Base.CellPadding, 0f), Value);
-        Text.Anchor = Constants.DefaultTextAnchor;
+        Icon?.Draw(targetRect.CutByX(targetRect.height));
+        Widgets.Label(targetRect.ContractedBy(TableWidget_Base.CellPadding, 0f), Text);
 
-        if (Explanation != null)
+        if (Tooltip?.Length > 0)
         {
-            TooltipHandler.TipRegion(targetRect, Explanation);
+            TooltipHandler.TipRegion(targetRect, Tooltip);
         }
-    }
-    public int CompareTo(ICellWidget? other)
-    {
-        if (other == null)
-        {
-            return 1;
-        }
-
-        return Value.CompareTo(((ICellWidget<string>)other).Value);
-    }
-    public override string ToString()
-    {
-        return Value;
     }
 }

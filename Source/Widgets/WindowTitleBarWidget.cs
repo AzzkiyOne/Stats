@@ -1,14 +1,14 @@
-﻿using RimWorld;
-using UnityEngine;
+﻿using UnityEngine;
 using Verse;
 
 namespace Stats;
 
+// Just to make RW stop throwing warning regarding assets loading.
+[StaticConstructorOnStartup]
 internal class WindowTitleBarWidget
 {
     private readonly TableSelectorWidget TableSelector;
-    private static readonly Texture2D? _holdToDragTex;
-    private static Texture2D HoldToDragTex => _holdToDragTex ?? ContentFinder<Texture2D>.Get("UI/Icons/Trainables/Tameness");
+    private static readonly Texture2D HoldToDragTex;
     private const string Manual = "- Click on the title bar to select a table.\n- Click on any row to select it. You can select multiple rows.\n- Press \"Alt\" to compare selected rows.\n- Hold \"Ctrl\" to scroll horizontally.";
     public WindowTitleBarWidget(TableSelectorWidget tableSelector)
     {
@@ -55,7 +55,6 @@ internal class WindowTitleBarWidget
             90f
         ))
         {
-
             Event = WindowTitleBarWidgetEvent.Expand;
         }
 
@@ -68,6 +67,10 @@ internal class WindowTitleBarWidget
         }
 
         return Event;
+    }
+    static WindowTitleBarWidget()
+    {
+        HoldToDragTex = ContentFinder<Texture2D>.Get("UI/Icons/Trainables/Tameness");
     }
 }
 

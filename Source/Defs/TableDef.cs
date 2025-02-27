@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using RimWorld;
 using UnityEngine;
 using Verse;
 
@@ -12,35 +13,36 @@ public class TableDef : Def
     public List<ColumnDef> columns;
     public string? iconPath;
     public ThingDef? iconThingDef;
+    internal Color IconColor { get; private set; } = Color.white;
     private TableWidget_Main? _widget;
     internal TableWidget_Main Widget => _widget ??= new(this);
-    private Texture2D _iconTex = BaseContent.BadTex;
-    public Texture2D Icon
+    internal Texture2D Icon { get; private set; } = BaseContent.BadTex;
+    private void ResolveIcon()
     {
-        get
+        if (iconPath?.Length > 0)
         {
-            if (iconPath?.Length > 0)
+            Icon = ContentFinder<Texture2D>.Get(iconPath);
+        }
+        else if (iconThingDef != null)
+        {
+            if (iconThingDef.MadeFromStuff)
             {
-                _iconTex = ContentFinder<Texture2D>.Get(iconPath);
-            }
+                var stuff = GenStuff.DefaultStuffFor(iconThingDef);
 
-            return _iconTex;
+                Icon = iconThingDef.GetUIIconForStuff(stuff);
+                IconColor = iconThingDef.GetColorForStuff(stuff);
+            }
+            else
+            {
+                Icon = iconThingDef.uiIcon;
+                IconColor = iconThingDef.uiIconColor;
+            }
         }
     }
-    public string Path { get; private set; }
-    public override void ResolveReferences()
+    public override void PostLoad()
     {
-        base.ResolveReferences();
+        base.PostLoad();
 
-        Path = LabelCap;
-
-        var curParent = parent;
-
-        while (curParent != null)
-        {
-            // Maybe better use StringBuilder.
-            Path = $"{curParent.LabelCap} / " + Path;
-            curParent = curParent.parent;
-        }
+        LongEventHandler.ExecuteWhenFinished(ResolveIcon);
     }
 }

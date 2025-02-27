@@ -5,50 +5,31 @@ using Verse;
 
 namespace Stats;
 
-public sealed class CellWidget_Things : ICellWidget<List<ThingAlike>>
+public sealed class CellWidget_Things : ICellWidget
 {
-    public List<ThingAlike> Value { get; }
-    private readonly string ValueStr;
-    public float MinWidth { get; } = TableWidget_Base.CellMinWidth;
-    public CellWidget_Things(List<ThingAlike> value)
+    private readonly IEnumerable<ThingIconWidget> Icons;
+    public float MinWidth => (Icons.Count() * TableWidget_Base.RowHeight)
+                             + ((Icons.Count() - 1) * TableWidget_Base.IconGap);
+    public CellWidget_Things(IEnumerable<ThingRec> things)
     {
-        Value = value;
-        MinWidth += value.Count * TableWidget_Base.RowHeight + (Value.Count - 1) * TableWidget_Base.IconGap;
-        Value.SortBy(thing => thing.Label);
-        ValueStr = string.Join(", ", Value.Select(thing => thing.Label));
+        Icons = things
+            .OrderBy(thing => thing.Def.label)
+            .Select(thing => new ThingIconWidget(thing));
+    }
+    public CellWidget_Things(IEnumerable<ThingDef> defs)
+    {
+        Icons = defs
+            .OrderBy(def => def.label)
+            .Select(def => new ThingIconWidget(def));
     }
     public void Draw(Rect targetRect)
     {
         var contentRect = targetRect.ContractedBy(TableWidget_Base.CellPadding, 0f);
 
-        for (int i = 0; i < Value.Count; i++)
+        foreach (var icon in Icons)
         {
-            var thing = Value[i];
-            var iconRect = contentRect.CutByX(contentRect.height);
-
-            thing.Icon.Draw(iconRect);
-            Widgets.DrawHighlightIfMouseover(iconRect);
-
-            if (Widgets.ButtonInvisible(iconRect))
-            {
-                DefInfoDialogWidget.Draw(thing.Def, thing.Stuff);
-            }
-
-            TooltipHandler.TipRegion(iconRect, thing.Label);
+            icon.Draw(contentRect.CutByX(contentRect.height));
             contentRect.PadLeft(TableWidget_Base.IconGap);
         }
-    }
-    public int CompareTo(ICellWidget? other)
-    {
-        if (other == null)
-        {
-            return 1;
-        }
-
-        return Value.Count.CompareTo(((ICellWidget<List<ThingAlike>>)other).Value.Count);
-    }
-    public override string ToString()
-    {
-        return ValueStr;
     }
 }

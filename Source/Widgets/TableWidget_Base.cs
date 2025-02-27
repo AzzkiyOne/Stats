@@ -68,10 +68,7 @@ internal abstract class TableWidget_Base
         {
             foreach (var thingDef in DefDatabase<ThingDef>.AllDefs)
             {
-                if (tableDef.filter(thingDef) == false)
-                {
-                    continue;
-                }
+                if (tableDef.filter(thingDef) == false) continue;
 
                 if (thingDef.MadeFromStuff)
                 {
@@ -220,11 +217,11 @@ internal abstract class TableWidget_Base
         {
             try
             {
-                var cellMinWidth = column.Worker.GetCellMinWidth(row);
+                var cellMinWidth = (column.Worker.GetCellWidget(row)?.MinWidth ?? 0f) + CellMinWidth;
 
                 ColumnsWidths[column] = Math.Max(
                     ColumnsWidths[column],
-                    cellMinWidth ?? 0f
+                    cellMinWidth
                 );
             }
             catch (Exception e)
@@ -243,22 +240,21 @@ internal abstract class TableWidget_Base
                 TempFiltersToApply.Add(filterWidget);
                 filterWidget.WasUpdated = false;
             }
-        }
 
-        if (TempFiltersToApply.Count > 0)
-        {
-            RowsCur.Clear();
-
-            foreach (var row in RowsAll)
+            if (TempFiltersToApply.Count > 0)
             {
-                if (TempFiltersToApply.All(filter => filter.Match(row)))
+                RowsCur.Clear();
+
+                foreach (var row in RowsAll)
                 {
+                    if (TempFiltersToApply.Any(filter => filter.Match(row) == false)) continue;
+
                     RowsCur.Add(row);
                 }
             }
-        }
 
-        TempFiltersToApply.Clear();
+            TempFiltersToApply.Clear();
+        }
     }
     protected class TablePart
     {
@@ -319,10 +315,7 @@ internal abstract class TableWidget_Base
             {
                 var cellWidth = Parent.ColumnsWidths[column] + cellExtraWidth;
 
-                if (x > targetRect.width)
-                {
-                    break;
-                }
+                if (x > targetRect.width) break;
 
                 var xMax = x + cellWidth;
 
@@ -365,17 +358,17 @@ internal abstract class TableWidget_Base
 
             if (column.Icon != null)
             {
-                contentRect = column.style switch
+                contentRect = column.Worker.CellStyle switch
                 {
-                    ColumnStyle.Number => contentRect.RightPartPixels(RowHeight),
-                    ColumnStyle.Boolean => contentRect,
+                    ColumnCellStyle.Number => contentRect.RightPartPixels(RowHeight),
+                    ColumnCellStyle.Boolean => contentRect,
                     _ => contentRect.LeftPartPixels(RowHeight)
                 };
                 Widgets.DrawTextureFitted(contentRect, column.Icon, 1f);
             }
             else
             {
-                Text.Anchor = column.CellTextAnchor;
+                Text.Anchor = (TextAnchor)column.Worker.CellStyle;
                 Widgets.Label(contentRect, column.LabelCap);
                 Text.Anchor = Constants.DefaultTextAnchor;
             }
@@ -438,10 +431,7 @@ internal abstract class TableWidget_Base
                 {
                     var cellWidth = Parent.ColumnsWidths[column] + cellExtraWidth;
 
-                    if (x > targetRect.width)
-                    {
-                        break;
-                    }
+                    if (x > targetRect.width) break;
 
                     var xMax = x + cellWidth;
 
@@ -449,7 +439,9 @@ internal abstract class TableWidget_Base
                     {
                         var cellRect = new Rect(x, y, cellWidth, RowHeight);
 
-                        column.Worker.DrawCell(cellRect, row);
+                        Text.Anchor = (TextAnchor)column.Worker.CellStyle;
+                        column.Worker.GetCellWidget(row)?.Draw(cellRect);
+                        Text.Anchor = Constants.DefaultTextAnchor;
 
                         if (ShouldDrawCellAddon)
                         {
@@ -489,10 +481,7 @@ internal abstract class TableWidget_Base
             float cellExtraWidth
         )
         {
-            if (Event.current.type != EventType.Repaint)
-            {
-                return;
-            }
+            if (Event.current.type != EventType.Repaint) return;
 
             var x = -scrollPosX;
 
@@ -501,10 +490,7 @@ internal abstract class TableWidget_Base
                 var cellWidth = Parent.ColumnsWidths[column] + cellExtraWidth;
                 var xMax = x + cellWidth;
 
-                if (xMax >= targetRect.width)
-                {
-                    break;
-                }
+                if (xMax >= targetRect.width) break;
 
                 if (xMax > 0f)
                 {

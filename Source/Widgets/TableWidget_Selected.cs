@@ -32,13 +32,12 @@ internal sealed class TableWidget_Selected : TableWidget_Base
 
         foreach (var column in Columns)
         {
-            if (column.Worker is IColumnWorker_Num columnWorker)
-            {
-                ColumnsMaxValues[column] = Math.Max(
-                    ColumnsMaxValues.TryGetValue(column) ?? 0f,
-                    columnWorker.GetCellValue(row) ?? 0f
-                );
-            }
+            if (column.Worker is not IColumnWorker<float> columnWorker) continue;
+
+            ColumnsMaxValues[column] = Math.Max(
+                ColumnsMaxValues.TryGetValue(column) ?? 0f,
+                columnWorker.GetValue(row)
+            );
         }
     }
     public void RemoveRow(ThingRec row)
@@ -52,13 +51,12 @@ internal sealed class TableWidget_Selected : TableWidget_Base
         {
             foreach (var column in Columns)
             {
-                if (column.Worker is IColumnWorker_Num columnWorker)
-                {
-                    ColumnsMaxValues[column] = Math.Max(
-                        ColumnsMaxValues.TryGetValue(column) ?? 0f,
-                        columnWorker.GetCellValue(row2) ?? 0f
-                    );
-                }
+                if (column.Worker is not IColumnWorker<float> columnWorker) continue;
+
+                ColumnsMaxValues[column] = Math.Max(
+                    ColumnsMaxValues.TryGetValue(column) ?? 0f,
+                    columnWorker.GetValue(row2)
+                );
             }
         }
     }
@@ -84,30 +82,31 @@ internal sealed class TableWidget_Selected : TableWidget_Base
         )
         {
             if (
-                Event.current.type == EventType.Repaint
-                && column.Worker is IColumnWorker_Num columnWorker
-            )
-            {
-                var valueCell = columnWorker.GetCellValue(row) ?? 0f;
-                var valueMax = ((TableWidget_Selected)Parent)
-                    .ColumnsMaxValues[column] ?? 0f;
+                Event.current.type != EventType.Repaint
+                || column.Worker is not IColumnWorker<float> columnWorker_Num
+            ) return;
 
-                if (valueCell != 0f && valueMax != 0f)
-                {
-                    // I don't remember any negative stat values in the game,
-                    // but we are working not only with stats, so just in case.
-                    var valuePct = Math.Abs(valueCell / valueMax);
+            var valueCell = columnWorker_Num.GetValue(row);
 
-                    Widgets.DrawLineHorizontal(
-                        cellRect.x + 5f,
-                        cellRect.yMax,
-                        (cellRect.width - 10f) * valuePct,
-                        column.bestIsHighest
-                            ? valuePct == 1f ? Color.green : Color.red
-                            : valuePct == 1f ? Color.red : Color.green
-                    );
-                }
-            }
+            if (valueCell == 0f) return;
+
+            var valueMax = ((TableWidget_Selected)Parent)
+                .ColumnsMaxValues[column] ?? 0f;
+
+            if (valueMax == 0f) return;
+
+            // I don't remember any negative stat values in the game,
+            // but we are working not only with stats, so just in case.
+            var valuePct = Math.Abs(valueCell / valueMax);
+
+            Widgets.DrawLineHorizontal(
+                cellRect.x + 5f,
+                cellRect.yMax,
+                (cellRect.width - 10f) * valuePct,
+                column.bestIsHighest
+                    ? valuePct == 1f ? Color.green : Color.red
+                    : valuePct == 1f ? Color.red : Color.green
+            );
         }
     }
 }

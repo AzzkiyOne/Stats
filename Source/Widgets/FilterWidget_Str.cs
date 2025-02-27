@@ -13,14 +13,13 @@ public class FilterWidget_Str : IFilterWidget
         get => _curValue;
         set
         {
-            if (_curValue != value)
-            {
-                _curValue = value;
-                WasUpdated = true;
-                CurValueLower = value.ToLower();
-                CurValueLowerStrs.Clear();
-                CurValueLowerStrs.AddRange(CurValueLower.Split(','));
-            }
+            if (_curValue == value) return;
+
+            _curValue = value;
+            WasUpdated = true;
+            CurValueLower = value.ToLower();
+            CurValueLowerStrs.Clear();
+            CurValueLowerStrs.AddRange(CurValueLower.Split(','));
         }
     }
     private string CurValueLower = "";
@@ -33,19 +32,18 @@ public class FilterWidget_Str : IFilterWidget
         get => _curOperator;
         set
         {
-            if (_curOperator != value)
+            if (_curOperator == value) return;
+
+            _curOperator = value;
+            CurOperatorStr = value switch
             {
-                _curOperator = value;
-                CurOperatorStr = value switch
-                {
-                    #pragma warning disable format
-                    Operator.Any   => "Any",
-                    Operator.Eq    => "==",
-                    Operator.EqNot => "!=",
-                    #pragma warning restore format
-                };
-                WasUpdated = true;
-            }
+                #pragma warning disable format
+                Operator.Any   => "Any",
+                Operator.Eq    => "==",
+                Operator.EqNot => "!=",
+                #pragma warning restore format
+            };
+            WasUpdated = true;
         }
     }
     private string CurOperatorStr = "Any";

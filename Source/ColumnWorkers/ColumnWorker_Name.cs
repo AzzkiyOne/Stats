@@ -1,9 +1,19 @@
 ﻿namespace Stats;
 
-public class ColumnWorker_Name : ColumnWorker<ICellWidget<ThingAlike>>
+public class ColumnWorker_Name : ColumnWorker_Str
 {
-    protected override ICellWidget<ThingAlike>? CreateCell(ThingRec thing)
+    public override string? GetValue(ThingRec thing)
     {
-        return new CellWidget_Thing(new ThingAlike(thing.Def, thing.StuffDef));
+        return thing.StuffDef == null
+            ? thing.Def.LabelCap
+            : $"{thing.Def.LabelCap} ({thing.StuffDef.LabelCap})";
+    }
+    protected override ICellWidget ValueToCellWidget(string value, ThingRec thing)
+    {
+        return new CellWidget_Str(
+            value,
+            thing.Def.description,
+            new ThingIconWidget(thing)
+        );
     }
 }

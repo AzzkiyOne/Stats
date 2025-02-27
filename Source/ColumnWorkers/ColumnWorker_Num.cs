@@ -1,43 +1,37 @@
-﻿using RimWorld;
+﻿namespace Stats;
 
-namespace Stats;
-
-public class ColumnWorker_Num :
-    ColumnWorker<ICellWidget<float>>,
-    IColumnWorker_Num
+public abstract class ColumnWorker_Num : ColumnWorker<float>
 {
-    protected virtual float GetValue(ThingRec thing)
+    public override ColumnCellStyle CellStyle => ColumnCellStyle.Number;
+    protected virtual string FormatValue(float value)
     {
-        var statReq = StatRequest.For(thing.Def, thing.StuffDef);
-
-        if (ColumnDef.stat!.Worker.ShouldShowFor(statReq) == true)
+        if (ColumnDef.formatString != null)
         {
-            return ColumnDef.stat!.Worker.GetValue(statReq);
+            return value.ToString(ColumnDef.formatString);
         }
 
-        return 0f;
+        return value.ToString();
     }
-    protected override ICellWidget<float>? CreateCell(ThingRec thing)
+    protected override bool ShouldShowValue(float value)
     {
-        var value = GetValue(thing);
+        return value != 0f && float.IsNaN(value) == false;
+    }
+    protected override ICellWidget ValueToCellWidget(float value, ThingRec thing)
+    {
+        var valueStr = FormatValue(value);
 
-        if (value != 0f && float.IsNaN(value) == false)
-        {
-            var valueStr = string.IsNullOrEmpty(ColumnDef.formatString)
-                ? ColumnDef.stat!.Worker.ValueToString(value, true)
-                : value.ToString(ColumnDef.formatString);
-
-            return new CellWidget_Num(value, valueStr);
-        }
-
-        return null;
+        return new CellWidget_Str(valueStr);
     }
     public override IFilterWidget GetFilterWidget()
     {
-        return new FilterWidget_Num(thing => GetCell(thing)?.Value);
+        return new FilterWidget_Num(GetValue);
+    }
+    public override int Compare(ThingRec thing1, ThingRec thing2)
+    {
+        return GetValue(thing1).CompareTo(GetValue(thing2));
     }
     public float? GetCellValue(ThingRec thing)
     {
-        return GetCell(thing)?.Value;
+        return GetValue(thing);
     }
 }

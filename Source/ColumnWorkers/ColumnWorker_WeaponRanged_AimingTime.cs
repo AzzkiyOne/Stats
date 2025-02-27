@@ -2,15 +2,12 @@
 
 public class ColumnWorker_WeaponRanged_AimingTime : ColumnWorker_Num
 {
-    protected override float GetValue(ThingRec thing)
+    public override float GetValue(ThingRec thing)
     {
         var verb = thing.Def.Verbs.Primary();
 
-        if (verb?.warmupTime > 0f)
-        {
-            return verb.warmupTime;
-        }
+        if (verb?.warmupTime == null) return 0f;
 
-        return 0f;
+        return verb.warmupTime;
     }
 }

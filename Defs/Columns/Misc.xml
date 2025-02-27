@@ -4,14 +4,12 @@
     <Stats.ColumnDef>
         <defName>Name</defName>
         <label>name</label>
-        <style>String</style>
         <workerClass>Stats.ColumnWorker_Name</workerClass>
     </Stats.ColumnDef>
 
     <Stats.ColumnDef>
         <defName>EquippedStatOffsets</defName>
         <label>offsets</label>
-        <style>Number</style>
         <workerClass>Stats.ColumnWorker_EquippedStatOffsets</workerClass>
     </Stats.ColumnDef>
 

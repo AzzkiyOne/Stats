@@ -7,44 +7,32 @@ namespace Stats;
 
 public class ColumnDef : Def
 {
-    public ColumnStyle style = ColumnStyle.Number;
-    internal TextAnchor CellTextAnchor { get; private set; }
     public StatDef? stat;
     public string? labelKey;
     public string? descriptionKey;
-    public string? icon;
+    public string? iconPath;
     public string? formatString;
+    public StatValueExplanationType? statValueExplanationType;
     public Type workerClass;
     public bool bestIsHighest = true;
-    private Texture2D? _iconTex;
-    public Texture2D? Icon
+    internal Texture2D? Icon { get; private set; }
+    internal IColumnWorker Worker { get; private set; }
+    public override void PostLoad()
     {
-        get
-        {
-            if (_iconTex == null && icon?.Length > 0)
-            {
-                _iconTex = ContentFinder<Texture2D>.Get(icon);
-            }
+        base.PostLoad();
 
-            return _iconTex;
-        }
-    }
-    private IColumnWorker _worker;
-    public IColumnWorker Worker
-    {
-        get
+        LongEventHandler.ExecuteWhenFinished(() =>
         {
-            if (_worker == null)
+            if (iconPath?.Length > 0)
             {
-                _worker = (IColumnWorker)Activator.CreateInstance(workerClass);
-                _worker.ColumnDef = this;
+                Icon = ContentFinder<Texture2D>.Get(iconPath);
             }
-
-            return _worker;
-        }
+        });
     }
     public override void ResolveReferences()
     {
+        base.ResolveReferences();
+
         if (labelKey?.Length > 0 && string.IsNullOrEmpty(label))
         {
             label = labelKey.Translate();
@@ -68,11 +56,7 @@ public class ColumnDef : Def
             }
         }
 
-        CellTextAnchor = style switch
-        {
-            ColumnStyle.Number => TextAnchor.LowerRight,
-            ColumnStyle.Boolean => TextAnchor.LowerCenter,
-            _ => TextAnchor.LowerLeft,
-        };
+        Worker = (IColumnWorker)Activator.CreateInstance(workerClass);
+        Worker.ColumnDef = this;
     }
 }

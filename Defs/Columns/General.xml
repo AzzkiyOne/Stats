@@ -5,36 +5,35 @@
         <defName>MarketValue</defName>
         <label>$$$</label>
         <stat>MarketValue</stat>
-        <workerClass>Stats.ColumnWorker_Num</workerClass>
+        <workerClass>Stats.ColumnWorker_Stat</workerClass>
     </Stats.ColumnDef>
 
     <Stats.ColumnDef>
         <defName>MaxHitPoints</defName>
         <label>max HP</label>
         <stat>MaxHitPoints</stat>
-        <workerClass>Stats.ColumnWorker_Num</workerClass>
+        <workerClass>Stats.ColumnWorker_Stat</workerClass>
     </Stats.ColumnDef>
 
     <Stats.ColumnDef>
         <defName>Flammability</defName>
-        <icon>UI/Icons/ColonistBar/Burning</icon>
+        <iconPath>UI/Icons/ColonistBar/Burning</iconPath>
         <stat>Flammability</stat>
         <bestIsHighest>false</bestIsHighest>
-        <workerClass>Stats.ColumnWorker_Num</workerClass>
+        <workerClass>Stats.ColumnWorker_Stat</workerClass>
     </Stats.ColumnDef>
 
     <Stats.ColumnDef>
         <defName>Mass</defName>
         <stat>Mass</stat>
         <bestIsHighest>false</bestIsHighest>
-        <workerClass>Stats.ColumnWorker_Num</workerClass>
+        <workerClass>Stats.ColumnWorker_Stat</workerClass>
     </Stats.ColumnDef>
 
     <Stats.ColumnDef>
         <defName>CreatedAt</defName>
         <labelKey>CreatedAt</labelKey>
         <descriptionKey>Stat_Thing_CreatedAt_Desc</descriptionKey>
-        <style>String</style>
         <workerClass>Stats.ColumnWorker_CreatedAt</workerClass>
     </Stats.ColumnDef>
 
@@ -45,13 +44,13 @@
         <label>work</label>
         <stat>WorkToMake</stat>
         <bestIsHighest>false</bestIsHighest>
-        <workerClass>Stats.ColumnWorker_Num</workerClass>
+        <workerClass>Stats.ColumnWorker_Stat</workerClass>
     </Stats.ColumnDef>
 
     <Stats.ColumnDef>
         <defName>Beauty</defName>
         <stat>Beauty</stat>
-        <workerClass>Stats.ColumnWorker_Num</workerClass>
+        <workerClass>Stats.ColumnWorker_Stat</workerClass>
     </Stats.ColumnDef>
 
     <Stats.ColumnDef>
@@ -59,7 +58,7 @@
         <label>$$$ %</label>
         <stat>SellPriceFactor</stat>
         <bestIsHighest>false</bestIsHighest>
-        <workerClass>Stats.ColumnWorker_Num</workerClass>
+        <workerClass>Stats.ColumnWorker_Stat</workerClass>
     </Stats.ColumnDef>
 
     <Stats.ColumnDef>
@@ -67,29 +66,26 @@
         <label>-HP / d</label>
         <stat>DeteriorationRate</stat>
         <bestIsHighest>false</bestIsHighest>
-        <workerClass>Stats.ColumnWorker_Num</workerClass>
+        <workerClass>Stats.ColumnWorker_Stat</workerClass>
         <formatString>0.00 / d</formatString>
     </Stats.ColumnDef>
 
     <Stats.ColumnDef>
         <defName>ContentSource</defName>
         <labelKey>Stat_Source_Label</labelKey>
-        <style>String</style>
         <workerClass>Stats.ColumnWorker_ContentSource</workerClass>
     </Stats.ColumnDef>
 
     <Stats.ColumnDef>
         <defName>Food_Nutrition</defName>
         <label>nutrition</label>
-        <style>Number</style>
         <stat>Nutrition</stat>
-        <workerClass>Stats.ColumnWorker_Num</workerClass>
+        <workerClass>Stats.ColumnWorker_Stat</workerClass>
     </Stats.ColumnDef>
 
     <Stats.ColumnDef>
         <defName>TechLevel</defName>
         <label>tech level</label>
-        <style>String</style>
         <workerClass>Stats.ColumnWorker_TechLevel</workerClass>
     </Stats.ColumnDef>
 

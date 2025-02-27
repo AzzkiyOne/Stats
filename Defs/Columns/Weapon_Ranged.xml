@@ -5,7 +5,7 @@
         <defName>WeaponRanged_Damage</defName>
         <labelKey>Damage</labelKey>
         <descriptionKey>Stat_Thing_Damage_Desc</descriptionKey>
-        <icon>UI/Commands/Attack</icon>
+        <iconPath>UI/Commands/Attack</iconPath>
         <workerClass>Stats.ColumnWorker_WeaponRanged_Damage</workerClass>
     </Stats.ColumnDef>
 
@@ -13,7 +13,7 @@
         <defName>WeaponRanged_StoppingPower</defName>
         <label>power</label>
         <descriptionKey>StoppingPowerExplanation</descriptionKey>
-        <icon>UI/Icons/Trainables/Obedience</icon>
+        <iconPath>UI/Icons/Trainables/Obedience</iconPath>
         <workerClass>Stats.ColumnWorker_WeaponRanged_StoppingPower</workerClass>
         <formatString>F1</formatString>
     </Stats.ColumnDef>
@@ -54,28 +54,28 @@
         <defName>WeaponRanged_AccuracyTouch</defName>
         <label>acc. (3)</label>
         <stat>AccuracyTouch</stat>
-        <workerClass>Stats.ColumnWorker_Num</workerClass>
+        <workerClass>Stats.ColumnWorker_Stat</workerClass>
     </Stats.ColumnDef>
 
     <Stats.ColumnDef>
         <defName>WeaponRanged_AccuracyShort</defName>
         <label>acc. (12)</label>
         <stat>AccuracyShort</stat>
-        <workerClass>Stats.ColumnWorker_Num</workerClass>
+        <workerClass>Stats.ColumnWorker_Stat</workerClass>
     </Stats.ColumnDef>
 
     <Stats.ColumnDef>
         <defName>WeaponRanged_AccuracyMedium</defName>
         <label>acc. (25)</label>
         <stat>AccuracyMedium</stat>
-        <workerClass>Stats.ColumnWorker_Num</workerClass>
+        <workerClass>Stats.ColumnWorker_Stat</workerClass>
     </Stats.ColumnDef>
 
     <Stats.ColumnDef>
         <defName>WeaponRanged_AccuracyLong</defName>
         <label>acc. (40)</label>
         <stat>AccuracyLong</stat>
-        <workerClass>Stats.ColumnWorker_Num</workerClass>
+        <workerClass>Stats.ColumnWorker_Stat</workerClass>
     </Stats.ColumnDef>
 
     <Stats.ColumnDef>
@@ -83,7 +83,7 @@
         <label>RCD</label>
         <stat>RangedWeapon_Cooldown</stat>
         <bestIsHighest>false</bestIsHighest>
-        <workerClass>Stats.ColumnWorker_Num</workerClass>
+        <workerClass>Stats.ColumnWorker_Stat</workerClass>
     </Stats.ColumnDef>
 
     <Stats.ColumnDef>

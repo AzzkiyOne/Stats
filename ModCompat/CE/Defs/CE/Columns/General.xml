@@ -5,7 +5,7 @@
         <defName>CE_Bulk</defName>
         <stat>Bulk</stat>
         <bestIsHighest>false</bestIsHighest>
-        <workerClass>Stats.ColumnWorker_Num</workerClass>
+        <workerClass>Stats.ColumnWorker_Stat</workerClass>
     </Stats.ColumnDef>
 
 </Defs>

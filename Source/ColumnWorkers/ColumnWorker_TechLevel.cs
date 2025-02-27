@@ -4,7 +4,7 @@ namespace Stats;
 
 public class ColumnWorker_TechLevel : ColumnWorker_Str
 {
-    protected override string? GetValue(ThingRec thing)
+    public override string? GetValue(ThingRec thing)
     {
         return thing.Def.techLevel switch
         {

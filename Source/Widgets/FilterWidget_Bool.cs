@@ -12,23 +12,22 @@ public class FilterWidget_Bool : IFilterWidget
         get => _curValue;
         set
         {
-            if (_curValue != value)
-            {
-                _curValue = value;
-                WasUpdated = true;
-            }
+            if (_curValue == value) return;
+
+            _curValue = value;
+            WasUpdated = true;
         }
     }
     public bool WasUpdated { get; set; } = false;
     public bool HasValue => CurValue != null;
-    private readonly Func<ThingRec, bool?> ValueFunc;
-    public FilterWidget_Bool(Func<ThingRec, bool?> valueFunc)
+    private readonly Func<ThingRec, bool> ValueFunc;
+    public FilterWidget_Bool(Func<ThingRec, bool> valueFunc)
     {
         ValueFunc = valueFunc;
     }
     public bool Match(ThingRec thing)
     {
-        var value = ValueFunc(thing) ?? false;
+        var value = ValueFunc(thing);
 
         return CurValue switch
         {
