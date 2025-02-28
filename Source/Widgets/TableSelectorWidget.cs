@@ -7,15 +7,14 @@ namespace Stats;
 
 internal class TableSelectorWidget
 {
-    public TableDef CurTableDef { get; private set; }
-    private string _curLabel;
-    private string CurLabel
+    private TableDef _CurTableDef;
+    public TableDef CurTableDef
     {
-        get => _curLabel;
-        set
+        get => _CurTableDef;
+        private set
         {
-            _curLabel = value;
-            CurLabelWidth = Text.CalcSize(value).x;
+            _CurTableDef = value;
+            CurLabelWidth = Text.CalcSize(value.LabelCap).x;
         }
     }
     private float CurLabelWidth;
@@ -25,29 +24,12 @@ internal class TableSelectorWidget
         var menuOptions = DefDatabase<TableDef>
             .AllDefs
             .Where(tableDef => tableDef.columns.Count > 0)
-            .Select(tableDef =>
-            {
-                var label = tableDef.LabelCap;
-                var curParent = tableDef.parent;
-
-                while (curParent != null)
-                {
-                    // Maybe better use StringBuilder.
-                    label = $"{curParent.LabelCap} / " + label;
-                    curParent = curParent.parent;
-                }
-
-                return new FloatMenuOption(
-                    label,
-                    () =>
-                    {
-                        CurTableDef = tableDef;
-                        CurLabel = label;
-                    },
-                    tableDef.Icon,
-                    tableDef.IconColor
-                );
-            })
+            .Select(tableDef => new FloatMenuOption(
+                tableDef.LabelCap,
+                () => CurTableDef = tableDef,
+                tableDef.Icon,
+                tableDef.IconColor
+            ))
             .OrderBy(opt => opt.Label)
             .ToList();
 
@@ -65,7 +47,7 @@ internal class TableSelectorWidget
 
         if (labelDoesntFit)
         {
-            TooltipHandler.TipRegion(targetRect, CurLabel);
+            TooltipHandler.TipRegion(targetRect, CurTableDef.LabelCap);
         }
 
         Widgets.DrawHighlightIfMouseover(targetRect);
@@ -87,7 +69,7 @@ internal class TableSelectorWidget
 
         Widgets.Label(
             targetRect.ContractedBy(GenUI.Pad, 0f),
-            CurLabel
+            CurTableDef.LabelCap
         );
     }
 }

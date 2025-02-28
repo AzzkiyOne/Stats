@@ -9,14 +9,14 @@
     </Operation>
 
     <Operation Class="PatchOperationReplace">
-        <xpath>Defs/Stats.TableDef[defName="WeaponsRanged"]/columns/li[text() = "WeaponRanged_Damage"]</xpath>
+        <xpath>Defs/Stats.TableDef[defName="RangedWeapons"]/columns/li[text() = "WeaponRanged_Damage"]</xpath>
         <value>
             <li>CE_WeaponRanged_Caliber</li>
         </value>
     </Operation>
 
     <Operation Class="PatchOperationInsert">
-        <xpath>Defs/Stats.TableDef[defName="WeaponsRanged"]/columns/li[text() = "WeaponRanged_Range"]</xpath>
+        <xpath>Defs/Stats.TableDef[defName="RangedWeapons"]/columns/li[text() = "WeaponRanged_Range"]</xpath>
         <order>Append</order>
         <value>
             <li>CE_WeaponRanged_OneHandedness</li>
@@ -30,7 +30,7 @@
     </Operation>
 
     <Operation Class="PatchOperationRemove">
-        <xpath>Defs/Stats.TableDef[defName="WeaponsRanged"]/columns/
+        <xpath>Defs/Stats.TableDef[defName="RangedWeapons"]/columns/
         li[ text()="WeaponRanged_StoppingPower"
             or text()="WeaponRanged_ArmorPenetration"
             or text()="WeaponRanged_AccuracyTouch"
@@ -45,7 +45,7 @@
     </Operation>
 
     <Operation Class="PatchOperationRemove">
-        <xpath>Defs/Stats.TableDef[defName="WeaponsMelee"]/columns/li[text()="WeaponMelee_ArmorPenetration"]</xpath>
+        <xpath>Defs/Stats.TableDef[defName="MeleeWeapons"]/columns/li[text()="WeaponMelee_ArmorPenetration"]</xpath>
     </Operation>
 
     <Operation Class="PatchOperationInsert">
@@ -57,7 +57,7 @@
     </Operation>
 
     <Operation Class="PatchOperationInsert">
-        <xpath>Defs/Stats.TableDef[defName="ApparelClothing" or defName="ApparelArmor" or defName="ApparelUtility"]/columns/li[text()="CE_Bulk"]</xpath>
+        <xpath>Defs/Stats.TableDef[defName="Clothing" or defName="Armor" or defName="UtilityApparel"]/columns/li[text()="CE_Bulk"]</xpath>
         <value>
             <li>CE_Apparel_Worn_Bulk</li>
         </value>

@@ -14,7 +14,7 @@ public class ColumnDef : Def
     public string? formatString;
     public StatValueExplanationType? statValueExplanationType;
     public Type workerClass;
-    public bool bestIsHighest = true;
+    public bool isNegative = false;
     internal Texture2D? Icon { get; private set; }
     internal IColumnWorker Worker { get; private set; }
     public override void PostLoad()

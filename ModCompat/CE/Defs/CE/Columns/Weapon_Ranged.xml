@@ -4,7 +4,7 @@
     <Stats.ColumnDef>
         <defName>CE_WeaponRanged_ShotSpread</defName>
         <stat>ShotSpread</stat>
-        <bestIsHighest>false</bestIsHighest>
+        <isNegative>true</isNegative>
         <workerClass>Stats.ColumnWorker_Stat</workerClass>
     </Stats.ColumnDef>
 
@@ -12,7 +12,7 @@
         <defName>CE_WeaponRanged_SwayFactor</defName>
         <label>sway</label>
         <stat>SwayFactor</stat>
-        <bestIsHighest>false</bestIsHighest>
+        <isNegative>true</isNegative>
         <workerClass>Stats.ColumnWorker_Stat</workerClass>
     </Stats.ColumnDef>
 
@@ -20,7 +20,7 @@
         <defName>CE_WeaponRanged_Recoil</defName>
         <label>recoil</label>
         <stat>Recoil</stat>
-        <bestIsHighest>false</bestIsHighest>
+        <isNegative>true</isNegative>
         <workerClass>Stats.ColumnWorker_Stat</workerClass>
     </Stats.ColumnDef>
 
@@ -42,7 +42,7 @@
     <Stats.ColumnDef>
         <defName>CE_WeaponRanged_ReloadTime</defName>
         <stat>ReloadTime</stat>
-        <bestIsHighest>false</bestIsHighest>
+        <isNegative>true</isNegative>
         <workerClass>Stats.Compat.CE.ColumnWorker_WeaponRanged_ReloadTime</workerClass>
         <formatString>0.00 s</formatString>
     </Stats.ColumnDef>

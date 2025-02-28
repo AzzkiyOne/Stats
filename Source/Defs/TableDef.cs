@@ -8,15 +8,15 @@ namespace Stats;
 
 public class TableDef : Def
 {
-    public TableDef? parent;
-    public Func<ThingDef, bool>? filter;
-    public List<ColumnDef> columns;
+    public List<ColumnDef> columns = [];
+    public Type workerClass;
     public string? iconPath;
     public ThingDef? iconThingDef;
+    internal ITableWorker Worker { get; private set; }
+    internal Texture2D Icon { get; private set; } = BaseContent.BadTex;
     internal Color IconColor { get; private set; } = Color.white;
     private TableWidget_Main? _widget;
     internal TableWidget_Main Widget => _widget ??= new(this);
-    internal Texture2D Icon { get; private set; } = BaseContent.BadTex;
     private void ResolveIcon()
     {
         if (iconPath?.Length > 0)
@@ -44,5 +44,12 @@ public class TableDef : Def
         base.PostLoad();
 
         LongEventHandler.ExecuteWhenFinished(ResolveIcon);
+    }
+    public override void ResolveReferences()
+    {
+        base.ResolveReferences();
+
+        Worker = (ITableWorker)Activator.CreateInstance(workerClass);
+        Worker.TableDef = this;
     }
 }

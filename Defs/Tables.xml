@@ -2,17 +2,10 @@
 <Defs>
 
     <Stats.TableDef>
-        <defName>Weapons</defName>
-        <label>weapons</label>
-        <columns></columns>
-    </Stats.TableDef>
-
-    <Stats.TableDef>
-        <defName>WeaponsRanged</defName>
-        <label>ranged</label>
+        <defName>RangedWeapons</defName>
+        <label>ranged weapons</label>
         <iconThingDef>Gun_Revolver</iconThingDef>
-        <parent>Weapons</parent>
-        <filter>Stats.TableFilters.IsWeaponRanged</filter>
+        <workerClass>Stats.TableWorker_RangedWeapons</workerClass>
         <columns>
             <li>WeaponRanged_Damage</li>
             <li>WeaponRanged_StoppingPower</li>
@@ -43,11 +36,10 @@
     </Stats.TableDef>
 
     <Stats.TableDef>
-        <defName>WeaponsMelee</defName>
-        <label>melee</label>
+        <defName>MeleeWeapons</defName>
+        <label>melee weapons</label>
         <iconThingDef>MeleeWeapon_Club</iconThingDef>
-        <parent>Weapons</parent>
-        <filter>Stats.TableFilters.IsWeaponMelee</filter>
+        <workerClass>Stats.TableWorker_MeleeWeapons</workerClass>
         <columns>
             <li>WeaponMelee_DPS</li>
             <li>WeaponMelee_ArmorPenetration</li>
@@ -63,17 +55,10 @@
     </Stats.TableDef>
 
     <Stats.TableDef>
-        <defName>Apparel</defName>
-        <label>apparel</label>
-        <columns></columns>
-    </Stats.TableDef>
-
-    <Stats.TableDef>
-        <defName>ApparelClothing</defName>
+        <defName>Clothing</defName>
         <label>clothing</label>
         <iconThingDef>Apparel_Duster</iconThingDef>
-        <parent>Apparel</parent>
-        <filter>Stats.TableFilters.IsApparelClothing</filter>
+        <workerClass>Stats.TableWorker_Clothing</workerClass>
         <columns>
             <li>Apparel_Insulation_Cold</li>
             <li>Apparel_Insulation_Heat</li>
@@ -95,11 +80,10 @@
     </Stats.TableDef>
 
     <Stats.TableDef>
-        <defName>ApparelArmor</defName>
+        <defName>Armor</defName>
         <label>armor</label>
         <iconThingDef>Apparel_PowerArmor</iconThingDef>
-        <parent>Apparel</parent>
-        <filter>Stats.TableFilters.IsApparelArmor</filter>
+        <workerClass>Stats.TableWorker_Armor</workerClass>
         <columns>
             <li>Apparel_ArmorRating_Sharp</li>
             <li>Apparel_ArmorRating_Blunt</li>
@@ -123,11 +107,10 @@
     </Stats.TableDef>
 
     <Stats.TableDef>
-        <defName>ApparelUtility</defName>
-        <label>utility</label>
+        <defName>UtilityApparel</defName>
+        <label>utility apparel</label>
         <iconThingDef>Apparel_FirefoampopPack</iconThingDef>
-        <parent>Apparel</parent>
-        <filter>Stats.TableFilters.IsApparelUtility</filter>
+        <workerClass>Stats.TableWorker_UtilityApparel</workerClass>
         <columns>
             <li>Apparel_Shield_EnergyMax</li>
             <li>Apparel_Shield_RechargeRate</li>
@@ -147,7 +130,7 @@
         <defName>Animals</defName>
         <label>animals</label>
         <iconThingDef>Cow</iconThingDef>
-        <filter>Stats.TableFilters.IsAnimal</filter>
+        <workerClass>Stats.TableWorker_Animals</workerClass>
         <columns>
             <li>MarketValue</li>
             <li>ContentSource</li>
@@ -158,7 +141,7 @@
         <defName>Stuff</defName>
         <label>stuff</label>
         <iconThingDef>Cloth</iconThingDef>
-        <filter>Stats.TableFilters.IsStuff</filter>
+        <workerClass>Stats.TableWorker_Stuff</workerClass>
         <columns>
             <li>Stuff_Category</li>
             <li>MarketValue</li>
@@ -173,7 +156,7 @@
         <defName>Plants</defName>
         <label>plants</label>
         <iconThingDef>Plant_TreeOak</iconThingDef>
-        <filter>Stats.TableFilters.IsPlant</filter>
+        <workerClass>Stats.TableWorker_Plants</workerClass>
         <columns>
             <li>MaxHitPoints</li>
             <li>Flammability</li>
@@ -186,7 +169,7 @@
         <defName>Food</defName>
         <label>food</label>
         <iconThingDef>MealLavish</iconThingDef>
-        <filter>Stats.TableFilters.IsFood</filter>
+        <workerClass>Stats.TableWorker_Food</workerClass>
         <columns>
             <li>Food_Nutrition</li>
             <li>Mass</li>
@@ -201,7 +184,7 @@
         <defName>Drugs</defName>
         <label>drugs</label>
         <iconThingDef>Yayo</iconThingDef>
-        <filter>Stats.TableFilters.IsDrug</filter>
+        <workerClass>Stats.TableWorker_Drugs</workerClass>
         <columns>
             <li>Food_Nutrition</li>
             <li>Mass</li>

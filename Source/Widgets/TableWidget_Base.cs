@@ -64,29 +64,10 @@ internal abstract class TableWidget_Base
     }
     protected void InitRows(TableDef tableDef)
     {
-        if (tableDef.filter != null)
-        {
-            foreach (var thingDef in DefDatabase<ThingDef>.AllDefs)
-            {
-                if (tableDef.filter(thingDef) == false) continue;
+        var rows = tableDef.Worker.GetRecords();
 
-                if (thingDef.MadeFromStuff)
-                {
-                    var allowedStuffs = GenStuff.AllowedStuffsFor(thingDef);
-
-                    foreach (var stuffDef in allowedStuffs)
-                    {
-                        RowsAll.Add(new(thingDef, stuffDef));
-                    }
-                }
-                else
-                {
-                    RowsAll.Add(new(thingDef, null));
-                }
-            }
-        }
-
-        RowsCur.AddRange(RowsAll);
+        RowsAll.AddRange(rows);
+        RowsCur.AddRange(rows);
         SortRows();
     }
     protected void SyncLayout()

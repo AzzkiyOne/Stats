@@ -103,9 +103,9 @@ internal sealed class TableWidget_Selected : TableWidget_Base
                 cellRect.x + 5f,
                 cellRect.yMax,
                 (cellRect.width - 10f) * valuePct,
-                column.bestIsHighest
-                    ? valuePct == 1f ? Color.green : Color.red
-                    : valuePct == 1f ? Color.red : Color.green
+                column.isNegative
+                    ? valuePct == 1f ? Color.red : Color.green
+                    : valuePct == 1f ? Color.green : Color.red
             );
         }
     }

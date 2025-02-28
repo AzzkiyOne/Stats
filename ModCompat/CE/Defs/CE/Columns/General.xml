@@ -4,7 +4,7 @@
     <Stats.ColumnDef>
         <defName>CE_Bulk</defName>
         <stat>Bulk</stat>
-        <bestIsHighest>false</bestIsHighest>
+        <isNegative>true</isNegative>
         <workerClass>Stats.ColumnWorker_Stat</workerClass>
     </Stats.ColumnDef>
 
