@@ -2,7 +2,7 @@
 
 namespace Stats;
 
-internal interface ITableWorker
+public interface ITableWorker
 {
     TableDef TableDef { get; set; }
     IEnumerable<ThingRec> GetRecords();

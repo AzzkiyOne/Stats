@@ -2,7 +2,7 @@
 
 namespace Stats;
 
-public interface ICellWidget
+public interface IWidget
 {
     float MinWidth { get; }
     void Draw(Rect targetRect);

@@ -4,8 +4,8 @@ public interface IColumnWorker
 {
     ColumnCellStyle CellStyle { get; }
     ColumnDef ColumnDef { get; set; }
-    ICellWidget? GetCellWidget(ThingRec thing);
-    IFilterWidget GetFilterWidget();
+    IWidget? GetTableCellContent(ThingRec thing);
+    IWidget_FilterInput GetFilterWidget();
     int Compare(ThingRec thing1, ThingRec thing2);
 }
 

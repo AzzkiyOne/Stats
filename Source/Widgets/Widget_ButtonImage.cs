@@ -3,7 +3,7 @@ using Verse;
 
 namespace Stats;
 
-internal static class ButtonImageWidget
+internal static class Widget_ButtonImage
 {
     public static bool Draw(
         Rect targetRect,

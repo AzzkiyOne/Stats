@@ -16,15 +16,15 @@ public abstract class ColumnWorker_Num : ColumnWorker<float>
     {
         return value != 0f && float.IsNaN(value) == false;
     }
-    protected override ICellWidget ValueToCellWidget(float value, ThingRec thing)
+    protected override IWidget GetTableCellContent(float value, ThingRec thing)
     {
         var valueStr = FormatValue(value);
 
-        return new CellWidget_Str(valueStr);
+        return new Widget_Label_Temp(valueStr) { Style = CellStyle };
     }
-    public override IFilterWidget GetFilterWidget()
+    public override IWidget_FilterInput GetFilterWidget()
     {
-        return new FilterWidget_Num(GetValue);
+        return new Widget_FilterInput_Num(GetValue);
     }
     public override int Compare(ThingRec thing1, ThingRec thing2)
     {

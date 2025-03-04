@@ -4,7 +4,7 @@ using Verse;
 
 namespace Stats;
 
-public sealed class ThingIconWidget
+public sealed class Widget_ThingIcon
 {
     private readonly ThingDef ThingDef;
     private readonly ThingDef? StuffDef;
@@ -15,8 +15,8 @@ public sealed class ThingIconWidget
     private readonly float Scale;
     private readonly float Angle;
     private readonly Vector2 Offset;
-    public ThingIconWidget(ThingRec thing) : this(thing.Def, thing.StuffDef) { }
-    public ThingIconWidget(ThingDef thingDef, ThingDef? stuffDef = null)
+    public Widget_ThingIcon(ThingRec thing) : this(thing.Def, thing.StuffDef) { }
+    public Widget_ThingIcon(ThingDef thingDef, ThingDef? stuffDef = null)
     {
         ThingDef = thingDef;
         StuffDef = stuffDef;
@@ -71,7 +71,7 @@ public sealed class ThingIconWidget
 
         if (Widgets.ButtonInvisible(targetRect))
         {
-            DefInfoDialogWidget.Draw(ThingDef, StuffDef);
+            Widget_DefInfoDialog.Draw(ThingDef, StuffDef);
         }
 
         TooltipHandler.TipRegion(targetRect, ThingDef.description);

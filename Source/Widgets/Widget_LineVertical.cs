@@ -3,7 +3,7 @@ using Verse;
 
 namespace Stats;
 
-internal static class LineVerticalWidget
+internal static class Widget_LineVertical
 {
     public static void Draw(float x, float y, float length, Color color)
     {

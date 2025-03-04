@@ -5,7 +5,7 @@ using Verse;
 
 namespace Stats;
 
-public class FilterWidget_Str : IFilterWidget
+public class Widget_FilterInput_Str : IWidget_FilterInput
 {
     private string _curValue = "";
     private string CurValue
@@ -41,6 +41,7 @@ public class FilterWidget_Str : IFilterWidget
                 Operator.Any   => "Any",
                 Operator.Eq    => "==",
                 Operator.EqNot => "!=",
+                _              => throw new NotImplementedException(),
                 #pragma warning restore format
             };
             WasUpdated = true;
@@ -50,7 +51,7 @@ public class FilterWidget_Str : IFilterWidget
     private readonly FloatMenu OperatorsMenu;
     private readonly Func<ThingRec, string?> ValueFunc;
     private const string Description = "Use \",\" to search by multiple terms.";
-    public FilterWidget_Str(Func<ThingRec, string?> valueFunc)
+    public Widget_FilterInput_Str(Func<ThingRec, string?> valueFunc)
     {
         ValueFunc = valueFunc;
         OperatorsMenu = new([
@@ -79,6 +80,7 @@ public class FilterWidget_Str : IFilterWidget
                 : CurValueLowerStrs.Count > 0
                 ? !CurValueLowerStrs.Any(valueLower.Contains)
                 : !valueLower.Contains(CurValueLower),
+            _               => throw new NotImplementedException(),
             #pragma warning restore format
         };
     }

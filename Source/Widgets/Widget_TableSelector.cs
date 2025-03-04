@@ -5,7 +5,7 @@ using Verse;
 
 namespace Stats;
 
-internal class TableSelectorWidget
+internal class Widget_TableSelector
 {
     private TableDef _CurTableDef;
     public TableDef CurTableDef
@@ -19,11 +19,11 @@ internal class TableSelectorWidget
     }
     private float CurLabelWidth;
     private FloatMenu Menu { get; }
-    public TableSelectorWidget()
+    public Widget_TableSelector()
     {
-        var menuOptions = DefDatabase<TableDef>
+        var menuOptions =
+            DefDatabase<TableDef>
             .AllDefs
-            .Where(tableDef => tableDef.columns.Count > 0)
             .Select(tableDef => new FloatMenuOption(
                 tableDef.LabelCap,
                 () => CurTableDef = tableDef,

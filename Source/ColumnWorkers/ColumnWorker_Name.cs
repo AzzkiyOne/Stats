@@ -8,12 +8,12 @@ public class ColumnWorker_Name : ColumnWorker_Str
             ? thing.Def.LabelCap
             : $"{thing.Def.LabelCap} ({thing.StuffDef.LabelCap})";
     }
-    protected override ICellWidget ValueToCellWidget(string value, ThingRec thing)
+    protected override IWidget GetTableCellContent(string? value, ThingRec thing)
     {
-        return new CellWidget_Str(
-            value,
+        return new Widget_Label_Temp(
+            value!,
             thing.Def.description,
-            new ThingIconWidget(thing)
+            new Widget_ThingIcon(thing)
         );
     }
 }

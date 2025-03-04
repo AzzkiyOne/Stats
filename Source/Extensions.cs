@@ -50,6 +50,7 @@ internal static class UnityEngine_Rect
         rect.xMin += amount;
     }
 }
+
 internal static class VerbList
 {
     public static VerbProperties? Primary(this List<VerbProperties> verbs)

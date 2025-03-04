@@ -31,16 +31,16 @@ public class ColumnWorker_CreatedAt : ColumnWorker<IEnumerable<ThingDef>>
     {
         return things.Count() > 0;
     }
-    protected override ICellWidget ValueToCellWidget(
+    protected override IWidget GetTableCellContent(
         IEnumerable<ThingDef> things,
         ThingRec thing
     )
     {
-        return new CellWidget_Things(things);
+        return new Widget_Things_Temp(things);
     }
-    public override IFilterWidget GetFilterWidget()
+    public override IWidget_FilterInput GetFilterWidget()
     {
-        return new FilterWidget_Str(thing => string.Join(", ", GetValue(thing).Select(thing => thing.LabelCap)));
+        return new Widget_FilterInput_Str(thing => string.Join(", ", GetValue(thing).Select(thing => thing.LabelCap)));
     }
     public override int Compare(ThingRec thing1, ThingRec thing2)
     {

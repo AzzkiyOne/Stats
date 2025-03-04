@@ -3,11 +3,11 @@ using Verse;
 
 namespace Stats;
 
-public sealed class CellWidget_Bool : ICellWidget
+public sealed class Widget_Bool_Temp : IWidget
 {
-    public float MinWidth => TableWidget_Base.RowHeight;
+    public float MinWidth => Widget_Table.RowHeight;
     private readonly Texture2D Tex;
-    public CellWidget_Bool(bool value)
+    public Widget_Bool_Temp(bool value)
     {
         Tex = Widgets.GetCheckboxTexture(value);
     }

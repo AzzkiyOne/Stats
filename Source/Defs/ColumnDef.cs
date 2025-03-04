@@ -13,10 +13,14 @@ public class ColumnDef : Def
     public string? iconPath;
     public string? formatString;
     public StatValueExplanationType? statValueExplanationType;
+#pragma warning disable CS8618
     public Type workerClass;
+#pragma warning restore CS8618
     public bool isNegative = false;
     internal Texture2D? Icon { get; private set; }
+#pragma warning disable CS8618
     internal IColumnWorker Worker { get; private set; }
+#pragma warning restore CS8618
     public override void PostLoad()
     {
         base.PostLoad();

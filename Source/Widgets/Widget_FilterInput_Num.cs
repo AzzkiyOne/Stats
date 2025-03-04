@@ -4,7 +4,7 @@ using Verse;
 
 namespace Stats;
 
-public class FilterWidget_Num : IFilterWidget
+public class Widget_FilterInput_Num : IWidget_FilterInput
 {
     private float CurValue = 0f;
     private string CurValueStrBuffer = "";
@@ -29,6 +29,7 @@ public class FilterWidget_Num : IFilterWidget
                 Operator.LT     => "<",
                 Operator.GTorEq => ">=",
                 Operator.LTorEq => "<=",
+                _               => throw new NotImplementedException(),
                 #pragma warning restore format
             };
             WasUpdated = true;
@@ -37,7 +38,7 @@ public class FilterWidget_Num : IFilterWidget
     private string CurOperatorStr = "Any";
     private readonly FloatMenu OperatorsMenu;
     private readonly Func<ThingRec, float> ValueFunc;
-    public FilterWidget_Num(Func<ThingRec, float> valueFunc)
+    public Widget_FilterInput_Num(Func<ThingRec, float> valueFunc)
     {
         ValueFunc = valueFunc;
         OperatorsMenu = new([
@@ -66,6 +67,7 @@ public class FilterWidget_Num : IFilterWidget
             Operator.LT     => value <  CurValue,
             Operator.GTorEq => value >= CurValue,
             Operator.LTorEq => value <= CurValue,
+            _               => throw new NotImplementedException(),
             #pragma warning restore format
         };
     }

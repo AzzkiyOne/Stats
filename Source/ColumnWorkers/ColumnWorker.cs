@@ -1,45 +1,25 @@
-﻿using System.Collections.Generic;
-
-namespace Stats;
+﻿namespace Stats;
 
 public abstract class ColumnWorker<ValueType> : IColumnWorker<ValueType>
 {
     public abstract ColumnCellStyle CellStyle { get; }
+#pragma warning disable CS8618
     public ColumnDef ColumnDef { get; set; }
-    private readonly Dictionary<ThingRec, ICellWidget?> Cells = [];
+#pragma warning restore CS8618
     public abstract ValueType GetValue(ThingRec thing);
     protected virtual bool ShouldShowValue(ValueType value)
     {
         return value != null;
     }
-    protected abstract ICellWidget ValueToCellWidget(ValueType value, ThingRec thing);
-    public ICellWidget? GetCellWidget(ThingRec thing)
+    protected abstract IWidget GetTableCellContent(ValueType value, ThingRec thing);
+    public IWidget? GetTableCellContent(ThingRec thing)
     {
-        var exists = Cells.TryGetValue(thing, out var cell);
+        var value = GetValue(thing);
 
-        if (exists == false)
-        {
-            try
-            {
-                var value = GetValue(thing);
+        if (ShouldShowValue(value) == false) return null;
 
-                if (ShouldShowValue(value))
-                {
-                    Cells[thing] = cell = ValueToCellWidget(value, thing);
-                }
-                else
-                {
-                    Cells[thing] = null;
-                }
-            }
-            catch
-            {
-                Cells[thing] = null;
-            }
-        }
-
-        return cell;
+        return GetTableCellContent(value, thing);
     }
-    public abstract IFilterWidget GetFilterWidget();
+    public abstract IWidget_FilterInput GetFilterWidget();
     public abstract int Compare(ThingRec thing1, ThingRec thing2);
 }

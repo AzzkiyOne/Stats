@@ -4,7 +4,7 @@ using Verse;
 
 namespace Stats;
 
-public class FilterWidget_Bool : IFilterWidget
+public class Widget_FilterInput_Bool : IWidget_FilterInput
 {
     private bool? _curValue = null;
     private bool? CurValue
@@ -21,7 +21,7 @@ public class FilterWidget_Bool : IFilterWidget
     public bool WasUpdated { get; set; } = false;
     public bool HasValue => CurValue != null;
     private readonly Func<ThingRec, bool> ValueFunc;
-    public FilterWidget_Bool(Func<ThingRec, bool> valueFunc)
+    public Widget_FilterInput_Bool(Func<ThingRec, bool> valueFunc)
     {
         ValueFunc = valueFunc;
     }

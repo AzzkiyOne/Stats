@@ -9,7 +9,7 @@ public class ColumnWorker_EquippedStatOffsets : ColumnWorker_Num
     {
         return thing.Def.equippedStatOffsets?.Count ?? 0f;
     }
-    protected override ICellWidget ValueToCellWidget(float value, ThingRec thing)
+    protected override IWidget GetTableCellContent(float value, ThingRec thing)
     {
         var tooltip = new StringBuilder();
 
@@ -24,6 +24,10 @@ public class ColumnWorker_EquippedStatOffsets : ColumnWorker_Num
             tooltip.AppendLine($"{offset.stat.LabelCap}: {offsetValueStr}");
         }
 
-        return new CellWidget_Str(FormatValue(value), tooltip.ToString());
+        return new Widget_Label_Temp(
+            FormatValue(value),
+            tooltip.ToString()
+        )
+        { Style = CellStyle };
     }
 }

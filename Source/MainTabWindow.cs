@@ -19,8 +19,8 @@ public class StatsMainTabWindow : MainTabWindow
     );
     private const float TitleBarHeight = 30f;
     internal static readonly Color BorderLineColor = new(1f, 1f, 1f, 0.4f);
-    private readonly WindowTitleBarWidget TitleBar;
-    private readonly TableSelectorWidget TableSelector;
+    private readonly Widget_WindowTitleBar TitleBar;
+    private readonly Widget_TableSelector TableSelector;
     public StatsMainTabWindow()
     {
         draggable = true;

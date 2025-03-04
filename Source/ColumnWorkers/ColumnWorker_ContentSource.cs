@@ -6,10 +6,10 @@ public class ColumnWorker_ContentSource : ColumnWorker_Str
     {
         return thing.Def.modContentPack?.Name;
     }
-    protected override ICellWidget ValueToCellWidget(string value, ThingRec thing)
+    protected override IWidget GetTableCellContent(string? value, ThingRec thing)
     {
-        return new CellWidget_Str(
-            value,
+        return new Widget_Label_Temp(
+            value!,
             thing.Def.modContentPack.PackageIdPlayerFacing
         );
     }

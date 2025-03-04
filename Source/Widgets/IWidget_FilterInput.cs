@@ -2,7 +2,7 @@
 
 namespace Stats;
 
-public interface IFilterWidget
+public interface IWidget_FilterInput
 {
     bool WasUpdated { get; set; }
     bool HasValue { get; }

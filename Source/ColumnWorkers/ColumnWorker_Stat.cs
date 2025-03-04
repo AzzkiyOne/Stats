@@ -60,16 +60,16 @@ public class ColumnWorker_Stat : ColumnWorker<float>
             _ => null,
         };
     }
-    protected override ICellWidget ValueToCellWidget(float value, ThingRec thing)
+    protected override IWidget GetTableCellContent(float value, ThingRec thing)
     {
         var valueStr = FormatValue(value, thing);
         var tooltip = GetValueExplanation(value, thing);
 
-        return new CellWidget_Str(valueStr, tooltip);
+        return new Widget_Label_Temp(valueStr, tooltip) { Style = CellStyle };
     }
-    public override IFilterWidget GetFilterWidget()
+    public override IWidget_FilterInput GetFilterWidget()
     {
-        return new FilterWidget_Num(GetValue);
+        return new Widget_FilterInput_Num(GetValue);
     }
     public override int Compare(ThingRec thing1, ThingRec thing2)
     {

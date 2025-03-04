@@ -5,12 +5,12 @@ namespace Stats;
 
 // Just to make RW stop throwing warning regarding assets loading.
 [StaticConstructorOnStartup]
-internal class WindowTitleBarWidget
+internal class Widget_WindowTitleBar
 {
-    private readonly TableSelectorWidget TableSelector;
+    private readonly Widget_TableSelector TableSelector;
     private static readonly Texture2D HoldToDragTex;
     private const string Manual = "- Click on the title bar to select a table.\n- Click on any row to select it. You can select multiple rows.\n- Press \"Alt\" to compare selected rows.\n- Hold \"Ctrl\" to scroll horizontally.";
-    public WindowTitleBarWidget(TableSelectorWidget tableSelector)
+    public Widget_WindowTitleBar(Widget_TableSelector tableSelector)
     {
         TableSelector = tableSelector;
     }
@@ -39,7 +39,7 @@ internal class WindowTitleBarWidget
             tooltip: Manual
         );
 
-        if (ButtonImageWidget.Draw(
+        if (Widget_ButtonImage.Draw(
             targetRect.CutByX(buttonWidth),
             TexButton.Reveal,
             angle: 90f
@@ -48,7 +48,7 @@ internal class WindowTitleBarWidget
             Event = WindowTitleBarWidgetEvent.Minimize;
         }
 
-        if (ButtonImageWidget.Draw(
+        if (Widget_ButtonImage.Draw(
             targetRect.CutByX(buttonWidth),
             TexButton.ShowZones,
             "Maximize/restore window",
@@ -68,7 +68,7 @@ internal class WindowTitleBarWidget
 
         return Event;
     }
-    static WindowTitleBarWidget()
+    static Widget_WindowTitleBar()
     {
         HoldToDragTex = ContentFinder<Texture2D>.Get("UI/Icons/Trainables/Tameness");
     }

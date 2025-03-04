@@ -7,13 +7,13 @@ public abstract class ColumnWorker_Str : ColumnWorker<string?>
     {
         return value?.Length > 0;
     }
-    protected override ICellWidget ValueToCellWidget(string value, ThingRec thing)
+    protected override IWidget GetTableCellContent(string? value, ThingRec thing)
     {
-        return new CellWidget_Str(value);
+        return new Widget_Label_Temp(value!);
     }
-    public override IFilterWidget GetFilterWidget()
+    public override IWidget_FilterInput GetFilterWidget()
     {
-        return new FilterWidget_Str(GetValue);
+        return new Widget_FilterInput_Str(GetValue);
     }
     public override int Compare(ThingRec thing1, ThingRec thing2)
     {

@@ -7,13 +7,13 @@ public abstract class ColumnWorker_Bool : ColumnWorker<bool>
     {
         return value == true;
     }
-    protected override ICellWidget ValueToCellWidget(bool value, ThingRec thing)
+    protected override IWidget GetTableCellContent(bool value, ThingRec thing)
     {
-        return new CellWidget_Bool(value);
+        return new Widget_Bool_Temp(value);
     }
-    public override IFilterWidget GetFilterWidget()
+    public override IWidget_FilterInput GetFilterWidget()
     {
-        return new FilterWidget_Bool(GetValue);
+        return new Widget_FilterInput_Bool(GetValue);
     }
     public override int Compare(ThingRec thing1, ThingRec thing2)
     {
