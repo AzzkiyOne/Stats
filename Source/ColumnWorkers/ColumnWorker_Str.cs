@@ -7,9 +7,12 @@ public abstract class ColumnWorker_Str : ColumnWorker<string?>
     {
         return value?.Length > 0;
     }
-    protected override IWidget GetTableCellContent(string? value, ThingRec thing)
+    protected override Widget GetTableCellContent(string? value, ThingRec thing)
     {
-        return new Widget_Label_Temp(value!);
+        return new Widget_Label(value!)
+        {
+            Width = 100,
+        };
     }
     public override IWidget_FilterInput GetFilterWidget()
     {

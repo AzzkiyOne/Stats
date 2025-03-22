@@ -7,17 +7,24 @@ namespace Stats;
 
 internal class Widget_Table
 {
-    protected List<Widget_TableRow> HeaderRows { get; } = [];
+    private readonly List<Widget_TableRow> HeaderRows = [];
     protected List<Widget_TableRow> BodyRows { get; } = [];
+    private float TotalHeaderRowsHeight = 0f;
+    private float TotalBodyRowsHeight = 0f;
     private Vector2 ScrollPos = new();
     private static Color ColumnSeparatorLineColor = new(1f, 1f, 1f, 0.05f);
-    // ?
-    //internal const float FilterWidgetInputInternalPadding = 6f;
-    public const float RowHeight = 30f;
-    public const float CellPadding = 15f;
-    public const float IconGap = 5f;
     public Widget_Table()
     {
+    }
+    public void AddHeaderRow(Widget_TableRow row)
+    {
+        HeaderRows.Add(row);
+        TotalHeaderRowsHeight += row.Height;
+    }
+    public void AddBodyRow(Widget_TableRow row)
+    {
+        BodyRows.Add(row);
+        TotalBodyRowsHeight += row.Height;
     }
     public void Draw(Rect targetRect)
     {
@@ -40,19 +47,19 @@ internal class Widget_Table
 
         foreach (var hCell in HeaderRows[0].Cells)
         {
-            if (hCell.IsPinned)
+            if (hCell.Props.IsPinned)
             {
-                leftColumnsMinWidth += hCell.Width;
+                leftColumnsMinWidth += hCell.Props.Width;
             }
             else
             {
-                rightColumnsMinWidth += hCell.Width;
+                rightColumnsMinWidth += hCell.Props.Width;
                 rightColumnsCount++;
             }
         }
 
         var minRowWidth = leftColumnsMinWidth + rightColumnsMinWidth;
-        var totalRowsHeight = (HeaderRows.Count + BodyRows.Count) * RowHeight;
+        var totalRowsHeight = TotalBodyRowsHeight + TotalHeaderRowsHeight;
         var contentSizeMax = new Vector2(minRowWidth, totalRowsHeight);
         var willScrollHor = contentSizeMax.x > targetRect.width;
         var willScrollVer = contentSizeMax.y > targetRect.height;
@@ -79,7 +86,7 @@ internal class Widget_Table
             leftPartRect,
             new Vector2(0f, ScrollPos.y),
             0f,
-            static (hCell) => hCell.IsPinned
+            static (cell) => cell.Props.IsPinned
         );
 
         // Separator line
@@ -97,7 +104,7 @@ internal class Widget_Table
             contentRectVisible,
             ScrollPos,
             Math.Max(rightPartFreeSpace / rightColumnsCount, 0f),
-            static (hCell) => hCell.IsPinned == false
+            static (cell) => cell.Props.IsPinned == false
         );
 
         Widgets.EndScrollView();
@@ -106,7 +113,7 @@ internal class Widget_Table
         Rect targetRect,
         Vector2 scrollPos,
         float cellExtraWidth,
-        Func<IWidget_TableCell, bool> shouldDrawCell
+        Func<Widget_TableCell, bool> shouldDrawCell
     )
     {
         DrawColumnSeparators(
@@ -116,7 +123,7 @@ internal class Widget_Table
             shouldDrawCell
         );
         DrawHeaders(
-            targetRect.CutByY(HeaderRows.Count * RowHeight),
+            targetRect.CutByY(TotalHeaderRowsHeight),
             scrollPos.x,
             cellExtraWidth,
             shouldDrawCell
@@ -132,7 +139,7 @@ internal class Widget_Table
         Rect targetRect,
         float offsetX,
         float cellExtraWidth,
-        Func<IWidget_TableCell, bool> shouldDrawCell
+        Func<Widget_TableCell, bool> shouldDrawCell
     )
     {
         Widgets.BeginGroup(targetRect);
@@ -141,7 +148,7 @@ internal class Widget_Table
 
         foreach (var row in HeaderRows)
         {
-            var rowRect = new Rect(0f, y, targetRect.width, RowHeight);
+            var rowRect = new Rect(0f, y, targetRect.width, row.Height);
 
             row.Draw(rowRect, offsetX, shouldDrawCell, cellExtraWidth, 0);
 
@@ -154,30 +161,34 @@ internal class Widget_Table
         Rect targetRect,
         Vector2 scrollPos,
         float cellExtraWidth,
-        Func<IWidget_TableCell, bool> shouldDrawCell
+        Func<Widget_TableCell, bool> shouldDrawCell
     )
     {
         Widgets.BeginGroup(targetRect);
 
-        var rowIndexStart = (int)Math.Floor(scrollPos.y / RowHeight);
-        var rowIndexEnd = Math.Min(
-            (int)Math.Ceiling((scrollPos.y + targetRect.height) / RowHeight),
-            BodyRows.Count
-        );
+        var y = -scrollPos.y;
 
-        for (int rowIndex = rowIndexStart; rowIndex < rowIndexEnd; rowIndex++)
+        for (int i = 0; i < BodyRows.Count; i++)
         {
-            var y = rowIndex * RowHeight - scrollPos.y;
-            var rowRect = new Rect(0f, y, targetRect.width, RowHeight);
-            var row = BodyRows[rowIndex];
+            if (y >= targetRect.height) break;
 
-            row.Draw(
-                rowRect,
-                scrollPos.x,
-                shouldDrawCell,
-                cellExtraWidth,
-                rowIndex
-            );
+            var row = BodyRows[i];
+            var yMax = y + row.Height;
+
+            if (yMax > 0f)
+            {
+                var rowRect = new Rect(0f, y, targetRect.width, row.Height);
+
+                row.Draw(
+                    rowRect,
+                    scrollPos.x,
+                    shouldDrawCell,
+                    cellExtraWidth,
+                    i
+                );
+            }
+
+            y = yMax;
         }
 
         Widgets.EndGroup();
@@ -188,7 +199,7 @@ internal class Widget_Table
         Rect targetRect,
         float offsetX,
         float cellExtraWidth,
-        Func<IWidget_TableCell, bool> shouldDrawCell
+        Func<Widget_TableCell, bool> shouldDrawCell
     )
     {
         if (Event.current.type != EventType.Repaint) return;
@@ -199,7 +210,7 @@ internal class Widget_Table
         {
             if (shouldDrawCell(cell) == false) continue;
 
-            var cellWidth = cell.Width + cellExtraWidth;
+            var cellWidth = cell.Props.Width + cellExtraWidth;
             var xMax = x + cellWidth;
 
             if (xMax >= targetRect.width) break;

@@ -1,34 +1,64 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using UnityEngine;
+using Verse;
 
 namespace Stats;
 
-internal abstract class Widget_TableRow
+internal class Widget_TableRow
 {
-    public List<IWidget_TableCell> Cells { get; } = [];
+    private readonly List<Widget_TableCell> _Cells = [];
+    public ReadOnlyCollection<Widget_TableCell> Cells => _Cells.AsReadOnly();
+    private float _Height = 0f;
+    public float Height
+    {
+        get => _Height;
+        set => _Height = Math.Max(_Height, value);
+    }
+    public Action<Rect, bool, int>? Background { get; set; }
+    private bool IsHovered = false;
     public Widget_TableRow()
     {
+    }
+    public void AddCell(Widget_TableCell cell)
+    {
+        var cellSize = cell.GetMarginBoxSize();
+
+        cell.Props.Width = cellSize.x;
+        Height = cellSize.y;
+
+        _Cells.Add(cell);
     }
     public void Draw(
         Rect targetRect,
         float offsetX,
-        Func<IWidget_TableCell, bool> shouldDrawCell,
+        Func<Widget_TableCell, bool> shouldDrawCell,
         float cellExtraWidth,
         int index
     )
     {
-        Draw(targetRect, index);
+        if (Mouse.IsOver(targetRect))
+        {
+            IsHovered = true;
+        }
+
+        Background?.Invoke(targetRect, IsHovered, index);
+
+        if (Mouse.IsOver(targetRect) == false)
+        {
+            IsHovered = false;
+        }
 
         // Cells
         var x = -offsetX;
 
-        foreach (var cell in Cells)
+        foreach (var cell in _Cells)
         {
             if (shouldDrawCell(cell) == false) continue;
             if (x >= targetRect.width) break;
 
-            var cellWidth = cell.Width + cellExtraWidth;
+            var cellWidth = cell.Props.Width + cellExtraWidth;
             var xMax = x + cellWidth;
 
             if (xMax > 0f)
@@ -40,11 +70,16 @@ internal abstract class Widget_TableRow
                     targetRect.height
                 );
 
-                cell.Draw(cellRect);
+                cell.DrawMarginBox(cellRect);
             }
 
             x = xMax;
         }
     }
-    protected abstract void Draw(Rect targetRect, int index);
+}
+
+internal sealed class Widget_TableRow<IdType>
+        : Widget_TableRow
+{
+    public required IdType Id { get; init; }
 }

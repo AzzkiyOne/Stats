@@ -4,7 +4,8 @@ using Verse;
 
 namespace Stats;
 
-public class Widget_FilterInput_Num : IWidget_FilterInput
+public sealed class Widget_FilterInput_Num
+    : IWidget_FilterInput
 {
     private float CurValue = 0f;
     private string CurValueStrBuffer = "";

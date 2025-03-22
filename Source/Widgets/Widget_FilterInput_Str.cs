@@ -5,7 +5,8 @@ using Verse;
 
 namespace Stats;
 
-public class Widget_FilterInput_Str : IWidget_FilterInput
+public sealed class Widget_FilterInput_Str
+    : IWidget_FilterInput
 {
     private string _curValue = "";
     private string CurValue

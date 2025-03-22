@@ -31,12 +31,34 @@ public class ColumnWorker_CreatedAt : ColumnWorker<IEnumerable<ThingDef>>
     {
         return things.Count() > 0;
     }
-    protected override IWidget GetTableCellContent(
+    protected override Widget GetTableCellContent(
         IEnumerable<ThingDef> things,
         ThingRec thing
     )
     {
-        return new Widget_Things_Temp(things);
+        return new Widget_Container_Hor(
+            things
+            .OrderBy(def => def.label)
+            .Select(def => new Widget_Icon_Thing(def)
+            {
+                Width = Text.LineHeight,
+                Height = Text.LineHeight,
+                Tooltip = def.description,
+                Background = (borderBox, _) =>
+                {
+                    Widgets.DrawHighlightIfMouseover(borderBox);
+
+                    if (Widgets.ButtonInvisible(borderBox))
+                    {
+                        Widget_DefInfoDialog.Draw(def);
+                    }
+                }
+            })
+            .ToList<Widget>()
+        )
+        {
+            Gap = 5f,
+        };
     }
     public override IWidget_FilterInput GetFilterWidget()
     {

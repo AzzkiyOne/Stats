@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using Verse;
 
@@ -7,28 +6,6 @@ namespace Stats;
 
 internal static class UnityEngine_Rect
 {
-    public static Rect CutFromX(this Rect rect, ref float x, float amount)
-    {
-        var result = new Rect(x, rect.y, amount, rect.height);
-        x = result.xMax;
-
-        return result;
-    }
-    public static Rect CutFromX(this Rect rect, float x)
-    {
-        return new Rect(x, rect.y, Math.Max(rect.xMax - x, 0f), rect.height);
-    }
-    public static Rect CutFromY(this Rect rect, ref float y, float amount)
-    {
-        var result = new Rect(rect.x, y, rect.width, amount);
-        y = result.yMax;
-
-        return result;
-    }
-    public static Rect CutFromY(this Rect rect, float y)
-    {
-        return new Rect(rect.x, y, rect.width, Math.Max(rect.yMax - y, 0f));
-    }
     public static Rect CutByX(ref this Rect rect, float amount)
     {
         var result = new Rect(rect.x, rect.y, amount, rect.height);
@@ -48,6 +25,31 @@ internal static class UnityEngine_Rect
     public static void PadLeft(ref this Rect rect, float amount)
     {
         rect.xMin += amount;
+    }
+    public static Rect OffsetBy(this Rect rect, Vector2 offset)
+    {
+        rect.position += offset;
+
+        return rect;
+    }
+    public static Rect ContractedBy(
+        this Rect rect,
+        (float l, float r, float t, float b) values
+    )
+    {
+        rect.ContractBy(values);
+
+        return rect;
+    }
+    public static void ContractBy(
+        ref this Rect rect,
+        (float l, float r, float t, float b) values
+    )
+    {
+        rect.xMin += values.l;
+        rect.yMin += values.t;
+        rect.xMax -= values.r;
+        rect.yMax -= values.b;
     }
 }
 

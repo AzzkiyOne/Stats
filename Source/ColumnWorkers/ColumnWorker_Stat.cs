@@ -60,12 +60,16 @@ public class ColumnWorker_Stat : ColumnWorker<float>
             _ => null,
         };
     }
-    protected override IWidget GetTableCellContent(float value, ThingRec thing)
+    protected override Widget GetTableCellContent(float value, ThingRec thing)
     {
         var valueStr = FormatValue(value, thing);
         var tooltip = GetValueExplanation(value, thing);
 
-        return new Widget_Label_Temp(valueStr, tooltip) { Style = CellStyle };
+        return new Widget_Label(valueStr)
+        {
+            Width = 100,
+            Tooltip = tooltip,
+        };
     }
     public override IWidget_FilterInput GetFilterWidget()
     {

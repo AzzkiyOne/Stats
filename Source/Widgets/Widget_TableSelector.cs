@@ -5,7 +5,7 @@ using Verse;
 
 namespace Stats;
 
-internal class Widget_TableSelector
+internal sealed class Widget_TableSelector
 {
     private TableDef _CurTableDef;
     public TableDef CurTableDef
@@ -45,6 +45,8 @@ internal class Widget_TableSelector
 
         targetRect = targetRect.CutByX(Math.Min(targetRectWidth, targetRect.width));
 
+        Widgets.DrawLightHighlight(targetRect);
+
         if (labelDoesntFit)
         {
             TooltipHandler.TipRegion(targetRect, CurTableDef.LabelCap);
@@ -67,9 +69,11 @@ internal class Widget_TableSelector
         );
         GUI.color = Color.white;
 
+        Text.Anchor = TextAnchor.MiddleLeft;
         Widgets.Label(
             targetRect.ContractedBy(GenUI.Pad, 0f),
             CurTableDef.LabelCap
         );
+        Text.Anchor = Constants.DefaultTextAnchor;
     }
 }

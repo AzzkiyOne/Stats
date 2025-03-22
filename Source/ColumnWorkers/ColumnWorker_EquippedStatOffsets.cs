@@ -1,17 +1,18 @@
-﻿using System.Text;
+﻿using System.Collections.Generic;
 using Verse;
 
 namespace Stats;
 
 public class ColumnWorker_EquippedStatOffsets : ColumnWorker_Num
 {
+    public override ColumnCellStyle CellStyle => ColumnCellStyle.String;
     public override float GetValue(ThingRec thing)
     {
         return thing.Def.equippedStatOffsets?.Count ?? 0f;
     }
-    protected override IWidget GetTableCellContent(float value, ThingRec thing)
+    protected override Widget GetTableCellContent(float value, ThingRec thing)
     {
-        var tooltip = new StringBuilder();
+        var rows = new List<Widget>();
 
         foreach (var offset in thing.Def.equippedStatOffsets)
         {
@@ -20,14 +21,17 @@ public class ColumnWorker_EquippedStatOffsets : ColumnWorker_Num
                 true,
                 ToStringNumberSense.Offset
             );
+            var widget = new Widget_Label($"{offset.stat.LabelCap}: {offsetValueStr}")
+            {
+                Width = 100,
+            };
 
-            tooltip.AppendLine($"{offset.stat.LabelCap}: {offsetValueStr}");
+            rows.Add(widget);
         }
 
-        return new Widget_Label_Temp(
-            FormatValue(value),
-            tooltip.ToString()
-        )
-        { Style = CellStyle };
+        return new Widget_Container_Ver(rows)
+        {
+            Width = 100,
+        };
     }
 }

@@ -5,7 +5,7 @@ namespace Stats;
 
 // Just to make RW stop throwing warning regarding assets loading.
 [StaticConstructorOnStartup]
-internal class Widget_WindowTitleBar
+internal sealed class Widget_WindowTitleBar
 {
     private readonly Widget_TableSelector TableSelector;
     private static readonly Texture2D HoldToDragTex;
@@ -27,9 +27,7 @@ internal class Widget_WindowTitleBar
             targetRect.width,
             StatsMainTabWindow.BorderLineColor
         );
-        Text.Anchor = TextAnchor.MiddleLeft;
         TableSelector.Draw(targetRect.CutByX(labelWidth));
-        Text.Anchor = Constants.DefaultTextAnchor;
         var rect = targetRect.CutByX(buttonWidth);
         Widgets.DrawTextureFitted(rect, HoldToDragTex, 1f);
         TooltipHandler.TipRegion(rect, "Hold to drag the window.");

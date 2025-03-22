@@ -6,11 +6,12 @@ public class ColumnWorker_ContentSource : ColumnWorker_Str
     {
         return thing.Def.modContentPack?.Name;
     }
-    protected override IWidget GetTableCellContent(string? value, ThingRec thing)
+    protected override Widget GetTableCellContent(string? value, ThingRec thing)
     {
-        return new Widget_Label_Temp(
-            value!,
-            thing.Def.modContentPack.PackageIdPlayerFacing
-        );
+        return new Widget_Label(value!)
+        {
+            Width = 100,
+            Tooltip = thing.Def.modContentPack.PackageIdPlayerFacing,
+        };
     }
 }

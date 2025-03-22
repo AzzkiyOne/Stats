@@ -16,7 +16,7 @@ public class ColumnWorker_WeaponRanged_Caliber : ColumnWorker_Str
             statReq
         );
     }
-    protected override IWidget GetTableCellContent(string? value, ThingRec thing)
+    protected override Widget GetTableCellContent(string? value, ThingRec thing)
     {
         var statReq = StatRequest.For(thing.Def, thing.StuffDef);
         var tooltip = ColumnDef.stat!.Worker.GetExplanationFull(
@@ -25,6 +25,10 @@ public class ColumnWorker_WeaponRanged_Caliber : ColumnWorker_Str
             ColumnDef.stat!.Worker.GetValue(statReq)
         );
 
-        return new Widget_Label_Temp(value!, tooltip);
+        return new Widget_Label(value!)
+        {
+            Width = 100,
+            Tooltip = tooltip,
+        };
     }
 }

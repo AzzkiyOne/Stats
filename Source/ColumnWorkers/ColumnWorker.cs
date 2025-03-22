@@ -11,8 +11,8 @@ public abstract class ColumnWorker<ValueType> : IColumnWorker<ValueType>
     {
         return value != null;
     }
-    protected abstract IWidget GetTableCellContent(ValueType value, ThingRec thing);
-    public IWidget? GetTableCellContent(ThingRec thing)
+    protected abstract Widget GetTableCellContent(ValueType value, ThingRec thing);
+    public Widget? GetTableCellContent(ThingRec thing)
     {
         var value = GetValue(thing);
 

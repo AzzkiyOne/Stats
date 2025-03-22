@@ -4,7 +4,8 @@ using Verse;
 
 namespace Stats;
 
-public class Widget_FilterInput_Bool : IWidget_FilterInput
+public sealed class Widget_FilterInput_Bool
+    : IWidget_FilterInput
 {
     private bool? _curValue = null;
     private bool? CurValue

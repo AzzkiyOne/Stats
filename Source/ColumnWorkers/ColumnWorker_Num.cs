@@ -16,11 +16,14 @@ public abstract class ColumnWorker_Num : ColumnWorker<float>
     {
         return value != 0f && float.IsNaN(value) == false;
     }
-    protected override IWidget GetTableCellContent(float value, ThingRec thing)
+    protected override Widget GetTableCellContent(float value, ThingRec thing)
     {
         var valueStr = FormatValue(value);
 
-        return new Widget_Label_Temp(valueStr) { Style = CellStyle };
+        return new Widget_Label(valueStr)
+        {
+            Width = 100,
+        };
     }
     public override IWidget_FilterInput GetFilterWidget()
     {

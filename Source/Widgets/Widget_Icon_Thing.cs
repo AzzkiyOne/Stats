@@ -1,13 +1,13 @@
-﻿using RimWorld;
+﻿using System.Collections.Generic;
+using RimWorld;
 using UnityEngine;
 using Verse;
 
 namespace Stats;
 
-public sealed class Widget_ThingIcon
+public class Widget_Icon_Thing
+    : Widget
 {
-    private readonly ThingDef ThingDef;
-    private readonly ThingDef? StuffDef;
     private readonly Texture2D Texture;
     private readonly Color Color;
     private readonly Vector2 Proportions;
@@ -15,11 +15,13 @@ public sealed class Widget_ThingIcon
     private readonly float Scale;
     private readonly float Angle;
     private readonly Vector2 Offset;
-    public Widget_ThingIcon(ThingRec thing) : this(thing.Def, thing.StuffDef) { }
-    public Widget_ThingIcon(ThingDef thingDef, ThingDef? stuffDef = null)
+    public Widget_Icon_Thing(ThingRec thing)
+        : this(thing.Def, thing.StuffDef)
     {
-        ThingDef = thingDef;
-        StuffDef = stuffDef;
+    }
+    public Widget_Icon_Thing(ThingDef thingDef, ThingDef? stuffDef = null)
+        : base([])
+    {
         Texture = Widgets.GetIconFor(thingDef, stuffDef) ?? BaseContent.BadTex;
         Scale = GenUI.IconDrawScale(thingDef);
         Angle = thingDef.uiIconAngle;
@@ -40,7 +42,11 @@ public sealed class Widget_ThingIcon
         {
             Proportions = thingDef.graphicData.drawSize.RotatedBy(thingDef.defaultPlacingRot);
 
-            if (thingDef.uiIconPath.NullOrEmpty() && thingDef.graphicData.linkFlags != 0)
+            if (
+                thingDef.uiIconPath.NullOrEmpty()
+                &&
+                thingDef.graphicData.linkFlags != 0
+            )
             {
                 Coords = new Rect(0f, 0.5f, 0.25f, 0.25f);// Verse.Widgets.LinkedTexCoords
             }
@@ -54,26 +60,22 @@ public sealed class Widget_ThingIcon
             Proportions = new Vector2(Texture.width, Texture.height);
         }
     }
-    public void Draw(Rect targetRect, float scale = 1f)
+    protected override IEnumerable<Rect> GetLayout(Vector2? contentBoxSize)
     {
-        targetRect.position += Offset * targetRect.size;
-        Widgets.DrawHighlightIfMouseover(targetRect);
+        yield return Rect.zero;
+    }
+    protected override void DrawContentBox(Rect contentBox)
+    {
+        contentBox.position += Offset * contentBox.size;
         GUI.color = Color;
         Widgets.DrawTextureFitted(
-            targetRect,
+            contentBox,
             Texture,
-            Scale * scale,
+            Scale,
             Proportions,
             Coords,
             Angle
         );
         GUI.color = Color.white;
-
-        if (Widgets.ButtonInvisible(targetRect))
-        {
-            Widget_DefInfoDialog.Draw(ThingDef, StuffDef);
-        }
-
-        TooltipHandler.TipRegion(targetRect, ThingDef.description);
     }
 }

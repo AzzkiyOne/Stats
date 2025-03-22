@@ -1,4 +1,6 @@
-﻿namespace Stats;
+﻿using Verse;
+
+namespace Stats;
 
 public abstract class ColumnWorker_Bool : ColumnWorker<bool>
 {
@@ -7,9 +9,14 @@ public abstract class ColumnWorker_Bool : ColumnWorker<bool>
     {
         return value == true;
     }
-    protected override IWidget GetTableCellContent(bool value, ThingRec thing)
+    protected override Widget GetTableCellContent(bool value, ThingRec thing)
     {
-        return new Widget_Bool_Temp(value);
+        return new Widget_Texture(Widgets.GetCheckboxTexture(value))
+        {
+            Width = Text.LineHeight,
+            Height = Text.LineHeight,
+            //Scale = 0.7f,
+        };
     }
     public override IWidget_FilterInput GetFilterWidget()
     {
