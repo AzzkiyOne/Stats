@@ -1,6 +1,9 @@
-﻿namespace Stats;
+﻿using UnityEngine;
 
-public class ColumnWorker_ContentSource : ColumnWorker_Str
+namespace Stats;
+
+public class ColumnWorker_ContentSource
+    : ColumnWorker_Str
 {
     public override string? GetValue(ThingRec thing)
     {
@@ -8,9 +11,13 @@ public class ColumnWorker_ContentSource : ColumnWorker_Str
     }
     protected override Widget GetTableCellContent(string? value, ThingRec thing)
     {
-        return new Widget_Label(value!)
+        var style = new WidgetStyle()
         {
-            Width = 100,
+            TextAlign = (TextAnchor)CellStyle,
+        };
+
+        return new Widget_Label(value!, style)
+        {
             Tooltip = thing.Def.modContentPack.PackageIdPlayerFacing,
         };
     }

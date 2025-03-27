@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using UnityEngine;
 using Verse;
 
@@ -7,8 +6,6 @@ namespace Stats;
 
 // TODO:
 // - Investigate functional composition instead.
-// - Some widgets are not containers. Maybe we can move all stuff related to containers
-// in a subclass and simplify childless widgets.
 
 // There are 2 cases in which a widget can be drawn.
 //
@@ -24,66 +21,103 @@ namespace Stats;
 // First, we need to measure the widget. Same as we would measure text.
 // Then, we pass the measured size to the widget and draw it as usual.
 
-// Essentially, we are trying to implement "box-sizing: border-box".
+// Box model is implemented as "box-sizing: border-box".
 public abstract class Widget
 {
     public string? Tooltip { get; set; }
-    public AlignFunc? Align_H { get; set; }
-    public Action<Rect, Widget>? Background { get; set; }
-    public Units.Unit? Width { get; set; }
-    public Units.Unit? Height { get; set; }
-    public (float l, float r, float t, float b) Margin { get; set; } =
-        (0f, 0f, 0f, 0f);
-    public (float l, float r, float t, float b) Padding { get; set; } =
-        (0f, 0f, 0f, 0f);
-    private Vector2? _ChildrenBoundingBoxSize;
-    private Vector2 ChildrenBoundingBoxSize
+    public WidgetStyle Style { get; }
+    protected abstract Vector2 ContentSize { get; }
+    private Vector2 CurContainerSize = Vector2.zero;
+    private Vector2 CurMarginBoxSize = Vector2.zero;
+    public Widget(WidgetStyle? style = null)
     {
-        get
+        Style = style ?? new WidgetStyle();
+    }
+    public Vector2 GetMarginBoxSize(in Vector2 containerSize)
+    {
+        if
+        (
+            CurContainerSize.x == containerSize.x
+            &&
+            CurContainerSize.y == containerSize.y
+        )
         {
-            if (_ChildrenBoundingBoxSize is Vector2 cbbs) return cbbs;
-
-            var xMax = 0f;
-            var yMax = 0f;
-
-            foreach (var childBox in GetLayout())
-            {
-                xMax = Math.Max(xMax, childBox.xMax);
-                yMax = Math.Max(yMax, childBox.yMax);
-            }
-
-            return (Vector2)(_ChildrenBoundingBoxSize = new Vector2(xMax, yMax));
+            return CurMarginBoxSize;
         }
-    }
-    protected List<Widget> Children { get; }
-    public Widget(List<Widget> children)
-    {
-        Children = children;
-    }
-    private float ResolveBorderBoxWidth(float? parentContentBoxWidth)
-    {
-        if (Width is Units.Abs absWidth) return absWidth.Value;
 
-        if (parentContentBoxWidth is float pcbw && Width != null) return Width.Get(pcbw);
+        CurContainerSize = containerSize;
 
-        return ChildrenBoundingBoxSize.x + Padding.l + Padding.r;
+        return CurMarginBoxSize = GetMarginBoxSize_Int(containerSize);
     }
-    private float ResolveBorderBoxHeight(float? parentContentBoxHeight)
+    private Vector2 GetMarginBoxSize_Int(in Vector2 containerSize)
     {
-        if (Height is Units.Abs absHeight) return absHeight.Value;
-
-        if (parentContentBoxHeight is float pcbh && Height != null) return Height.Get(pcbh);
-
-        return ChildrenBoundingBoxSize.y + Padding.t + Padding.b;
+        return Style switch
+        {
+            {
+                Width: not null,
+                Height: not null
+            } => new Vector2(
+                Style.Width.Get(containerSize.x),
+                Style.Height.Get(containerSize.y)
+            ),
+            {
+                Width: not null,
+                Height: null
+            } => new Vector2(
+                Style.Width.Get(containerSize.x),
+                ContentSize.y + Style.Padding.Ver
+            ),
+            {
+                Width: null,
+                Height: not null
+            } => new Vector2(
+                ContentSize.x + Style.Padding.Hor,
+                Style.Height.Get(containerSize.y)
+            ),
+            _ => ContentSize + Style.Padding.Size,
+        } + Style.Margin.Size;
     }
-    public Vector2 GetMarginBoxSize(Vector2? parentContentBoxSize = null)
+    public Vector2 GetMarginBoxSize()
     {
-        return new Vector2(
-            ResolveBorderBoxWidth(parentContentBoxSize?.x) + Margin.l + Margin.r,
-            ResolveBorderBoxHeight(parentContentBoxSize?.y) + Margin.t + Margin.b
-        );
+        return Style switch
+        {
+            {
+                Width: WidgetStyle.Units.Abs absWidth,
+                Height: WidgetStyle.Units.Abs absHeight
+            } => new Vector2(
+                absWidth.Value,
+                absHeight.Value
+            ),
+            {
+                Width: WidgetStyle.Units.Abs absWidth,
+                Height: null
+            } => new Vector2(
+                absWidth.Value,
+                ContentSize.y + Style.Padding.Ver
+            ),
+            {
+                Width: null,
+                Height: WidgetStyle.Units.Abs absHeight
+            } => new Vector2(
+                ContentSize.x + Style.Padding.Hor,
+                absHeight.Value
+            ),
+            _ => ContentSize + Style.Padding.Size,
+        } + Style.Margin.Size;
     }
-    protected abstract IEnumerable<Rect> GetLayout(Vector2? contentBoxSize = null);
+    public void DrawIn(in Rect container)
+    {
+        var marginBoxSize = GetMarginBoxSize(container.size);
+        var marginBox = new Rect(container.position, marginBoxSize);
+
+        DrawMarginBoxIn(marginBox, container);
+    }
+    public void DrawMarginBoxIn(Rect marginBox, in Rect container)
+    {
+        Style.Align_H?.Invoke(container, ref marginBox);
+
+        DrawMarginBox(marginBox);
+    }
     public void DrawMarginBox(Rect marginBox)
     {
         // We can optimize here rendering in a scroll area.
@@ -95,44 +129,45 @@ public abstract class Widget
             Widgets.DrawRectFast(marginBox, Color.cyan.ToTransparent(0.3f));
         }
 
-        marginBox.ContractBy(Margin);
+        marginBox.ContractBy(Style.Margin);
 
         if (Tooltip?.Length > 0)
         {
             TooltipHandler.TipRegion(marginBox, Tooltip);
         }
 
-        Background?.Invoke(marginBox, this);
+        Style.Background?.Invoke(marginBox, this);
 
-        marginBox.ContractBy(Padding);
+        marginBox.ContractBy(Style.Padding);
 
         DrawContentBox(marginBox);
     }
-    protected virtual void DrawContentBox(Rect contentBox)
-    {
-        var i = 0;
+    protected abstract void DrawContentBox(Rect contentBox);
+}
 
-        foreach (var childMarginBox in GetLayout(contentBox.size))
-        {
-            var childWidget = Children[i];
-            var childWidgetMarginBox = childMarginBox.OffsetBy(contentBox.position);
+public class WidgetStyle
+{
+    public Units.Unit? Width { get; init; } = 100;
+    public Units.Unit? Height { get; init; }
+    public BoxOffset Margin { get; init; } = 0f;
+    public BoxOffset Padding { get; init; } = 0f;
+    public AlignFunc? Align_H { get; init; }
+    public Action<Rect, Widget>? Background { get; init; }
+    public TextAnchor TextAlign { get; init; } = Constants.DefaultTextAnchor;
 
-            childWidget.Align_H?.Invoke(ref contentBox, ref childWidgetMarginBox);
-
-            childWidget.DrawMarginBox(childWidgetMarginBox);
-
-            i++;
-        }
-    }
     public static class Units
     {
         public abstract class Unit
         {
             public abstract float Get(float value);
-            public static implicit operator Unit(float v) => new Abs(v);
-            public static implicit operator Unit(int v) => new Pct(v / 100f);
-            //public static implicit operator Unit(Func<float, float> v) => new Expr(v);
+            public static implicit operator
+                Unit(float v) => new Abs(v);
+            public static implicit operator
+                Unit(int v) => new Pct(v / 100f);
+            public static implicit operator
+                Unit(Func<float, float> v) => new Expr(v);
         }
+
         public sealed class Abs
             : Unit
         {
@@ -146,6 +181,7 @@ public abstract class Widget
                 return Value;
             }
         }
+
         public sealed class Pct
             : Unit
         {
@@ -159,6 +195,7 @@ public abstract class Widget
                 return value * Mult;
             }
         }
+
         public sealed class Expr
             : Unit
         {
@@ -173,15 +210,17 @@ public abstract class Widget
             }
         }
     }
-    public delegate void AlignFunc(ref Rect outerRect, ref Rect innerRect);
+
+    public delegate void AlignFunc(in Rect outerRect, ref Rect innerRect);
+
     public static class Align
     {
-        public static void Right(ref Rect outerRect, ref Rect innerRect)
+        public static void Right(in Rect outerRect, ref Rect innerRect)
         {
             innerRect.xMin = outerRect.xMax - innerRect.width;
             innerRect.xMax = outerRect.xMax;
         }
-        public static void Middle_H(ref Rect outerRect, ref Rect innerRect)
+        public static void Middle_H(in Rect outerRect, ref Rect innerRect)
         {
             var margin = (outerRect.width - innerRect.width) / 2f;
 
@@ -189,4 +228,44 @@ public abstract class Widget
             innerRect.xMax = outerRect.xMax - margin;
         }
     }
+
+    public class BoxOffset
+    {
+        public float Left { get; init; } = 0f;
+        public float Right { get; init; } = 0f;
+        public float Top { get; init; } = 0f;
+        public float Bottom { get; init; } = 0f;
+        public float Hor => Left + Right;
+        public float Ver => Top + Bottom;
+        public Vector2 Size => new(Left + Right, Top + Bottom);
+        public BoxOffset(float l, float r, float t, float b)
+        {
+            Left = l;
+            Right = r;
+            Top = t;
+            Bottom = b;
+        }
+        public BoxOffset(float hor, float ver)
+            : this(hor, hor, ver, ver)
+        {
+        }
+        public BoxOffset(float value)
+            : this(value, value, value, value)
+        {
+        }
+        public static implicit operator
+            BoxOffset((float l, float r, float t, float b) v) => new(v.l, v.r, v.t, v.b);
+        public static implicit operator
+            BoxOffset((float hor, float ver) v) => new(v.hor, v.ver);
+        public static implicit operator
+            BoxOffset(float v) => new(v);
+    }
 }
+
+//public class Box
+//{
+//    public WidgetStyle.Units.Unit? Width { get; init; }
+//    public WidgetStyle.Units.Unit? Height { get; init; }
+//    public WidgetStyle.BoxOffset Margin { get; init; } = 0f;
+//    public WidgetStyle.BoxOffset Padding { get; init; } = 0f;
+//}

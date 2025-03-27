@@ -1,27 +1,62 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Stats;
 
-internal class Widget_Container_Hor
-    : Widget
+public class Widget_Container_Hor
+    : Widget_Container_XY
 {
-    public float Gap { get; set; } = 0f;
-    public Widget_Container_Hor(List<Widget> children) : base(children)
+    public Widget_Container_Hor(
+        List<Widget> children,
+        float gap = 0f,
+        bool flex = false,
+        WidgetStyle? style = null
+    )
+        : base(children, gap, style)
     {
+        if (flex)
+        {
+            foreach (var child in Children)
+            {
+                if (child.Style.Width is WidgetStyle.Units.Abs or null)
+                {
+                    ReservedSpaceAmount += child.GetMarginBoxSize().x;
+                }
+            }
+        }
     }
-    protected override IEnumerable<Rect> GetLayout(Vector2? contentBoxSize)
+    protected override Vector2 CalcContentSize()
     {
-        var x = 0f;
+        Vector2 result;
+
+        result.x = TotalGapAmount;
+        result.y = 0f;
 
         foreach (var child in Children)
         {
-            var childPos = new Vector2(x, 0f);
-            var childMarginBoxSize = child.GetMarginBoxSize(contentBoxSize);
+            var childMarginBoxSize = child.GetMarginBoxSize();
 
-            yield return new Rect(childPos, childMarginBoxSize);
+            result.x += childMarginBoxSize.x;
+            result.y = Math.Max(result.y, childMarginBoxSize.y);
+        }
 
-            x += childMarginBoxSize.x + Gap;
+        return result;
+    }
+    protected override void DrawContentBox(Rect contentBox)
+    {
+        var childMarginBox = new Rect(contentBox.position, Vector2.zero);
+        var contentBoxSize = contentBox.size;
+
+        contentBoxSize.x -= ReservedSpaceAmount;
+
+        foreach (var child in Children)
+        {
+            childMarginBox.size = child.GetMarginBoxSize(contentBoxSize);
+
+            child.DrawMarginBoxIn(childMarginBox, contentBox);
+
+            childMarginBox.x = childMarginBox.xMax + Gap;
         }
     }
 }

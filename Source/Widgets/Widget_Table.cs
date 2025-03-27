@@ -58,16 +58,19 @@ internal class Widget_Table
             }
         }
 
-        var minRowWidth = leftColumnsMinWidth + rightColumnsMinWidth;
-        var totalRowsHeight = TotalBodyRowsHeight + TotalHeaderRowsHeight;
-        var contentSizeMax = new Vector2(minRowWidth, totalRowsHeight);
-        var willScrollHor = contentSizeMax.x > targetRect.width;
-        var willScrollVer = contentSizeMax.y > targetRect.height;
+        var contentSizeMax = new Vector2(
+            // Min. row width
+            leftColumnsMinWidth + rightColumnsMinWidth,
+            // Total rows height
+            TotalBodyRowsHeight + TotalHeaderRowsHeight
+        );
         var contentSizeVisible = new Vector2(
-            willScrollVer
+            // Will scroll horizontally
+            contentSizeMax.y > targetRect.height
                 ? targetRect.width - GenUI.ScrollBarWidth
                 : targetRect.width,
-            willScrollHor
+            // Will scroll vertically
+            contentSizeMax.x > targetRect.width
                 ? targetRect.height - GenUI.ScrollBarWidth
                 : targetRect.height
         );
@@ -111,8 +114,8 @@ internal class Widget_Table
     }
     private void DrawPart(
         Rect targetRect,
-        Vector2 scrollPos,
-        float cellExtraWidth,
+        in Vector2 scrollPos,
+        in float cellExtraWidth,
         Func<Widget_TableCell, bool> shouldDrawCell
     )
     {
@@ -136,9 +139,9 @@ internal class Widget_Table
         );
     }
     private void DrawHeaders(
-        Rect targetRect,
-        float offsetX,
-        float cellExtraWidth,
+        in Rect targetRect,
+        in float offsetX,
+        in float cellExtraWidth,
         Func<Widget_TableCell, bool> shouldDrawCell
     )
     {
@@ -158,9 +161,9 @@ internal class Widget_Table
         Widgets.EndGroup();
     }
     private void DrawBody(
-        Rect targetRect,
-        Vector2 scrollPos,
-        float cellExtraWidth,
+        in Rect targetRect,
+        in Vector2 scrollPos,
+        in float cellExtraWidth,
         Func<Widget_TableCell, bool> shouldDrawCell
     )
     {
@@ -196,9 +199,9 @@ internal class Widget_Table
     // The performance impact of instead drawing a vertical border for each
     // individual cell is huge. So we have to keep this.
     private void DrawColumnSeparators(
-        Rect targetRect,
-        float offsetX,
-        float cellExtraWidth,
+        in Rect targetRect,
+        in float offsetX,
+        in float cellExtraWidth,
         Func<Widget_TableCell, bool> shouldDrawCell
     )
     {

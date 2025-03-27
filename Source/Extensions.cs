@@ -26,30 +26,12 @@ internal static class UnityEngine_Rect
     {
         rect.xMin += amount;
     }
-    public static Rect OffsetBy(this Rect rect, Vector2 offset)
+    public static void ContractBy(ref this Rect rect, WidgetStyle.BoxOffset offset)
     {
-        rect.position += offset;
-
-        return rect;
-    }
-    public static Rect ContractedBy(
-        this Rect rect,
-        (float l, float r, float t, float b) values
-    )
-    {
-        rect.ContractBy(values);
-
-        return rect;
-    }
-    public static void ContractBy(
-        ref this Rect rect,
-        (float l, float r, float t, float b) values
-    )
-    {
-        rect.xMin += values.l;
-        rect.yMin += values.t;
-        rect.xMax -= values.r;
-        rect.yMax -= values.b;
+        rect.xMin += offset.Left;
+        rect.yMin += offset.Top;
+        rect.xMax -= offset.Right;
+        rect.yMax -= offset.Bottom;
     }
 }
 

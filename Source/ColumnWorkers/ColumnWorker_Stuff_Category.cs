@@ -2,7 +2,8 @@
 
 namespace Stats;
 
-public class ColumnWorker_Stuff_Category : ColumnWorker_Str
+public class ColumnWorker_Stuff_Category
+    : ColumnWorker_Str
 {
     public override string? GetValue(ThingRec thing)
     {

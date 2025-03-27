@@ -14,7 +14,7 @@ internal sealed class Widget_Table_Things
         : base()
     {
         List<ColumnDef> columns = [ColumnDefOf.Name, .. tableDef.columns];
-        var cellPadding = (15f, 15f, 5f, 5f);
+        var cellPadding = (15f, 5f);
 
         // Headers
 
@@ -38,37 +38,36 @@ internal sealed class Widget_Table_Things
 
             if (column.Icon != null)
             {
-                Widget.AlignFunc? align = column.Worker.CellStyle switch
+                WidgetStyle.AlignFunc? align = column.Worker.CellStyle switch
                 {
-                    ColumnCellStyle.Number => Widget.Align.Right,
-                    ColumnCellStyle.Boolean => Widget.Align.Middle_H,
+                    ColumnCellStyle.Number => WidgetStyle.Align.Right,
+                    ColumnCellStyle.Boolean => WidgetStyle.Align.Middle_H,
                     _ => null,
                 };
-
-                cellContent = new Widget_Texture(column.Icon)
+                var iconStyle = new WidgetStyle()
                 {
                     Width = Text.LineHeight,
                     Height = Text.LineHeight,
                     Align_H = align,
                 };
+
+                cellContent = new Widget_Texture(column.Icon, iconStyle);
             }
             else
             {
-                cellContent = new Widget_Label(column.LabelCap)
+                var labelStyle = new WidgetStyle()
                 {
-                    Width = 100,
+                    TextAlign = (TextAnchor)column.Worker.CellStyle,
                 };
+
+                cellContent = new Widget_Label(column.LabelCap, labelStyle);
             }
 
-            var cell = new Widget_TableCell([cellContent])
+            var cellStyle = new WidgetStyle()
             {
+                Width = null,
+                Height = null,
                 Padding = cellPadding,
-                Props = new Widget_TableCell.Properties()
-                {
-                    IsPinned = column == ColumnDefOf.Name,
-                    TextAnchor = (TextAnchor)column.Worker.CellStyle,
-                },
-                Tooltip = column.description,
                 Background = (borderBox, widget) =>
                 {
                     Widgets.DrawHighlightIfMouseover(borderBox);
@@ -96,7 +95,15 @@ internal sealed class Widget_Table_Things
                             SortRowsByColumn(column);
                         }
                     }
-                }
+                },
+            };
+            var cellProps = new Widget_TableCell.Properties()
+            {
+                IsPinned = column == ColumnDefOf.Name,
+            };
+            var cell = new Widget_TableCell(cellContent, cellProps, cellStyle)
+            {
+                Tooltip = column.description,
             };
 
             headerRow.AddCell(cell);
@@ -136,22 +143,23 @@ internal sealed class Widget_Table_Things
             {
                 var column = columns[j];
                 var cellProps = headerRow.Cells[j].Props;
-                List<Widget> cellContent;
+                Widget? cellContent = null;
 
                 try
                 {
-                    cellContent = [column.Worker.GetTableCellContent(rec)];
+                    cellContent = column.Worker.GetTableCellContent(rec);
                 }
                 catch
                 {
-                    cellContent = [];
                 }
 
-                var cell = new Widget_TableCell(cellContent)
+                var cellStyle = new WidgetStyle()
                 {
+                    Width = null,
+                    Height = null,
                     Padding = cellPadding,
-                    Props = cellProps,
                 };
+                var cell = new Widget_TableCell(cellContent, cellProps, cellStyle);
 
                 row.AddCell(cell);
             }

@@ -1,6 +1,7 @@
 ﻿namespace Stats;
 
-public class ColumnWorker_WeaponRanged_Range : ColumnWorker_Num
+public class ColumnWorker_WeaponRanged_Range
+    : ColumnWorker_Num
 {
     public override float GetValue(ThingRec thing)
     {

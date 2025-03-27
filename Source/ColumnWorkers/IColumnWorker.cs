@@ -9,7 +9,8 @@ public interface IColumnWorker
     int Compare(ThingRec thing1, ThingRec thing2);
 }
 
-public interface IColumnWorker<ValueType> : IColumnWorker
+public interface IColumnWorker<ValueType>
+    : IColumnWorker
 {
     ValueType GetValue(ThingRec thing);
 }

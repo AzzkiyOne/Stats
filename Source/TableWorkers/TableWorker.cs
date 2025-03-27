@@ -4,7 +4,8 @@ using Verse;
 
 namespace Stats;
 
-public abstract class TableWorker : ITableWorker
+public abstract class TableWorker
+    : ITableWorker
 {
 #pragma warning disable CS8618
     public TableDef TableDef { get; set; }

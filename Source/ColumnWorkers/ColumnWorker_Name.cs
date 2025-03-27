@@ -1,9 +1,10 @@
-﻿using Verse;
+﻿using UnityEngine;
+using Verse;
 
 namespace Stats;
 
-public class ColumnWorker_Name :
-    ColumnWorker_Str
+public class ColumnWorker_Name
+    : ColumnWorker_Str
 {
     public override string? GetValue(ThingRec thing)
     {
@@ -13,7 +14,7 @@ public class ColumnWorker_Name :
     }
     protected override Widget GetTableCellContent(string? value, ThingRec thing)
     {
-        var icon = new Widget_Icon_Thing(thing)
+        var iconStyle = new WidgetStyle()
         {
             Width = Text.LineHeight,
             Height = Text.LineHeight,
@@ -27,16 +28,17 @@ public class ColumnWorker_Name :
                 }
             }
         };
-        var label = new Widget_Label(value!)
-        {
-            Width = new Widget.Units.Expr(v => v - icon.Width!.Get(v) - 10f),
-        };
+        var icon = new Widget_Icon_Thing(thing, iconStyle);
 
-        return new Widget_Container_Hor([icon, label])
+        var labelStyle = new WidgetStyle()
         {
-            Width = 100,
+            TextAlign = (TextAnchor)CellStyle,
+        };
+        var label = new Widget_Label(value!, labelStyle);
+
+        return new Widget_Container_Hor([icon, label], 10f, true)
+        {
             Tooltip = thing.Def.description,
-            Gap = 10f,
         };
     }
 }

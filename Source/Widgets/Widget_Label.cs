@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using Verse;
 
 namespace Stats;
@@ -10,16 +9,19 @@ public sealed class Widget_Label
     : Widget
 {
     private readonly string Text;
-    public Widget_Label(string text) : base([])
+    protected override Vector2 ContentSize { get; }
+    public Widget_Label(string text, WidgetStyle? style = null)
+        : base(style)
     {
         Text = text;
-    }
-    protected override IEnumerable<Rect> GetLayout(Vector2? _)
-    {
-        yield return new Rect(Vector2.zero, Verse.Text.CalcSize(Text));
+        ContentSize = Verse.Text.CalcSize(Text);
     }
     protected override void DrawContentBox(Rect contentBox)
     {
+        Verse.Text.Anchor = Style.TextAlign;
+
         Widgets.Label(contentBox, Text);
+
+        Verse.Text.Anchor = Constants.DefaultTextAnchor;
     }
 }

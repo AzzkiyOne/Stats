@@ -1,9 +1,11 @@
 ﻿using RimWorld;
+using UnityEngine;
 using Verse;
 
 namespace Stats;
 
-public class ColumnWorker_Stat : ColumnWorker<float>
+public class ColumnWorker_Stat
+    : ColumnWorker<float>
 {
     public override ColumnCellStyle CellStyle => ColumnCellStyle.Number;
     public override float GetValue(ThingRec thing)
@@ -64,10 +66,13 @@ public class ColumnWorker_Stat : ColumnWorker<float>
     {
         var valueStr = FormatValue(value, thing);
         var tooltip = GetValueExplanation(value, thing);
-
-        return new Widget_Label(valueStr)
+        var style = new WidgetStyle()
         {
-            Width = 100,
+            TextAlign = (TextAnchor)CellStyle,
+        };
+
+        return new Widget_Label(valueStr, style)
+        {
             Tooltip = tooltip,
         };
     }

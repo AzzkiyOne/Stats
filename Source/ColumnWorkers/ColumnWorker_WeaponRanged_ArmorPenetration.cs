@@ -1,6 +1,7 @@
 ﻿namespace Stats;
 
-public class ColumnWorker_WeaponRanged_ArmorPenetration : ColumnWorker_Num
+public class ColumnWorker_WeaponRanged_ArmorPenetration
+    : ColumnWorker_Num
 {
     public override float GetValue(ThingRec thing)
     {

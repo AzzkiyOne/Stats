@@ -1,6 +1,7 @@
 ﻿namespace Stats;
 
-public abstract class ColumnWorker<ValueType> : IColumnWorker<ValueType>
+public abstract class ColumnWorker<ValueType>
+    : IColumnWorker<ValueType>
 {
     public abstract ColumnCellStyle CellStyle { get; }
 #pragma warning disable CS8618

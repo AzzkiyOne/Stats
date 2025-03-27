@@ -2,7 +2,8 @@
 
 namespace Stats;
 
-public abstract class ColumnWorker_Bool : ColumnWorker<bool>
+public abstract class ColumnWorker_Bool
+    : ColumnWorker<bool>
 {
     public override ColumnCellStyle CellStyle => ColumnCellStyle.Boolean;
     protected override bool ShouldShowValue(bool value)
@@ -11,12 +12,14 @@ public abstract class ColumnWorker_Bool : ColumnWorker<bool>
     }
     protected override Widget GetTableCellContent(bool value, ThingRec thing)
     {
-        return new Widget_Texture(Widgets.GetCheckboxTexture(value))
+        var style = new WidgetStyle()
         {
             Width = Text.LineHeight,
             Height = Text.LineHeight,
-            //Scale = 0.7f,
+            Align_H = WidgetStyle.Align.Middle_H,
         };
+
+        return new Widget_Texture(Widgets.GetCheckboxTexture(value), style);
     }
     public override IWidget_FilterInput GetFilterWidget()
     {

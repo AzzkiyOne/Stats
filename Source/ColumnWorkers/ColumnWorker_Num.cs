@@ -1,6 +1,9 @@
-﻿namespace Stats;
+﻿using UnityEngine;
 
-public abstract class ColumnWorker_Num : ColumnWorker<float>
+namespace Stats;
+
+public abstract class ColumnWorker_Num
+    : ColumnWorker<float>
 {
     public override ColumnCellStyle CellStyle => ColumnCellStyle.Number;
     protected virtual string FormatValue(float value)
@@ -19,11 +22,12 @@ public abstract class ColumnWorker_Num : ColumnWorker<float>
     protected override Widget GetTableCellContent(float value, ThingRec thing)
     {
         var valueStr = FormatValue(value);
-
-        return new Widget_Label(valueStr)
+        var style = new WidgetStyle()
         {
-            Width = 100,
+            TextAlign = (TextAnchor)CellStyle,
         };
+
+        return new Widget_Label(valueStr, style);
     }
     public override IWidget_FilterInput GetFilterWidget()
     {

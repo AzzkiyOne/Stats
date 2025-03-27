@@ -2,7 +2,8 @@
 
 namespace Stats.Compat.CE;
 
-public class ColumnWorker_WeaponRanged_OneHandedness : ColumnWorker_Bool
+public class ColumnWorker_WeaponRanged_OneHandedness
+    : ColumnWorker_Bool
 {
     public override bool GetValue(ThingRec thing)
     {

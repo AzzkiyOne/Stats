@@ -3,7 +3,8 @@ using RimWorld;
 
 namespace Stats.Compat.CE;
 
-public class ColumnWorker_WeaponRanged_ReloadTime : ColumnWorker_Stat
+public class ColumnWorker_WeaponRanged_ReloadTime
+    : ColumnWorker_Stat
 {
     public override float GetValue(ThingRec thing)
     {

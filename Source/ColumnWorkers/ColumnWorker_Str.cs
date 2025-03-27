@@ -1,6 +1,9 @@
-﻿namespace Stats;
+﻿using UnityEngine;
 
-public abstract class ColumnWorker_Str : ColumnWorker<string?>
+namespace Stats;
+
+public abstract class ColumnWorker_Str
+    : ColumnWorker<string?>
 {
     public override ColumnCellStyle CellStyle => ColumnCellStyle.String;
     protected override bool ShouldShowValue(string? value)
@@ -9,10 +12,12 @@ public abstract class ColumnWorker_Str : ColumnWorker<string?>
     }
     protected override Widget GetTableCellContent(string? value, ThingRec thing)
     {
-        return new Widget_Label(value!)
+        var style = new WidgetStyle()
         {
-            Width = 100,
+            TextAlign = (TextAnchor)CellStyle,
         };
+
+        return new Widget_Label(value!, style);
     }
     public override IWidget_FilterInput GetFilterWidget()
     {

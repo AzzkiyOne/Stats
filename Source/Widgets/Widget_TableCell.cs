@@ -1,37 +1,31 @@
 ﻿using System;
-using System.Collections.Generic;
 using UnityEngine;
-using Verse;
 
 namespace Stats;
 
 internal class Widget_TableCell
     : Widget
 {
-    public required Properties Props { get; set; }
-    public Widget_TableCell(List<Widget> children)
-        : base(children)
+    public Properties Props { get; }
+    private readonly Widget? Widget;
+    public bool IsEmpty => Widget == null;
+    protected override Vector2 ContentSize { get; }
+    public Widget_TableCell(
+        Widget? widget,
+        Properties props,
+        WidgetStyle? style = null
+    )
+        : base(style)
     {
-    }
-    protected override IEnumerable<Rect> GetLayout(Vector2? contentBoxSize)
-    {
-        var content = Children[0];
-
-        if (content != null)
-        {
-            yield return new Rect(
-                Vector2.zero,
-                content.GetMarginBoxSize(contentBoxSize)
-            );
-        }
+        Props = props;
+        Widget = widget;
+        ContentSize = Widget?.GetMarginBoxSize() ?? Vector2.zero;
     }
     protected override void DrawContentBox(Rect contentBox)
     {
-        Text.Anchor = Props.TextAnchor;
+        if (Widget == null) return;
 
-        base.DrawContentBox(contentBox);
-
-        Text.Anchor = Constants.DefaultTextAnchor;
+        Widget.DrawIn(contentBox);
     }
     public class Properties
     {
@@ -42,6 +36,5 @@ internal class Widget_TableCell
             get => _Width;
             set => _Width = Math.Max(_Width, value);
         }
-        public required TextAnchor TextAnchor { get; set; }
     }
 }

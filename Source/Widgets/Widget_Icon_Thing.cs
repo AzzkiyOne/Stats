@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using RimWorld;
+﻿using RimWorld;
 using UnityEngine;
 using Verse;
 
@@ -15,12 +14,20 @@ public class Widget_Icon_Thing
     private readonly float Scale;
     private readonly float Angle;
     private readonly Vector2 Offset;
-    public Widget_Icon_Thing(ThingRec thing)
-        : this(thing.Def, thing.StuffDef)
+    protected override Vector2 ContentSize => Vector2.zero;
+    public Widget_Icon_Thing(
+        ThingRec thing,
+        WidgetStyle? style = null
+    )
+        : this(thing.Def, thing.StuffDef, style)
     {
     }
-    public Widget_Icon_Thing(ThingDef thingDef, ThingDef? stuffDef = null)
-        : base([])
+    public Widget_Icon_Thing(
+        ThingDef thingDef,
+        ThingDef? stuffDef = null,
+        WidgetStyle? style = null
+    )
+        : base(style)
     {
         Texture = Widgets.GetIconFor(thingDef, stuffDef) ?? BaseContent.BadTex;
         Scale = GenUI.IconDrawScale(thingDef);
@@ -59,10 +66,6 @@ public class Widget_Icon_Thing
         {
             Proportions = new Vector2(Texture.width, Texture.height);
         }
-    }
-    protected override IEnumerable<Rect> GetLayout(Vector2? contentBoxSize)
-    {
-        yield return Rect.zero;
     }
     protected override void DrawContentBox(Rect contentBox)
     {

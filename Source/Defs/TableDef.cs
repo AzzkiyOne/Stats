@@ -6,7 +6,8 @@ using Verse;
 
 namespace Stats;
 
-public class TableDef : Def
+public class TableDef
+    : Def
 {
 #pragma warning disable CS8618
     public List<ColumnDef> columns;

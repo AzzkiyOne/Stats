@@ -1,15 +1,20 @@
 ﻿using System.Linq;
-using Verse;
 
 namespace Stats;
 
-public class ColumnWorker_Apparel_Layers : ColumnWorker_Str
+public class ColumnWorker_Apparel_Layers
+    : ColumnWorker_Str
 {
     public override string? GetValue(ThingRec thing)
     {
-        return string.Join(
-            ", ",
-            thing.Def.apparel?.layers.Select(layer => layer.LabelCap)
-        );
+        var labels =
+            thing
+            .Def
+            .apparel?
+            .layers
+            .OrderBy(def => def.label)
+            .Select(layer => layer.LabelCap);
+
+        return string.Join("\n", labels);
     }
 }

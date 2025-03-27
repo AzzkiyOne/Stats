@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using Verse;
 
 namespace Stats;
@@ -9,13 +8,11 @@ public class Widget_Texture
 {
     private readonly Texture2D Tex;
     public float Scale { get; set; } = 1f;
-    public Widget_Texture(Texture2D tex) : base([])
+    protected override Vector2 ContentSize => Vector2.zero;
+    public Widget_Texture(Texture2D tex, WidgetStyle? style = null)
+        : base(style)
     {
         Tex = tex;
-    }
-    protected override IEnumerable<Rect> GetLayout(Vector2? contentBoxSize)
-    {
-        yield return Rect.zero;
     }
     protected override void DrawContentBox(Rect contentBox)
     {

@@ -4,7 +4,8 @@ using Verse;
 
 namespace Stats;
 
-public class ColumnWorker_CreatedAt : ColumnWorker<IEnumerable<ThingDef>>
+public class ColumnWorker_CreatedAt
+    : ColumnWorker<IEnumerable<ThingDef>>
 {
     public override ColumnCellStyle CellStyle => ColumnCellStyle.String;
     public override IEnumerable<ThingDef> GetValue(ThingRec thing)
@@ -36,29 +37,33 @@ public class ColumnWorker_CreatedAt : ColumnWorker<IEnumerable<ThingDef>>
         ThingRec thing
     )
     {
-        return new Widget_Container_Hor(
-            things
-            .OrderBy(def => def.label)
-            .Select(def => new Widget_Icon_Thing(def)
+        var icons = new List<Widget>();
+
+        foreach (var thingDef in things.OrderBy(def => def.label))
+        {
+            var iconStyle = new WidgetStyle()
             {
                 Width = Text.LineHeight,
                 Height = Text.LineHeight,
-                Tooltip = def.description,
                 Background = (borderBox, _) =>
                 {
                     Widgets.DrawHighlightIfMouseover(borderBox);
 
                     if (Widgets.ButtonInvisible(borderBox))
                     {
-                        Widget_DefInfoDialog.Draw(def);
+                        Widget_DefInfoDialog.Draw(thingDef);
                     }
-                }
-            })
-            .ToList<Widget>()
-        )
-        {
-            Gap = 5f,
-        };
+                },
+            };
+            var icon = new Widget_Icon_Thing(thingDef, style: iconStyle)
+            {
+                Tooltip = thingDef.description,
+            };
+
+            icons.Add(icon);
+        }
+
+        return new Widget_Container_Hor(icons, 5f);
     }
     public override IWidget_FilterInput GetFilterWidget()
     {

@@ -4,7 +4,8 @@ using Verse;
 
 namespace Stats;
 
-public class StatsMainTabWindow : MainTabWindow
+public class StatsMainTabWindow
+    : MainTabWindow
 {
     protected override float Margin { get => 1f; }
     public override Vector2 RequestedTabSize => new(UI.screenWidth, base.RequestedTabSize.y);

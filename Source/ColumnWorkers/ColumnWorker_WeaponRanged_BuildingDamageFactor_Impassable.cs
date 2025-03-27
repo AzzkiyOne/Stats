@@ -1,6 +1,7 @@
 ﻿namespace Stats;
 
-public class ColumnWorker_WeaponRanged_BuildingDamageFactor_Impassable : ColumnWorker_Num
+public class ColumnWorker_WeaponRanged_BuildingDamageFactor_Impassable
+    : ColumnWorker_Num
 {
     public override float GetValue(ThingRec thing)
     {

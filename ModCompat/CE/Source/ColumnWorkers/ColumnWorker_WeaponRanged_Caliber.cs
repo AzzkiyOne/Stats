@@ -1,9 +1,11 @@
 ﻿using RimWorld;
+using UnityEngine;
 using Verse;
 
 namespace Stats.Compat.CE;
 
-public class ColumnWorker_WeaponRanged_Caliber : ColumnWorker_Str
+public class ColumnWorker_WeaponRanged_Caliber
+    : ColumnWorker_Str
 {
     public override string GetValue(ThingRec thing)
     {
@@ -24,10 +26,13 @@ public class ColumnWorker_WeaponRanged_Caliber : ColumnWorker_Str
             ToStringNumberSense.Absolute,
             ColumnDef.stat!.Worker.GetValue(statReq)
         );
-
-        return new Widget_Label(value!)
+        var style = new WidgetStyle()
         {
-            Width = 100,
+            TextAlign = (TextAnchor)CellStyle,
+        };
+
+        return new Widget_Label(value!, style)
+        {
             Tooltip = tooltip,
         };
     }

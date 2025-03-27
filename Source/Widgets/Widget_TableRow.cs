@@ -31,11 +31,11 @@ internal class Widget_TableRow
         _Cells.Add(cell);
     }
     public void Draw(
-        Rect targetRect,
-        float offsetX,
+        in Rect targetRect,
+        in float offsetX,
         Func<Widget_TableCell, bool> shouldDrawCell,
-        float cellExtraWidth,
-        int index
+        in float cellExtraWidth,
+        in int index
     )
     {
         if (Mouse.IsOver(targetRect))
@@ -61,7 +61,7 @@ internal class Widget_TableRow
             var cellWidth = cell.Props.Width + cellExtraWidth;
             var xMax = x + cellWidth;
 
-            if (xMax > 0f)
+            if (xMax > 0f && cell.IsEmpty == false)
             {
                 var cellRect = new Rect(
                     x,

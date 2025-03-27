@@ -2,7 +2,8 @@
 
 namespace Stats;
 
-public class TableWorker_Drugs : TableWorker
+public class TableWorker_Drugs
+    : TableWorker
 {
     protected override bool IsValidThingDef(ThingDef thingDef)
     {
