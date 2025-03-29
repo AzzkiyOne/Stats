@@ -2,12 +2,12 @@
 
 namespace Stats;
 
-public abstract class Widget_Proxy
+public abstract class Widget_Addon
     : Widget
 {
     protected Widget Widget { get; }
     public override WidgetStyle Style => Widget.Style;
-    public Widget_Proxy(Widget widget)
+    public Widget_Addon(Widget widget)
     {
         Widget = widget;
     }

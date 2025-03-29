@@ -3,7 +3,7 @@
 namespace Stats;
 
 public abstract class Widget_Addon_RectOffset
-    : Widget_Proxy
+    : Widget_Addon
 {
     protected float Left { get; }
     protected float Top { get; }

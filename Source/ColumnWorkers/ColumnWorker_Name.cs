@@ -36,7 +36,7 @@ public class ColumnWorker_Name
         };
         var label = new Widget_Label(value!, labelStyle);
 
-        return new Widget_Tooltip(
+        return new Widget_Addon_Tooltip(
             new Widget_Container_Hor([icon, label], 10f, true),
             thing.Def.description
         );

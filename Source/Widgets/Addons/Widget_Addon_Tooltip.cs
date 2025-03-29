@@ -3,11 +3,11 @@ using Verse;
 
 namespace Stats;
 
-public class Widget_Tooltip
-    : Widget_Proxy
+public class Widget_Addon_Tooltip
+    : Widget_Addon
 {
     private readonly string Text;
-    public Widget_Tooltip(Widget widget, string text)
+    public Widget_Addon_Tooltip(Widget widget, string text)
         : base(widget)
     {
         Text = text;

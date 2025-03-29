@@ -55,7 +55,7 @@ public class ColumnWorker_CreatedAt
                     }
                 },
             };
-            var icon = new Widget_Tooltip(
+            var icon = new Widget_Addon_Tooltip(
                 new Widget_Icon_Thing(thingDef, style: iconStyle),
                 thingDef.description
             );

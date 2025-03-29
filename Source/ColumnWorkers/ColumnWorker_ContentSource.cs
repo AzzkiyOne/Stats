@@ -16,7 +16,7 @@ public class ColumnWorker_ContentSource
             TextAlign = (TextAnchor)CellStyle,
         };
 
-        return new Widget_Tooltip(
+        return new Widget_Addon_Tooltip(
             new Widget_Label(value!, style),
             thing.Def.modContentPack.PackageIdPlayerFacing
         );

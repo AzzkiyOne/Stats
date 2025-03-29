@@ -74,7 +74,7 @@ public class ColumnWorker_Stat
 
         if (tooltip != null)
         {
-            return new Widget_Tooltip(labelWidget, tooltip);
+            return new Widget_Addon_Tooltip(labelWidget, tooltip);
         }
 
         return labelWidget;

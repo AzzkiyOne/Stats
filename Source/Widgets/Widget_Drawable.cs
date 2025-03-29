@@ -28,59 +28,49 @@ public abstract class Widget_Drawable
 
         CurContainerSize = containerSize;
 
-        return CurSize = Style switch
+        if (Style.Width != null)
         {
-            {
-                Width: not null,
-                Height: not null
-            } => new Vector2(
-                Style.Width.Get(containerSize.x),
-                Style.Height.Get(containerSize.y)
-            ),
-            {
-                Width: null,
-                Height: not null
-            } => new Vector2(
-                ContentSize.x,
-                Style.Height.Get(containerSize.y)
-            ),
-            {
-                Width: not null,
-                Height: null
-            } => new Vector2(
-                Style.Width.Get(containerSize.x),
-                ContentSize.y
-            ),
-            _ => ContentSize,
-        };
+            CurSize.x = Style.Width.Get(containerSize.x);
+        }
+        else
+        {
+            CurSize.x = ContentSize.x;
+        }
+
+        if (Style.Height != null)
+        {
+            CurSize.y = Style.Height.Get(containerSize.y);
+        }
+        else
+        {
+            CurSize.y = ContentSize.y;
+        }
+
+        return CurSize;
     }
     public override Vector2 GetSize()
     {
-        return Style switch
+        Vector2 result;
+
+        if (Style.Width is WidgetStyle.Units.Abs absWidth)
         {
-            {
-                Width: WidgetStyle.Units.Abs absWidth,
-                Height: WidgetStyle.Units.Abs absHeight
-            } => new Vector2(
-                absWidth.Value,
-                absHeight.Value
-            ),
-            {
-                Width: null,
-                Height: WidgetStyle.Units.Abs absHeight
-            } => new Vector2(
-                ContentSize.x,
-                absHeight.Value
-            ),
-            {
-                Width: WidgetStyle.Units.Abs absWidth,
-                Height: null
-            } => new Vector2(
-                absWidth.Value,
-                ContentSize.y
-            ),
-            _ => ContentSize,
-        };
+            result.x = absWidth.Value;
+        }
+        else
+        {
+            result.x = ContentSize.x;
+        }
+
+        if (Style.Height is WidgetStyle.Units.Abs absHeight)
+        {
+            result.y = absHeight.Value;
+        }
+        else
+        {
+            result.y = ContentSize.y;
+        }
+
+        return result;
     }
     public override void Draw(Rect rect)
     {

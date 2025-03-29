@@ -65,7 +65,7 @@ internal sealed class Widget_Table_Things
 
             cellContent = new Widget_Container_Single(cellContent);
             cellContent = new Widget_Addon_Padding(cellContent, cellPadding);
-            cellContent = new Widget_Tooltip(cellContent, column.description);
+            cellContent = new Widget_Addon_Tooltip(cellContent, column.description);
 
             //var cellStyle = new WidgetStyle()
             //{
