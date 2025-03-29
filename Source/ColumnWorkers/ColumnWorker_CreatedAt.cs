@@ -55,10 +55,10 @@ public class ColumnWorker_CreatedAt
                     }
                 },
             };
-            var icon = new Widget_Icon_Thing(thingDef, style: iconStyle)
-            {
-                Tooltip = thingDef.description,
-            };
+            var icon = new Widget_Tooltip(
+                new Widget_Icon_Thing(thingDef, style: iconStyle),
+                thingDef.description
+            );
 
             icons.Add(icon);
         }

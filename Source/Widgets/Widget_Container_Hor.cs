@@ -26,7 +26,7 @@ public class Widget_Container_Hor
             }
         }
     }
-    protected override Vector2 CalcContentSize()
+    public override Vector2 CalcContentSize()
     {
         Vector2 result;
 
@@ -43,7 +43,7 @@ public class Widget_Container_Hor
 
         return result;
     }
-    protected override void DrawContentBox(Rect contentBox)
+    public override void DrawContentBox(Rect contentBox)
     {
         var childMarginBox = new Rect(contentBox.position, Vector2.zero);
         var contentBoxSize = contentBox.size;

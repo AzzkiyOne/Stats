@@ -63,10 +63,10 @@ internal sealed class Widget_Table_Things
                 cellContent = new Widget_Label(column.LabelCap, labelStyle);
             }
 
+            cellContent = new Widget_Tooltip(cellContent, column.description);
+
             var cellStyle = new WidgetStyle()
             {
-                Width = null,
-                Height = null,
                 Padding = cellPadding,
                 Background = (borderBox, widget) =>
                 {
@@ -101,10 +101,7 @@ internal sealed class Widget_Table_Things
             {
                 IsPinned = column == ColumnDefOf.Name,
             };
-            var cell = new Widget_TableCell(cellContent, cellProps, cellStyle)
-            {
-                Tooltip = column.description,
-            };
+            var cell = new Widget_TableCell(cellContent, cellProps, cellStyle);
 
             headerRow.AddCell(cell);
         }
@@ -155,8 +152,6 @@ internal sealed class Widget_Table_Things
 
                 var cellStyle = new WidgetStyle()
                 {
-                    Width = null,
-                    Height = null,
                     Padding = cellPadding,
                 };
                 var cell = new Widget_TableCell(cellContent, cellProps, cellStyle);

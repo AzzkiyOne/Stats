@@ -9,14 +9,14 @@ public sealed class Widget_Label
     : Widget
 {
     private readonly string Text;
-    protected override Vector2 ContentSize { get; }
+    public override Vector2 ContentSize { get; }
     public Widget_Label(string text, WidgetStyle? style = null)
         : base(style)
     {
         Text = text;
         ContentSize = Verse.Text.CalcSize(Text);
     }
-    protected override void DrawContentBox(Rect contentBox)
+    public override void DrawContentBox(Rect contentBox)
     {
         Verse.Text.Anchor = Style.TextAlign;
 

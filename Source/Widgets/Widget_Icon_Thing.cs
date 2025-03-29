@@ -14,7 +14,7 @@ public class Widget_Icon_Thing
     private readonly float Scale;
     private readonly float Angle;
     private readonly Vector2 Offset;
-    protected override Vector2 ContentSize => Vector2.zero;
+    public override Vector2 ContentSize => Vector2.zero;
     public Widget_Icon_Thing(
         ThingRec thing,
         WidgetStyle? style = null
@@ -67,7 +67,7 @@ public class Widget_Icon_Thing
             Proportions = new Vector2(Texture.width, Texture.height);
         }
     }
-    protected override void DrawContentBox(Rect contentBox)
+    public override void DrawContentBox(Rect contentBox)
     {
         contentBox.position += Offset * contentBox.size;
         GUI.color = Color;

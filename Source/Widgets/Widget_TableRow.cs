@@ -31,7 +31,7 @@ internal class Widget_TableRow
         _Cells.Add(cell);
     }
     public void Draw(
-        in Rect targetRect,
+        Rect targetRect,
         in float offsetX,
         Func<Widget_TableCell, bool> shouldDrawCell,
         in float cellExtraWidth,

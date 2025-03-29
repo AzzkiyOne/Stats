@@ -24,14 +24,13 @@ namespace Stats;
 // Box model is implemented as "box-sizing: border-box".
 public abstract class Widget
 {
-    public string? Tooltip { get; set; }
     public WidgetStyle Style { get; }
-    protected abstract Vector2 ContentSize { get; }
+    public abstract Vector2 ContentSize { get; }
     private Vector2 CurContainerSize = Vector2.zero;
     private Vector2 CurMarginBoxSize = Vector2.zero;
     public Widget(WidgetStyle? style = null)
     {
-        Style = style ?? new WidgetStyle();
+        Style = style ?? WidgetStyle.Default;
     }
     public Vector2 GetMarginBoxSize(in Vector2 containerSize)
     {
@@ -105,16 +104,16 @@ public abstract class Widget
             _ => ContentSize + Style.Padding.Size,
         } + Style.Margin.Size;
     }
-    public void DrawIn(in Rect container)
+    public void DrawIn(Rect container)
     {
         var marginBoxSize = GetMarginBoxSize(container.size);
         var marginBox = new Rect(container.position, marginBoxSize);
 
         DrawMarginBoxIn(marginBox, container);
     }
-    public void DrawMarginBoxIn(Rect marginBox, in Rect container)
+    public void DrawMarginBoxIn(Rect marginBox, Rect container)
     {
-        Style.Align_H?.Invoke(container, ref marginBox);
+        Style.Align_H?.Invoke(ref container, ref marginBox);
 
         DrawMarginBox(marginBox);
     }
@@ -129,20 +128,19 @@ public abstract class Widget
             Widgets.DrawRectFast(marginBox, Color.cyan.ToTransparent(0.3f));
         }
 
-        marginBox.ContractBy(Style.Margin);
+        Style.Margin.ContractRect(ref marginBox);
 
-        if (Tooltip?.Length > 0)
-        {
-            TooltipHandler.TipRegion(marginBox, Tooltip);
-        }
+        DrawBorderBox(marginBox);
 
-        Style.Background?.Invoke(marginBox, this);
-
-        marginBox.ContractBy(Style.Padding);
+        Style.Padding.ContractRect(ref marginBox);
 
         DrawContentBox(marginBox);
     }
-    protected abstract void DrawContentBox(Rect contentBox);
+    public virtual void DrawBorderBox(Rect borderBox)
+    {
+        Style.Background?.Invoke(borderBox, this);
+    }
+    public abstract void DrawContentBox(Rect contentBox);
 }
 
 public class WidgetStyle
@@ -154,6 +152,8 @@ public class WidgetStyle
     public AlignFunc? Align_H { get; init; }
     public Action<Rect, Widget>? Background { get; init; }
     public TextAnchor TextAlign { get; init; } = Constants.DefaultTextAnchor;
+    // This is ok because style is readonly.
+    internal static WidgetStyle Default { get; } = new WidgetStyle();
 
     public static class Units
     {
@@ -211,16 +211,16 @@ public class WidgetStyle
         }
     }
 
-    public delegate void AlignFunc(in Rect outerRect, ref Rect innerRect);
+    public delegate void AlignFunc(ref Rect outerRect, ref Rect innerRect);
 
     public static class Align
     {
-        public static void Right(in Rect outerRect, ref Rect innerRect)
+        public static void Right(ref Rect outerRect, ref Rect innerRect)
         {
             innerRect.xMin = outerRect.xMax - innerRect.width;
             innerRect.xMax = outerRect.xMax;
         }
-        public static void Middle_H(in Rect outerRect, ref Rect innerRect)
+        public static void Middle_H(ref Rect outerRect, ref Rect innerRect)
         {
             var margin = (outerRect.width - innerRect.width) / 2f;
 
@@ -235,15 +235,18 @@ public class WidgetStyle
         public float Right { get; init; } = 0f;
         public float Top { get; init; } = 0f;
         public float Bottom { get; init; } = 0f;
-        public float Hor => Left + Right;
-        public float Ver => Top + Bottom;
-        public Vector2 Size => new(Left + Right, Top + Bottom);
+        public float Hor { get; }
+        public float Ver { get; }
+        public Vector2 Size { get; }
         public BoxOffset(float l, float r, float t, float b)
         {
             Left = l;
             Right = r;
             Top = t;
             Bottom = b;
+            Hor = Left + Right;
+            Ver = Top + Bottom;
+            Size = new Vector2(Left + Right, Top + Bottom);
         }
         public BoxOffset(float hor, float ver)
             : this(hor, hor, ver, ver)
@@ -252,6 +255,13 @@ public class WidgetStyle
         public BoxOffset(float value)
             : this(value, value, value, value)
         {
+        }
+        public void ContractRect(ref Rect rect)
+        {
+            rect.x += Left;
+            rect.y += Top;
+            rect.width -= Hor;
+            rect.height -= Ver;
         }
         public static implicit operator
             BoxOffset((float l, float r, float t, float b) v) => new(v.l, v.r, v.t, v.b);

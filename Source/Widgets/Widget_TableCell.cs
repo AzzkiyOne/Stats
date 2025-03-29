@@ -9,7 +9,7 @@ internal class Widget_TableCell
     public Properties Props { get; }
     private readonly Widget? Widget;
     public bool IsEmpty => Widget == null;
-    protected override Vector2 ContentSize { get; }
+    public override Vector2 ContentSize { get; }
     public Widget_TableCell(
         Widget? widget,
         Properties props,
@@ -21,11 +21,9 @@ internal class Widget_TableCell
         Widget = widget;
         ContentSize = Widget?.GetMarginBoxSize() ?? Vector2.zero;
     }
-    protected override void DrawContentBox(Rect contentBox)
+    public override void DrawContentBox(Rect contentBox)
     {
-        if (Widget == null) return;
-
-        Widget.DrawIn(contentBox);
+        Widget?.DrawIn(contentBox);
     }
     public class Properties
     {

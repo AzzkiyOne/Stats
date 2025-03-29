@@ -8,7 +8,7 @@ public abstract class Widget_Container
 {
     protected List<Widget> Children { get; }
     private Vector2? _ContentSize;
-    protected override Vector2 ContentSize
+    public override Vector2 ContentSize
     {
         get
         {
@@ -22,5 +22,5 @@ public abstract class Widget_Container
     {
         Children = children;
     }
-    protected abstract Vector2 CalcContentSize();
+    public abstract Vector2 CalcContentSize();
 }

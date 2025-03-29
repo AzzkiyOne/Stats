@@ -26,13 +26,6 @@ internal static class UnityEngine_Rect
     {
         rect.xMin += amount;
     }
-    public static void ContractBy(ref this Rect rect, WidgetStyle.BoxOffset offset)
-    {
-        rect.xMin += offset.Left;
-        rect.yMin += offset.Top;
-        rect.xMax -= offset.Right;
-        rect.yMax -= offset.Bottom;
-    }
 }
 
 internal static class VerbList

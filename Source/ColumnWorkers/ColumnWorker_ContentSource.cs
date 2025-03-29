@@ -16,9 +16,9 @@ public class ColumnWorker_ContentSource
             TextAlign = (TextAnchor)CellStyle,
         };
 
-        return new Widget_Label(value!, style)
-        {
-            Tooltip = thing.Def.modContentPack.PackageIdPlayerFacing,
-        };
+        return new Widget_Tooltip(
+            new Widget_Label(value!, style),
+            thing.Def.modContentPack.PackageIdPlayerFacing
+        );
     }
 }

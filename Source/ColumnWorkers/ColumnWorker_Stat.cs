@@ -70,11 +70,14 @@ public class ColumnWorker_Stat
         {
             TextAlign = (TextAnchor)CellStyle,
         };
+        var labelWidget = new Widget_Label(valueStr, style);
 
-        return new Widget_Label(valueStr, style)
+        if (tooltip != null)
         {
-            Tooltip = tooltip,
-        };
+            return new Widget_Tooltip(labelWidget, tooltip);
+        }
+
+        return labelWidget;
     }
     public override IWidget_FilterInput GetFilterWidget()
     {

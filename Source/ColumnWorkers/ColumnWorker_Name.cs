@@ -36,9 +36,9 @@ public class ColumnWorker_Name
         };
         var label = new Widget_Label(value!, labelStyle);
 
-        return new Widget_Container_Hor([icon, label], 10f, true)
-        {
-            Tooltip = thing.Def.description,
-        };
+        return new Widget_Tooltip(
+            new Widget_Container_Hor([icon, label], 10f, true),
+            thing.Def.description
+        );
     }
 }

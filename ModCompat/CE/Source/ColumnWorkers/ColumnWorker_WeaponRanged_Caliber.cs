@@ -31,9 +31,6 @@ public class ColumnWorker_WeaponRanged_Caliber
             TextAlign = (TextAnchor)CellStyle,
         };
 
-        return new Widget_Label(value!, style)
-        {
-            Tooltip = tooltip,
-        };
+        return new Widget_Tooltip(new Widget_Label(value!, style), tooltip);
     }
 }

@@ -86,7 +86,7 @@ internal class Widget_Table
         var leftPartRect = contentRectVisible.CutByX(leftColumnsMinWidth);
 
         DrawPart(
-            leftPartRect,
+            ref leftPartRect,
             new Vector2(0f, ScrollPos.y),
             0f,
             static (cell) => cell.Props.IsPinned
@@ -95,7 +95,7 @@ internal class Widget_Table
         // Separator line
         Widget_LineVertical.Draw(
             leftPartRect.xMax,
-            leftPartRect.y,
+            leftPartRect.y - TotalHeaderRowsHeight,
             targetRect.height,
             StatsMainTabWindow.BorderLineColor
         );
@@ -104,7 +104,7 @@ internal class Widget_Table
         var rightPartFreeSpace = contentRectVisible.width - rightColumnsMinWidth;
 
         DrawPart(
-            contentRectVisible,
+            ref contentRectVisible,
             ScrollPos,
             Math.Max(rightPartFreeSpace / rightColumnsCount, 0f),
             static (cell) => cell.Props.IsPinned == false
@@ -113,33 +113,34 @@ internal class Widget_Table
         Widgets.EndScrollView();
     }
     private void DrawPart(
-        Rect targetRect,
+        ref Rect targetRect,
         in Vector2 scrollPos,
         in float cellExtraWidth,
         Func<Widget_TableCell, bool> shouldDrawCell
     )
     {
         DrawColumnSeparators(
-            targetRect,
+            ref targetRect,
             scrollPos.x,
             cellExtraWidth,
             shouldDrawCell
         );
+        var headersRect = targetRect.CutByY(TotalHeaderRowsHeight);
         DrawHeaders(
-            targetRect.CutByY(TotalHeaderRowsHeight),
+            ref headersRect,
             scrollPos.x,
             cellExtraWidth,
             shouldDrawCell
         );
         DrawBody(
-            targetRect,
+            ref targetRect,
             scrollPos,
             cellExtraWidth,
             shouldDrawCell
         );
     }
     private void DrawHeaders(
-        in Rect targetRect,
+        ref Rect targetRect,
         in float offsetX,
         in float cellExtraWidth,
         Func<Widget_TableCell, bool> shouldDrawCell
@@ -151,17 +152,21 @@ internal class Widget_Table
 
         foreach (var row in HeaderRows)
         {
-            var rowRect = new Rect(0f, y, targetRect.width, row.Height);
+            row.Draw(
+                new Rect(0f, y, targetRect.width, row.Height),
+                offsetX,
+                shouldDrawCell,
+                cellExtraWidth,
+                0
+            );
 
-            row.Draw(rowRect, offsetX, shouldDrawCell, cellExtraWidth, 0);
-
-            y += rowRect.height;
+            y += row.Height;
         }
 
         Widgets.EndGroup();
     }
     private void DrawBody(
-        in Rect targetRect,
+        ref Rect targetRect,
         in Vector2 scrollPos,
         in float cellExtraWidth,
         Func<Widget_TableCell, bool> shouldDrawCell
@@ -180,10 +185,8 @@ internal class Widget_Table
 
             if (yMax > 0f)
             {
-                var rowRect = new Rect(0f, y, targetRect.width, row.Height);
-
                 row.Draw(
-                    rowRect,
+                    new Rect(0f, y, targetRect.width, row.Height),
                     scrollPos.x,
                     shouldDrawCell,
                     cellExtraWidth,
@@ -199,7 +202,7 @@ internal class Widget_Table
     // The performance impact of instead drawing a vertical border for each
     // individual cell is huge. So we have to keep this.
     private void DrawColumnSeparators(
-        in Rect targetRect,
+        ref Rect targetRect,
         in float offsetX,
         in float cellExtraWidth,
         Func<Widget_TableCell, bool> shouldDrawCell
