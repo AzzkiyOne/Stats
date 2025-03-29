@@ -4,11 +4,11 @@ using UnityEngine;
 namespace Stats;
 
 public abstract class Widget_Container
-    : Widget
+    : Widget_Drawable
 {
     protected List<Widget> Children { get; }
     private Vector2? _ContentSize;
-    public override Vector2 ContentSize
+    protected override Vector2 ContentSize
     {
         get
         {
@@ -22,5 +22,5 @@ public abstract class Widget_Container
     {
         Children = children;
     }
-    public abstract Vector2 CalcContentSize();
+    protected abstract Vector2 CalcContentSize();
 }

@@ -1,0 +1,26 @@
+﻿using UnityEngine;
+
+namespace Stats;
+
+internal sealed class Widget_TableCell_Empty
+    : Widget_TableCell
+{
+    public override WidgetStyle Style => WidgetStyle.Default;
+    public Widget_TableCell_Empty(
+        Properties props
+    )
+        : base(props)
+    {
+    }
+    public override Vector2 GetSize(in Vector2 containerSize)
+    {
+        return Vector2.zero;
+    }
+    public override Vector2 GetSize()
+    {
+        return Vector2.zero;
+    }
+    public override void Draw(Rect rect)
+    {
+    }
+}

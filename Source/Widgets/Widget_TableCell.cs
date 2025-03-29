@@ -1,29 +1,16 @@
 ﻿using System;
-using UnityEngine;
 
 namespace Stats;
 
-internal class Widget_TableCell
+internal abstract class Widget_TableCell
     : Widget
 {
     public Properties Props { get; }
-    private readonly Widget? Widget;
-    public bool IsEmpty => Widget == null;
-    public override Vector2 ContentSize { get; }
     public Widget_TableCell(
-        Widget? widget,
-        Properties props,
-        WidgetStyle? style = null
+        Properties props
     )
-        : base(style)
     {
         Props = props;
-        Widget = widget;
-        ContentSize = Widget?.GetMarginBoxSize() ?? Vector2.zero;
-    }
-    public override void DrawContentBox(Rect contentBox)
-    {
-        Widget?.DrawIn(contentBox);
     }
     public class Properties
     {

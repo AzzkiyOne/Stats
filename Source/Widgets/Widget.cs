@@ -1,6 +1,5 @@
 ﻿using System;
 using UnityEngine;
-using Verse;
 
 namespace Stats;
 
@@ -24,131 +23,29 @@ namespace Stats;
 // Box model is implemented as "box-sizing: border-box".
 public abstract class Widget
 {
-    public WidgetStyle Style { get; }
-    public abstract Vector2 ContentSize { get; }
-    private Vector2 CurContainerSize = Vector2.zero;
-    private Vector2 CurMarginBoxSize = Vector2.zero;
-    public Widget(WidgetStyle? style = null)
-    {
-        Style = style ?? WidgetStyle.Default;
-    }
-    public Vector2 GetMarginBoxSize(in Vector2 containerSize)
-    {
-        if
-        (
-            CurContainerSize.x == containerSize.x
-            &&
-            CurContainerSize.y == containerSize.y
-        )
-        {
-            return CurMarginBoxSize;
-        }
-
-        CurContainerSize = containerSize;
-
-        return CurMarginBoxSize = GetMarginBoxSize_Int(containerSize);
-    }
-    private Vector2 GetMarginBoxSize_Int(in Vector2 containerSize)
-    {
-        return Style switch
-        {
-            {
-                Width: not null,
-                Height: not null
-            } => new Vector2(
-                Style.Width.Get(containerSize.x),
-                Style.Height.Get(containerSize.y)
-            ),
-            {
-                Width: not null,
-                Height: null
-            } => new Vector2(
-                Style.Width.Get(containerSize.x),
-                ContentSize.y + Style.Padding.Ver
-            ),
-            {
-                Width: null,
-                Height: not null
-            } => new Vector2(
-                ContentSize.x + Style.Padding.Hor,
-                Style.Height.Get(containerSize.y)
-            ),
-            _ => ContentSize + Style.Padding.Size,
-        } + Style.Margin.Size;
-    }
-    public Vector2 GetMarginBoxSize()
-    {
-        return Style switch
-        {
-            {
-                Width: WidgetStyle.Units.Abs absWidth,
-                Height: WidgetStyle.Units.Abs absHeight
-            } => new Vector2(
-                absWidth.Value,
-                absHeight.Value
-            ),
-            {
-                Width: WidgetStyle.Units.Abs absWidth,
-                Height: null
-            } => new Vector2(
-                absWidth.Value,
-                ContentSize.y + Style.Padding.Ver
-            ),
-            {
-                Width: null,
-                Height: WidgetStyle.Units.Abs absHeight
-            } => new Vector2(
-                ContentSize.x + Style.Padding.Hor,
-                absHeight.Value
-            ),
-            _ => ContentSize + Style.Padding.Size,
-        } + Style.Margin.Size;
-    }
+    public abstract WidgetStyle Style { get; }
+    public abstract Vector2 GetSize(in Vector2 containerSize);
+    public abstract Vector2 GetSize();
+    public abstract void Draw(Rect rect);
     public void DrawIn(Rect container)
     {
-        var marginBoxSize = GetMarginBoxSize(container.size);
-        var marginBox = new Rect(container.position, marginBoxSize);
+        var size = GetSize(container.size);
+        var rect = new Rect(container.position, size);
 
-        DrawMarginBoxIn(marginBox, container);
+        DrawIn(rect, container);
     }
-    public void DrawMarginBoxIn(Rect marginBox, Rect container)
+    public void DrawIn(Rect rect, Rect container)
     {
-        Style.Align_H?.Invoke(ref container, ref marginBox);
+        Style.Align_H?.Invoke(ref container, ref rect);
 
-        DrawMarginBox(marginBox);
+        Draw(rect);
     }
-    public void DrawMarginBox(Rect marginBox)
-    {
-        // We can optimize here rendering in a scroll area.
-        // If x/y coordinates are negative we can look if the margin box will be
-        // visible.
-
-        if (Mouse.IsOver(marginBox))
-        {
-            Widgets.DrawRectFast(marginBox, Color.cyan.ToTransparent(0.3f));
-        }
-
-        Style.Margin.ContractRect(ref marginBox);
-
-        DrawBorderBox(marginBox);
-
-        Style.Padding.ContractRect(ref marginBox);
-
-        DrawContentBox(marginBox);
-    }
-    public virtual void DrawBorderBox(Rect borderBox)
-    {
-        Style.Background?.Invoke(borderBox, this);
-    }
-    public abstract void DrawContentBox(Rect contentBox);
 }
 
 public class WidgetStyle
 {
     public Units.Unit? Width { get; init; } = 100;
     public Units.Unit? Height { get; init; }
-    public BoxOffset Margin { get; init; } = 0f;
-    public BoxOffset Padding { get; init; } = 0f;
     public AlignFunc? Align_H { get; init; }
     public Action<Rect, Widget>? Background { get; init; }
     public TextAnchor TextAlign { get; init; } = Constants.DefaultTextAnchor;
@@ -228,54 +125,4 @@ public class WidgetStyle
             innerRect.xMax = outerRect.xMax - margin;
         }
     }
-
-    public class BoxOffset
-    {
-        public float Left { get; init; } = 0f;
-        public float Right { get; init; } = 0f;
-        public float Top { get; init; } = 0f;
-        public float Bottom { get; init; } = 0f;
-        public float Hor { get; }
-        public float Ver { get; }
-        public Vector2 Size { get; }
-        public BoxOffset(float l, float r, float t, float b)
-        {
-            Left = l;
-            Right = r;
-            Top = t;
-            Bottom = b;
-            Hor = Left + Right;
-            Ver = Top + Bottom;
-            Size = new Vector2(Left + Right, Top + Bottom);
-        }
-        public BoxOffset(float hor, float ver)
-            : this(hor, hor, ver, ver)
-        {
-        }
-        public BoxOffset(float value)
-            : this(value, value, value, value)
-        {
-        }
-        public void ContractRect(ref Rect rect)
-        {
-            rect.x += Left;
-            rect.y += Top;
-            rect.width -= Hor;
-            rect.height -= Ver;
-        }
-        public static implicit operator
-            BoxOffset((float l, float r, float t, float b) v) => new(v.l, v.r, v.t, v.b);
-        public static implicit operator
-            BoxOffset((float hor, float ver) v) => new(v.hor, v.ver);
-        public static implicit operator
-            BoxOffset(float v) => new(v);
-    }
 }
-
-//public class Box
-//{
-//    public WidgetStyle.Units.Unit? Width { get; init; }
-//    public WidgetStyle.Units.Unit? Height { get; init; }
-//    public WidgetStyle.BoxOffset Margin { get; init; } = 0f;
-//    public WidgetStyle.BoxOffset Padding { get; init; } = 0f;
-//}

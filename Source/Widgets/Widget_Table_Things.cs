@@ -63,45 +63,46 @@ internal sealed class Widget_Table_Things
                 cellContent = new Widget_Label(column.LabelCap, labelStyle);
             }
 
+            cellContent = new Widget_Container_Single(cellContent);
+            cellContent = new Widget_Addon_Padding(cellContent, cellPadding);
             cellContent = new Widget_Tooltip(cellContent, column.description);
 
-            var cellStyle = new WidgetStyle()
-            {
-                Padding = cellPadding,
-                Background = (borderBox, widget) =>
-                {
-                    Widgets.DrawHighlightIfMouseover(borderBox);
+            //var cellStyle = new WidgetStyle()
+            //{
+            //    Background = (borderBox, widget) =>
+            //    {
+            //        Widgets.DrawHighlightIfMouseover(borderBox);
 
-                    if (SortColumn == column)
-                    {
-                        Widgets.DrawBoxSolid(
-                            SortDirection == SortDirection.Ascending
-                                ? borderBox.BottomPartPixels(5f)
-                                : borderBox.TopPartPixels(5f),
-                            Color.yellow.ToTransparent(0.3f)
-                        );
-                    }
+            //        if (SortColumn == column)
+            //        {
+            //            Widgets.DrawBoxSolid(
+            //                SortDirection == SortDirection.Ascending
+            //                    ? borderBox.BottomPartPixels(5f)
+            //                    : borderBox.TopPartPixels(5f),
+            //                Color.yellow.ToTransparent(0.3f)
+            //            );
+            //        }
 
-                    if (Widgets.ButtonInvisible(borderBox))
-                    {
-                        if (Event.current.control)
-                        {
-                            var cell = (Widget_TableCell)widget;
+            //        if (Widgets.ButtonInvisible(borderBox))
+            //        {
+            //            if (Event.current.control)
+            //            {
+            //                var cell = (Widget_TableCell)widget;
 
-                            cell.Props.IsPinned = !cell.Props.IsPinned;
-                        }
-                        else
-                        {
-                            SortRowsByColumn(column);
-                        }
-                    }
-                },
-            };
+            //                cell.Props.IsPinned = !cell.Props.IsPinned;
+            //            }
+            //            else
+            //            {
+            //                SortRowsByColumn(column);
+            //            }
+            //        }
+            //    },
+            //};
             var cellProps = new Widget_TableCell.Properties()
             {
                 IsPinned = column == ColumnDefOf.Name,
             };
-            var cell = new Widget_TableCell(cellContent, cellProps, cellStyle);
+            var cell = new Widget_TableCell_Normal(cellContent, cellProps);
 
             headerRow.AddCell(cell);
         }
@@ -150,11 +151,18 @@ internal sealed class Widget_Table_Things
                 {
                 }
 
-                var cellStyle = new WidgetStyle()
+                Widget_TableCell cell;
+
+                if (cellContent == null)
                 {
-                    Padding = cellPadding,
-                };
-                var cell = new Widget_TableCell(cellContent, cellProps, cellStyle);
+                    cell = new Widget_TableCell_Empty(cellProps);
+                }
+                else
+                {
+                    cellContent = new Widget_Container_Single(cellContent);
+                    cellContent = new Widget_Addon_Padding(cellContent, cellPadding);
+                    cell = new Widget_TableCell_Normal(cellContent, cellProps);
+                }
 
                 row.AddCell(cell);
             }

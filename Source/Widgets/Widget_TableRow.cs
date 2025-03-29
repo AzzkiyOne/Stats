@@ -23,7 +23,7 @@ internal class Widget_TableRow
     }
     public void AddCell(Widget_TableCell cell)
     {
-        var cellSize = cell.GetMarginBoxSize();
+        var cellSize = cell.GetSize();
 
         cell.Props.Width = cellSize.x;
         Height = cellSize.y;
@@ -61,7 +61,7 @@ internal class Widget_TableRow
             var cellWidth = cell.Props.Width + cellExtraWidth;
             var xMax = x + cellWidth;
 
-            if (xMax > 0f && cell.IsEmpty == false)
+            if (xMax > 0f)
             {
                 var cellRect = new Rect(
                     x,
@@ -70,7 +70,7 @@ internal class Widget_TableRow
                     targetRect.height
                 );
 
-                cell.DrawMarginBox(cellRect);
+                cell.Draw(cellRect);
             }
 
             x = xMax;

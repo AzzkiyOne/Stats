@@ -3,19 +3,22 @@ using Verse;
 
 namespace Stats;
 
+// This is basically HTML <img>
 public class Widget_Texture
-    : Widget
+    : Widget_Drawable
 {
     private readonly Texture2D Tex;
     public float Scale { get; set; } = 1f;
-    public override Vector2 ContentSize => Vector2.zero;
+    protected override Vector2 ContentSize => Vector2.zero;
     public Widget_Texture(Texture2D tex, WidgetStyle? style = null)
         : base(style)
     {
         Tex = tex;
     }
-    public override void DrawContentBox(Rect contentBox)
+    public override void Draw(Rect rect)
     {
-        Widgets.DrawTextureFitted(contentBox, Tex, Scale);
+        base.Draw(rect);
+
+        Widgets.DrawTextureFitted(rect, Tex, Scale);
     }
 }

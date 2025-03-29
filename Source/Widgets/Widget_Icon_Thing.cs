@@ -5,7 +5,7 @@ using Verse;
 namespace Stats;
 
 public class Widget_Icon_Thing
-    : Widget
+    : Widget_Drawable
 {
     private readonly Texture2D Texture;
     private readonly Color Color;
@@ -14,7 +14,7 @@ public class Widget_Icon_Thing
     private readonly float Scale;
     private readonly float Angle;
     private readonly Vector2 Offset;
-    public override Vector2 ContentSize => Vector2.zero;
+    protected override Vector2 ContentSize => Vector2.zero;
     public Widget_Icon_Thing(
         ThingRec thing,
         WidgetStyle? style = null
@@ -67,12 +67,14 @@ public class Widget_Icon_Thing
             Proportions = new Vector2(Texture.width, Texture.height);
         }
     }
-    public override void DrawContentBox(Rect contentBox)
+    public override void Draw(Rect rect)
     {
-        contentBox.position += Offset * contentBox.size;
+        base.Draw(rect);
+
+        rect.position += Offset * rect.size;
         GUI.color = Color;
         Widgets.DrawTextureFitted(
-            contentBox,
+            rect,
             Texture,
             Scale,
             Proportions,

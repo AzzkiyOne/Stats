@@ -21,12 +21,12 @@ public class Widget_Container_Hor
             {
                 if (child.Style.Width is WidgetStyle.Units.Abs or null)
                 {
-                    ReservedSpaceAmount += child.GetMarginBoxSize().x;
+                    ReservedSpaceAmount += child.GetSize().x;
                 }
             }
         }
     }
-    public override Vector2 CalcContentSize()
+    protected override Vector2 CalcContentSize()
     {
         Vector2 result;
 
@@ -35,28 +35,30 @@ public class Widget_Container_Hor
 
         foreach (var child in Children)
         {
-            var childMarginBoxSize = child.GetMarginBoxSize();
+            var childSize = child.GetSize();
 
-            result.x += childMarginBoxSize.x;
-            result.y = Math.Max(result.y, childMarginBoxSize.y);
+            result.x += childSize.x;
+            result.y = Math.Max(result.y, childSize.y);
         }
 
         return result;
     }
-    public override void DrawContentBox(Rect contentBox)
+    public override void Draw(Rect rect)
     {
-        var childMarginBox = new Rect(contentBox.position, Vector2.zero);
-        var contentBoxSize = contentBox.size;
+        base.Draw(rect);
 
-        contentBoxSize.x -= ReservedSpaceAmount;
+        var childRect = new Rect(rect.position, Vector2.zero);
+        var rectSize = rect.size;
+
+        rectSize.x -= ReservedSpaceAmount;
 
         foreach (var child in Children)
         {
-            childMarginBox.size = child.GetMarginBoxSize(contentBoxSize);
+            childRect.size = child.GetSize(rectSize);
 
-            child.DrawMarginBoxIn(childMarginBox, contentBox);
+            child.DrawIn(childRect, rect);
 
-            childMarginBox.x = childMarginBox.xMax + Gap;
+            childRect.x = childRect.xMax + Gap;
         }
     }
 }
