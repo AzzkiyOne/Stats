@@ -56,7 +56,7 @@ public class Widget_Container_Ver
         {
             childRect.size = child.GetSize(rectSize);
 
-            child.DrawIn(childRect, rect);
+            child.Draw(childRect);
 
             childRect.y = childRect.yMax + Gap;
         }

@@ -56,7 +56,7 @@ public class Widget_Container_Hor
         {
             childRect.size = child.GetSize(rectSize);
 
-            child.DrawIn(childRect, rect);
+            child.Draw(childRect);
 
             childRect.x = childRect.xMax + Gap;
         }

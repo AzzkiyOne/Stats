@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using UnityEngine;
 using Verse;
 
 namespace Stats;
@@ -45,20 +46,24 @@ public class ColumnWorker_CreatedAt
             {
                 Width = Text.LineHeight,
                 Height = Text.LineHeight,
-                Background = (borderBox, _) =>
-                {
-                    Widgets.DrawHighlightIfMouseover(borderBox);
-
-                    if (Widgets.ButtonInvisible(borderBox))
-                    {
-                        Widget_DefInfoDialog.Draw(thingDef);
-                    }
-                },
             };
-            var icon = new Widget_Addon_Tooltip(
-                new Widget_Icon_Thing(thingDef, style: iconStyle),
-                thingDef.description
-            );
+            void onDrawIcon(Rect rect)
+            {
+                Widgets.DrawHighlightIfMouseover(rect);
+
+                if (Widgets.ButtonInvisible(rect))
+                {
+                    Widget_DefInfoDialog.Draw(thingDef);
+                }
+            }
+            var icon =
+                new Widget_Addon_Generic(
+                    new Widget_Addon_Tooltip(
+                        new Widget_Icon_Thing(thingDef, style: iconStyle),
+                        thingDef.description
+                    ),
+                    onDrawIcon
+                );
 
             icons.Add(icon);
         }

@@ -5,8 +5,8 @@ namespace Stats;
 public class Widget_Addon_Margin
     : Widget_Addon_RectOffset
 {
-    public Widget_Addon_Margin(Widget widget, (float hor, float ver) vals)
-        : base(widget, vals)
+    public Widget_Addon_Margin(Widget widget, float hor, float ver)
+        : base(widget, hor, ver)
     {
     }
     public Widget_Addon_Margin(Widget widget, float l, float r, float t, float b)

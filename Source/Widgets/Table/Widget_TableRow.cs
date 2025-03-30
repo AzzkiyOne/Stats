@@ -16,70 +16,70 @@ internal class Widget_TableRow
         get => _Height;
         set => _Height = Math.Max(_Height, value);
     }
-    public Action<Rect, bool, int>? Background { get; set; }
+    private readonly OnDraw DrawBG;
     private bool IsHovered = false;
-    public Widget_TableRow()
+    public Widget_TableRow(OnDraw onDraw)
     {
+        DrawBG = onDraw;
     }
     public void AddCell(Widget_TableCell cell)
     {
         var cellSize = cell.GetSize();
 
-        cell.Props.Width = cellSize.x;
+        cell.Column.Width = cellSize.x;
         Height = cellSize.y;
 
         _Cells.Add(cell);
     }
     public void Draw(
-        Rect targetRect,
+        Rect rect,
         in float offsetX,
         Func<Widget_TableCell, bool> shouldDrawCell,
         in float cellExtraWidth,
         in int index
     )
     {
-        if (Mouse.IsOver(targetRect))
+        if (Mouse.IsOver(rect))
         {
             IsHovered = true;
         }
 
-        Background?.Invoke(targetRect, IsHovered, index);
+        DrawBG(rect, IsHovered, index);
 
-        if (Mouse.IsOver(targetRect) == false)
+        if (Mouse.IsOver(rect) == false)
         {
             IsHovered = false;
         }
 
         // Cells
-        var x = -offsetX;
+        var cellRect = new Rect(-offsetX, rect.y, 0f, rect.height);
 
         foreach (var cell in _Cells)
         {
             if (shouldDrawCell(cell) == false) continue;
-            if (x >= targetRect.width) break;
+            if (cellRect.x >= rect.width) break;
 
-            var cellWidth = cell.Props.Width + cellExtraWidth;
-            var xMax = x + cellWidth;
+            cellRect.width = cell.Column.Width + cellExtraWidth;
 
-            if (xMax > 0f)
+            if (cellRect.xMax > 0f)
             {
-                var cellRect = new Rect(
-                    x,
-                    targetRect.y,
-                    cellWidth,
-                    targetRect.height
-                );
-
-                cell.Draw(cellRect);
+                cell.DrawIn(cellRect);
             }
 
-            x = xMax;
+            cellRect.x = cellRect.xMax;
         }
     }
+
+    internal delegate void OnDraw(Rect rect, bool isHovered, int index);
 }
 
 internal sealed class Widget_TableRow<IdType>
         : Widget_TableRow
 {
-    public required IdType Id { get; init; }
+    public IdType Id { get; }
+    public Widget_TableRow(OnDraw onDraw, IdType id)
+        : base(onDraw)
+    {
+        Id = id;
+    }
 }

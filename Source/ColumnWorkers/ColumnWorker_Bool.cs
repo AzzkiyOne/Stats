@@ -16,10 +16,14 @@ public abstract class ColumnWorker_Bool
         {
             Width = Text.LineHeight,
             Height = Text.LineHeight,
-            Align_H = WidgetStyle.Align.Middle_H,
         };
 
-        return new Widget_Texture(Widgets.GetCheckboxTexture(value), style);
+        return
+            new Widget_Container_Hor([
+                new Widget_Empty(new () { Width = 50 }),
+                new Widget_Texture(Widgets.GetCheckboxTexture(value), style),
+                new Widget_Empty(new () { Width = 50 }),
+            ], flex: true);
     }
     public override IWidget_FilterInput GetFilterWidget()
     {

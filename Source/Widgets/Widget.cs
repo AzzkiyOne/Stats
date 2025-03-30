@@ -28,15 +28,6 @@ public abstract class Widget
     public abstract void Draw(Rect rect);
     public void DrawIn(Rect container)
     {
-        var size = GetSize(container.size);
-        var rect = new Rect(container.position, size);
-
-        DrawIn(rect, container);
-    }
-    public void DrawIn(Rect rect, Rect container)
-    {
-        Style.Align_H?.Invoke(ref container, ref rect);
-
-        Draw(rect);
+        Draw(new Rect(container.position, GetSize(container.size)));
     }
 }

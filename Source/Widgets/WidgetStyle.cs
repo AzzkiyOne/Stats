@@ -7,8 +7,6 @@ public class WidgetStyle
 {
     public Units.Unit? Width { get; init; } = 100;
     public Units.Unit? Height { get; init; }
-    public AlignFunc? Align_H { get; init; }
-    public Action<Rect, Widget>? Background { get; init; }
     public TextAnchor TextAlign { get; init; } = Constants.DefaultTextAnchor;
     // This is ok because style is readonly.
     internal static WidgetStyle Default { get; } = new WidgetStyle();
@@ -66,24 +64,6 @@ public class WidgetStyle
             {
                 return Math.Max(Func(value), 0f);
             }
-        }
-    }
-
-    public delegate void AlignFunc(ref Rect outerRect, ref Rect innerRect);
-
-    public static class Align
-    {
-        public static void Right(ref Rect outerRect, ref Rect innerRect)
-        {
-            innerRect.xMin = outerRect.xMax - innerRect.width;
-            innerRect.xMax = outerRect.xMax;
-        }
-        public static void Middle_H(ref Rect outerRect, ref Rect innerRect)
-        {
-            var margin = (outerRect.width - innerRect.width) / 2f;
-
-            innerRect.xMin += margin;
-            innerRect.xMax = outerRect.xMax - margin;
         }
     }
 }

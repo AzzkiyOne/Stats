@@ -75,14 +75,12 @@ public abstract class Widget_Drawable
     public override void Draw(Rect rect)
     {
         // We can (could?) optimize here rendering in a scroll area.
-        // If x/y coordinates are negative we can look if the margin box will be
+        // If x/y coordinates are negative we can look if widget will be
         // visible.
 
         if (Mouse.IsOver(rect))
         {
             Widgets.DrawRectFast(rect, Color.cyan.ToTransparent(0.3f));
         }
-
-        Style.Background?.Invoke(rect, this);
     }
 }

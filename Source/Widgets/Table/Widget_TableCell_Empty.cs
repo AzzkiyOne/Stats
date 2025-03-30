@@ -7,9 +7,9 @@ internal sealed class Widget_TableCell_Empty
 {
     public override WidgetStyle Style => WidgetStyle.Default;
     public Widget_TableCell_Empty(
-        Properties props
+        Widget_Table.ColumnProps column
     )
-        : base(props)
+        : base(column)
     {
     }
     public override Vector2 GetSize(in Vector2 containerSize)

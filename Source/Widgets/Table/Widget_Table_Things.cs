@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 using Verse;
 
@@ -9,165 +8,183 @@ internal sealed class Widget_Table_Things
     : Widget_Table
 {
     private ColumnDef SortColumn = ColumnDefOf.Name;
-    private SortDirection SortDirection = SortDirection.Ascending;
+    private SortDirection SortDirection = SortDirection.Descending;
+    private const float cellPaddingHor = 15f;
+    private const float cellPaddingVer = 5f;
     public Widget_Table_Things(TableDef tableDef)
         : base()
     {
         List<ColumnDef> columns = [ColumnDefOf.Name, .. tableDef.columns];
-        var cellPadding = (15f, 5f);
 
         // Headers
 
-        var headerRow = new Widget_TableRow()
-        {
-            Background = static (borderBox, _, _) =>
-            {
-                Widgets.DrawHighlight(borderBox);
-                Widgets.DrawLineHorizontal(
-                    borderBox.x,
-                    borderBox.yMax - 1f,
-                    borderBox.width,
-                    StatsMainTabWindow.BorderLineColor
-                );
-            },
-        };
+        var headerRow = new Widget_TableRow(DrawHeaderRowBG);
 
         foreach (var column in columns)
         {
-            Widget cellContent;
-
-            if (column.Icon != null)
-            {
-                WidgetStyle.AlignFunc? align = column.Worker.CellStyle switch
-                {
-                    ColumnCellStyle.Number => WidgetStyle.Align.Right,
-                    ColumnCellStyle.Boolean => WidgetStyle.Align.Middle_H,
-                    _ => null,
-                };
-                var iconStyle = new WidgetStyle()
-                {
-                    Width = Text.LineHeight,
-                    Height = Text.LineHeight,
-                    Align_H = align,
-                };
-
-                cellContent = new Widget_Texture(column.Icon, iconStyle);
-            }
-            else
-            {
-                var labelStyle = new WidgetStyle()
-                {
-                    TextAlign = (TextAnchor)column.Worker.CellStyle,
-                };
-
-                cellContent = new Widget_Label(column.LabelCap, labelStyle);
-            }
-
-            cellContent = new Widget_Container_Single(cellContent);
-            cellContent = new Widget_Addon_Padding(cellContent, cellPadding);
-            cellContent = new Widget_Addon_Tooltip(cellContent, column.description);
-
-            //var cellStyle = new WidgetStyle()
-            //{
-            //    Background = (borderBox, widget) =>
-            //    {
-            //        Widgets.DrawHighlightIfMouseover(borderBox);
-
-            //        if (SortColumn == column)
-            //        {
-            //            Widgets.DrawBoxSolid(
-            //                SortDirection == SortDirection.Ascending
-            //                    ? borderBox.BottomPartPixels(5f)
-            //                    : borderBox.TopPartPixels(5f),
-            //                Color.yellow.ToTransparent(0.3f)
-            //            );
-            //        }
-
-            //        if (Widgets.ButtonInvisible(borderBox))
-            //        {
-            //            if (Event.current.control)
-            //            {
-            //                var cell = (Widget_TableCell)widget;
-
-            //                cell.Props.IsPinned = !cell.Props.IsPinned;
-            //            }
-            //            else
-            //            {
-            //                SortRowsByColumn(column);
-            //            }
-            //        }
-            //    },
-            //};
-            var cellProps = new Widget_TableCell.Properties()
-            {
-                IsPinned = column == ColumnDefOf.Name,
-            };
-            var cell = new Widget_TableCell_Normal(cellContent, cellProps);
-
-            headerRow.AddCell(cell);
+            headerRow.AddCell(CreateHeaderCell(column));
         }
 
         AddHeaderRow(headerRow);
 
         // Body
 
-        var records = tableDef.Worker.GetRecords().ToList();
-
-        records.Sort((r1, r2) =>
-            SortColumn.Worker.Compare(r1, r2) * (int)SortDirection
-        );
-
-        for (int i = 0; i < records.Count; i++)
+        foreach (var rec in tableDef.Worker.GetRecords())
         {
-            var rec = records[i];
-            var row = new Widget_TableRow<ThingRec>()
-            {
-                Id = rec,
-                Background = static (borderBox, isHovered, index) =>
-                {
-                    if (index % 2 == 0)
-                    {
-                        Widgets.DrawLightHighlight(borderBox);
-                    }
-
-                    if (isHovered)
-                    {
-                        Widgets.DrawHighlight(borderBox);
-                    }
-                },
-            };
+            var row = new Widget_TableRow<ThingRec>(DrawBodyRowBG, rec);
 
             for (int j = 0; j < columns.Count; j++)
             {
                 var column = columns[j];
-                var cellProps = headerRow.Cells[j].Props;
-                Widget? cellContent = null;
+                var columnProps = headerRow.Cells[j].Column;
 
-                try
-                {
-                    cellContent = column.Worker.GetTableCellContent(rec);
-                }
-                catch
-                {
-                }
-
-                Widget_TableCell cell;
-
-                if (cellContent == null)
-                {
-                    cell = new Widget_TableCell_Empty(cellProps);
-                }
-                else
-                {
-                    cellContent = new Widget_Container_Single(cellContent);
-                    cellContent = new Widget_Addon_Padding(cellContent, cellPadding);
-                    cell = new Widget_TableCell_Normal(cellContent, cellProps);
-                }
-
-                row.AddCell(cell);
+                row.AddCell(CreateBodyCell(column, rec, columnProps));
             }
 
             AddBodyRow(row);
+        }
+
+        SortRowsByColumn(SortColumn);
+    }
+    private Widget_TableCell CreateHeaderCell(ColumnDef column)
+    {
+        var columnProps = new ColumnProps()
+        {
+            IsPinned = column == ColumnDefOf.Name,
+        };
+        Widget iconOrLabel;
+
+        if (column.Icon != null)
+        {
+            var iconStyle = new WidgetStyle()
+            {
+                Width = Text.LineHeight,
+                Height = Text.LineHeight,
+            };
+            iconOrLabel = new Widget_Texture(column.Icon, iconStyle);
+
+            if (column.Worker.CellStyle == ColumnCellStyle.Number)
+            {
+                iconOrLabel =
+                    new Widget_Container_Hor([
+                        new Widget_Empty(),
+                        iconOrLabel
+                    ], flex: true);
+            }
+            else if (column.Worker.CellStyle == ColumnCellStyle.Boolean)
+            {
+                iconOrLabel =
+                    new Widget_Container_Hor([
+                        new Widget_Empty(new () { Width = 50 }),
+                        iconOrLabel,
+                        new Widget_Empty(new () { Width = 50 }),
+                    ], flex: true);
+            }
+        }
+        else
+        {
+            var labelStyle = new WidgetStyle()
+            {
+                TextAlign = (TextAnchor)column.Worker.CellStyle,
+            };
+            iconOrLabel = new Widget_Label(column.LabelCap, labelStyle);
+        }
+
+        void onDrawCell(Rect rect)
+        {
+            Widgets.DrawHighlightIfMouseover(rect);
+
+            if (SortColumn == column)
+            {
+                Widgets.DrawBoxSolid(
+                    SortDirection == SortDirection.Ascending
+                        ? rect.BottomPartPixels(5f)
+                        : rect.TopPartPixels(5f),
+                    Color.yellow.ToTransparent(0.3f)
+                );
+            }
+
+            if (Widgets.ButtonInvisible(rect))
+            {
+                if (Event.current.control)
+                {
+                    columnProps.IsPinned = !columnProps.IsPinned;
+                }
+                else
+                {
+                    SortRowsByColumn(column);
+                }
+            }
+        }
+
+        return
+            new Widget_TableCell_Normal(
+                new Widget_Addon_Generic(
+                    new Widget_Addon_Tooltip(
+                        new Widget_Addon_Padding(
+                            iconOrLabel,
+                            cellPaddingHor,
+                            cellPaddingVer
+                        ),
+                        column.description
+                    ),
+                    onDrawCell
+                ),
+                columnProps
+            );
+    }
+    private Widget_TableCell CreateBodyCell(
+        ColumnDef column,
+        ThingRec rec,
+        ColumnProps columnProps
+    )
+    {
+        Widget? cellContent = null;
+
+        try
+        {
+            cellContent = column.Worker.GetTableCellContent(rec);
+        }
+        catch
+        {
+        }
+
+        if (cellContent == null)
+        {
+            return new Widget_TableCell_Empty(columnProps);
+        }
+        else
+        {
+            return
+                new Widget_TableCell_Normal(
+                    new Widget_Addon_Padding(
+                        cellContent,
+                        cellPaddingHor,
+                        cellPaddingVer
+                    ),
+                    columnProps
+                );
+        }
+    }
+    private static void DrawHeaderRowBG(Rect borderBox, bool _, int __)
+    {
+        Widgets.DrawHighlight(borderBox);
+        Widgets.DrawLineHorizontal(
+            borderBox.x,
+            borderBox.yMax - 1f,
+            borderBox.width,
+            StatsMainTabWindow.BorderLineColor
+        );
+    }
+    private static void DrawBodyRowBG(Rect borderBox, bool isHovered, int index)
+    {
+        if (isHovered)
+        {
+            Widgets.DrawHighlight(borderBox);
+        }
+        else if (index % 2 == 0)
+        {
+            Widgets.DrawLightHighlight(borderBox);
         }
     }
     private void SortRowsByColumn(ColumnDef column)

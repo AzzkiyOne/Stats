@@ -9,9 +9,9 @@ internal sealed class Widget_TableCell_Normal
     public override WidgetStyle Style => Widget.Style;
     public Widget_TableCell_Normal(
         Widget widget,
-        Properties props
+        Widget_Table.ColumnProps column
     )
-        : base(props)
+        : base(column)
     {
         Widget = widget;
     }

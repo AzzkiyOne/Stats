@@ -17,8 +17,8 @@ public abstract class Widget_Addon_RectOffset
         Hor = l + r;
         Ver = t + b;
     }
-    public Widget_Addon_RectOffset(Widget widget, (float hor, float ver) vals)
-        : this(widget, vals.hor, vals.hor, vals.ver, vals.ver)
+    public Widget_Addon_RectOffset(Widget widget, float hor, float ver)
+        : this(widget, hor, hor, ver, ver)
     {
     }
     public override void Draw(Rect rect)
