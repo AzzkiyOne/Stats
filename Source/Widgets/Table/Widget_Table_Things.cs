@@ -66,19 +66,16 @@ internal sealed class Widget_Table_Things
             if (column.Worker.CellStyle == ColumnCellStyle.Number)
             {
                 iconOrLabel =
-                    new Widget_Container_Hor([
-                        new Widget_Empty(),
-                        iconOrLabel
-                    ], flex: true);
+                    new Widget_Container_Hor(
+                        [new Widget_Addon_Margin_Rel(iconOrLabel, 100, 0f, 0f, 0f)]
+                    );
             }
             else if (column.Worker.CellStyle == ColumnCellStyle.Boolean)
             {
                 iconOrLabel =
-                    new Widget_Container_Hor([
-                        new Widget_Empty(new () { Width = 50 }),
-                        iconOrLabel,
-                        new Widget_Empty(new () { Width = 50 }),
-                    ], flex: true);
+                    new Widget_Container_Hor(
+                        [new Widget_Addon_Margin_Rel(iconOrLabel, 50, 0f)]
+                    );
             }
         }
         else
@@ -90,7 +87,7 @@ internal sealed class Widget_Table_Things
             iconOrLabel = new Widget_Label(column.LabelCap, labelStyle);
         }
 
-        void onDrawCell(Rect rect)
+        void onDrawCell(ref Rect rect)
         {
             Widgets.DrawHighlightIfMouseover(rect);
 

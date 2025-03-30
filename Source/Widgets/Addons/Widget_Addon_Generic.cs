@@ -1,21 +1,21 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace Stats;
 
 public class Widget_Addon_Generic
     : Widget_Addon
 {
-    private readonly Action<Rect> OnDraw;
-    public Widget_Addon_Generic(Widget widget, Action<Rect> onDraw)
+    private readonly OnDrawCB OnDraw;
+    public Widget_Addon_Generic(Widget widget, OnDrawCB onDraw)
         : base(widget)
     {
         OnDraw = onDraw;
     }
-    public override void Draw(Rect rect)
+    public override void Draw(Rect rect, in Vector2 containerSize)
     {
-        OnDraw(rect);
+        OnDraw(ref rect);
 
-        base.Draw(rect);
+        base.Draw(rect, containerSize);
     }
+    public delegate void OnDrawCB(ref Rect rect);
 }

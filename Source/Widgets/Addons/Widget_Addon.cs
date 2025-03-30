@@ -19,8 +19,8 @@ public abstract class Widget_Addon
     {
         return Widget.GetSize();
     }
-    public override void Draw(Rect rect)
+    public override void Draw(Rect rect, in Vector2 containerSize)
     {
-        Widget.Draw(rect);
+        Widget.Draw(rect, containerSize);
     }
 }

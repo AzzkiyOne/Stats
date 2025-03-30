@@ -25,9 +25,9 @@ public abstract class Widget
     public abstract WidgetStyle Style { get; }
     public abstract Vector2 GetSize(in Vector2 containerSize);
     public abstract Vector2 GetSize();
-    public abstract void Draw(Rect rect);
+    public abstract void Draw(Rect rect, in Vector2 containerSize);
     public void DrawIn(Rect container)
     {
-        Draw(new Rect(container.position, GetSize(container.size)));
+        Draw(new Rect(container.position, GetSize(container.size)), container.size);
     }
 }

@@ -15,14 +15,11 @@ public class Widget_Container_Ver
     )
         : base(children, gap, style)
     {
-        if (flex)
+        foreach (var child in Children)
         {
-            foreach (var child in Children)
+            if (child.Style.Height is WidgetStyle.Units.Abs or null)
             {
-                if (child.Style.Height is WidgetStyle.Units.Abs or null)
-                {
-                    ReservedSpaceAmount += child.GetSize().y;
-                }
+                ReservedSpaceAmount += child.GetSize().y;
             }
         }
     }
@@ -43,9 +40,9 @@ public class Widget_Container_Ver
 
         return result;
     }
-    public override void Draw(Rect rect)
+    public override void Draw(Rect rect, in Vector2 containerSize)
     {
-        base.Draw(rect);
+        base.Draw(rect, containerSize);
 
         var childRect = new Rect(rect.position, Vector2.zero);
         var rectSize = rect.size;
@@ -56,7 +53,7 @@ public class Widget_Container_Ver
         {
             childRect.size = child.GetSize(rectSize);
 
-            child.Draw(childRect);
+            child.Draw(childRect, rectSize);
 
             childRect.y = childRect.yMax + Gap;
         }

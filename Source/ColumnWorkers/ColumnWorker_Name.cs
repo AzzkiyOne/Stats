@@ -23,7 +23,7 @@ public class ColumnWorker_Name
             Width = Text.LineHeight,
             Height = Text.LineHeight,
         };
-        void onDrawIcon(Rect rect)
+        void onDrawIcon(ref Rect rect)
         {
             Widgets.DrawHighlightIfMouseover(rect);
 
@@ -41,7 +41,7 @@ public class ColumnWorker_Name
                         onDrawIcon
                     ),
                     new Widget_Label(value!, labelStyle)
-                ], 10f, true),
+                ], 10f),
                 thing.Def.description
             );
     }

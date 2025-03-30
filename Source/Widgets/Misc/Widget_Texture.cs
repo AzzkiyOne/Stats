@@ -15,9 +15,9 @@ public class Widget_Texture
     {
         Tex = tex;
     }
-    public override void Draw(Rect rect)
+    public override void Draw(Rect rect, in Vector2 containerSize)
     {
-        base.Draw(rect);
+        base.Draw(rect, containerSize);
 
         Widgets.DrawTextureFitted(rect, Tex, Scale);
     }

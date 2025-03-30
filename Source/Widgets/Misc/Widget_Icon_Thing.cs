@@ -67,9 +67,9 @@ public class Widget_Icon_Thing
             Proportions = new Vector2(Texture.width, Texture.height);
         }
     }
-    public override void Draw(Rect rect)
+    public override void Draw(Rect rect, in Vector2 containerSize)
     {
-        base.Draw(rect);
+        base.Draw(rect, containerSize);
 
         rect.position += Offset * rect.size;
         GUI.color = Color;

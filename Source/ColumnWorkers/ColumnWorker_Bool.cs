@@ -20,10 +20,11 @@ public abstract class ColumnWorker_Bool
 
         return
             new Widget_Container_Hor([
-                new Widget_Empty(new () { Width = 50 }),
-                new Widget_Texture(Widgets.GetCheckboxTexture(value), style),
-                new Widget_Empty(new () { Width = 50 }),
-            ], flex: true);
+                new Widget_Addon_Margin_Rel(
+                    new Widget_Texture(Widgets.GetCheckboxTexture(value), style),
+                    50, 0f
+                ),
+            ]);
     }
     public override IWidget_FilterInput GetFilterWidget()
     {

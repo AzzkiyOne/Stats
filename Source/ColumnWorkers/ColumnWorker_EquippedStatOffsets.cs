@@ -40,13 +40,10 @@ public class ColumnWorker_EquippedStatOffsets
             TextAlign = TextAnchor.LowerRight,
         };
 
-        return new Widget_Container_Hor(
-            [
+        return
+            new Widget_Container_Hor([
                 new Widget_Label(string.Join("\n", col_left),leftColStyle),
                 new Widget_Label(string.Join("\n", col_right), rightColStyle),
-            ],
-            10f,
-            true
-        );
+            ], 10f);
     }
 }

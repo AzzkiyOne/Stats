@@ -10,19 +10,15 @@ public class Widget_Container_Hor
     public Widget_Container_Hor(
         List<Widget> children,
         float gap = 0f,
-        bool flex = false,
         WidgetStyle? style = null
     )
         : base(children, gap, style)
     {
-        if (flex)
+        foreach (var child in Children)
         {
-            foreach (var child in Children)
+            if (child.Style.Width is WidgetStyle.Units.Abs or null)
             {
-                if (child.Style.Width is WidgetStyle.Units.Abs or null)
-                {
-                    ReservedSpaceAmount += child.GetSize().x;
-                }
+                ReservedSpaceAmount += child.GetSize().x;
             }
         }
     }
@@ -43,9 +39,9 @@ public class Widget_Container_Hor
 
         return result;
     }
-    public override void Draw(Rect rect)
+    public override void Draw(Rect rect, in Vector2 containerSize)
     {
-        base.Draw(rect);
+        base.Draw(rect, containerSize);
 
         var childRect = new Rect(rect.position, Vector2.zero);
         var rectSize = rect.size;
@@ -56,7 +52,7 @@ public class Widget_Container_Hor
         {
             childRect.size = child.GetSize(rectSize);
 
-            child.Draw(childRect);
+            child.Draw(childRect, rectSize);
 
             childRect.x = childRect.xMax + Gap;
         }

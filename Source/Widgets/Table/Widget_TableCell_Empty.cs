@@ -20,7 +20,7 @@ internal sealed class Widget_TableCell_Empty
     {
         return Vector2.zero;
     }
-    public override void Draw(Rect rect)
+    public override void Draw(Rect rect, in Vector2 containerSize)
     {
     }
 }

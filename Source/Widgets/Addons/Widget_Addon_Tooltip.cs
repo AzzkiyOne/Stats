@@ -12,10 +12,10 @@ public class Widget_Addon_Tooltip
     {
         Text = text;
     }
-    public override void Draw(Rect rect)
+    public override void Draw(Rect rect, in Vector2 containerSize)
     {
         TooltipHandler.TipRegion(rect, Text);
 
-        Widget.Draw(rect);
+        Widget.Draw(rect, containerSize);
     }
 }

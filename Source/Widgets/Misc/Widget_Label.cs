@@ -16,9 +16,9 @@ public sealed class Widget_Label
         Text = text;
         ContentSize = Verse.Text.CalcSize(Text);
     }
-    public override void Draw(Rect rect)
+    public override void Draw(Rect rect, in Vector2 containerSize)
     {
-        base.Draw(rect);
+        base.Draw(rect, containerSize);
 
         Verse.Text.Anchor = Style.TextAlign;
 

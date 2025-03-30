@@ -23,8 +23,8 @@ internal sealed class Widget_TableCell_Normal
     {
         return Widget.GetSize();
     }
-    public override void Draw(Rect rect)
+    public override void Draw(Rect rect, in Vector2 containerSize)
     {
-        Widget.Draw(rect);
+        Widget.Draw(rect, containerSize);
     }
 }

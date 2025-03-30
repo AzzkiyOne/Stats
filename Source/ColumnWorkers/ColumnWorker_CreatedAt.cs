@@ -47,7 +47,7 @@ public class ColumnWorker_CreatedAt
                 Width = Text.LineHeight,
                 Height = Text.LineHeight,
             };
-            void onDrawIcon(Rect rect)
+            void onDrawIcon(ref Rect rect)
             {
                 Widgets.DrawHighlightIfMouseover(rect);
 

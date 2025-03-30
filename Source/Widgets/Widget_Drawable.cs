@@ -72,7 +72,7 @@ public abstract class Widget_Drawable
 
         return result;
     }
-    public override void Draw(Rect rect)
+    public override void Draw(Rect rect, in Vector2 containerSize)
     {
         // We can (could?) optimize here rendering in a scroll area.
         // If x/y coordinates are negative we can look if widget will be

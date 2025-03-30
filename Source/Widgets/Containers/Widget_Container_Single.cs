@@ -17,9 +17,9 @@ public class Widget_Container_Single
         Widget = widget;
         ContentSize = widget.GetSize();
     }
-    public override void Draw(Rect rect)
+    public override void Draw(Rect rect, in Vector2 containerSize)
     {
-        base.Draw(rect);
+        base.Draw(rect, containerSize);
 
         Widget.DrawIn(rect);
     }

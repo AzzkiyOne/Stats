@@ -21,13 +21,13 @@ public abstract class Widget_Addon_RectOffset
         : this(widget, hor, hor, ver, ver)
     {
     }
-    public override void Draw(Rect rect)
+    public override void Draw(Rect rect, in Vector2 containerSize)
     {
         rect.x += Left;
         rect.y += Top;
         rect.width -= Hor;
         rect.height -= Ver;
 
-        Widget.Draw(rect);
+        Widget.Draw(rect, containerSize);
     }
 }
