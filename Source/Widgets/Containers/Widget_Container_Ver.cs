@@ -5,47 +5,36 @@ using UnityEngine;
 namespace Stats;
 
 public class Widget_Container_Ver
-    : Widget_Container
+    : Widget_Drawable
 {
     private readonly float Gap;
-    private readonly float TotalGapAmount;
     private readonly float ReservedSpaceAmount;
+    private readonly List<IWidget> Children;
+    private readonly Vector2 _ContentSize = Vector2.zero;
+    protected override Vector2 ContentSize => _ContentSize;
     public Widget_Container_Ver(
         List<IWidget> children,
         float gap = 0f,
-        bool flex = false,
         WidgetStyle? style = null
     )
-        : base(children, style)
+        : base(style)
     {
+        Children = children;
         Gap = gap;
-        TotalGapAmount = (Children.Count - 1) * gap;
-        ReservedSpaceAmount = TotalGapAmount;
+        ReservedSpaceAmount = _ContentSize.y = (children.Count - 1) * gap;
 
-        foreach (var child in Children)
-        {
-            if (child.Style.Height is WidgetStyle.Units.Abs or null)
-            {
-                ReservedSpaceAmount += child.GetSize().y;
-            }
-        }
-    }
-    protected override Vector2 CalcContentSize()
-    {
-        Vector2 result;
-
-        result.x = 0f;
-        result.y = TotalGapAmount;
-
-        foreach (var child in Children)
+        foreach (var child in children)
         {
             var childSize = child.GetSize();
 
-            result.x = Math.Max(result.x, childSize.x);
-            result.y += childSize.y;
-        }
+            if (child.Style.Height is WidgetStyle.Units.Abs or null)
+            {
+                ReservedSpaceAmount += childSize.y;
+            }
 
-        return result;
+            _ContentSize.x = Math.Max(_ContentSize.x, childSize.x);
+            _ContentSize.y += childSize.y;
+        }
     }
     public override void Draw(Rect rect, in Vector2 containerSize)
     {
