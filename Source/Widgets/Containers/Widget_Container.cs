@@ -6,7 +6,7 @@ namespace Stats;
 public abstract class Widget_Container
     : Widget_Drawable
 {
-    protected List<Widget> Children { get; }
+    protected List<IWidget> Children { get; }
     private Vector2? _ContentSize;
     protected override Vector2 ContentSize
     {
@@ -17,7 +17,7 @@ public abstract class Widget_Container
             return (Vector2)(_ContentSize = CalcContentSize());
         }
     }
-    public Widget_Container(List<Widget> children, WidgetStyle? style = null)
+    public Widget_Container(List<IWidget> children, WidgetStyle? style = null)
         : base(style)
     {
         Children = children;

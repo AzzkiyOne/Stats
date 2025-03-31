@@ -9,7 +9,7 @@ public abstract class Widget_Addon_RectOffset
     protected float Top { get; }
     protected float Hor { get; }
     protected float Ver { get; }
-    public Widget_Addon_RectOffset(Widget widget, float l, float r, float t, float b)
+    public Widget_Addon_RectOffset(IWidget widget, float l, float r, float t, float b)
         : base(widget)
     {
         Left = l;
@@ -17,7 +17,7 @@ public abstract class Widget_Addon_RectOffset
         Hor = l + r;
         Ver = t + b;
     }
-    public Widget_Addon_RectOffset(Widget widget, float hor, float ver)
+    public Widget_Addon_RectOffset(IWidget widget, float hor, float ver)
         : this(widget, hor, hor, ver, ver)
     {
     }

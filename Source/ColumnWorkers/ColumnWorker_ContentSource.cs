@@ -9,7 +9,7 @@ public class ColumnWorker_ContentSource
     {
         return thing.Def.modContentPack?.Name;
     }
-    protected override Widget GetTableCellContent(string? value, ThingRec thing)
+    protected override IWidget GetTableCellContent(string? value, ThingRec thing)
     {
         var style = new WidgetStyle()
         {

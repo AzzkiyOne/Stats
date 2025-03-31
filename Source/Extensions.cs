@@ -4,7 +4,7 @@ using Verse;
 
 namespace Stats;
 
-internal static class UnityEngine_Rect
+public static class Ext_UnityEngine_Rect
 {
     public static Rect CutByX(ref this Rect rect, float amount)
     {
@@ -28,10 +28,21 @@ internal static class UnityEngine_Rect
     }
 }
 
-internal static class VerbList
+public static class Ext_VerbList
 {
     public static VerbProperties? Primary(this List<VerbProperties> verbs)
     {
         return verbs.FirstOrFallback(v => v?.isPrimary == true);
+    }
+}
+
+public static class Ext_Widget
+{
+    public static void DrawIn(this IWidget widget, Rect container)
+    {
+        widget.Draw(
+            new Rect(container.position, widget.GetSize(container.size)),
+            container.size
+        );
     }
 }

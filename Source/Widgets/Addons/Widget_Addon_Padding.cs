@@ -6,11 +6,11 @@ namespace Stats;
 public class Widget_Addon_Padding
     : Widget_Addon_RectOffset
 {
-    public Widget_Addon_Padding(Widget widget, float hor, float ver)
+    public Widget_Addon_Padding(IWidget widget, float hor, float ver)
         : base(widget, hor, ver)
     {
     }
-    public Widget_Addon_Padding(Widget widget, float l, float r, float t, float b)
+    public Widget_Addon_Padding(IWidget widget, float l, float r, float t, float b)
         : base(widget, l, r, t, b)
     {
     }

@@ -62,7 +62,7 @@ public class ColumnWorker_Stat
             _ => null,
         };
     }
-    protected override Widget GetTableCellContent(float value, ThingRec thing)
+    protected override IWidget GetTableCellContent(float value, ThingRec thing)
     {
         var valueStr = FormatValue(value, thing);
         var tooltip = GetValueExplanation(value, thing);

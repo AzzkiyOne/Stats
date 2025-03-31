@@ -10,7 +10,7 @@ public class Widget_Addon_Margin_Rel
     private readonly WidgetStyle.Units.Unit Top;
     private readonly WidgetStyle.Units.Unit Bottom;
     public Widget_Addon_Margin_Rel(
-        Widget widget,
+        IWidget widget,
         WidgetStyle.Units.Unit l,
         WidgetStyle.Units.Unit r,
         WidgetStyle.Units.Unit t,
@@ -24,7 +24,7 @@ public class Widget_Addon_Margin_Rel
         Bottom = b;
     }
     public Widget_Addon_Margin_Rel(
-        Widget widget,
+        IWidget widget,
         WidgetStyle.Units.Unit hor,
         WidgetStyle.Units.Unit ver
     )

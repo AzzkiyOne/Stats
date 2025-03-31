@@ -5,16 +5,23 @@ using UnityEngine;
 namespace Stats;
 
 public class Widget_Container_Ver
-    : Widget_Container_XY
+    : Widget_Container
 {
+    private readonly float Gap;
+    private readonly float TotalGapAmount;
+    private readonly float ReservedSpaceAmount;
     public Widget_Container_Ver(
-        List<Widget> children,
+        List<IWidget> children,
         float gap = 0f,
         bool flex = false,
         WidgetStyle? style = null
     )
-        : base(children, gap, style)
+        : base(children, style)
     {
+        Gap = gap;
+        TotalGapAmount = (Children.Count - 1) * gap;
+        ReservedSpaceAmount = TotalGapAmount;
+
         foreach (var child in Children)
         {
             if (child.Style.Height is WidgetStyle.Units.Abs or null)

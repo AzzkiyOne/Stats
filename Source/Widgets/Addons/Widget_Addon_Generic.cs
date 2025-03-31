@@ -6,7 +6,7 @@ public class Widget_Addon_Generic
     : Widget_Addon
 {
     private readonly OnDrawCB OnDraw;
-    public Widget_Addon_Generic(Widget widget, OnDrawCB onDraw)
+    public Widget_Addon_Generic(IWidget widget, OnDrawCB onDraw)
         : base(widget)
     {
         OnDraw = onDraw;

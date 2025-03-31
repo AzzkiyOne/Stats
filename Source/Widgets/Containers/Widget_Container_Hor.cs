@@ -5,15 +5,22 @@ using UnityEngine;
 namespace Stats;
 
 public class Widget_Container_Hor
-    : Widget_Container_XY
+    : Widget_Container
 {
+    private readonly float Gap;
+    private readonly float TotalGapAmount;
+    private readonly float ReservedSpaceAmount;
     public Widget_Container_Hor(
-        List<Widget> children,
+        List<IWidget> children,
         float gap = 0f,
         WidgetStyle? style = null
     )
-        : base(children, gap, style)
+        : base(children, style)
     {
+        Gap = gap;
+        TotalGapAmount = (Children.Count - 1) * gap;
+        ReservedSpaceAmount = TotalGapAmount;
+
         foreach (var child in Children)
         {
             if (child.Style.Width is WidgetStyle.Units.Abs or null)

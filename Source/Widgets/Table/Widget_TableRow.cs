@@ -8,8 +8,8 @@ namespace Stats;
 
 internal class Widget_TableRow
 {
-    private readonly List<Widget_TableCell> _Cells = [];
-    public ReadOnlyCollection<Widget_TableCell> Cells => _Cells.AsReadOnly();
+    private readonly List<IWidget_TableCell> _Cells = [];
+    public ReadOnlyCollection<IWidget_TableCell> Cells => _Cells.AsReadOnly();
     private float _Height = 0f;
     public float Height
     {
@@ -22,7 +22,7 @@ internal class Widget_TableRow
     {
         DrawBG = onDraw;
     }
-    public void AddCell(Widget_TableCell cell)
+    public void AddCell(IWidget_TableCell cell)
     {
         var cellSize = cell.GetSize();
 
@@ -34,7 +34,7 @@ internal class Widget_TableRow
     public void Draw(
         Rect rect,
         in float offsetX,
-        Func<Widget_TableCell, bool> shouldDrawCell,
+        Func<IWidget_TableCell, bool> shouldDrawCell,
         in float cellExtraWidth,
         in int index
     )

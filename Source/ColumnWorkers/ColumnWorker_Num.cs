@@ -19,7 +19,7 @@ public abstract class ColumnWorker_Num
     {
         return value != 0f && float.IsNaN(value) == false;
     }
-    protected override Widget GetTableCellContent(float value, ThingRec thing)
+    protected override IWidget GetTableCellContent(float value, ThingRec thing)
     {
         var valueStr = FormatValue(value);
         var style = new WidgetStyle()

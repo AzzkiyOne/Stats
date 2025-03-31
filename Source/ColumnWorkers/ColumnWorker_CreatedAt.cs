@@ -33,12 +33,12 @@ public class ColumnWorker_CreatedAt
     {
         return things.Count() > 0;
     }
-    protected override Widget GetTableCellContent(
+    protected override IWidget GetTableCellContent(
         IEnumerable<ThingDef> things,
         ThingRec thing
     )
     {
-        var icons = new List<Widget>();
+        var icons = new List<IWidget>();
 
         foreach (var thingDef in things.OrderBy(def => def.label))
         {

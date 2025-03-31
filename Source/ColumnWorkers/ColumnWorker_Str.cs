@@ -10,7 +10,7 @@ public abstract class ColumnWorker_Str
     {
         return value?.Length > 0;
     }
-    protected override Widget GetTableCellContent(string? value, ThingRec thing)
+    protected override IWidget GetTableCellContent(string? value, ThingRec thing)
     {
         var style = new WidgetStyle()
         {

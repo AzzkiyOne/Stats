@@ -3,24 +3,23 @@
 namespace Stats;
 
 internal sealed class Widget_TableCell_Empty
-    : Widget_TableCell
+    : IWidget_TableCell
 {
-    public override WidgetStyle Style => WidgetStyle.Default;
-    public Widget_TableCell_Empty(
-        Widget_Table.ColumnProps column
-    )
-        : base(column)
+    public Widget_Table.ColumnProps Column { get; }
+    public WidgetStyle Style => WidgetStyle.Default;
+    public Widget_TableCell_Empty(Widget_Table.ColumnProps column)
     {
+        Column = column;
     }
-    public override Vector2 GetSize(in Vector2 containerSize)
-    {
-        return Vector2.zero;
-    }
-    public override Vector2 GetSize()
+    public Vector2 GetSize(in Vector2 containerSize)
     {
         return Vector2.zero;
     }
-    public override void Draw(Rect rect, in Vector2 containerSize)
+    public Vector2 GetSize()
+    {
+        return Vector2.zero;
+    }
+    public void Draw(Rect rect, in Vector2 containerSize)
     {
     }
 }

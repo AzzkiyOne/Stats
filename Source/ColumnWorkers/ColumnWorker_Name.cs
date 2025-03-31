@@ -12,7 +12,7 @@ public class ColumnWorker_Name
             ? thing.Def.LabelCap
             : $"{thing.Def.LabelCap} ({thing.StuffDef.LabelCap})";
     }
-    protected override Widget GetTableCellContent(string? value, ThingRec thing)
+    protected override IWidget GetTableCellContent(string? value, ThingRec thing)
     {
         var labelStyle = new WidgetStyle()
         {

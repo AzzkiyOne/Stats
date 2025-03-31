@@ -105,7 +105,7 @@ internal class Widget_Table
         ref Rect rect,
         in Vector2 scrollPos,
         in float cellExtraWidth,
-        Func<Widget_TableCell, bool> shouldDrawCell
+        Func<IWidget_TableCell, bool> shouldDrawCell
     )
     {
         DrawColumnSeparators(
@@ -132,7 +132,7 @@ internal class Widget_Table
         ref Rect rect,
         in float offsetX,
         in float cellExtraWidth,
-        Func<Widget_TableCell, bool> shouldDrawCell
+        Func<IWidget_TableCell, bool> shouldDrawCell
     )
     {
         Widgets.BeginGroup(rect);
@@ -158,7 +158,7 @@ internal class Widget_Table
         ref Rect rect,
         in Vector2 scrollPos,
         in float cellExtraWidth,
-        Func<Widget_TableCell, bool> shouldDrawCell
+        Func<IWidget_TableCell, bool> shouldDrawCell
     )
     {
         Widgets.BeginGroup(rect);
@@ -189,7 +189,7 @@ internal class Widget_Table
         ref Rect rect,
         in float offsetX,
         in float cellExtraWidth,
-        Func<Widget_TableCell, bool> shouldDrawCell
+        Func<IWidget_TableCell, bool> shouldDrawCell
     )
     {
         if (Event.current.type != EventType.Repaint) return;

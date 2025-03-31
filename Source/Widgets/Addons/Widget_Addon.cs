@@ -3,23 +3,23 @@
 namespace Stats;
 
 public abstract class Widget_Addon
-    : Widget
+    : IWidget
 {
-    protected Widget Widget { get; }
-    public override WidgetStyle Style => Widget.Style;
-    public Widget_Addon(Widget widget)
+    protected IWidget Widget { get; }
+    public WidgetStyle Style => Widget.Style;
+    public Widget_Addon(IWidget widget)
     {
         Widget = widget;
     }
-    public override Vector2 GetSize(in Vector2 containerSize)
+    public virtual Vector2 GetSize(in Vector2 containerSize)
     {
         return Widget.GetSize(containerSize);
     }
-    public override Vector2 GetSize()
+    public virtual Vector2 GetSize()
     {
         return Widget.GetSize();
     }
-    public override void Draw(Rect rect, in Vector2 containerSize)
+    public virtual void Draw(Rect rect, in Vector2 containerSize)
     {
         Widget.Draw(rect, containerSize);
     }

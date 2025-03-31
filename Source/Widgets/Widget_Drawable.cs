@@ -4,17 +4,23 @@ using Verse;
 namespace Stats;
 
 public abstract class Widget_Drawable
-    : Widget
+    : IWidget
 {
-    public override WidgetStyle Style { get; }
+    public WidgetStyle Style { get; }
     protected abstract Vector2 ContentSize { get; }
-    private Vector2 CurContainerSize = Vector2.zero;
+    // Vector2.positiveInfinity is used instead of Vector2.zero
+    // because there might be a case where passed container size
+    // would be 0, but the widget size is not.
+    // For example, when a widget width absolute dimensions is
+    // rendered inside a flex container and takes all of the
+    // available space.
+    private Vector2 CurContainerSize = Vector2.positiveInfinity;
     private Vector2 CurSize = Vector2.zero;
     public Widget_Drawable(WidgetStyle? style = null)
     {
         Style = style ?? WidgetStyle.Default;
     }
-    public override Vector2 GetSize(in Vector2 containerSize)
+    public Vector2 GetSize(in Vector2 containerSize)
     {
         if
         (
@@ -48,7 +54,7 @@ public abstract class Widget_Drawable
 
         return CurSize;
     }
-    public override Vector2 GetSize()
+    public Vector2 GetSize()
     {
         Vector2 result;
 
@@ -72,7 +78,7 @@ public abstract class Widget_Drawable
 
         return result;
     }
-    public override void Draw(Rect rect, in Vector2 containerSize)
+    public virtual void Draw(Rect rect, in Vector2 containerSize)
     {
         // We can (could?) optimize here rendering in a scroll area.
         // If x/y coordinates are negative we can look if widget will be

@@ -46,13 +46,13 @@ internal sealed class Widget_Table_Things
 
         SortRowsByColumn(SortColumn);
     }
-    private Widget_TableCell CreateHeaderCell(ColumnDef column)
+    private IWidget_TableCell CreateHeaderCell(ColumnDef column)
     {
         var columnProps = new ColumnProps()
         {
             IsPinned = column == ColumnDefOf.Name,
         };
-        Widget iconOrLabel;
+        IWidget iconOrLabel;
 
         if (column.Icon != null)
         {
@@ -66,16 +66,20 @@ internal sealed class Widget_Table_Things
             if (column.Worker.CellStyle == ColumnCellStyle.Number)
             {
                 iconOrLabel =
-                    new Widget_Container_Hor(
-                        [new Widget_Addon_Margin_Rel(iconOrLabel, 100, 0f, 0f, 0f)]
+                    new Widget_Container_Single(
+                        new Widget_Addon_Margin_Rel(iconOrLabel, 100, 0f, 0f, 0f)
                     );
             }
             else if (column.Worker.CellStyle == ColumnCellStyle.Boolean)
             {
                 iconOrLabel =
-                    new Widget_Container_Hor(
-                        [new Widget_Addon_Margin_Rel(iconOrLabel, 50, 0f)]
+                    new Widget_Container_Single(
+                        new Widget_Addon_Margin_Rel(iconOrLabel, 50, 0f)
                     );
+            }
+            else
+            {
+                iconOrLabel = new Widget_Container_Single(iconOrLabel);
             }
         }
         else
@@ -130,13 +134,13 @@ internal sealed class Widget_Table_Things
                 columnProps
             );
     }
-    private Widget_TableCell CreateBodyCell(
+    private IWidget_TableCell CreateBodyCell(
         ColumnDef column,
         ThingRec rec,
         ColumnProps columnProps
     )
     {
-        Widget? cellContent = null;
+        IWidget? cellContent = null;
 
         try
         {

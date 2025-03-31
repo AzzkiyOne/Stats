@@ -12,7 +12,7 @@ public class ColumnWorker_EquippedStatOffsets
     {
         return thing.Def.equippedStatOffsets?.Count ?? 0f;
     }
-    protected override Widget GetTableCellContent(float value, ThingRec thing)
+    protected override IWidget GetTableCellContent(float value, ThingRec thing)
     {
         var col_left = new List<string>();
         var col_right = new List<string>();
@@ -42,7 +42,7 @@ public class ColumnWorker_EquippedStatOffsets
 
         return
             new Widget_Container_Hor([
-                new Widget_Label(string.Join("\n", col_left),leftColStyle),
+                new Widget_Label(string.Join("\n", col_left), leftColStyle),
                 new Widget_Label(string.Join("\n", col_right), rightColStyle),
             ], 10f);
     }

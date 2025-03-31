@@ -7,7 +7,7 @@ public class Widget_Addon_Tooltip
     : Widget_Addon
 {
     private readonly string Text;
-    public Widget_Addon_Tooltip(Widget widget, string text)
+    public Widget_Addon_Tooltip(IWidget widget, string text)
         : base(widget)
     {
         Text = text;

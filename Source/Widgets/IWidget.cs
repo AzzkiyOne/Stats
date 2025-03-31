@@ -20,14 +20,10 @@ namespace Stats;
 // Then, we pass the measured size to the widget and draw it as usual.
 
 // Box model is implemented as "box-sizing: border-box".
-public abstract class Widget
+public interface IWidget
 {
-    public abstract WidgetStyle Style { get; }
-    public abstract Vector2 GetSize(in Vector2 containerSize);
-    public abstract Vector2 GetSize();
-    public abstract void Draw(Rect rect, in Vector2 containerSize);
-    public void DrawIn(Rect container)
-    {
-        Draw(new Rect(container.position, GetSize(container.size)), container.size);
-    }
+    WidgetStyle Style { get; }
+    Vector2 GetSize(in Vector2 containerSize);
+    Vector2 GetSize();
+    void Draw(Rect rect, in Vector2 containerSize);
 }
