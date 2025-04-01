@@ -78,7 +78,7 @@ internal class Widget_Table
             ref leftPartRect,
             new Vector2(0f, ScrollPos.y),
             0f,
-            static (cell) => cell.Column.IsPinned
+            true
         );
 
         // Separator line
@@ -96,7 +96,7 @@ internal class Widget_Table
             ref contentRectVisible,
             ScrollPos,
             Math.Max(rightPartFreeSpace / rightColumnsCount, 0f),
-            static (cell) => cell.Column.IsPinned == false
+            false
         );
 
         Widgets.EndScrollView();
@@ -105,34 +105,34 @@ internal class Widget_Table
         ref Rect rect,
         in Vector2 scrollPos,
         in float cellExtraWidth,
-        Func<IWidget_TableCell, bool> shouldDrawCell
+        in bool drawPinned
     )
     {
         DrawColumnSeparators(
             ref rect,
             scrollPos.x,
             cellExtraWidth,
-            shouldDrawCell
+            drawPinned
         );
         var headersRect = rect.CutByY(TotalHeaderRowsHeight);
         DrawHeaders(
             ref headersRect,
             scrollPos.x,
             cellExtraWidth,
-            shouldDrawCell
+            drawPinned
         );
         DrawBody(
             ref rect,
             scrollPos,
             cellExtraWidth,
-            shouldDrawCell
+            drawPinned
         );
     }
     private void DrawHeaders(
         ref Rect rect,
         in float offsetX,
         in float cellExtraWidth,
-        Func<IWidget_TableCell, bool> shouldDrawCell
+        in bool drawPinned
     )
     {
         Widgets.BeginGroup(rect);
@@ -144,7 +144,7 @@ internal class Widget_Table
             row.Draw(
                 new Rect(0f, y, rect.width, row.Height),
                 offsetX,
-                shouldDrawCell,
+                drawPinned,
                 cellExtraWidth,
                 0
             );
@@ -158,7 +158,7 @@ internal class Widget_Table
         ref Rect rect,
         in Vector2 scrollPos,
         in float cellExtraWidth,
-        Func<IWidget_TableCell, bool> shouldDrawCell
+        in bool drawPinned
     )
     {
         Widgets.BeginGroup(rect);
@@ -175,7 +175,7 @@ internal class Widget_Table
 
             if (rowRect.yMax > 0f)
             {
-                row.Draw(rowRect, scrollPos.x, shouldDrawCell, cellExtraWidth, i);
+                row.Draw(rowRect, scrollPos.x, drawPinned, cellExtraWidth, i);
             }
 
             rowRect.y = rowRect.yMax;
@@ -189,7 +189,7 @@ internal class Widget_Table
         ref Rect rect,
         in float offsetX,
         in float cellExtraWidth,
-        Func<IWidget_TableCell, bool> shouldDrawCell
+        in bool drawPinned
     )
     {
         if (Event.current.type != EventType.Repaint) return;
@@ -198,7 +198,7 @@ internal class Widget_Table
 
         foreach (var cell in HeaderRows[0].Cells)
         {
-            if (shouldDrawCell(cell) == false) continue;
+            if (cell.Column.IsPinned != drawPinned) continue;
 
             var cellWidth = cell.Column.Width + cellExtraWidth;
             var xMax = x + cellWidth;
@@ -238,12 +238,7 @@ internal class Widget_Table
 
     public class ColumnProps
     {
-        public bool IsPinned { get; set; } = false;
-        private float _Width = 0f;
-        public float Width
-        {
-            get => _Width;
-            set => _Width = Math.Max(_Width, value);
-        }
+        public bool IsPinned = false;
+        public float Width = 0f;
     }
 }

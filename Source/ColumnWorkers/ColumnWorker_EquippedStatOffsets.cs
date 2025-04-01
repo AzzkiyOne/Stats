@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Text;
 using UnityEngine;
 using Verse;
 
@@ -14,8 +15,8 @@ public class ColumnWorker_EquippedStatOffsets
     }
     protected override IWidget GetTableCellContent(float value, ThingRec thing)
     {
-        var col_left = new List<string>();
-        var col_right = new List<string>();
+        var labels = new StringBuilder();
+        var values = new StringBuilder();
 
         foreach (var offset in thing.Def.equippedStatOffsets)
         {
@@ -26,24 +27,18 @@ public class ColumnWorker_EquippedStatOffsets
                 ToStringNumberSense.Offset
             );
 
-            col_left.Add(offsetLabel);
-            col_right.Add(offsetValueStr);
+            labels.AppendInNewLine(offsetLabel);
+            values.AppendInNewLine(offsetValueStr);
         }
 
-        var leftColStyle = new WidgetStyle()
-        {
-            Width = null,
-            TextAlign = TextAnchor.LowerLeft,
-        };
-        var rightColStyle = new WidgetStyle()
-        {
-            TextAlign = TextAnchor.LowerRight,
-        };
+        IWidget
+        leftCol = new Widget_Label(labels.ToString());
+        leftCol = new WidgetComp_TextAnchor(leftCol, TextAnchor.LowerLeft);
+        IWidget
+        rightCol = new Widget_Label(values.ToString());
+        rightCol = new WidgetComp_Width_Rel(rightCol, 1f);
+        rightCol = new WidgetComp_TextAnchor(rightCol, TextAnchor.LowerRight);
 
-        return
-            new Widget_Container_Hor([
-                new Widget_Label(string.Join("\n", col_left), leftColStyle),
-                new Widget_Label(string.Join("\n", col_right), rightColStyle),
-            ], 10f);
+        return new Widget_Container_Hor([leftCol, rightCol], 10f);
     }
 }

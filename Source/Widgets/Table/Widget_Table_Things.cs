@@ -9,8 +9,8 @@ internal sealed class Widget_Table_Things
 {
     private ColumnDef SortColumn = ColumnDefOf.Name;
     private SortDirection SortDirection = SortDirection.Descending;
-    private const float cellPaddingHor = 15f;
-    private const float cellPaddingVer = 5f;
+    private const float cellPadHor = 15f;
+    private const float cellPadVer = 5f;
     public Widget_Table_Things(TableDef tableDef)
         : base()
     {
@@ -46,49 +46,33 @@ internal sealed class Widget_Table_Things
 
         SortRowsByColumn(SortColumn);
     }
-    private IWidget_TableCell CreateHeaderCell(ColumnDef column)
+    private Widget_TableCell CreateHeaderCell(ColumnDef column)
     {
         var columnProps = new ColumnProps()
         {
             IsPinned = column == ColumnDefOf.Name,
         };
-        IWidget iconOrLabel;
+        IWidget cell;
 
         if (column.Icon != null)
         {
-            var iconStyle = new WidgetStyle()
-            {
-                Width = Text.LineHeight,
-                Height = Text.LineHeight,
-            };
-            iconOrLabel = new Widget_Texture(column.Icon, iconStyle);
+            cell = new Widget_Texture(column.Icon);
+            cell = new WidgetComp_Size_Abs(cell, Text.LineHeight);
 
             if (column.Worker.CellStyle == ColumnCellStyle.Number)
             {
-                iconOrLabel =
-                    new Widget_Container_Single(
-                        new Widget_Addon_Margin_Rel(iconOrLabel, 100, 0f, 0f, 0f)
-                    );
+                cell = new WidgetComp_Margin_Rel(cell, 1f, 0f, 0f, 0f);
             }
             else if (column.Worker.CellStyle == ColumnCellStyle.Boolean)
             {
-                iconOrLabel =
-                    new Widget_Container_Single(
-                        new Widget_Addon_Margin_Rel(iconOrLabel, 50, 0f)
-                    );
+                cell = new WidgetComp_Margin_Rel(cell, 0.5f, 0f);
             }
-            else
-            {
-                iconOrLabel = new Widget_Container_Single(iconOrLabel);
-            }
+
+            cell = new Widget_Container_Single(cell);
         }
         else
         {
-            var labelStyle = new WidgetStyle()
-            {
-                TextAlign = (TextAnchor)column.Worker.CellStyle,
-            };
-            iconOrLabel = new Widget_Label(column.LabelCap, labelStyle);
+            cell = new Widget_Label(column.LabelCap);
         }
 
         void onDrawCell(ref Rect rect)
@@ -118,56 +102,42 @@ internal sealed class Widget_Table_Things
             }
         }
 
-        return
-            new Widget_TableCell_Normal(
-                new Widget_Addon_Generic(
-                    new Widget_Addon_Tooltip(
-                        new Widget_Addon_Padding(
-                            iconOrLabel,
-                            cellPaddingHor,
-                            cellPaddingVer
-                        ),
-                        column.description
-                    ),
-                    onDrawCell
-                ),
-                columnProps
-            );
+        cell = new WidgetComp_Padding(cell, cellPadHor, cellPadVer);
+        cell = new WidgetComp_Width_Rel(cell, 1f);
+        cell = new WidgetComp_Tooltip(cell, column.description);
+        cell = new WidgetComp_Generic(cell, onDrawCell);
+
+        return new Widget_TableCell_Normal(cell, columnProps, column.Worker.CellStyle);
     }
-    private IWidget_TableCell CreateBodyCell(
+    private Widget_TableCell CreateBodyCell(
         ColumnDef column,
         ThingRec rec,
         ColumnProps columnProps
     )
     {
-        IWidget? cellContent = null;
+        IWidget? cell = null;
 
         try
         {
-            cellContent = column.Worker.GetTableCellContent(rec);
+            cell = column.Worker.GetTableCellContent(rec);
         }
         catch
         {
         }
 
-        if (cellContent == null)
+        if (cell == null)
         {
             return new Widget_TableCell_Empty(columnProps);
         }
         else
         {
-            return
-                new Widget_TableCell_Normal(
-                    new Widget_Addon_Padding(
-                        cellContent,
-                        cellPaddingHor,
-                        cellPaddingVer
-                    ),
-                    columnProps
-                );
+            cell = new WidgetComp_Padding(cell, cellPadHor, cellPadVer);
+            cell = new WidgetComp_Width_Rel(cell, 1f);
+
+            return new Widget_TableCell_Normal(cell, columnProps, column.Worker.CellStyle);
         }
     }
-    private static void DrawHeaderRowBG(Rect borderBox, bool _, int __)
+    private static void DrawHeaderRowBG(ref Rect borderBox, in bool _, in int __)
     {
         Widgets.DrawHighlight(borderBox);
         Widgets.DrawLineHorizontal(
@@ -177,7 +147,7 @@ internal sealed class Widget_Table_Things
             StatsMainTabWindow.BorderLineColor
         );
     }
-    private static void DrawBodyRowBG(Rect borderBox, bool isHovered, int index)
+    private static void DrawBodyRowBG(ref Rect borderBox, in bool isHovered, in int index)
     {
         if (isHovered)
         {

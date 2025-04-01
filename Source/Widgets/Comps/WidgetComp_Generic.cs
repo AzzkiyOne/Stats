@@ -2,11 +2,11 @@
 
 namespace Stats;
 
-public class Widget_Addon_Generic
-    : Widget_Addon
+public class WidgetComp_Generic
+    : WidgetComp
 {
     private readonly OnDrawCB OnDraw;
-    public Widget_Addon_Generic(IWidget widget, OnDrawCB onDraw)
+    public WidgetComp_Generic(IWidget widget, OnDrawCB onDraw)
         : base(widget)
     {
         OnDraw = onDraw;
@@ -15,7 +15,7 @@ public class Widget_Addon_Generic
     {
         OnDraw(ref rect);
 
-        base.Draw(rect, containerSize);
+        Widget.Draw(rect, containerSize);
     }
     public delegate void OnDrawCB(ref Rect rect);
 }

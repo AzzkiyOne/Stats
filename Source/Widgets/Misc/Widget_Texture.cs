@@ -5,15 +5,15 @@ namespace Stats;
 
 // This is basically HTML <img>
 public class Widget_Texture
-    : Widget_Drawable
+    : Widget
 {
     private readonly Texture2D Tex;
-    public float Scale { get; set; } = 1f;
+    private readonly float Scale;
     protected override Vector2 ContentSize => Vector2.zero;
-    public Widget_Texture(Texture2D tex, WidgetStyle? style = null)
-        : base(style)
+    public Widget_Texture(Texture2D tex, float scale = 1f)
     {
         Tex = tex;
+        Scale = scale;
     }
     public override void Draw(Rect rect, in Vector2 containerSize)
     {

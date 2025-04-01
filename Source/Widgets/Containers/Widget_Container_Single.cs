@@ -7,27 +7,21 @@ namespace Stats;
 // For example, Widget_Icon has content size of 0. Although we can probably
 // measure a texture, using its size as content size would be unpractical.
 public class Widget_Container_Single
-    : Widget_Drawable
+    : Widget
 {
     private readonly IWidget Widget;
     protected override Vector2 ContentSize { get; }
     private readonly float ReservedWidth = 0f;
     private readonly float ReservedHeight = 0f;
-    public Widget_Container_Single(IWidget widget, WidgetStyle? style = null)
-        : base(style)
+    public Widget_Container_Single(IWidget widget)
     {
         Widget = widget;
         ContentSize = widget.GetSize();
 
-        if (widget.Style.Width is WidgetStyle.Units.Abs or null)
-        {
-            ReservedWidth = ContentSize.x;
-        }
+        var widgetSize = widget.GetSize(Vector2.zero);
 
-        if (widget.Style.Height is WidgetStyle.Units.Abs or null)
-        {
-            ReservedHeight = ContentSize.y;
-        }
+        ReservedWidth = widgetSize.x;
+        ReservedHeight = widgetSize.y;
     }
     public override void Draw(Rect rect, in Vector2 containerSize)
     {

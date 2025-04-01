@@ -1,5 +1,4 @@
 ﻿using RimWorld;
-using UnityEngine;
 using Verse;
 
 namespace Stats.Compat.CE;
@@ -26,11 +25,10 @@ public class ColumnWorker_WeaponRanged_Caliber
             ToStringNumberSense.Absolute,
             ColumnDef.stat!.Worker.GetValue(statReq)
         );
-        var style = new WidgetStyle()
-        {
-            TextAlign = (TextAnchor)CellStyle,
-        };
+        IWidget
+        widget = new Widget_Label(value!);
+        widget = new WidgetComp_Tooltip(widget, tooltip);
 
-        return new Widget_Addon_Tooltip(new Widget_Label(value!, style), tooltip);
+        return widget;
     }
 }

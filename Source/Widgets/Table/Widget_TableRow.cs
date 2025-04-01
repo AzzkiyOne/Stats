@@ -8,33 +8,28 @@ namespace Stats;
 
 internal class Widget_TableRow
 {
-    private readonly List<IWidget_TableCell> _Cells = [];
-    public ReadOnlyCollection<IWidget_TableCell> Cells => _Cells.AsReadOnly();
-    private float _Height = 0f;
-    public float Height
-    {
-        get => _Height;
-        set => _Height = Math.Max(_Height, value);
-    }
+    private readonly List<Widget_TableCell> _Cells = [];
+    public ReadOnlyCollection<Widget_TableCell> Cells => _Cells.AsReadOnly();
+    public float Height = 0f;
     private readonly OnDraw DrawBG;
     private bool IsHovered = false;
     public Widget_TableRow(OnDraw onDraw)
     {
         DrawBG = onDraw;
     }
-    public void AddCell(IWidget_TableCell cell)
+    public void AddCell(Widget_TableCell cell)
     {
         var cellSize = cell.GetSize();
 
-        cell.Column.Width = cellSize.x;
-        Height = cellSize.y;
+        cell.Column.Width = Math.Max(cell.Column.Width, cellSize.x);
+        Height = Math.Max(Height, cellSize.y);
 
         _Cells.Add(cell);
     }
     public void Draw(
         Rect rect,
         in float offsetX,
-        Func<IWidget_TableCell, bool> shouldDrawCell,
+        in bool drawPinned,
         in float cellExtraWidth,
         in int index
     )
@@ -44,7 +39,7 @@ internal class Widget_TableRow
             IsHovered = true;
         }
 
-        DrawBG(rect, IsHovered, index);
+        DrawBG(ref rect, IsHovered, index);
 
         if (Mouse.IsOver(rect) == false)
         {
@@ -56,7 +51,7 @@ internal class Widget_TableRow
 
         foreach (var cell in _Cells)
         {
-            if (shouldDrawCell(cell) == false) continue;
+            if (cell.Column.IsPinned != drawPinned) continue;
             if (cellRect.x >= rect.width) break;
 
             cellRect.width = cell.Column.Width + cellExtraWidth;
@@ -70,7 +65,7 @@ internal class Widget_TableRow
         }
     }
 
-    internal delegate void OnDraw(Rect rect, bool isHovered, int index);
+    internal delegate void OnDraw(ref Rect rect, in bool isHovered, in int index);
 }
 
 internal sealed class Widget_TableRow<IdType>

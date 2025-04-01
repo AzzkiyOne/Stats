@@ -5,7 +5,7 @@ using Verse;
 namespace Stats;
 
 public class Widget_Icon_Thing
-    : Widget_Drawable
+    : Widget
 {
     private readonly Texture2D Texture;
     private readonly Color Color;
@@ -15,19 +15,11 @@ public class Widget_Icon_Thing
     private readonly float Angle;
     private readonly Vector2 Offset;
     protected override Vector2 ContentSize => Vector2.zero;
-    public Widget_Icon_Thing(
-        ThingRec thing,
-        WidgetStyle? style = null
-    )
-        : this(thing.Def, thing.StuffDef, style)
+    public Widget_Icon_Thing(ThingRec thing)
+        : this(thing.Def, thing.StuffDef)
     {
     }
-    public Widget_Icon_Thing(
-        ThingDef thingDef,
-        ThingDef? stuffDef = null,
-        WidgetStyle? style = null
-    )
-        : base(style)
+    public Widget_Icon_Thing(ThingDef thingDef, ThingDef? stuffDef = null)
     {
         Texture = Widgets.GetIconFor(thingDef, stuffDef) ?? BaseContent.BadTex;
         Scale = GenUI.IconDrawScale(thingDef);

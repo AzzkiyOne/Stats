@@ -5,19 +5,14 @@ using UnityEngine;
 namespace Stats;
 
 public class Widget_Container_Ver
-    : Widget_Drawable
+    : Widget
 {
     private readonly float Gap;
     private readonly float ReservedSpaceAmount;
     private readonly List<IWidget> Children;
     private readonly Vector2 _ContentSize = Vector2.zero;
     protected override Vector2 ContentSize => _ContentSize;
-    public Widget_Container_Ver(
-        List<IWidget> children,
-        float gap = 0f,
-        WidgetStyle? style = null
-    )
-        : base(style)
+    public Widget_Container_Ver(List<IWidget> children, float gap = 0f)
     {
         Children = children;
         Gap = gap;
@@ -25,12 +20,9 @@ public class Widget_Container_Ver
 
         foreach (var child in children)
         {
-            var childSize = child.GetSize();
+            ReservedSpaceAmount += child.GetSize(Vector2.zero).y;
 
-            if (child.Style.Height is WidgetStyle.Units.Abs or null)
-            {
-                ReservedSpaceAmount += childSize.y;
-            }
+            var childSize = child.GetSize();
 
             _ContentSize.x = Math.Max(_ContentSize.x, childSize.x);
             _ContentSize.y += childSize.y;

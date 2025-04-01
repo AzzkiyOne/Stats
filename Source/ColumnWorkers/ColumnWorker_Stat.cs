@@ -1,5 +1,4 @@
 ﻿using RimWorld;
-using UnityEngine;
 using Verse;
 
 namespace Stats;
@@ -66,18 +65,14 @@ public class ColumnWorker_Stat
     {
         var valueStr = FormatValue(value, thing);
         var tooltip = GetValueExplanation(value, thing);
-        var style = new WidgetStyle()
-        {
-            TextAlign = (TextAnchor)CellStyle,
-        };
-        var labelWidget = new Widget_Label(valueStr, style);
+        var widget = new Widget_Label(valueStr);
 
         if (tooltip != null)
         {
-            return new Widget_Addon_Tooltip(labelWidget, tooltip);
+            return new WidgetComp_Tooltip(widget, tooltip);
         }
 
-        return labelWidget;
+        return widget;
     }
     public override IWidget_FilterInput GetFilterWidget()
     {

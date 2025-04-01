@@ -22,7 +22,6 @@ namespace Stats;
 // Box model is implemented as "box-sizing: border-box".
 public interface IWidget
 {
-    WidgetStyle Style { get; }
     Vector2 GetSize(in Vector2 containerSize);
     Vector2 GetSize();
     void Draw(Rect rect, in Vector2 containerSize);

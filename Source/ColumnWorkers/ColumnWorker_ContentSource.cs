@@ -1,6 +1,4 @@
-﻿using UnityEngine;
-
-namespace Stats;
+﻿namespace Stats;
 
 public class ColumnWorker_ContentSource
     : ColumnWorker_Str
@@ -11,14 +9,11 @@ public class ColumnWorker_ContentSource
     }
     protected override IWidget GetTableCellContent(string? value, ThingRec thing)
     {
-        var style = new WidgetStyle()
-        {
-            TextAlign = (TextAnchor)CellStyle,
-        };
+        var tooltip = thing.Def.modContentPack.PackageIdPlayerFacing;
+        IWidget
+        widget = new Widget_Label(value!);
+        widget = new WidgetComp_Tooltip(widget, tooltip);
 
-        return new Widget_Addon_Tooltip(
-            new Widget_Label(value!, style),
-            thing.Def.modContentPack.PackageIdPlayerFacing
-        );
+        return widget;
     }
 }

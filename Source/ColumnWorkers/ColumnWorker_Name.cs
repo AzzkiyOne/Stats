@@ -14,15 +14,6 @@ public class ColumnWorker_Name
     }
     protected override IWidget GetTableCellContent(string? value, ThingRec thing)
     {
-        var labelStyle = new WidgetStyle()
-        {
-            TextAlign = (TextAnchor)CellStyle,
-        };
-        var iconStyle = new WidgetStyle()
-        {
-            Width = Text.LineHeight,
-            Height = Text.LineHeight,
-        };
         void onDrawIcon(ref Rect rect)
         {
             Widgets.DrawHighlightIfMouseover(rect);
@@ -33,16 +24,17 @@ public class ColumnWorker_Name
             }
         }
 
-        return
-            new Widget_Addon_Tooltip(
-                new Widget_Container_Hor([
-                    new Widget_Addon_Generic(
-                        new Widget_Icon_Thing(thing, iconStyle),
-                        onDrawIcon
-                    ),
-                    new Widget_Label(value!, labelStyle)
-                ], 10f),
-                thing.Def.description
-            );
+        IWidget
+        icon = new Widget_Icon_Thing(thing);
+        icon = new WidgetComp_Size_Abs(icon, Text.LineHeight);
+        icon = new WidgetComp_Generic(icon, onDrawIcon);
+        IWidget
+        label = new Widget_Label(value!);
+        label = new WidgetComp_Width_Rel(label, 1f);
+        IWidget
+        container = new Widget_Container_Hor([icon, label], 10f);
+        container = new WidgetComp_Tooltip(container, thing.Def.description);
+
+        return container;
     }
 }

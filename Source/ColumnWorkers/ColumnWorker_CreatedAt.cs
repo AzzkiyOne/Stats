@@ -42,11 +42,6 @@ public class ColumnWorker_CreatedAt
 
         foreach (var thingDef in things.OrderBy(def => def.label))
         {
-            var iconStyle = new WidgetStyle()
-            {
-                Width = Text.LineHeight,
-                Height = Text.LineHeight,
-            };
             void onDrawIcon(ref Rect rect)
             {
                 Widgets.DrawHighlightIfMouseover(rect);
@@ -56,14 +51,12 @@ public class ColumnWorker_CreatedAt
                     Widget_DefInfoDialog.Draw(thingDef);
                 }
             }
-            var icon =
-                new Widget_Addon_Generic(
-                    new Widget_Addon_Tooltip(
-                        new Widget_Icon_Thing(thingDef, style: iconStyle),
-                        thingDef.description
-                    ),
-                    onDrawIcon
-                );
+
+            IWidget
+            icon = new Widget_Icon_Thing(thingDef);
+            icon = new WidgetComp_Size_Abs(icon, Text.LineHeight);
+            icon = new WidgetComp_Tooltip(icon, thingDef.description);
+            icon = new WidgetComp_Generic(icon, onDrawIcon);
 
             icons.Add(icon);
         }

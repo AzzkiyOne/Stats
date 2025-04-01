@@ -2,12 +2,11 @@
 
 namespace Stats;
 
-public abstract class Widget_Addon
+public abstract class WidgetComp
     : IWidget
 {
     protected IWidget Widget { get; }
-    public WidgetStyle Style => Widget.Style;
-    public Widget_Addon(IWidget widget)
+    public WidgetComp(IWidget widget)
     {
         Widget = widget;
     }
