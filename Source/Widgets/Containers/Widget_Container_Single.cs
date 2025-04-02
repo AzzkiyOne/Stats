@@ -10,13 +10,13 @@ public class Widget_Container_Single
     : Widget
 {
     private readonly IWidget Widget;
-    protected override Vector2 ContentSize { get; }
     private readonly float ReservedWidth = 0f;
     private readonly float ReservedHeight = 0f;
+    public override Vector2 AbsSize { get; }
     public Widget_Container_Single(IWidget widget)
     {
         Widget = widget;
-        ContentSize = widget.GetSize();
+        AbsSize = widget.AbsSize;
 
         var widgetSize = widget.GetSize(Vector2.zero);
 
@@ -28,10 +28,10 @@ public class Widget_Container_Single
         base.Draw(rect, containerSize);
 
         var rectSize = rect.size;
-
         rectSize.x -= ReservedWidth;
         rectSize.y -= ReservedHeight;
 
-        Widget.Draw(new Rect(rect.position, Widget.GetSize(rectSize)), rectSize);
+        rect.size = Widget.GetSize(rectSize);
+        Widget.Draw(rect, rectSize);
     }
 }

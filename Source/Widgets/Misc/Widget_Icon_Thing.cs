@@ -14,7 +14,7 @@ public class Widget_Icon_Thing
     private readonly float Scale;
     private readonly float Angle;
     private readonly Vector2 Offset;
-    protected override Vector2 ContentSize => Vector2.zero;
+    public override Vector2 AbsSize { get; } = Vector2.zero;
     public Widget_Icon_Thing(ThingRec thing)
         : this(thing.Def, thing.StuffDef)
     {

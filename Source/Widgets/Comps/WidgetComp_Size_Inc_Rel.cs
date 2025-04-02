@@ -2,14 +2,14 @@
 
 namespace Stats;
 
-public class WidgetComp_Margin_Rel
+public class WidgetComp_Size_Inc_Rel
     : WidgetComp
 {
     private readonly float L;
     private readonly float R;
     private readonly float T;
     private readonly float B;
-    public WidgetComp_Margin_Rel(IWidget widget, float l, float r, float t, float b)
+    public WidgetComp_Size_Inc_Rel(IWidget widget, float l, float r, float t, float b)
         : base(widget)
     {
         L = l;
@@ -17,16 +17,13 @@ public class WidgetComp_Margin_Rel
         T = t;
         B = b;
     }
-    public WidgetComp_Margin_Rel(IWidget widget, float hor, float ver)
-        : base(widget)
+    public WidgetComp_Size_Inc_Rel(IWidget widget, float hor, float ver)
+        : this(widget, hor, hor, ver, ver)
     {
-        L = R = hor;
-        T = B = ver;
     }
-    public WidgetComp_Margin_Rel(IWidget widget, float amount)
-        : base(widget)
+    public WidgetComp_Size_Inc_Rel(IWidget widget, float amount)
+        : this(widget, amount, amount, amount, amount)
     {
-        L = R = T = B = amount;
     }
     public override Vector2 GetSize(in Vector2 containerSize)
     {

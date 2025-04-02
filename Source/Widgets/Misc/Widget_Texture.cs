@@ -9,7 +9,7 @@ public class Widget_Texture
 {
     private readonly Texture2D Tex;
     private readonly float Scale;
-    protected override Vector2 ContentSize => Vector2.zero;
+    public override Vector2 AbsSize { get; } = Vector2.zero;
     public Widget_Texture(Texture2D tex, float scale = 1f)
     {
         Tex = tex;

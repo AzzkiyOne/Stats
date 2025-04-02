@@ -61,11 +61,11 @@ internal sealed class Widget_Table_Things
 
             if (column.Worker.CellStyle == ColumnCellStyle.Number)
             {
-                cell = new WidgetComp_Margin_Rel(cell, 1f, 0f, 0f, 0f);
+                cell = new WidgetComp_Size_Inc_Rel(cell, 1f, 0f, 0f, 0f);
             }
             else if (column.Worker.CellStyle == ColumnCellStyle.Boolean)
             {
-                cell = new WidgetComp_Margin_Rel(cell, 0.5f, 0f);
+                cell = new WidgetComp_Size_Inc_Rel(cell, 0.5f, 0f);
             }
 
             cell = new Widget_Container_Single(cell);
@@ -102,7 +102,7 @@ internal sealed class Widget_Table_Things
             }
         }
 
-        cell = new WidgetComp_Padding(cell, cellPadHor, cellPadVer);
+        cell = new WidgetComp_Size_Inc_Abs(cell, cellPadHor, cellPadVer);
         cell = new WidgetComp_Width_Rel(cell, 1f);
         cell = new WidgetComp_Tooltip(cell, column.description);
         cell = new WidgetComp_Generic(cell, onDrawCell);
@@ -131,7 +131,7 @@ internal sealed class Widget_Table_Things
         }
         else
         {
-            cell = new WidgetComp_Padding(cell, cellPadHor, cellPadVer);
+            cell = new WidgetComp_Size_Inc_Abs(cell, cellPadHor, cellPadVer);
             cell = new WidgetComp_Width_Rel(cell, 1f);
 
             return new Widget_TableCell_Normal(cell, columnProps, column.Worker.CellStyle);

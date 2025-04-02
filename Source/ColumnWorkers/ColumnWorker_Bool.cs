@@ -16,7 +16,7 @@ public abstract class ColumnWorker_Bool
         IWidget
         icon = new Widget_Texture(tex);
         icon = new WidgetComp_Size_Abs(icon, Text.LineHeight);
-        icon = new WidgetComp_Margin_Rel(icon, 0.5f, 0f);
+        icon = new WidgetComp_Size_Inc_Rel(icon, 0.5f, 0f);
 
         return new Widget_Container_Single(icon);
     }

@@ -38,11 +38,17 @@ public static class Ext_VerbList
 
 public static class Ext_Widget
 {
-    public static void DrawIn(this IWidget widget, Rect container)
+    public static void DrawIn(this IWidget widget, Rect rect)
     {
-        widget.Draw(
-            new Rect(container.position, widget.GetSize(container.size)),
-            container.size
-        );
+        rect.size = widget.GetSize(rect.size);
+        widget.Draw(rect, rect.size);
+    }
+    public static void ResizeRect(
+        this IWidget widget,
+        ref Rect rect,
+        in Vector2 containerSize
+    )
+    {
+        rect.size = widget.GetSize(containerSize);
     }
 }

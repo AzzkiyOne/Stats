@@ -6,6 +6,7 @@ namespace Stats;
 internal sealed class Widget_TableCell_Normal
     : Widget_TableCell
 {
+    public override Vector2 AbsSize => Widget.AbsSize;
     private readonly IWidget Widget;
     private readonly TextAnchor TextAnchor;
     public Widget_TableCell_Normal(
@@ -21,10 +22,6 @@ internal sealed class Widget_TableCell_Normal
     public override Vector2 GetSize(in Vector2 containerSize)
     {
         return Widget.GetSize(containerSize);
-    }
-    public override Vector2 GetSize()
-    {
-        return Widget.GetSize();
     }
     public override void Draw(Rect rect, in Vector2 containerSize)
     {

@@ -5,6 +5,7 @@ namespace Stats;
 public class WidgetComp_Size_Abs
     : WidgetComp
 {
+    public override Vector2 AbsSize => new(Width, Height);
     private readonly float Width;
     private readonly float Height;
     public WidgetComp_Size_Abs(IWidget widget, float width, float height)
@@ -19,15 +20,6 @@ public class WidgetComp_Size_Abs
         Width = Height = size;
     }
     public override Vector2 GetSize(in Vector2 containerSize)
-    {
-        Vector2 size;
-
-        size.x = Width;
-        size.y = Height;
-
-        return size;
-    }
-    public override Vector2 GetSize()
     {
         Vector2 size;
 
