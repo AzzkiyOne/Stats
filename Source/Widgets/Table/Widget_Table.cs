@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using Verse;
 
@@ -95,7 +94,7 @@ internal class Widget_Table
         DrawPart(
             ref contentRectVisible,
             ScrollPos,
-            Math.Max(rightPartFreeSpace / rightColumnsCount, 0f),
+            Mathf.Max(rightPartFreeSpace / rightColumnsCount, 0f),
             false
         );
 

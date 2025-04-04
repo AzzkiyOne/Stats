@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using UnityEngine;
 using Verse;
@@ -21,8 +20,8 @@ internal class Widget_TableRow
     {
         var cellAbsSize = cell.AbsSize;
 
-        cell.Column.Width = Math.Max(cell.Column.Width, cellAbsSize.x);
-        Height = Math.Max(Height, cellAbsSize.y);
+        cell.Column.Width = Mathf.Max(cell.Column.Width, cellAbsSize.x);
+        Height = Mathf.Max(Height, cellAbsSize.y);
 
         _Cells.Add(cell);
     }

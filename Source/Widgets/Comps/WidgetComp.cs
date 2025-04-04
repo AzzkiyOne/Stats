@@ -20,3 +20,6 @@ public abstract class WidgetComp
         Widget.Draw(rect, containerSize);
     }
 }
+
+public delegate float SizeFunc_SingleAxis(in Vector2 containerSize);
+public delegate Vector2 SizeFunc_DoubleAxis(in Vector2 containerSize);

@@ -7,10 +7,10 @@ public class WidgetComp_Size_Rel
 {
     private readonly float WidthMult;
     private readonly float HeightMult;
-    public WidgetComp_Size_Rel(IWidget widget, float widthMlut, float heightMult)
+    public WidgetComp_Size_Rel(IWidget widget, float widthMult, float heightMult)
         : base(widget)
     {
-        WidthMult = widthMlut;
+        WidthMult = widthMult;
         HeightMult = heightMult;
     }
     public WidgetComp_Size_Rel(IWidget widget, float sizeMult)

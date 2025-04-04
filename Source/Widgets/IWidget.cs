@@ -54,52 +54,64 @@ public interface IWidget
 {
     /*
 
-    AbsSize is the sum of widget's size components which are defined in absolute units, including its "own size" and according to its box model.
+    AbsSize (absolute/abstract size) is the size of a widget as if it were given infinite space to draw. Since widget's container size is unknown, relative size constraints/modifiers have no effect.
 
-    For example, let's imagine we have a widget that defines it's AbsSize.x = 50.
+    var containerSize = new Vector2(100, 100);
 
     IWidget
     w = new Widget_Example();
     w.AbsSize.x;// 50
+    w.GetSize(containerSize).x;// 50
 
     --- Absolute size ---
 
     w = new Size_Inc_Abs(w, 10);
     w.AbsSize.x;// 60
+    w.GetSize(containerSize).x;// 60
 
     w = new Width_Abs(w, 100);
     w.AbsSize.x;// 100
+    w.GetSize(containerSize).x;// 100
 
     w = new Size_Inc_Abs(w, 10);
     w.AbsSize.x;// 110
+    w.GetSize(containerSize).x;// 110
 
     --- Relative size ---
 
     w = new Size_Inc_Rel(w, 0.1);
     w.AbsSize.x;// 50
+    w.GetSize(containerSize).x;// 60
 
     w = new Width_Rel(w, 1);
     w.AbsSize.x;// 50
+    w.GetSize(containerSize).x;// 100
 
     w = new Size_Inc_Rel(w, 0.1);
     w.AbsSize.x;// 50
+    w.GetSize(containerSize).x;// 110
 
     --- Mixed size ---
 
     w = new Size_Inc_Abs(w, 100);
     w.AbsSize.x;// 150
+    w.GetSize(containerSize).x;// 150
 
     w = new Width_Rel(w, 1);
     w.AbsSize.x;// 150
+    w.GetSize(containerSize).x;// 100
 
     w = new Size_Inc_Abs(w, 50);
     w.AbsSize.x;// 200
+    w.GetSize(containerSize).x;// 150
 
     */
     Vector2 AbsSize { get; }
     /*
     
-    This method is used to get widget's size relative to its container size and according to its box model.
+    This method is used to calculate widget's size relative to its container size and according to its box model.
+
+    The only argument is the size of its parent container. It is used to calculate relative dimensions of a widget's box.
 
     var containerSize = new Vector2(100, 100);
 
@@ -122,7 +134,7 @@ public interface IWidget
 
     w.GetSize(Vector2.zero);// (10, 10)
 
-    This value is different from AbsSize, since it doesn't include widget's "own size".
+    This value doesn't include widget's own AbsSize.
 
     */
     Vector2 GetSize(in Vector2 containerSize);
