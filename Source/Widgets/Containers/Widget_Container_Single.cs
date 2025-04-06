@@ -15,12 +15,18 @@ public class Widget_Container_Single
     public Widget_Container_Single(IWidget widget)
     {
         Widget = widget;
-        Size = widget.GetSize(Vector2.positiveInfinity);
+        widget.Parent = this;
 
         var widgetSize = widget.GetSize(Vector2.zero);
 
         OccupiedWidth = widgetSize.x;
         OccupiedHeight = widgetSize.y;
+
+        UpdateSize();
+    }
+    protected override Vector2 GetSize()
+    {
+        return Widget.GetSize(Vector2.positiveInfinity);
     }
     protected override void DrawContent(Rect rect)
     {

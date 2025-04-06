@@ -7,8 +7,8 @@ namespace Stats;
 
 internal class Widget_TableRow
 {
-    private readonly List<Widget_TableCell> _Cells = [];
-    public ReadOnlyCollection<Widget_TableCell> Cells => _Cells.AsReadOnly();
+    private readonly List<WidgetComp_TableCell> _Cells = [];
+    public ReadOnlyCollection<WidgetComp_TableCell> Cells => _Cells.AsReadOnly();
     public float Height = 0f;
     private readonly OnDraw DrawBG;
     private bool IsHovered = false;
@@ -16,7 +16,7 @@ internal class Widget_TableRow
     {
         DrawBG = onDraw;
     }
-    public void AddCell(Widget_TableCell cell)
+    public void AddCell(WidgetComp_TableCell cell)
     {
         var cellAbsSize = cell.GetSize(Vector2.positiveInfinity);
 

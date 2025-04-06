@@ -134,7 +134,7 @@ internal class Widget_Table
         in bool drawPinned
     )
     {
-        Widgets.BeginGroup(rect);
+        GUI.BeginClip(rect);
 
         var y = 0f;
 
@@ -151,7 +151,7 @@ internal class Widget_Table
             y += row.Height;
         }
 
-        Widgets.EndGroup();
+        GUI.EndClip();
     }
     private void DrawBody(
         ref Rect rect,
@@ -160,7 +160,7 @@ internal class Widget_Table
         in bool drawPinned
     )
     {
-        Widgets.BeginGroup(rect);
+        GUI.BeginClip(rect);
 
         var rowRect = new Rect(0f, -scrollPos.y, rect.width, 0f);
 
@@ -180,7 +180,7 @@ internal class Widget_Table
             rowRect.y = rowRect.yMax;
         }
 
-        Widgets.EndGroup();
+        GUI.EndClip();
     }
     // The performance impact of instead drawing a vertical border for each
     // individual cell is huge. So we have to keep this.

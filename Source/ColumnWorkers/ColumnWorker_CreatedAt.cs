@@ -42,21 +42,17 @@ public class ColumnWorker_CreatedAt
 
         foreach (var thingDef in things.OrderBy(def => def.label))
         {
-            void onDrawIcon(ref Rect rect)
+            void handleIconClick()
             {
-                Widgets.DrawHighlightIfMouseover(rect);
-
-                if (Widgets.ButtonInvisible(rect))
-                {
-                    Widget_DefInfoDialog.Draw(thingDef);
-                }
+                Widget_DefInfoDialog.Draw(thingDef);
             }
 
             IWidget
             icon = new Widget_Icon_Thing(thingDef);
             icon = new WidgetComp_Size_Abs(icon, Text.LineHeight);
             icon = new WidgetComp_Tooltip(icon, thingDef.description);
-            icon = new WidgetComp_Generic(icon, onDrawIcon);
+            icon = new WidgetComp_Bg_Tex_OnHover(icon, TexUI.HighlightTex);
+            icon = new WidgetComp_OnClick(icon, handleIconClick);
 
             icons.Add(icon);
         }

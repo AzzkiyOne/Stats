@@ -8,7 +8,8 @@ public class Widget_Container_Ver
 {
     private readonly float Gap;
     private readonly List<IWidget> Children;
-    private readonly float OccupiedSpaceAmount = 0f;
+    private readonly bool ShareFreeSpace;
+    private float OccupiedSpaceAmount = 0f;
     public Widget_Container_Ver(
         List<IWidget> children,
         float gap = 0f,
@@ -17,10 +18,22 @@ public class Widget_Container_Ver
     {
         Children = children;
         Gap = gap;
+        ShareFreeSpace = shareFreeSpace;
 
-        var totalGapAmount = (children.Count - 1) * gap;
+        foreach (var child in children)
+        {
+            child.Parent = this;
+        }
 
-        if (shareFreeSpace)
+        UpdateSize();
+    }
+    protected override Vector2 GetSize()
+    {
+        OccupiedSpaceAmount = 0f;
+
+        var totalGapAmount = (Children.Count - 1) * Gap;
+
+        if (ShareFreeSpace)
         {
             OccupiedSpaceAmount = totalGapAmount;
         }
@@ -29,20 +42,20 @@ public class Widget_Container_Ver
         size.x = 0f;
         size.y = totalGapAmount;
 
-        foreach (var child in children)
+        foreach (var child in Children)
         {
             var childSize = child.GetSize(Vector2.positiveInfinity);
 
             size.x = Mathf.Max(size.x, childSize.x);
             size.y += childSize.y;
 
-            if (shareFreeSpace)
+            if (ShareFreeSpace)
             {
                 OccupiedSpaceAmount += child.GetSize(Vector2.zero).y;
             }
         }
 
-        Size = size;
+        return size;
     }
     protected override void DrawContent(Rect rect)
     {

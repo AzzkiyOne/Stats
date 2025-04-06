@@ -58,6 +58,10 @@ public class Widget_Icon_Thing
             Proportions = new Vector2(Texture.width, Texture.height);
         }
     }
+    protected override Vector2 GetSize()
+    {
+        return Vector2.zero;
+    }
     protected override void DrawContent(Rect rect)
     {
         rect.position += Offset * rect.size;

@@ -2,12 +2,13 @@
 
 namespace Stats;
 
-internal sealed class Widget_TableCell_Empty
-    : Widget_TableCell
+internal sealed class WidgetComp_TableCell_Empty
+    : WidgetComp_TableCell
 {
     public override bool WidthIsUndef { set { } }
     public override bool HeightIsUndef { set { } }
-    public Widget_TableCell_Empty(Widget_Table.ColumnProps column)
+    public override IWidget? Parent { set { } }
+    public WidgetComp_TableCell_Empty(Widget_Table.ColumnProps column)
         : base(column)
     {
     }
@@ -16,6 +17,9 @@ internal sealed class Widget_TableCell_Empty
         return Vector2.zero;
     }
     public override void Draw(Rect rect, in Vector2 containerSize)
+    {
+    }
+    public override void UpdateSize()
     {
     }
 }

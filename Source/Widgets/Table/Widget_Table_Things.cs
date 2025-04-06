@@ -46,7 +46,7 @@ internal sealed class Widget_Table_Things
 
         SortRowsByColumn(SortColumn);
     }
-    private Widget_TableCell CreateHeaderCell(ColumnDef column)
+    private WidgetComp_TableCell CreateHeaderCell(ColumnDef column)
     {
         var columnProps = new ColumnProps()
         {
@@ -75,10 +75,8 @@ internal sealed class Widget_Table_Things
             cell = new Widget_Label(column.LabelCap);
         }
 
-        void onDrawCell(ref Rect rect)
+        void drawSortIndicator(ref Rect rect)
         {
-            Widgets.DrawHighlightIfMouseover(rect);
-
             if (SortColumn == column)
             {
                 Widgets.DrawBoxSolid(
@@ -88,28 +86,29 @@ internal sealed class Widget_Table_Things
                     Color.yellow.ToTransparent(0.3f)
                 );
             }
-
-            if (Widgets.ButtonInvisible(rect))
+        }
+        void handleCellClick()
+        {
+            if (Event.current.control)
             {
-                if (Event.current.control)
-                {
-                    columnProps.IsPinned = !columnProps.IsPinned;
-                }
-                else
-                {
-                    SortRowsByColumn(column);
-                }
+                columnProps.IsPinned = !columnProps.IsPinned;
+            }
+            else
+            {
+                SortRowsByColumn(column);
             }
         }
 
         cell = new WidgetComp_Size_Inc_Abs(cell, cellPadHor, cellPadVer);
         cell = new WidgetComp_Width_Rel(cell, 1f);
         cell = new WidgetComp_Tooltip(cell, column.description);
-        cell = new WidgetComp_Generic(cell, onDrawCell);
+        cell = new WidgetComp_Bg_Tex_OnHover(cell, TexUI.HighlightTex);
+        cell = new WidgetComp_OnClick(cell, handleCellClick);
+        cell = new WidgetComp_Generic(cell, drawSortIndicator);
 
-        return new Widget_TableCell_Normal(cell, columnProps, column.Worker.CellStyle);
+        return new WidgetComp_TableCell_Normal(cell, columnProps, column.Worker.CellStyle);
     }
-    private Widget_TableCell CreateBodyCell(
+    private WidgetComp_TableCell CreateBodyCell(
         ColumnDef column,
         ThingRec rec,
         ColumnProps columnProps
@@ -127,14 +126,14 @@ internal sealed class Widget_Table_Things
 
         if (cell == null)
         {
-            return new Widget_TableCell_Empty(columnProps);
+            return new WidgetComp_TableCell_Empty(columnProps);
         }
         else
         {
             cell = new WidgetComp_Size_Inc_Abs(cell, cellPadHor, cellPadVer);
             cell = new WidgetComp_Width_Rel(cell, 1f);
 
-            return new Widget_TableCell_Normal(cell, columnProps, column.Worker.CellStyle);
+            return new WidgetComp_TableCell_Normal(cell, columnProps, column.Worker.CellStyle);
         }
     }
     private static void DrawHeaderRowBG(ref Rect borderBox, in bool _, in int __)

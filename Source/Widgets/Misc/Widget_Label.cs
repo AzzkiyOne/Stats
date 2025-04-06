@@ -8,11 +8,23 @@ namespace Stats;
 public sealed class Widget_Label
     : Widget
 {
-    private readonly string Text;
+    private string _Text;
+    public string Text
+    {
+        get => _Text;
+        set
+        {
+            _Text = value;
+            UpdateSize();
+        }
+    }
     public Widget_Label(string text)
     {
         Text = text;
-        Size = Verse.Text.CalcSize(Text);
+    }
+    protected override Vector2 GetSize()
+    {
+        return Verse.Text.CalcSize(Text);
     }
     protected override void DrawContent(Rect rect)
     {

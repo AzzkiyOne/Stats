@@ -3,14 +3,15 @@ using Verse;
 
 namespace Stats;
 
-internal sealed class Widget_TableCell_Normal
-    : Widget_TableCell
+internal sealed class WidgetComp_TableCell_Normal
+    : WidgetComp_TableCell
 {
     public override bool WidthIsUndef { set => Widget.WidthIsUndef = value; }
     public override bool HeightIsUndef { set => Widget.WidthIsUndef = value; }
+    public override IWidget? Parent { set => Widget.Parent = value; }
     private readonly IWidget Widget;
     private readonly TextAnchor TextAnchor;
-    public Widget_TableCell_Normal(
+    public WidgetComp_TableCell_Normal(
         IWidget widget,
         Widget_Table.ColumnProps column,
         ColumnCellStyle style
@@ -31,5 +32,9 @@ internal sealed class Widget_TableCell_Normal
         Widget.Draw(rect, containerSize);
 
         Text.Anchor = Constants.DefaultTextAnchor;
+    }
+    public override void UpdateSize()
+    {
+        Widget.UpdateSize();
     }
 }

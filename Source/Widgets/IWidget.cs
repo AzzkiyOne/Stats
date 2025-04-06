@@ -30,6 +30,7 @@ w.GetSize(containerSize).x;// 110
 
 public interface IWidget
 {
+    IWidget? Parent { set; }
     /*
     
     These should only be set by size-constraining comps.
@@ -98,4 +99,5 @@ public interface IWidget
     */
     Vector2 GetSize(in Vector2 containerSize);
     void Draw(Rect rect, in Vector2 containerSize);
+    void UpdateSize();
 }
