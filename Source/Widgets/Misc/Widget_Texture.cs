@@ -9,16 +9,13 @@ public class Widget_Texture
 {
     private readonly Texture2D Tex;
     private readonly float Scale;
-    public override Vector2 AbsSize { get; } = Vector2.zero;
     public Widget_Texture(Texture2D tex, float scale = 1f)
     {
         Tex = tex;
         Scale = scale;
     }
-    public override void Draw(Rect rect, in Vector2 containerSize)
+    protected override void DrawContent(Rect rect)
     {
-        base.Draw(rect, containerSize);
-
         Widgets.DrawTextureFitted(rect, Tex, Scale);
     }
 }

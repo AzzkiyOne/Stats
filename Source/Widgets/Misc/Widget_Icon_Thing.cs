@@ -14,7 +14,6 @@ public class Widget_Icon_Thing
     private readonly float Scale;
     private readonly float Angle;
     private readonly Vector2 Offset;
-    public override Vector2 AbsSize { get; } = Vector2.zero;
     public Widget_Icon_Thing(ThingRec thing)
         : this(thing.Def, thing.StuffDef)
     {
@@ -59,10 +58,8 @@ public class Widget_Icon_Thing
             Proportions = new Vector2(Texture.width, Texture.height);
         }
     }
-    public override void Draw(Rect rect, in Vector2 containerSize)
+    protected override void DrawContent(Rect rect)
     {
-        base.Draw(rect, containerSize);
-
         rect.position += Offset * rect.size;
         GUI.color = Color;
         Widgets.DrawTextureFitted(

@@ -30,7 +30,6 @@ public class ColumnWorker_Name
         icon = new WidgetComp_Generic(icon, onDrawIcon);
         IWidget
         label = new Widget_Label(value!);
-        label = new WidgetComp_Width_Rel(label, 1f);
         IWidget
         container = new Widget_Container_Hor([icon, label], 10f);
         container = new WidgetComp_Tooltip(container, thing.Def.description);

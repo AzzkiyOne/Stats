@@ -5,7 +5,8 @@ namespace Stats;
 internal abstract class Widget_TableCell
     : IWidget
 {
-    public abstract Vector2 AbsSize { get; }
+    public abstract bool WidthIsUndef { set; }
+    public abstract bool HeightIsUndef { set; }
     public Widget_Table.ColumnProps Column;
     public Widget_TableCell(Widget_Table.ColumnProps column)
     {

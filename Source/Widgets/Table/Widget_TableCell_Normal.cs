@@ -6,7 +6,8 @@ namespace Stats;
 internal sealed class Widget_TableCell_Normal
     : Widget_TableCell
 {
-    public override Vector2 AbsSize => Widget.AbsSize;
+    public override bool WidthIsUndef { set => Widget.WidthIsUndef = value; }
+    public override bool HeightIsUndef { set => Widget.WidthIsUndef = value; }
     private readonly IWidget Widget;
     private readonly TextAnchor TextAnchor;
     public Widget_TableCell_Normal(

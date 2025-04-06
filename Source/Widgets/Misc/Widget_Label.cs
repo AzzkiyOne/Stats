@@ -9,16 +9,13 @@ public sealed class Widget_Label
     : Widget
 {
     private readonly string Text;
-    public override Vector2 AbsSize { get; }
     public Widget_Label(string text)
     {
         Text = text;
-        AbsSize = Verse.Text.CalcSize(Text);
+        Size = Verse.Text.CalcSize(Text);
     }
-    public override void Draw(Rect rect, in Vector2 containerSize)
+    protected override void DrawContent(Rect rect)
     {
-        base.Draw(rect, containerSize);
-
         Widgets.Label(rect, Text);
     }
 }

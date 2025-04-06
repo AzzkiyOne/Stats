@@ -5,7 +5,6 @@ namespace Stats;
 public class WidgetComp_Size_Inc_Abs
     : WidgetComp
 {
-    public override Vector2 AbsSize => Widget.AbsSize + new Vector2(L + R, T + B);
     private readonly float L;
     private readonly float R;
     private readonly float T;

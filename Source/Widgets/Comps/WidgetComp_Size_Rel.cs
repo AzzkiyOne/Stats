@@ -12,18 +12,21 @@ public class WidgetComp_Size_Rel
     {
         WidthMult = widthMult;
         HeightMult = heightMult;
+        widget.WidthIsUndef = false;
+        widget.HeightIsUndef = false;
     }
     public WidgetComp_Size_Rel(IWidget widget, float sizeMult)
-        : base(widget)
+        : this(widget, sizeMult, sizeMult)
     {
-        WidthMult = HeightMult = sizeMult;
     }
     public override Vector2 GetSize(in Vector2 containerSize)
     {
-        Vector2 size;
+        Vector2 size = Widget.GetSize(containerSize);
 
-        size.x = WidthMult * containerSize.x;
-        size.y = HeightMult * containerSize.y;
+        if (containerSize.x < float.PositiveInfinity)
+            size.x = WidthMult * containerSize.x;
+        if (containerSize.y < float.PositiveInfinity)
+            size.y = HeightMult * containerSize.y;
 
         return size;
     }

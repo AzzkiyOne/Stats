@@ -10,12 +10,14 @@ public class WidgetComp_Width_Func
         : base(widget)
     {
         WidthFunc = widthFunc;
+        widget.WidthIsUndef = false;
     }
     public override Vector2 GetSize(in Vector2 containerSize)
     {
         Vector2 size = Widget.GetSize(containerSize);
 
-        size.x = WidthFunc(containerSize);
+        if (containerSize.x < float.PositiveInfinity)
+            size.x = WidthFunc(containerSize);
 
         return size;
     }

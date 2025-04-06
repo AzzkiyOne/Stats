@@ -5,7 +5,8 @@ namespace Stats;
 internal sealed class Widget_TableCell_Empty
     : Widget_TableCell
 {
-    public override Vector2 AbsSize => Vector2.zero;
+    public override bool WidthIsUndef { set { } }
+    public override bool HeightIsUndef { set { } }
     public Widget_TableCell_Empty(Widget_Table.ColumnProps column)
         : base(column)
     {

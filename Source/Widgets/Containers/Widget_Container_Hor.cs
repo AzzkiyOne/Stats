@@ -1,48 +1,69 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 namespace Stats;
 
+// See vertical variant for comments.
 public class Widget_Container_Hor
     : Widget
 {
     private readonly float Gap;
-    private readonly float ReservedSpaceAmount;
     private readonly List<IWidget> Children;
-    public override Vector2 AbsSize { get; }
-    public Widget_Container_Hor(List<IWidget> children, float gap = 0f)
+    private readonly float OccupiedSpaceAmount = 0f;
+    public Widget_Container_Hor(
+        List<IWidget> children,
+        float gap = 0f,
+        bool shareFreeSpace = false
+    )
     {
         Children = children;
         Gap = gap;
 
-        var absSize = Vector2.zero;
+        var totalGapAmount = (children.Count - 1) * gap;
 
-        ReservedSpaceAmount = absSize.x = (children.Count - 1) * gap;
+        if (shareFreeSpace)
+        {
+            OccupiedSpaceAmount = totalGapAmount;
+        }
+
+        Vector2 size;
+        size.x = totalGapAmount;
+        size.y = 0f;
 
         foreach (var child in children)
         {
-            ReservedSpaceAmount += child.GetSize(Vector2.zero).x;
+            var childSize = child.GetSize(Vector2.positiveInfinity);
 
-            var childAbsSize = child.AbsSize;
+            size.x += childSize.x;
+            size.y = Mathf.Max(size.y, childSize.y);
 
-            absSize.x += childAbsSize.x;
-            absSize.y = Math.Max(absSize.y, childAbsSize.y);
+            if (shareFreeSpace)
+            {
+                OccupiedSpaceAmount += child.GetSize(Vector2.zero).x;
+            }
         }
 
-        AbsSize = absSize;
+        Size = size;
     }
-    public override void Draw(Rect rect, in Vector2 containerSize)
+    protected override void DrawContent(Rect rect)
     {
-        base.Draw(rect, containerSize);
+        var xMax = rect.xMax;
+        var size = rect.size;
+        size.x -= OccupiedSpaceAmount;
 
-        var rectSize = rect.size;
-        rectSize.x -= ReservedSpaceAmount;
+        if (WidthIsUndef) size.x = float.PositiveInfinity;
+        if (HeightIsUndef) size.y = float.PositiveInfinity;
 
         foreach (var child in Children)
         {
-            rect.size = child.GetSize(rectSize);
-            child.Draw(rect, rectSize);
+            if (rect.x >= xMax) break;
+
+            rect.size = child.GetSize(size);
+
+            if (rect.xMax > 0f)
+            {
+                child.Draw(rect, size);
+            }
 
             rect.x = rect.xMax + Gap;
         }

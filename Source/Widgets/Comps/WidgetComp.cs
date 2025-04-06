@@ -5,8 +5,9 @@ namespace Stats;
 public abstract class WidgetComp
     : IWidget
 {
-    public virtual Vector2 AbsSize => Widget.AbsSize;
     protected IWidget Widget { get; }
+    public bool WidthIsUndef { set => Widget.WidthIsUndef = value; }
+    public bool HeightIsUndef { set => Widget.HeightIsUndef = value; }
     public WidgetComp(IWidget widget)
     {
         Widget = widget;

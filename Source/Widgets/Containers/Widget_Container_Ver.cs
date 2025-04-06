@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 namespace Stats;
@@ -8,41 +7,65 @@ public class Widget_Container_Ver
     : Widget
 {
     private readonly float Gap;
-    private readonly float ReservedSpaceAmount;
     private readonly List<IWidget> Children;
-    public override Vector2 AbsSize { get; }
-    public Widget_Container_Ver(List<IWidget> children, float gap = 0f)
+    private readonly float OccupiedSpaceAmount = 0f;
+    public Widget_Container_Ver(
+        List<IWidget> children,
+        float gap = 0f,
+        bool shareFreeSpace = false
+    )
     {
         Children = children;
         Gap = gap;
 
-        var absSize = Vector2.zero;
+        var totalGapAmount = (children.Count - 1) * gap;
 
-        ReservedSpaceAmount = absSize.y = (children.Count - 1) * gap;
+        if (shareFreeSpace)
+        {
+            OccupiedSpaceAmount = totalGapAmount;
+        }
+
+        Vector2 size;
+        size.x = 0f;
+        size.y = totalGapAmount;
 
         foreach (var child in children)
         {
-            ReservedSpaceAmount += child.GetSize(Vector2.zero).y;
+            var childSize = child.GetSize(Vector2.positiveInfinity);
 
-            var childAbsSize = child.AbsSize;
+            size.x = Mathf.Max(size.x, childSize.x);
+            size.y += childSize.y;
 
-            absSize.x = Math.Max(absSize.x, childAbsSize.x);
-            absSize.y += childAbsSize.y;
+            if (shareFreeSpace)
+            {
+                OccupiedSpaceAmount += child.GetSize(Vector2.zero).y;
+            }
         }
 
-        AbsSize = absSize;
+        Size = size;
     }
-    public override void Draw(Rect rect, in Vector2 containerSize)
+    protected override void DrawContent(Rect rect)
     {
-        base.Draw(rect, containerSize);
+        var yMax = rect.yMax;
+        var size = rect.size;
+        size.y -= OccupiedSpaceAmount;
 
-        var rectSize = rect.size;
-        rectSize.y -= ReservedSpaceAmount;
+        // If container's size is undefined, its children have no base to calculate
+        // their relative dimensions from.
+        if (WidthIsUndef) size.x = float.PositiveInfinity;
+        if (HeightIsUndef) size.y = float.PositiveInfinity;
 
         foreach (var child in Children)
         {
-            rect.size = child.GetSize(rectSize);
-            child.Draw(rect, rectSize);
+            if (rect.y >= yMax) break;
+
+            rect.size = child.GetSize(size);
+
+            // This is for (future) scroll component.
+            if (rect.yMax > 0f)
+            {
+                child.Draw(rect, size);
+            }
 
             rect.y = rect.yMax + Gap;
         }

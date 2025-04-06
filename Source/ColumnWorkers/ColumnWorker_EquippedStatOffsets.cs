@@ -39,6 +39,6 @@ public class ColumnWorker_EquippedStatOffsets
         rightCol = new WidgetComp_Width_Rel(rightCol, 1f);
         rightCol = new WidgetComp_TextAnchor(rightCol, TextAnchor.LowerRight);
 
-        return new Widget_Container_Hor([leftCol, rightCol], 10f);
+        return new Widget_Container_Hor([leftCol, rightCol], 10f, true);
     }
 }

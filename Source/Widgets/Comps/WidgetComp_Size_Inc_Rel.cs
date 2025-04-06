@@ -29,17 +29,26 @@ public class WidgetComp_Size_Inc_Rel
     {
         Vector2 size = Widget.GetSize(containerSize);
 
-        size.x += (L + R) * containerSize.x;
-        size.y += (T + B) * containerSize.y;
+        if (containerSize.x < float.PositiveInfinity)
+            size.x += (L + R) * containerSize.x;
+        if (containerSize.y < float.PositiveInfinity)
+            size.y += (T + B) * containerSize.y;
 
         return size;
     }
     public override void Draw(Rect rect, in Vector2 containerSize)
     {
-        rect.x += L * containerSize.x;
-        rect.y += T * containerSize.y;
-        rect.width -= (L + R) * containerSize.x;
-        rect.height -= (T + B) * containerSize.y;
+        if (containerSize.x < float.PositiveInfinity)
+        {
+            rect.x += L * containerSize.x;
+            rect.width -= (L + R) * containerSize.x;
+        }
+
+        if (containerSize.y < float.PositiveInfinity)
+        {
+            rect.y += T * containerSize.y;
+            rect.height -= (T + B) * containerSize.y;
+        }
 
         Widget.Draw(rect, containerSize);
     }

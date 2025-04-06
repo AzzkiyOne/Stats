@@ -10,26 +10,23 @@ public class Widget_Container_Single
     : Widget
 {
     private readonly IWidget Widget;
-    private readonly float ReservedWidth = 0f;
-    private readonly float ReservedHeight = 0f;
-    public override Vector2 AbsSize { get; }
+    private readonly float OccupiedWidth = 0f;
+    private readonly float OccupiedHeight = 0f;
     public Widget_Container_Single(IWidget widget)
     {
         Widget = widget;
-        AbsSize = widget.AbsSize;
+        Size = widget.GetSize(Vector2.positiveInfinity);
 
         var widgetSize = widget.GetSize(Vector2.zero);
 
-        ReservedWidth = widgetSize.x;
-        ReservedHeight = widgetSize.y;
+        OccupiedWidth = widgetSize.x;
+        OccupiedHeight = widgetSize.y;
     }
-    public override void Draw(Rect rect, in Vector2 containerSize)
+    protected override void DrawContent(Rect rect)
     {
-        base.Draw(rect, containerSize);
-
         var rectSize = rect.size;
-        rectSize.x -= ReservedWidth;
-        rectSize.y -= ReservedHeight;
+        rectSize.x -= OccupiedWidth;
+        rectSize.y -= OccupiedHeight;
 
         rect.size = Widget.GetSize(rectSize);
         Widget.Draw(rect, rectSize);
