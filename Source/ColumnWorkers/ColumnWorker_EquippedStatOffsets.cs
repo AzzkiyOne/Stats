@@ -31,13 +31,12 @@ public class ColumnWorker_EquippedStatOffsets
             values.AppendInNewLine(offsetValueStr);
         }
 
-        IWidget
-        leftCol = new Widget_Label(labels.ToString());
-        leftCol = new WidgetComp_TextAnchor(leftCol, TextAnchor.LowerLeft);
-        IWidget
-        rightCol = new Widget_Label(values.ToString());
-        rightCol = new WidgetComp_Width_Rel(rightCol, 1f);
-        rightCol = new WidgetComp_TextAnchor(rightCol, TextAnchor.LowerRight);
+        IWidget leftCol = new Widget_Label(labels.ToString());
+        new WidgetComp_TextAnchor(ref leftCol, TextAnchor.LowerLeft);
+
+        IWidget rightCol = new Widget_Label(values.ToString());
+        new WidgetComp_Width_Rel(ref rightCol, 1f);
+        new WidgetComp_TextAnchor(ref rightCol, TextAnchor.LowerRight);
 
         return new Widget_Container_Hor([leftCol, rightCol], 10f, true);
     }

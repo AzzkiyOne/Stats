@@ -5,10 +5,12 @@ namespace Stats;
 public class Widget_Empty
     : Widget
 {
+    protected override Vector2 Size { get; set; }
     public Widget_Empty()
     {
+        Size = GetSize();
     }
-    protected override Vector2 GetSize()
+    public override Vector2 GetSize()
     {
         return Vector2.zero;
     }

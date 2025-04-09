@@ -8,22 +8,18 @@ public abstract class Widget
     : IWidget
 {
     public IWidget? Parent { private get; set; }
-    public bool WidthIsUndef { protected get; set; } = true;
-    public bool HeightIsUndef { protected get; set; } = true;
-    private Vector2 Size = Vector2.zero;
+    protected abstract Vector2 Size { get; set; }
     public Vector2 GetSize(in Vector2 containerSize)
     {
         return Size;
     }
-    protected abstract Vector2 GetSize();
+    public abstract Vector2 GetSize();
     public void Draw(Rect rect, in Vector2 containerSize)
     {
         DrawDebugInfo(rect);
         DrawContent(rect);
     }
     protected abstract void DrawContent(Rect rect);
-    // One thing to remember, is that derived classes call this method in their
-    // constructors to set their initial size.
     public void UpdateSize()
     {
         Size = GetSize();

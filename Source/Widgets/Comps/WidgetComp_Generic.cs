@@ -6,8 +6,8 @@ public class WidgetComp_Generic
     : WidgetComp
 {
     private readonly OnDrawCB OnDraw;
-    public WidgetComp_Generic(IWidget widget, OnDrawCB onDraw)
-        : base(widget)
+    public WidgetComp_Generic(ref IWidget widget, OnDrawCB onDraw)
+        : base(ref widget)
     {
         OnDraw = onDraw;
     }

@@ -18,33 +18,29 @@ public class StatsMainTabWindow
         UI.screenWidth,
         windowRect.height = UI.screenHeight - MainButtonDef.ButtonHeight
     );
-    private const float TitleBarHeight = 30f;
+    internal const float TitleBarHeight = 30f;
     internal static readonly Color BorderLineColor = new(1f, 1f, 1f, 0.4f);
-    private readonly Widget_WindowTitleBar TitleBar;
+    private readonly IWidget TitleBar;
     private readonly Widget_TableSelector TableSelector;
     public StatsMainTabWindow()
     {
         draggable = true;
         resizeable = true;
-        TableSelector = new();
-        TitleBar = new(TableSelector);
+
+        TableSelector = new Widget_TableSelector();
+        TitleBar = new Widget_WindowTitleBar(
+            TableSelector,
+            Reset,
+            ExpandOrCollapse,
+            () => Close()
+        );
+        new WidgetComp_Width_Rel(ref TitleBar, 1f);
     }
     public override void DoWindowContents(Rect targetRect)
     {
         Text.WordWrap = false;
 
-        switch (TitleBar.Draw(targetRect.CutByY(TitleBarHeight)))
-        {
-            case WindowTitleBarWidgetEvent.Minimize:
-                Minimize();
-                break;
-            case WindowTitleBarWidgetEvent.Expand:
-                ExpandOrCollapse();
-                break;
-            case WindowTitleBarWidgetEvent.Close:
-                Close();
-                break;
-        }
+        TitleBar.DrawIn(targetRect.CutByY(TitleBarHeight));
 
         TableSelector.CurTableDef.Widget.Draw(targetRect);
 
@@ -79,7 +75,7 @@ public class StatsMainTabWindow
             PreExpandRect = null;
         }
     }
-    private void Minimize()
+    private void Reset()
     {
         draggable = true;
         resizeable = true;

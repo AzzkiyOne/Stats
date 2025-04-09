@@ -6,18 +6,17 @@ public class WidgetComp_Height_Abs
     : WidgetComp
 {
     private readonly float Value;
-    public WidgetComp_Height_Abs(IWidget widget, float value)
-        : base(widget)
+    public WidgetComp_Height_Abs(ref IWidget widget, float value)
+        : base(ref widget)
     {
         Value = value;
-        widget.HeightIsUndef = false;
     }
     public override Vector2 GetSize(in Vector2 containerSize)
     {
-        Vector2 size = Widget.GetSize(containerSize);
-
-        size.y = Value;
-
-        return size;
+        return Widget.GetSize(containerSize) with { y = Value };
+    }
+    public override Vector2 GetSize()
+    {
+        return Widget.GetSize() with { y = Value };
     }
 }

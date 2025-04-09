@@ -18,10 +18,10 @@ internal class Widget_TableRow
     }
     public void AddCell(WidgetComp_TableCell cell)
     {
-        var cellAbsSize = cell.GetSize(Vector2.positiveInfinity);
+        var cellSize = cell.GetSize();
 
-        cell.Column.Width = Mathf.Max(cell.Column.Width, cellAbsSize.x);
-        Height = Mathf.Max(Height, cellAbsSize.y);
+        cell.Column.Width = Mathf.Max(cell.Column.Width, cellSize.x);
+        Height = Mathf.Max(Height, cellSize.y);
 
         _Cells.Add(cell);
     }

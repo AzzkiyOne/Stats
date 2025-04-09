@@ -6,6 +6,7 @@ namespace Stats;
 public class Widget_Container_Ver
     : Widget
 {
+    protected override Vector2 Size { get; set; }
     private readonly float Gap;
     private readonly List<IWidget> Children;
     private readonly bool ShareFreeSpace;
@@ -25,18 +26,14 @@ public class Widget_Container_Ver
             child.Parent = this;
         }
 
-        UpdateSize();
+        Size = GetSize();
     }
-    protected override Vector2 GetSize()
+    public override Vector2 GetSize()
     {
-        OccupiedSpaceAmount = 0f;
-
         var totalGapAmount = (Children.Count - 1) * Gap;
-
-        if (ShareFreeSpace)
-        {
-            OccupiedSpaceAmount = totalGapAmount;
-        }
+        // Total gap amount is not reserved in normal mode, because overflow may
+        // not happen when it should.
+        OccupiedSpaceAmount = ShareFreeSpace ? totalGapAmount : 0f;
 
         Vector2 size;
         size.x = 0f;
@@ -44,14 +41,14 @@ public class Widget_Container_Ver
 
         foreach (var child in Children)
         {
-            var childSize = child.GetSize(Vector2.positiveInfinity);
+            var childSize = child.GetSize();
 
             size.x = Mathf.Max(size.x, childSize.x);
             size.y += childSize.y;
 
             if (ShareFreeSpace)
             {
-                OccupiedSpaceAmount += child.GetSize(Vector2.zero).y;
+                OccupiedSpaceAmount += child.GetFixedSize().y;
             }
         }
 
@@ -61,12 +58,7 @@ public class Widget_Container_Ver
     {
         var yMax = rect.yMax;
         var size = rect.size;
-        size.y -= OccupiedSpaceAmount;
-
-        // If container's size is undefined, its children have no base to calculate
-        // their relative dimensions from.
-        if (WidthIsUndef) size.x = float.PositiveInfinity;
-        if (HeightIsUndef) size.y = float.PositiveInfinity;
+        size.y = Mathf.Max(size.y - OccupiedSpaceAmount, 0f);
 
         foreach (var child in Children)
         {

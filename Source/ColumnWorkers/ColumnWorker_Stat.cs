@@ -65,11 +65,11 @@ public class ColumnWorker_Stat
     {
         var valueStr = FormatValue(value, thing);
         var tooltip = GetValueExplanation(value, thing);
-        var widget = new Widget_Label(valueStr);
+        IWidget widget = new Widget_Label(valueStr);
 
-        if (tooltip != null)
+        if (tooltip?.Length > 0)
         {
-            return new WidgetComp_Tooltip(widget, tooltip);
+            new WidgetComp_Tooltip(ref widget, tooltip);
         }
 
         return widget;

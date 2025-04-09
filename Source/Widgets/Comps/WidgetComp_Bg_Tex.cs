@@ -6,8 +6,8 @@ public class WidgetComp_Bg_Tex
     : WidgetComp
 {
     private readonly Texture2D Tex;
-    public WidgetComp_Bg_Tex(IWidget widget, Texture2D tex)
-        : base(widget)
+    public WidgetComp_Bg_Tex(ref IWidget widget, Texture2D tex)
+        : base(ref widget)
     {
         Tex = tex;
     }

@@ -6,31 +6,38 @@ public class WidgetComp_Size_Inc_Abs
     : WidgetComp
 {
     private readonly float L;
-    private readonly float R;
     private readonly float T;
-    private readonly float B;
-    public WidgetComp_Size_Inc_Abs(IWidget widget, float l, float r, float t, float b)
-        : base(widget)
+    private readonly float Hor;
+    private readonly float Ver;
+    public WidgetComp_Size_Inc_Abs(ref IWidget widget, float l, float r, float t, float b)
+        : base(ref widget)
     {
         L = l;
-        R = r;
         T = t;
-        B = b;
+        Hor = l + r;
+        Ver = t + b;
     }
-    public WidgetComp_Size_Inc_Abs(IWidget widget, float hor, float ver)
-        : this(widget, hor, hor, ver, ver)
+    public WidgetComp_Size_Inc_Abs(ref IWidget widget, float hor, float ver)
+        : this(ref widget, hor, hor, ver, ver)
     {
     }
-    public WidgetComp_Size_Inc_Abs(IWidget widget, float amount)
-        : this(widget, amount, amount, amount, amount)
+    public WidgetComp_Size_Inc_Abs(ref IWidget widget, float amount)
+        : this(ref widget, amount, amount, amount, amount)
     {
     }
     public override Vector2 GetSize(in Vector2 containerSize)
     {
         Vector2 size = Widget.GetSize(containerSize);
+        size.x += Hor;
+        size.y += Ver;
 
-        size.x += L + R;
-        size.y += T + B;
+        return size;
+    }
+    public override Vector2 GetSize()
+    {
+        Vector2 size = Widget.GetSize();
+        size.x += Hor;
+        size.y += Ver;
 
         return size;
     }
@@ -38,8 +45,8 @@ public class WidgetComp_Size_Inc_Abs
     {
         rect.x += L;
         rect.y += T;
-        rect.width -= L + R;
-        rect.height -= T + B;
+        rect.width -= Hor;
+        rect.height -= Ver;
 
         Widget.Draw(rect, containerSize);
     }

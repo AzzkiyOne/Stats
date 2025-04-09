@@ -22,10 +22,6 @@ public static class Ext_UnityEngine_Rect
 
         return result;
     }
-    public static void PadLeft(ref this Rect rect, float amount)
-    {
-        rect.xMin += amount;
-    }
 }
 
 public static class Ext_VerbList
@@ -38,17 +34,14 @@ public static class Ext_VerbList
 
 public static class Ext_Widget
 {
+    // Doesn't include widget's "own" size.
+    public static Vector2 GetFixedSize(this IWidget widget)
+    {
+        return widget.GetSize(Vector2.zero);
+    }
     public static void DrawIn(this IWidget widget, Rect rect)
     {
         rect.size = widget.GetSize(rect.size);
         widget.Draw(rect, rect.size);
-    }
-    public static void ResizeRect(
-        this IWidget widget,
-        ref Rect rect,
-        in Vector2 containerSize
-    )
-    {
-        rect.size = widget.GetSize(containerSize);
     }
 }

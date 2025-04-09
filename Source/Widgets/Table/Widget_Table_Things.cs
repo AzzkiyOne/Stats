@@ -57,15 +57,15 @@ internal sealed class Widget_Table_Things
         if (column.Icon != null)
         {
             cell = new Widget_Texture(column.Icon);
-            cell = new WidgetComp_Size_Abs(cell, Text.LineHeight);
+            new WidgetComp_Size_Abs(ref cell, Text.LineHeight);
 
             if (column.Worker.CellStyle == ColumnCellStyle.Number)
             {
-                cell = new WidgetComp_Size_Inc_Rel(cell, 1f, 0f, 0f, 0f);
+                new WidgetComp_Size_Inc_Rel(ref cell, 1f, 0f, 0f, 0f);
             }
             else if (column.Worker.CellStyle == ColumnCellStyle.Boolean)
             {
-                cell = new WidgetComp_Size_Inc_Rel(cell, 0.5f, 0f);
+                new WidgetComp_Size_Inc_Rel(ref cell, 0.5f, 0f);
             }
 
             cell = new Widget_Container_Single(cell);
@@ -99,12 +99,12 @@ internal sealed class Widget_Table_Things
             }
         }
 
-        cell = new WidgetComp_Size_Inc_Abs(cell, cellPadHor, cellPadVer);
-        cell = new WidgetComp_Width_Rel(cell, 1f);
-        cell = new WidgetComp_Tooltip(cell, column.description);
-        cell = new WidgetComp_Bg_Tex_OnHover(cell, TexUI.HighlightTex);
-        cell = new WidgetComp_OnClick(cell, handleCellClick);
-        cell = new WidgetComp_Generic(cell, drawSortIndicator);
+        new WidgetComp_Size_Inc_Abs(ref cell, cellPadHor, cellPadVer);
+        new WidgetComp_Width_Rel(ref cell, 1f);
+        new WidgetComp_Tooltip(ref cell, column.description);
+        new WidgetComp_Bg_Tex_Hover(ref cell, TexUI.HighlightTex);
+        new WidgetComp_OnClick(ref cell, handleCellClick);
+        new WidgetComp_Generic(ref cell, drawSortIndicator);
 
         return new WidgetComp_TableCell_Normal(cell, columnProps, column.Worker.CellStyle);
     }
@@ -130,8 +130,8 @@ internal sealed class Widget_Table_Things
         }
         else
         {
-            cell = new WidgetComp_Size_Inc_Abs(cell, cellPadHor, cellPadVer);
-            cell = new WidgetComp_Width_Rel(cell, 1f);
+            new WidgetComp_Size_Inc_Abs(ref cell, cellPadHor, cellPadVer);
+            new WidgetComp_Width_Rel(ref cell, 1f);
 
             return new WidgetComp_TableCell_Normal(cell, columnProps, column.Worker.CellStyle);
         }

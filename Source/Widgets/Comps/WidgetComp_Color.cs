@@ -6,8 +6,8 @@ public class WidgetComp_Color
     : WidgetComp
 {
     public Color Color { get; set; }
-    public WidgetComp_Color(IWidget widget, Color color)
-        : base(widget)
+    public WidgetComp_Color(ref IWidget widget, Color color)
+        : base(ref widget)
     {
         Color = color;
     }

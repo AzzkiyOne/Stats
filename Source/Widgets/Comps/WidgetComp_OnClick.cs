@@ -10,8 +10,8 @@ public class WidgetComp_OnClick
 {
     private readonly Action CB;
     private readonly bool PlaySound;
-    public WidgetComp_OnClick(IWidget widget, Action cb, bool playSound = true)
-        : base(widget)
+    public WidgetComp_OnClick(ref IWidget widget, Action cb, bool playSound = true)
+        : base(ref widget)
     {
         CB = cb;
         PlaySound = playSound;

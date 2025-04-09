@@ -47,12 +47,11 @@ public class ColumnWorker_CreatedAt
                 Widget_DefInfoDialog.Draw(thingDef);
             }
 
-            IWidget
-            icon = new Widget_Icon_Thing(thingDef);
-            icon = new WidgetComp_Size_Abs(icon, Text.LineHeight);
-            icon = new WidgetComp_Tooltip(icon, thingDef.description);
-            icon = new WidgetComp_Bg_Tex_OnHover(icon, TexUI.HighlightTex);
-            icon = new WidgetComp_OnClick(icon, handleIconClick);
+            IWidget icon = new Widget_Icon_Thing(thingDef);
+            new WidgetComp_Size_Abs(ref icon, Text.LineHeight);
+            new WidgetComp_Tooltip(ref icon, thingDef.description);
+            new WidgetComp_Bg_Tex_Hover(ref icon, TexUI.HighlightTex);
+            new WidgetComp_OnClick(ref icon, handleIconClick);
 
             icons.Add(icon);
         }

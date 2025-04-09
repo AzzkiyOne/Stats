@@ -2,20 +2,18 @@
 
 namespace Stats;
 
-public abstract class WidgetComp
+public abstract class WidgetDecorator
     : IWidget
 {
     public IWidget? Parent { set => Widget.Parent = value; }
-    public bool WidthIsUndef { set => Widget.WidthIsUndef = value; }
-    public bool HeightIsUndef { set => Widget.HeightIsUndef = value; }
-    protected IWidget Widget { get; }
-    public WidgetComp(IWidget widget)
-    {
-        Widget = widget;
-    }
+    protected abstract IWidget Widget { get; }
     public virtual Vector2 GetSize(in Vector2 containerSize)
     {
         return Widget.GetSize(containerSize);
+    }
+    public virtual Vector2 GetSize()
+    {
+        return Widget.GetSize();
     }
     public virtual void Draw(Rect rect, in Vector2 containerSize)
     {
@@ -26,6 +24,3 @@ public abstract class WidgetComp
         Widget.UpdateSize();
     }
 }
-
-public delegate float SizeFunc_SingleAxis(in Vector2 containerSize);
-public delegate Vector2 SizeFunc_DoubleAxis(in Vector2 containerSize);

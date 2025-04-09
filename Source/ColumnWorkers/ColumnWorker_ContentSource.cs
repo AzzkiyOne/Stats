@@ -10,9 +10,8 @@ public class ColumnWorker_ContentSource
     protected override IWidget GetTableCellContent(string? value, ThingRec thing)
     {
         var tooltip = thing.Def.modContentPack.PackageIdPlayerFacing;
-        IWidget
-        widget = new Widget_Label(value!);
-        widget = new WidgetComp_Tooltip(widget, tooltip);
+        IWidget widget = new Widget_Label(value!);
+        new WidgetComp_Tooltip(ref widget, tooltip);
 
         return widget;
     }

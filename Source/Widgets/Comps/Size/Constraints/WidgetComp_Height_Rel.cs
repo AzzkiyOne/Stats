@@ -6,19 +6,13 @@ public class WidgetComp_Height_Rel
     : WidgetComp
 {
     private readonly float Mult;
-    public WidgetComp_Height_Rel(IWidget widget, float mult)
-        : base(widget)
+    public WidgetComp_Height_Rel(ref IWidget widget, float mult)
+        : base(ref widget)
     {
         Mult = mult;
-        widget.HeightIsUndef = false;
     }
     public override Vector2 GetSize(in Vector2 containerSize)
     {
-        Vector2 size = Widget.GetSize(containerSize);
-
-        if (containerSize.y < float.PositiveInfinity)
-            size.y = containerSize.y * Mult;
-
-        return size;
+        return Widget.GetSize(containerSize) with { y = containerSize.y * Mult };
     }
 }

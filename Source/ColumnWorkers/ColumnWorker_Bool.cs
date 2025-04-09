@@ -13,10 +13,9 @@ public abstract class ColumnWorker_Bool
     protected override IWidget GetTableCellContent(bool value, ThingRec thing)
     {
         var tex = Widgets.GetCheckboxTexture(value);
-        IWidget
-        icon = new Widget_Texture(tex);
-        icon = new WidgetComp_Size_Abs(icon, Text.LineHeight);
-        icon = new WidgetComp_Size_Inc_Rel(icon, 0.5f, 0f);
+        IWidget icon = new Widget_Texture(tex);
+        new WidgetComp_Size_Abs(ref icon, Text.LineHeight);
+        new WidgetComp_Size_Inc_Rel(ref icon, 0.5f, 0f);
 
         return new Widget_Container_Single(icon);
     }

@@ -5,7 +5,7 @@ using Verse;
 namespace Stats;
 
 internal sealed class Widget_TableSelector
-    : Widget
+    : WidgetDecorator
 {
     private TableDef _CurTableDef = TableDefOf.RangedWeapons;
     public TableDef CurTableDef
@@ -15,40 +15,36 @@ internal sealed class Widget_TableSelector
         {
             _CurTableDef = value;
             Icon.Tex = value.Icon;
-            IconColor.Color = value.IconColor;
+            IconColorComp.Color = value.IconColor;
             Label.Text = value.LabelCap;
         }
     }
     private readonly FloatMenu Menu;
     private readonly Widget_Texture Icon;
-    private readonly WidgetComp_Color IconColor;
+    private readonly WidgetComp_Color IconColorComp;
     private readonly Widget_Label Label;
-    private readonly IWidget Button;
+    protected override IWidget Widget { get; }
     public Widget_TableSelector()
         : base()
     {
-        IWidget
-        icon =
-        Icon = new Widget_Texture(CurTableDef.Icon);
-        icon = new WidgetComp_Width_Abs(icon, Text.LineHeight);
-        icon = new WidgetComp_Height_Rel(icon, 1f);
-        icon =
-        IconColor = new WidgetComp_Color(icon, CurTableDef.IconColor);
-        IWidget
-        label =
-        Label = new Widget_Label(CurTableDef.LabelCap);
-        label = new WidgetComp_Height_Rel(label, 1f);
-        label = new WidgetComp_TextAnchor(label, TextAnchor.MiddleLeft);
+        IWidget icon = Icon = new Widget_Texture(CurTableDef.Icon, 0.9f);
+        new WidgetComp_Size_Abs(ref icon, StatsMainTabWindow.TitleBarHeight);
+        IconColorComp =
+        new WidgetComp_Color(ref icon, CurTableDef.IconColor);
 
-        Button = new Widget_Container_Hor([icon, label], GenUI.Pad);
-        Button = new WidgetComp_Size_Inc_Abs(Button, GenUI.Pad, 0f);
-        Button = new WidgetComp_Height_Rel(Button, 1f);
-        Button = new WidgetComp_Bg_Tex_Alt(Button,
+        IWidget label = Label = new Widget_Label(CurTableDef.LabelCap);
+        new WidgetComp_Height_Abs(ref label, StatsMainTabWindow.TitleBarHeight);
+        new WidgetComp_TextAnchor(ref label, TextAnchor.MiddleLeft);
+
+        IWidget button = new Widget_Container_Hor([icon, label], GenUI.Pad);
+        new WidgetComp_Size_Inc_Abs(ref button, GenUI.Pad, 0f);
+        new WidgetComp_Bg_Tex_Alt(ref button,
             Widgets.LightHighlight,
             TexUI.HighlightTex
         );
-        Button = new WidgetComp_OnClick(Button, ShowMenu);
-        Button.Parent = this;
+        new WidgetComp_OnClick(ref button, ShowMenu);
+
+        Widget = button;
 
         var menuOptions =
             DefDatabase<TableDef>
@@ -62,16 +58,6 @@ internal sealed class Widget_TableSelector
             .OrderBy(opt => opt.Label)
             .ToList();
         Menu = new(menuOptions);
-
-        UpdateSize();
-    }
-    protected override Vector2 GetSize()
-    {
-        return Button.GetSize(Vector2.positiveInfinity);
-    }
-    protected override void DrawContent(Rect rect)
-    {
-        Button.DrawIn(rect);
     }
     private void ShowMenu()
     {

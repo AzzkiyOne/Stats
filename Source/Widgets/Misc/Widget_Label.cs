@@ -8,6 +8,7 @@ namespace Stats;
 public sealed class Widget_Label
     : Widget
 {
+    protected override Vector2 Size { get; set; }
     private string _Text;
     public string Text
     {
@@ -20,9 +21,10 @@ public sealed class Widget_Label
     }
     public Widget_Label(string text)
     {
-        Text = text;
+        _Text = text;
+        Size = GetSize();
     }
-    protected override Vector2 GetSize()
+    public override Vector2 GetSize()
     {
         return Verse.Text.CalcSize(Text);
     }

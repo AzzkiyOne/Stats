@@ -7,8 +7,8 @@ public class WidgetComp_Tooltip
     : WidgetComp
 {
     private readonly string Text;
-    public WidgetComp_Tooltip(IWidget widget, string text)
-        : base(widget)
+    public WidgetComp_Tooltip(ref IWidget widget, string text)
+        : base(ref widget)
     {
         Text = text;
     }

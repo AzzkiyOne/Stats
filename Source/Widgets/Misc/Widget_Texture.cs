@@ -7,14 +7,16 @@ namespace Stats;
 public class Widget_Texture
     : Widget
 {
+    protected override Vector2 Size { get; set; }
     public Texture2D Tex { get; set; }
     private readonly float Scale;
     public Widget_Texture(Texture2D tex, float scale = 1f)
     {
         Tex = tex;
         Scale = scale;
+        Size = GetSize();
     }
-    protected override Vector2 GetSize()
+    public override Vector2 GetSize()
     {
         return Vector2.zero;
     }

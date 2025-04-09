@@ -7,6 +7,7 @@ namespace Stats;
 public class Widget_Container_Hor
     : Widget
 {
+    protected override Vector2 Size { get; set; }
     private readonly float Gap;
     private readonly List<IWidget> Children;
     private readonly bool ShareFreeSpace;
@@ -26,18 +27,13 @@ public class Widget_Container_Hor
             child.Parent = this;
         }
 
-        UpdateSize();
+        Size = GetSize();
     }
-    protected override Vector2 GetSize()
+    public override Vector2 GetSize()
     {
-        OccupiedSpaceAmount = 0f;
-
         var totalGapAmount = (Children.Count - 1) * Gap;
 
-        if (ShareFreeSpace)
-        {
-            OccupiedSpaceAmount = totalGapAmount;
-        }
+        OccupiedSpaceAmount = ShareFreeSpace ? totalGapAmount : 0f;
 
         Vector2 size;
         size.x = totalGapAmount;
@@ -45,14 +41,14 @@ public class Widget_Container_Hor
 
         foreach (var child in Children)
         {
-            var childSize = child.GetSize(Vector2.positiveInfinity);
+            var childSize = child.GetSize();
 
             size.x += childSize.x;
             size.y = Mathf.Max(size.y, childSize.y);
 
             if (ShareFreeSpace)
             {
-                OccupiedSpaceAmount += child.GetSize(Vector2.zero).x;
+                OccupiedSpaceAmount += child.GetFixedSize().x;
             }
         }
 
@@ -62,10 +58,7 @@ public class Widget_Container_Hor
     {
         var xMax = rect.xMax;
         var size = rect.size;
-        size.x -= OccupiedSpaceAmount;
-
-        if (WidthIsUndef) size.x = float.PositiveInfinity;
-        if (HeightIsUndef) size.y = float.PositiveInfinity;
+        size.x = Mathf.Max(size.x - OccupiedSpaceAmount, 0f);
 
         foreach (var child in Children)
         {

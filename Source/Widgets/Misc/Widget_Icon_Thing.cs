@@ -7,6 +7,7 @@ namespace Stats;
 public class Widget_Icon_Thing
     : Widget
 {
+    protected override Vector2 Size { get; set; }
     private readonly Texture2D Texture;
     private readonly Color Color;
     private readonly Vector2 Proportions;
@@ -57,8 +58,10 @@ public class Widget_Icon_Thing
         {
             Proportions = new Vector2(Texture.width, Texture.height);
         }
+
+        Size = GetSize();
     }
-    protected override Vector2 GetSize()
+    public override Vector2 GetSize()
     {
         return Vector2.zero;
     }

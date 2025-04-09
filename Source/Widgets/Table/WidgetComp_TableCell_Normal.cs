@@ -6,8 +6,6 @@ namespace Stats;
 internal sealed class WidgetComp_TableCell_Normal
     : WidgetComp_TableCell
 {
-    public override bool WidthIsUndef { set => Widget.WidthIsUndef = value; }
-    public override bool HeightIsUndef { set => Widget.WidthIsUndef = value; }
     public override IWidget? Parent { set => Widget.Parent = value; }
     private readonly IWidget Widget;
     private readonly TextAnchor TextAnchor;
@@ -24,6 +22,10 @@ internal sealed class WidgetComp_TableCell_Normal
     public override Vector2 GetSize(in Vector2 containerSize)
     {
         return Widget.GetSize(containerSize);
+    }
+    public override Vector2 GetSize()
+    {
+        return Widget.GetSize();
     }
     public override void Draw(Rect rect, in Vector2 containerSize)
     {

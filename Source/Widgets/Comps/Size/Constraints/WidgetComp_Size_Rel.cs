@@ -7,26 +7,21 @@ public class WidgetComp_Size_Rel
 {
     private readonly float WidthMult;
     private readonly float HeightMult;
-    public WidgetComp_Size_Rel(IWidget widget, float widthMult, float heightMult)
-        : base(widget)
+    public WidgetComp_Size_Rel(ref IWidget widget, float widthMult, float heightMult)
+        : base(ref widget)
     {
         WidthMult = widthMult;
         HeightMult = heightMult;
-        widget.WidthIsUndef = false;
-        widget.HeightIsUndef = false;
     }
-    public WidgetComp_Size_Rel(IWidget widget, float sizeMult)
-        : this(widget, sizeMult, sizeMult)
+    public WidgetComp_Size_Rel(ref IWidget widget, float sizeMult)
+        : this(ref widget, sizeMult, sizeMult)
     {
     }
     public override Vector2 GetSize(in Vector2 containerSize)
     {
-        Vector2 size = Widget.GetSize(containerSize);
-
-        if (containerSize.x < float.PositiveInfinity)
-            size.x = WidthMult * containerSize.x;
-        if (containerSize.y < float.PositiveInfinity)
-            size.y = HeightMult * containerSize.y;
+        Vector2 size;
+        size.x = WidthMult * containerSize.x;
+        size.y = HeightMult * containerSize.y;
 
         return size;
     }

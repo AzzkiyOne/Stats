@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using Verse;
 
 namespace Stats;
@@ -6,85 +7,82 @@ namespace Stats;
 // Just to make RW stop throwing warning regarding assets loading.
 [StaticConstructorOnStartup]
 internal sealed class Widget_WindowTitleBar
-    : Widget
+    : WidgetDecorator
 {
-    private readonly IWidget TableSelector;
     private static readonly Texture2D HoldToDragTex;
     private const string Manual = "- Click on the title bar to select a table.\n- Click on any row to select it. You can select multiple rows.\n- Press \"Alt\" to compare selected rows.\n- Hold \"Ctrl\" to scroll horizontally.";
-    public Widget_WindowTitleBar(IWidget tableSelector)
+    protected override IWidget Widget { get; }
+    public Widget_WindowTitleBar(
+        IWidget tableSelector,
+        Action onReset,
+        Action onExpand,
+        Action onClose
+    )
     {
-        TableSelector = tableSelector;
-    }
-    public WindowTitleBarWidgetEvent? Draw(Rect targetRect)
-    {
-        var buttonWidth = targetRect.height;
-        var labelWidth = targetRect.width - buttonWidth * 5;
-        WindowTitleBarWidgetEvent? Event = null;
+        const float iconHeight = StatsMainTabWindow.TitleBarHeight;
+        const float iconScale = 0.9f;
 
-        Widgets.DrawLightHighlight(targetRect);
+        new WidgetComp_Size_Inc_Rel(ref tableSelector, 0f, 1f, 0f, 0f);
+
+        IWidget dragIcon = new Widget_Texture(HoldToDragTex, iconScale);
+        new WidgetComp_Size_Abs(ref dragIcon, iconHeight);
+        new WidgetComp_Tooltip(ref dragIcon, "Hold to drag the window");
+
+        IWidget infoIcon = new Widget_Texture(TexButton.Info, iconScale);
+        new WidgetComp_Size_Abs(ref infoIcon, iconHeight);
+        new WidgetComp_Tooltip(ref infoIcon, Manual);
+
+        IWidget resetBtn = new Widget_Texture(TexButton.Reveal, iconScale);// angle: 90f
+        new WidgetComp_Size_Abs(ref resetBtn, iconHeight);
+        new WidgetComp_OnClick(ref resetBtn, onReset);
+        new WidgetComp_Tooltip(ref resetBtn, "Reset window");
+        new WidgetComp_Bg_Tex_Hover(ref resetBtn, Widgets.LightHighlight);
+        new WidgetComp_Color_Hover(ref resetBtn);
+
+        IWidget expandBtn = new Widget_Texture(TexButton.ShowZones, iconScale);// angle: 90f
+        new WidgetComp_Size_Abs(ref expandBtn, iconHeight);
+        new WidgetComp_OnClick(ref expandBtn, onExpand);
+        new WidgetComp_Tooltip(ref expandBtn, "Expand window");
+        new WidgetComp_Bg_Tex_Hover(ref expandBtn, Widgets.LightHighlight);
+        new WidgetComp_Color_Hover(ref expandBtn);
+
+        IWidget closeBtn = new Widget_Texture(TexButton.CloseXSmall, iconScale - 0.1f);
+        new WidgetComp_Size_Abs(ref closeBtn, iconHeight);
+        new WidgetComp_OnClick(ref closeBtn, onClose);
+        new WidgetComp_Tooltip(ref closeBtn, "Close");
+        new WidgetComp_Bg_Tex_Hover(ref closeBtn, Widgets.LightHighlight);
+        new WidgetComp_Color_Hover(ref closeBtn);
+
+        IWidget container = new Widget_Container_Hor(
+            [
+                tableSelector,
+                dragIcon,
+                infoIcon,
+                resetBtn,
+                expandBtn,
+                closeBtn,
+            ],
+            GenUI.Pad,
+            true
+        );
+        new WidgetComp_Bg_Tex(ref container, Widgets.LightHighlight);
+
+        Widget = container;
+    }
+    public override void Draw(Rect rect, in Vector2 containerSize)
+    {
         Widgets.DrawLineHorizontal(
-            targetRect.x,
-            targetRect.yMax,
-            targetRect.width,
+            rect.x,
+            rect.yMax,
+            rect.width,
             StatsMainTabWindow.BorderLineColor
         );
-        TableSelector.DrawIn(targetRect.CutByX(labelWidth));
-        var rect = targetRect.CutByX(buttonWidth);
-        Widgets.DrawTextureFitted(rect, HoldToDragTex, 1f);
-        TooltipHandler.TipRegion(rect, "Hold to drag the window.");
-        Widgets.ButtonImage(
-            targetRect.CutByX(buttonWidth),
-            TexButton.Info,
-            tooltip: Manual
-        );
 
-        if (Widget_ButtonImage.Draw(
-            targetRect.CutByX(buttonWidth),
-            TexButton.Reveal,
-            angle: 90f
-        ))
-        {
-            Event = WindowTitleBarWidgetEvent.Minimize;
-        }
-
-        if (Widget_ButtonImage.Draw(
-            targetRect.CutByX(buttonWidth),
-            TexButton.ShowZones,
-            "Maximize/restore window",
-            90f
-        ))
-        {
-            Event = WindowTitleBarWidgetEvent.Expand;
-        }
-
-        if (Widgets.ButtonImageFitted(
-            targetRect.CutByX(buttonWidth),
-            TexButton.CloseXSmall
-        ))
-        {
-            Event = WindowTitleBarWidgetEvent.Close;
-        }
-
-        return Event;
-    }
-    protected override Vector2 GetSize()
-    {
-        throw new System.NotImplementedException();
-    }
-    protected override void DrawContent(Rect rect)
-    {
-        throw new System.NotImplementedException();
+        Widget.Draw(rect, containerSize);
     }
 
     static Widget_WindowTitleBar()
     {
         HoldToDragTex = ContentFinder<Texture2D>.Get("UI/Icons/Trainables/Tameness");
     }
-}
-
-internal enum WindowTitleBarWidgetEvent
-{
-    Minimize,
-    Expand,
-    Close,
 }

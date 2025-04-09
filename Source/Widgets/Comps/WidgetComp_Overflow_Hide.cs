@@ -5,8 +5,8 @@ namespace Stats;
 public class WidgetComp_Overflow_Hide
     : WidgetComp
 {
-    public WidgetComp_Overflow_Hide(IWidget widget)
-        : base(widget)
+    public WidgetComp_Overflow_Hide(ref IWidget widget)
+        : base(ref widget)
     {
     }
     public override void Draw(Rect rect, in Vector2 containerSize)

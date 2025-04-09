@@ -9,11 +9,11 @@ public class WidgetComp_Bg_Tex_Alt
     private readonly Texture2D TexIdle;
     private readonly Texture2D TexHover;
     public WidgetComp_Bg_Tex_Alt(
-        IWidget widget,
+        ref IWidget widget,
         Texture2D texIdle,
         Texture2D texHover
     )
-        : base(widget)
+        : base(ref widget)
     {
         TexIdle = texIdle;
         TexHover = texHover;

@@ -2,13 +2,10 @@
 
 namespace Stats;
 
-// This is mainly for wrapping non-containers to apply padding.
-// 
-// For example, Widget_Icon has content size of 0. Although we can probably
-// measure a texture, using its size as content size would be unpractical.
 public class Widget_Container_Single
     : Widget
 {
+    protected override Vector2 Size { get; set; }
     private readonly IWidget Widget;
     private readonly float OccupiedWidth = 0f;
     private readonly float OccupiedHeight = 0f;
@@ -17,24 +14,23 @@ public class Widget_Container_Single
         Widget = widget;
         widget.Parent = this;
 
-        var widgetSize = widget.GetSize(Vector2.zero);
+        var widgetSize = widget.GetFixedSize();
 
         OccupiedWidth = widgetSize.x;
         OccupiedHeight = widgetSize.y;
-
-        UpdateSize();
+        Size = GetSize();
     }
-    protected override Vector2 GetSize()
+    public override Vector2 GetSize()
     {
-        return Widget.GetSize(Vector2.positiveInfinity);
+        return Widget.GetSize();
     }
     protected override void DrawContent(Rect rect)
     {
-        var rectSize = rect.size;
-        rectSize.x -= OccupiedWidth;
-        rectSize.y -= OccupiedHeight;
+        var size = rect.size;
+        size.x = Mathf.Max(size.x - OccupiedWidth, 0f);
+        size.y = Mathf.Max(size.y - OccupiedHeight, 0f);
 
-        rect.size = Widget.GetSize(rectSize);
-        Widget.Draw(rect, rectSize);
+        rect.size = Widget.GetSize(size);
+        Widget.Draw(rect, size);
     }
 }
