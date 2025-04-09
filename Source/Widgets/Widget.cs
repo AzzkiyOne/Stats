@@ -1,6 +1,4 @@
-﻿using System.Diagnostics;
-using UnityEngine;
-using Verse;
+﻿using UnityEngine;
 
 namespace Stats;
 
@@ -16,7 +14,7 @@ public abstract class Widget
     public abstract Vector2 GetSize();
     public void Draw(Rect rect, in Vector2 containerSize)
     {
-        DrawDebugInfo(rect);
+        GUIDebugger.DebugRect(this, rect);
         DrawContent(rect);
     }
     protected abstract void DrawContent(Rect rect);
@@ -26,24 +24,4 @@ public abstract class Widget
 
         Parent?.UpdateSize();
     }
-    [Conditional("DEBUG")]
-    private void DrawDebugInfo(Rect rect)
-    {
-        if (Event.current.control && Mouse.IsOver(rect))
-        {
-            Widgets.DrawRectFast(rect, Color.cyan.ToTransparent(0.3f));
-            //WriteDebugLine(this, $"{rect.width} x {rect.height}");
-            //DebugInfoLines.Reverse();
-            //TooltipHandler.TipRegion(rect, string.Join("\n", DebugInfoLines));
-            TooltipHandler.TipRegion(rect, $"{GetType().Name}: {rect.width} x {rect.height} ({rect.x}, {rect.y})");
-        }
-
-        //DebugInfoLines.Clear();
-    }
-    //[Conditional("DEBUG")]
-    //public static void WriteDebugLine(IWidget widget, string info)
-    //{
-    //    DebugInfoLines.Add($"{widget.GetType().Name}: {info}");
-    //}
-    //private static readonly List<string> DebugInfoLines = new(20);
 }

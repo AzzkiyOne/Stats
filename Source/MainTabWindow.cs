@@ -36,13 +36,15 @@ public class StatsMainTabWindow
         );
         new WidgetComp_Width_Rel(ref TitleBar, 1f);
     }
-    public override void DoWindowContents(Rect targetRect)
+    public override void DoWindowContents(Rect rect)
     {
         Text.WordWrap = false;
 
-        TitleBar.DrawIn(targetRect.CutByY(TitleBarHeight));
+        TitleBar.Draw(rect.TopPartPixels(TitleBarHeight), rect.size);
 
-        TableSelector.CurTableDef.Widget.Draw(targetRect);
+        TableSelector.CurTableDef.Widget.Draw(rect.BottomPartPixels(rect.height - TitleBarHeight));
+
+        GUIDebugger.DrawDebugInfo(rect);
 
         Text.WordWrap = true;
     }

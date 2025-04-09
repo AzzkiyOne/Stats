@@ -35,6 +35,8 @@ public class WidgetComp_Size_Inc_Rel
     }
     public override void Draw(Rect rect, in Vector2 containerSize)
     {
+        GUIDebugger.DebugRect(this, rect);
+
         rect.x += L * containerSize.x;
         rect.y += T * containerSize.y;
         rect.width -= Hor * containerSize.x;

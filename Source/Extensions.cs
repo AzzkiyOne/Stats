@@ -32,7 +32,7 @@ public static class Ext_VerbList
     }
 }
 
-public static class Ext_Widget
+public static class Widget_Ext
 {
     // Doesn't include widget's "own" size.
     public static Vector2 GetFixedSize(this IWidget widget)
@@ -43,5 +43,19 @@ public static class Ext_Widget
     {
         rect.size = widget.GetSize(rect.size);
         widget.Draw(rect, rect.size);
+    }
+}
+
+public static class String_Ext
+{
+    public static Color ToUniqueColorRGB(this string str)
+    {
+        // I don't think that this hash is very reliable.
+        var hash = (uint)str.GetHashCode();
+        var r = ((hash & 0xFF000000) >> 24) / 255f;
+        var g = ((hash & 0x00FF0000) >> 16) / 255f;
+        var b = ((hash & 0x0000FF00) >> 8) / 255f;
+
+        return new Color(r, g, b);
     }
 }

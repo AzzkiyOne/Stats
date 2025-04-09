@@ -3,7 +3,7 @@ using Verse;
 
 namespace Stats;
 
-// Maybe text shouldn't be a widget, but rather just a text node with "Size" prop?
+// Maybe text shouldn't be a widget, but rather just a text node with "ContentSize" prop?
 // You can't set a width of a text. It must always have the width based on the text.
 public sealed class Widget_Label
     : Widget
