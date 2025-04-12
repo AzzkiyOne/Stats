@@ -11,7 +11,8 @@
 
     <Stats.ColumnDef>
         <defName>WeaponRanged_StoppingPower</defName>
-        <label>power</label>
+        <labelKey>StoppingPower</labelKey>
+        <labelShort>Power</labelShort>
         <descriptionKey>StoppingPowerExplanation</descriptionKey>
         <iconPath>UI/Icons/Trainables/Obedience</iconPath>
         <workerClass>Stats.ColumnWorker_WeaponRanged_StoppingPower</workerClass>
@@ -20,7 +21,8 @@
 
     <Stats.ColumnDef>
         <defName>WeaponRanged_ArmorPenetration</defName>
-        <label>AP</label>
+        <labelKey>ArmorPenetration</labelKey>
+        <labelShort>AP</labelShort>
         <descriptionKey>ArmorPenetrationExplanation</descriptionKey>
         <workerClass>Stats.ColumnWorker_WeaponRanged_ArmorPenetration</workerClass>
         <formatString>0%</formatString>
@@ -36,7 +38,8 @@
 
     <Stats.ColumnDef>
         <defName>WeaponRanged_BurstShotCount</defName>
-        <label>BSC</label>
+        <labelKey>BurstShotCount</labelKey>
+        <labelShort>BSC</labelShort>
         <descriptionKey>Stat_Thing_Weapon_BurstShotCount_Desc</descriptionKey>
         <workerClass>Stats.ColumnWorker_WeaponRanged_BurstShotCount</workerClass>
         <formatString>0</formatString>
@@ -52,35 +55,35 @@
 
     <Stats.ColumnDef>
         <defName>WeaponRanged_AccuracyTouch</defName>
-        <label>acc. (3)</label>
+        <labelShort>Acc. (3)</labelShort>
         <stat>AccuracyTouch</stat>
         <workerClass>Stats.ColumnWorker_Stat</workerClass>
     </Stats.ColumnDef>
 
     <Stats.ColumnDef>
         <defName>WeaponRanged_AccuracyShort</defName>
-        <label>acc. (12)</label>
+        <labelShort>Acc. (12)</labelShort>
         <stat>AccuracyShort</stat>
         <workerClass>Stats.ColumnWorker_Stat</workerClass>
     </Stats.ColumnDef>
 
     <Stats.ColumnDef>
         <defName>WeaponRanged_AccuracyMedium</defName>
-        <label>acc. (25)</label>
+        <labelShort>Acc. (25)</labelShort>
         <stat>AccuracyMedium</stat>
         <workerClass>Stats.ColumnWorker_Stat</workerClass>
     </Stats.ColumnDef>
 
     <Stats.ColumnDef>
         <defName>WeaponRanged_AccuracyLong</defName>
-        <label>acc. (40)</label>
+        <labelShort>Acc. (40)</labelShort>
         <stat>AccuracyLong</stat>
         <workerClass>Stats.ColumnWorker_Stat</workerClass>
     </Stats.ColumnDef>
 
     <Stats.ColumnDef>
         <defName>WeaponRanged_Cooldown</defName>
-        <label>RCD</label>
+        <labelShort>RCD</labelShort>
         <stat>RangedWeapon_Cooldown</stat>
         <isNegative>true</isNegative>
         <workerClass>Stats.ColumnWorker_Stat</workerClass>
@@ -88,7 +91,8 @@
 
     <Stats.ColumnDef>
         <defName>WeaponRanged_AimingTime</defName>
-        <label>Aim t.</label>
+        <labelKey>RangedWarmupTime</labelKey>
+        <labelShort>Aim t.</labelShort>
         <descriptionKey>Stat_Thing_Weapon_RangedWarmupTime_Desc</descriptionKey>
         <isNegative>true</isNegative>
         <workerClass>Stats.ColumnWorker_WeaponRanged_AimingTime</workerClass>
@@ -97,7 +101,8 @@
 
     <Stats.ColumnDef>
         <defName>WeaponRanged_BuildingDamageFactor_Passable</defName>
-        <label>BDF (P)</label>
+        <labelKey>BuildingDamageFactorPassable</labelKey>
+        <labelShort>BDF (P)</labelShort>
         <descriptionKey>BuildingDamageFactorPassableExplanation</descriptionKey>
         <workerClass>Stats.ColumnWorker_WeaponRanged_BuildingDamageFactor_Passable</workerClass>
         <formatString>0%</formatString>
@@ -105,7 +110,8 @@
 
     <Stats.ColumnDef>
         <defName>WeaponRanged_BuildingDamageFactor_Impassable</defName>
-        <label>BDF (I)</label>
+        <labelKey>BuildingDamageFactorImpassable</labelKey>
+        <labelShort>BDF (I)</labelShort>
         <descriptionKey>BuildingDamageFactorImpassableExplanation</descriptionKey>
         <workerClass>Stats.ColumnWorker_WeaponRanged_BuildingDamageFactor_Impassable</workerClass>
         <formatString>0%</formatString>
@@ -113,7 +119,8 @@
 
     <Stats.ColumnDef>
         <defName>WeaponRanged_DirectHitChance</defName>
-        <label>DH %</label>
+        <labelKey>DirectHitChance</labelKey>
+        <labelShort>DH %</labelShort>
         <descriptionKey>Stat_Thing_Weapon_DirectHitChance_Desc</descriptionKey>
         <workerClass>Stats.ColumnWorker_WeaponRanged_DirectHitChance</workerClass>
         <formatString>0.0%</formatString>
@@ -121,7 +128,8 @@
 
     <Stats.ColumnDef>
         <defName>WeaponRanged_MissRadius</defName>
-        <label>MR</label>
+        <labelKey>MissRadius</labelKey>
+        <labelShort>MR</labelShort>
         <descriptionKey>Stat_Thing_Weapon_MissRadius_Desc</descriptionKey>
         <isNegative>true</isNegative>
         <workerClass>Stats.ColumnWorker_WeaponRanged_MissRadius</workerClass>

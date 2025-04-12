@@ -63,7 +63,7 @@ public class Widget_Icon_Thing
     }
     public override Vector2 GetSize()
     {
-        return Vector2.zero;
+        return new Vector2(Text.LineHeight, Text.LineHeight);
     }
     protected override void DrawContent(Rect rect)
     {

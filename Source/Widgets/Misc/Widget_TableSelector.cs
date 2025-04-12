@@ -20,14 +20,14 @@ internal sealed class Widget_TableSelector
         }
     }
     private readonly FloatMenu Menu;
-    private readonly Widget_Texture Icon;
+    private readonly Widget_Icon Icon;
     private readonly WidgetComp_Color IconColorComp;
     private readonly Widget_Label Label;
     protected override IWidget Widget { get; }
     public Widget_TableSelector()
         : base()
     {
-        IWidget icon = Icon = new Widget_Texture(CurTableDef.Icon, 0.9f);
+        IWidget icon = Icon = new Widget_Icon(CurTableDef.Icon, 0.9f);
         new WidgetComp_Size_Abs(ref icon, StatsMainTabWindow.TitleBarHeight);
         IconColorComp =
         new WidgetComp_Color(ref icon, CurTableDef.IconColor);

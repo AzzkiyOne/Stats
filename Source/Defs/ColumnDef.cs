@@ -10,6 +10,7 @@ public class ColumnDef
 {
     public StatDef? stat;
     public string? labelKey;
+    public string? labelShort;
     public string? descriptionKey;
     public string? iconPath;
     public string? formatString;
@@ -59,6 +60,11 @@ public class ColumnDef
             {
                 description = stat.description;
             }
+        }
+
+        if (string.IsNullOrEmpty(labelShort))
+        {
+            labelShort = LabelCap;
         }
 
         Worker = (IColumnWorker)Activator.CreateInstance(workerClass);

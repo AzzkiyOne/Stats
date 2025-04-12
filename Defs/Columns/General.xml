@@ -3,14 +3,14 @@
 
     <Stats.ColumnDef>
         <defName>MarketValue</defName>
-        <label>$$$</label>
+        <labelShort>$$$</labelShort>
         <stat>MarketValue</stat>
         <workerClass>Stats.ColumnWorker_Stat</workerClass>
     </Stats.ColumnDef>
 
     <Stats.ColumnDef>
         <defName>MaxHitPoints</defName>
-        <label>max HP</label>
+        <labelShort>Max HP</labelShort>
         <stat>MaxHitPoints</stat>
         <workerClass>Stats.ColumnWorker_Stat</workerClass>
     </Stats.ColumnDef>
@@ -41,7 +41,7 @@
 
     <Stats.ColumnDef>
         <defName>WorkToMake</defName>
-        <label>work</label>
+        <labelShort>Work</labelShort>
         <stat>WorkToMake</stat>
         <isNegative>true</isNegative>
         <workerClass>Stats.ColumnWorker_Stat</workerClass>
@@ -55,7 +55,7 @@
 
     <Stats.ColumnDef>
         <defName>SellPriceFactor</defName>
-        <label>$$$ %</label>
+        <labelShort>$$$ %</labelShort>
         <stat>SellPriceFactor</stat>
         <isNegative>true</isNegative>
         <workerClass>Stats.ColumnWorker_Stat</workerClass>
@@ -63,7 +63,7 @@
 
     <Stats.ColumnDef>
         <defName>DeteriorationRate</defName>
-        <label>-HP / d</label>
+        <labelShort>-HP / d</labelShort>
         <stat>DeteriorationRate</stat>
         <isNegative>true</isNegative>
         <workerClass>Stats.ColumnWorker_Stat</workerClass>
@@ -78,7 +78,6 @@
 
     <Stats.ColumnDef>
         <defName>Food_Nutrition</defName>
-        <label>nutrition</label>
         <stat>Nutrition</stat>
         <workerClass>Stats.ColumnWorker_Stat</workerClass>
     </Stats.ColumnDef>

@@ -3,7 +3,7 @@
 
     <Stats.ColumnDef>
         <defName>CE_Apparel_Worn_Bulk</defName>
-        <label>bulk (W)</label>
+        <labelShort>Bulk (W)</labelShort>
         <stat>WornBulk</stat>
         <isNegative>true</isNegative>
         <workerClass>Stats.ColumnWorker_Stat</workerClass>
@@ -11,7 +11,7 @@
 
     <Stats.ColumnDef>
         <defName>CE_Apparel_ArmorRating_Electric</defName>
-        <label>armor (E)</label>
+        <labelShort>Armor (E)</labelShort>
         <stat>ArmorRating_Electric</stat>
         <workerClass>Stats.ColumnWorker_Stat</workerClass>
     </Stats.ColumnDef>

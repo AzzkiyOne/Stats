@@ -10,7 +10,7 @@ public abstract class ColumnWorker_Str
     }
     protected override IWidget GetTableCellContent(string? value, ThingRec thing)
     {
-        return new Widget_Label(value!);
+        return new Widget_Label(value);
     }
     public override IWidget_FilterInput GetFilterWidget()
     {

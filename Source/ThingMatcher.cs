@@ -7,6 +7,7 @@ public abstract class ThingMatcher<T>
     where T : IEquatable<T>
 {
     private readonly Func<ThingRec, T> ValueFunc;
+    private readonly T DefaultValue;
     private T _Value;
     public T Value
     {
@@ -19,6 +20,7 @@ public abstract class ThingMatcher<T>
             OnChange?.Invoke();
         }
     }
+    private readonly IBinaryOp<T> DefaultOp;
     private IBinaryOp<T> _Operator;
     public IBinaryOp<T> Operator
     {
@@ -38,8 +40,8 @@ public abstract class ThingMatcher<T>
         Func<ThingRec, T> valueFunc
     )
     {
-        _Value = defaultValue;
-        _Operator = defaultOp;
+        _Value = DefaultValue = defaultValue;
+        _Operator = DefaultOp = defaultOp;
         ValueFunc = valueFunc;
     }
     // Use this to avoid emitting 2 events when setting both props.
@@ -62,5 +64,9 @@ public abstract class ThingMatcher<T>
         {
             return false;
         }
+    }
+    public void Reset()
+    {
+        Set(DefaultValue, DefaultOp);
     }
 }

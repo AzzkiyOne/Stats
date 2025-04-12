@@ -30,9 +30,10 @@ public class StatsMainTabWindow
         TableSelector = new Widget_TableSelector();
         TitleBar = new Widget_WindowTitleBar(
             TableSelector,
-            Reset,
-            ExpandOrCollapse,
-            () => Close()
+            ResetWindow,
+            ExpandOrCollapseWidow,
+            () => Close(),
+            ResetCurTableFilters
         );
         new WidgetComp_Width_Rel(ref TitleBar, 1f);
     }
@@ -48,7 +49,7 @@ public class StatsMainTabWindow
 
         Text.WordWrap = true;
     }
-    private void ExpandOrCollapse()
+    private void ExpandOrCollapseWidow()
     {
         if (IsExpanded)
         {
@@ -77,7 +78,7 @@ public class StatsMainTabWindow
             PreExpandRect = null;
         }
     }
-    private void Reset()
+    private void ResetWindow()
     {
         draggable = true;
         resizeable = true;
@@ -101,5 +102,9 @@ public class StatsMainTabWindow
     {
         base.PostClose();
         PreCloseRect = windowRect;
+    }
+    private void ResetCurTableFilters()
+    {
+        TableSelector.CurTableDef.Widget.ResetFilters();
     }
 }

@@ -12,6 +12,7 @@ internal sealed class Widget_Table_Things
     private const float cellPadVer = 5f;
     private readonly List<IThingMatcher> ThingMatchers = [];
     private readonly Widget_Table Table;
+    private bool IsFiltersBeingReset = false;
     public Widget_Table_Things(TableDef tableDef)
     {
         List<ColumnDef> columnDefs = [ColumnDefOf.Name, .. tableDef.columns];
@@ -64,8 +65,7 @@ internal sealed class Widget_Table_Things
 
         if (columnDef.Icon != null)
         {
-            cell = new Widget_Texture(columnDef.Icon);
-            new WidgetComp_Size_Abs(ref cell, Text.LineHeight);
+            cell = new Widget_Icon(columnDef.Icon);
 
             if (columnDef.Worker.CellStyle == ColumnCellStyle.Number)
             {
@@ -80,7 +80,7 @@ internal sealed class Widget_Table_Things
         }
         else
         {
-            cell = new Widget_Label(columnDef.LabelCap);
+            cell = new Widget_Label(columnDef.labelShort);
         }
 
         void drawSortIndicator(Rect rect)
@@ -109,7 +109,7 @@ internal sealed class Widget_Table_Things
 
         new WidgetComp_Size_Inc_Abs(ref cell, cellPadHor, cellPadVer);
         new WidgetComp_Width_Rel(ref cell, 1f);
-        new WidgetComp_Tooltip(ref cell, columnDef.description);
+        new WidgetComp_Tooltip(ref cell, $"{columnDef.LabelCap}\n\n{columnDef.description}");
         new WidgetComp_Bg_Tex_Hover(ref cell, TexUI.HighlightTex);
         new WidgetComp_OnClick(ref cell, handleCellClick);
         new WidgetComp_Generic(ref cell, drawSortIndicator);
@@ -207,6 +207,8 @@ internal sealed class Widget_Table_Things
     }
     private void ApplyFilters()
     {
+        if (IsFiltersBeingReset) return;
+
         foreach (Widget_TableRow<ThingRec> row in Table.BodyRows)
         {
             row.IsHidden = false;
@@ -222,5 +224,16 @@ internal sealed class Widget_Table_Things
         }
 
         Table.RecalcLayout();
+    }
+    public void ResetFilters()
+    {
+        IsFiltersBeingReset = true;
+        foreach (var thingMatcher in ThingMatchers)
+        {
+            thingMatcher.Reset();
+        }
+        IsFiltersBeingReset = false;
+
+        ApplyFilters();
     }
 }

@@ -9,7 +9,8 @@
 
     <Stats.ColumnDef>
         <defName>EquippedStatOffsets</defName>
-        <label>offsets</label>
+        <label>Offsets when equipped</label>
+        <labelShort>Offsets</labelShort>
         <workerClass>Stats.ColumnWorker_EquippedStatOffsets</workerClass>
     </Stats.ColumnDef>
 

@@ -25,7 +25,7 @@ public class ColumnWorker_WeaponRanged_Caliber
             ToStringNumberSense.Absolute,
             ColumnDef.stat!.Worker.GetValue(statReq)
         );
-        IWidget widget = new Widget_Label(value!);
+        IWidget widget = new Widget_Label(value);
         new WidgetComp_Tooltip(ref widget, tooltip);
 
         return widget;

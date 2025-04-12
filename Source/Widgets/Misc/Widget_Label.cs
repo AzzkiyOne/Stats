@@ -9,8 +9,8 @@ public sealed class Widget_Label
     : Widget
 {
     protected override Vector2 Size { get; set; }
-    private string _Text;
-    public string Text
+    private string? _Text;
+    public string? Text
     {
         get => _Text;
         set
@@ -19,7 +19,7 @@ public sealed class Widget_Label
             UpdateSize();
         }
     }
-    public Widget_Label(string text)
+    public Widget_Label(string? text)
     {
         _Text = text;
         Size = GetSize();

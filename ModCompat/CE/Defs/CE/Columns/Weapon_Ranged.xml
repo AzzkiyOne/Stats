@@ -10,7 +10,7 @@
 
     <Stats.ColumnDef>
         <defName>CE_WeaponRanged_SwayFactor</defName>
-        <label>sway</label>
+        <labelShort>Sway</labelShort>
         <stat>SwayFactor</stat>
         <isNegative>true</isNegative>
         <workerClass>Stats.ColumnWorker_Stat</workerClass>
@@ -18,7 +18,7 @@
 
     <Stats.ColumnDef>
         <defName>CE_WeaponRanged_Recoil</defName>
-        <label>recoil</label>
+        <labelShort>Recoil</labelShort>
         <stat>Recoil</stat>
         <isNegative>true</isNegative>
         <workerClass>Stats.ColumnWorker_Stat</workerClass>
@@ -26,14 +26,14 @@
 
     <Stats.ColumnDef>
         <defName>CE_WeaponRanged_SightsEfficiency</defName>
-        <label>sights</label>
+        <labelShort>Sights</labelShort>
         <stat>SightsEfficiency</stat>
         <workerClass>Stats.ColumnWorker_Stat</workerClass>
     </Stats.ColumnDef>
 
     <Stats.ColumnDef>
         <defName>CE_WeaponRanged_MagazineCapacity</defName>
-        <label>mag. cap</label>
+        <labelShort>Mag. cap</labelShort>
         <stat>MagazineCapacity</stat>
         <workerClass>Stats.ColumnWorker_Stat</workerClass>
         <formatString></formatString>
@@ -49,7 +49,7 @@
 
     <Stats.ColumnDef>
         <defName>CE_WeaponRanged_OneHandedness</defName>
-        <label>one-handed</label>
+        <labelShort>One-handed</labelShort>
         <iconPath>Things/Apparel/BallisticShield/CE_BallisticShield</iconPath>
         <stat>OneHandedness</stat>
         <workerClass>Stats.Compat.CE.ColumnWorker_WeaponRanged_OneHandedness</workerClass>

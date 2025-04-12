@@ -3,49 +3,49 @@
 
     <Stats.ColumnDef>
         <defName>Apparel_Insulation_Cold</defName>
-        <label>ins. (C)</label>
+        <labelShort>Ins. (C)</labelShort>
         <stat>Insulation_Cold</stat>
         <workerClass>Stats.ColumnWorker_Stat</workerClass>
     </Stats.ColumnDef>
 
     <Stats.ColumnDef>
         <defName>Apparel_Insulation_Heat</defName>
-        <label>ins. (H)</label>
+        <labelShort>Ins. (H)</labelShort>
         <stat>Insulation_Heat</stat>
         <workerClass>Stats.ColumnWorker_Stat</workerClass>
     </Stats.ColumnDef>
 
     <Stats.ColumnDef>
         <defName>Apparel_ArmorRating_Sharp</defName>
-        <label>armor (S)</label>
+        <labelShort>Armor (S)</labelShort>
         <stat>ArmorRating_Sharp</stat>
         <workerClass>Stats.ColumnWorker_Stat</workerClass>
     </Stats.ColumnDef>
 
     <Stats.ColumnDef>
         <defName>Apparel_ArmorRating_Blunt</defName>
-        <label>armor (B)</label>
+        <labelShort>Armor (B)</labelShort>
         <stat>ArmorRating_Blunt</stat>
         <workerClass>Stats.ColumnWorker_Stat</workerClass>
     </Stats.ColumnDef>
 
     <Stats.ColumnDef>
         <defName>Apparel_ArmorRating_Heat</defName>
-        <label>armor (H)</label>
+        <labelShort>Armor (H)</labelShort>
         <stat>ArmorRating_Heat</stat>
         <workerClass>Stats.ColumnWorker_Stat</workerClass>
     </Stats.ColumnDef>
 
     <Stats.ColumnDef>
         <defName>Apparel_Shield_EnergyMax</defName>
-        <label>shiled (En)</label>
+        <labelShort>Shiled (En)</labelShort>
         <stat>EnergyShieldEnergyMax</stat>
         <workerClass>Stats.ColumnWorker_Stat</workerClass>
     </Stats.ColumnDef>
 
     <Stats.ColumnDef>
         <defName>Apparel_Shield_RechargeRate</defName>
-        <label>shiled (R)</label>
+        <labelShort>Shiled (R)</labelShort>
         <stat>EnergyShieldRechargeRate</stat>
         <workerClass>Stats.ColumnWorker_Stat</workerClass>
     </Stats.ColumnDef>

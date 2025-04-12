@@ -48,8 +48,7 @@ public class ColumnWorker_CreatedAt
             }
 
             IWidget icon = new Widget_Icon_Thing(thingDef);
-            new WidgetComp_Size_Abs(ref icon, Text.LineHeight);
-            new WidgetComp_Tooltip(ref icon, thingDef.description);
+            new WidgetComp_Tooltip(ref icon, $"{thingDef.LabelCap}\n\n{thingDef.description}");
             new WidgetComp_Bg_Tex_Hover(ref icon, TexUI.HighlightTex);
             new WidgetComp_OnClick(ref icon, handleIconClick);
 

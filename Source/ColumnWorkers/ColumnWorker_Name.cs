@@ -19,11 +19,10 @@ public class ColumnWorker_Name
         }
 
         IWidget icon = new Widget_Icon_Thing(thing);
-        new WidgetComp_Size_Abs(ref icon, Text.LineHeight);
         new WidgetComp_Bg_Tex_Hover(ref icon, TexUI.HighlightTex);
         new WidgetComp_OnClick(ref icon, handleIconClick);
 
-        IWidget label = new Widget_Label(value!);
+        IWidget label = new Widget_Label(value);
 
         IWidget container = new Widget_Container_Hor([icon, label], 10f);
         new WidgetComp_Tooltip(ref container, thing.Def.description);
