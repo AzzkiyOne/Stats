@@ -27,7 +27,8 @@ internal sealed class Widget_TableSelector
     public Widget_TableSelector()
         : base()
     {
-        IWidget icon = Icon = new Widget_Icon(CurTableDef.Icon, 0.9f);
+        IWidget icon = Icon = new Widget_Icon(CurTableDef.Icon);
+        new WidgetComp_Size_Inc_Abs(ref icon, 3f);
         new WidgetComp_Size_Abs(ref icon, StatsMainTabWindow.TitleBarHeight);
         IconColorComp =
         new WidgetComp_Color(ref icon, CurTableDef.IconColor);
