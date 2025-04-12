@@ -25,7 +25,7 @@ public abstract class ColumnWorker_Num
     }
     public override IWidget_FilterInput GetFilterWidget()
     {
-        return new Widget_FilterInput_Num(GetValue);
+        return new Widget_FilterInput_Num(new(GetValue));
     }
     public override int Compare(ThingRec thing1, ThingRec thing2)
     {

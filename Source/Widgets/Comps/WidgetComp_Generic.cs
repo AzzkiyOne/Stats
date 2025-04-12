@@ -13,9 +13,9 @@ public class WidgetComp_Generic
     }
     public override void Draw(Rect rect, in Vector2 containerSize)
     {
-        OnDraw(ref rect);
+        OnDraw(rect);
 
         Widget.Draw(rect, containerSize);
     }
-    public delegate void OnDrawCB(ref Rect rect);
+    public delegate void OnDrawCB(Rect rect);
 }

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 using Verse;
 
@@ -57,5 +58,9 @@ public static class String_Ext
         var b = ((hash & 0x0000FF00) >> 8) / 255f;
 
         return new Color(r, g, b);
+    }
+    public static bool Contains(this string str, string substr, StringComparison comp)
+    {
+        return str.IndexOf(substr, comp) >= 0;
     }
 }

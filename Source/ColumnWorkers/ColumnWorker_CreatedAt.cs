@@ -60,7 +60,9 @@ public class ColumnWorker_CreatedAt
     }
     public override IWidget_FilterInput GetFilterWidget()
     {
-        return new Widget_FilterInput_Str(thing => string.Join(", ", GetValue(thing).Select(thing => thing.LabelCap)));
+        return new Widget_FilterInput_Str(
+            new(thing => string.Join(", ", GetValue(thing).Select(thing => thing.LabelCap)))
+        );
     }
     public override int Compare(ThingRec thing1, ThingRec thing2)
     {

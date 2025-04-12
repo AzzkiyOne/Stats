@@ -5,52 +5,80 @@ using Verse;
 namespace Stats;
 
 public sealed class Widget_FilterInput_Bool
-    : IWidget_FilterInput
+    : Widget,
+      IWidget_FilterInput
 {
-    private bool? _curValue = null;
-    private bool? CurValue
-    {
-        get => _curValue;
-        set
-        {
-            if (_curValue == value) return;
 
-            _curValue = value;
-            WasUpdated = true;
+    protected override Vector2 Size { get; set; }
+    private readonly ThingMatcher_Bool _ThingMatcher;
+    public IThingMatcher ThingMatcher => _ThingMatcher;
+    public Widget_FilterInput_Bool(ThingMatcher_Bool thingMatcher)
+    {
+        _ThingMatcher = thingMatcher;
+        Size = GetSize();
+    }
+    public override Vector2 GetSize()
+    {
+        if (_ThingMatcher.Operator is Op_Bool_Any)
+        {
+            return Text.CalcSize(_ThingMatcher.Operator.ToString());
+        }
+
+        return new Vector2(Text.LineHeight, Text.LineHeight);
+    }
+    protected override void DrawContent(Rect rect)
+    {
+        switch (_ThingMatcher)
+        {
+            case { Operator: Op_Bool_Any }:
+                if (Widgets.ButtonTextSubtle(rect, "Any"))
+                {
+                    _ThingMatcher.Set(true, Op_Bool_Eq.Instance);
+                }
+                break;
+            case { Value: true }:
+                if (Widgets.ButtonImageFitted(rect, Widgets.CheckboxOnTex))
+                {
+                    _ThingMatcher.Value = false;
+                }
+                break;
+            case { Value: false }:
+                if (Widgets.ButtonImageFitted(rect, Widgets.CheckboxOffTex))
+                {
+                    _ThingMatcher.Operator = Op_Bool_Any.Instance;
+                }
+                break;
         }
     }
-    public bool WasUpdated { get; set; } = false;
-    public bool HasValue => CurValue != null;
-    private readonly Func<ThingRec, bool> ValueFunc;
-    public Widget_FilterInput_Bool(Func<ThingRec, bool> valueFunc)
+    public IWidget_FilterInput Clone()
     {
-        ValueFunc = valueFunc;
+        return new Widget_FilterInput_Bool(_ThingMatcher);
     }
-    public bool Match(ThingRec thing)
-    {
-        var value = ValueFunc(thing);
 
-        return CurValue switch
-        {
-            #pragma warning disable format
-            null => true,
-            _    => value == CurValue,
-            #pragma warning restore format
-        };
-    }
-    public void Draw(Rect targetRect)
+    public sealed class ThingMatcher_Bool
+        : ThingMatcher<bool>
     {
-        switch (CurValue)
+        public ThingMatcher_Bool(Func<ThingRec, bool> valueFunc)
+            : base(true, Op_Bool_Any.Instance, valueFunc)
         {
-            case null:
-                if (Widgets.ButtonTextSubtle(targetRect, "Any")) CurValue = true;
-                break;
-            case true:
-                if (Widgets.ButtonImageFitted(targetRect, Widgets.CheckboxOnTex)) CurValue = false;
-                break;
-            case false:
-                if (Widgets.ButtonImageFitted(targetRect, Widgets.CheckboxOffTex)) CurValue = null;
-                break;
         }
+    }
+
+    private sealed class Op_Bool_Any
+        : IBinaryOp<bool>
+    {
+        private Op_Bool_Any() { }
+        public bool Eval(bool lhs, bool rhs) => true;
+        public override string ToString() => "Any";
+        public static IBinaryOp<bool> Instance { get; } = new Op_Bool_Any();
+    }
+
+    private sealed class Op_Bool_Eq
+        : IBinaryOp<bool>
+    {
+        private Op_Bool_Eq() { }
+        public bool Eval(bool lhs, bool rhs) => lhs == rhs;
+        public override string ToString() => "==";
+        public static IBinaryOp<bool> Instance { get; } = new Op_Bool_Eq();
     }
 }

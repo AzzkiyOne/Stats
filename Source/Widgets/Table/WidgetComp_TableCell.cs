@@ -6,8 +6,8 @@ internal abstract class WidgetComp_TableCell
     : IWidget
 {
     public abstract IWidget? Parent { set; }
-    public Widget_Table.ColumnProps Column;
-    public WidgetComp_TableCell(Widget_Table.ColumnProps column)
+    public Widget_Table.Column Column;
+    public WidgetComp_TableCell(Widget_Table.Column column)
     {
         Column = column;
     }

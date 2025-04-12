@@ -1,11 +1,8 @@
-﻿using UnityEngine;
-
-namespace Stats;
+﻿namespace Stats;
 
 public interface IWidget_FilterInput
+    : IWidget
 {
-    bool WasUpdated { get; set; }
-    bool HasValue { get; }
-    bool Match(ThingRec thing);
-    void Draw(Rect targetRect);
+    IThingMatcher ThingMatcher { get; }
+    IWidget_FilterInput Clone();
 }

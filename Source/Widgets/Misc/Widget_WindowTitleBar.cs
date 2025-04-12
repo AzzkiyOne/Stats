@@ -10,7 +10,9 @@ internal sealed class Widget_WindowTitleBar
     : WidgetDecorator
 {
     private static readonly Texture2D HoldToDragTex;
-    private const string Manual = "- Click on the title bar to select a table.\n- Click on any row to select it. You can select multiple rows.\n- Press \"Alt\" to compare selected rows.\n- Hold \"Ctrl\" to scroll horizontally.";
+    private const string Manual =
+        "- Hold \"Ctrl\" to scroll horizontally.\n" +
+        "- Hold \"Ctrl\" and click on a column's name to pin/unpin it.";
     protected override IWidget Widget { get; }
     public Widget_WindowTitleBar(
         IWidget tableSelector,
@@ -26,7 +28,7 @@ internal sealed class Widget_WindowTitleBar
 
         IWidget dragIcon = new Widget_Texture(HoldToDragTex, iconScale);
         new WidgetComp_Size_Abs(ref dragIcon, iconHeight);
-        new WidgetComp_Tooltip(ref dragIcon, "Hold to drag the window");
+        new WidgetComp_Tooltip(ref dragIcon, "Hold to drag the window (if there's nothing more to hold on to)");
 
         IWidget infoIcon = new Widget_Texture(TexButton.Info, iconScale);
         new WidgetComp_Size_Abs(ref infoIcon, iconHeight);

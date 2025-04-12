@@ -1,112 +1,121 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
 using UnityEngine;
 using Verse;
 
 namespace Stats;
 
 public sealed class Widget_FilterInput_Str
-    : IWidget_FilterInput
+    : Widget,
+      IWidget_FilterInput
 {
-    private string _curValue = "";
-    private string CurValue
-    {
-        get => _curValue;
-        set
-        {
-            if (_curValue == value) return;
-
-            _curValue = value;
-            WasUpdated = true;
-            CurValueLower = value.ToLower();
-            CurValueLowerStrs.Clear();
-            CurValueLowerStrs.AddRange(CurValueLower.Split(','));
-        }
-    }
-    private string CurValueLower = "";
-    private readonly List<string> CurValueLowerStrs = [];
-    public bool WasUpdated { get; set; } = false;
-    public bool HasValue => CurOperator != Operator.Any;
-    private Operator _curOperator = Operator.Any;
-    private Operator CurOperator
-    {
-        get => _curOperator;
-        set
-        {
-            if (_curOperator == value) return;
-
-            _curOperator = value;
-            CurOperatorStr = value switch
-            {
-                #pragma warning disable format
-                Operator.Any   => "Any",
-                Operator.Eq    => "==",
-                Operator.EqNot => "!=",
-                _              => throw new NotImplementedException(),
-                #pragma warning restore format
-            };
-            WasUpdated = true;
-        }
-    }
-    private string CurOperatorStr = "Any";
+    protected override Vector2 Size { get; set; }
+    private readonly ThingMatcher_Str _ThingMatcher;
+    public IThingMatcher ThingMatcher => _ThingMatcher;
     private readonly FloatMenu OperatorsMenu;
-    private readonly Func<ThingRec, string?> ValueFunc;
     private const string Description = "Use \",\" to search by multiple terms.";
-    public Widget_FilterInput_Str(Func<ThingRec, string?> valueFunc)
+    public Widget_FilterInput_Str(ThingMatcher_Str thingMatcher)
     {
-        ValueFunc = valueFunc;
-        OperatorsMenu = new([
-            #pragma warning disable format
-            new("Any", () => CurOperator = Operator.Any),
-            new( "==", () => CurOperator = Operator.Eq),
-            new( "!=", () => CurOperator = Operator.EqNot),
-            #pragma warning restore format
-        ]);
-    }
-    public bool Match(ThingRec thing)
-    {
-        var valueLower = ValueFunc(thing)?.ToLower() ?? "";
-
-        return CurOperator switch
+        _ThingMatcher = thingMatcher;
+        var menuOptions = new List<FloatMenuOption>(Operatos.Count);
+        foreach (var op in Operatos)
         {
-            #pragma warning disable format
-            Operator.Any    => true,
-            Operator.Eq     => CurValueLower == ""
-                ? valueLower == ""
-                : CurValueLowerStrs.Count > 0
-                ? CurValueLowerStrs.Any(valueLower.Contains)
-                : valueLower.Contains(CurValueLower),
-            Operator.EqNot  => CurValueLower == ""
-                ? valueLower != ""
-                : CurValueLowerStrs.Count > 0
-                ? !CurValueLowerStrs.Any(valueLower.Contains)
-                : !valueLower.Contains(CurValueLower),
-            _               => throw new NotImplementedException(),
-            #pragma warning restore format
-        };
+            var optText = op.ToString();
+            void optCb() => _ThingMatcher.Operator = op;
+            menuOptions.Add(new FloatMenuOption(optText, optCb));
+        }
+        OperatorsMenu = new FloatMenu(menuOptions);
+        Size = GetSize();
+        thingMatcher.OnChange += UpdateSize;
     }
-    public void Draw(Rect targetRect)
+    public override Vector2 GetSize()
     {
-        if (Widgets.ButtonTextSubtle(
-            CurOperator == Operator.Any
-                ? targetRect
-                : targetRect.CutByX(targetRect.height),
-            CurOperatorStr
-        ))
+        if (_ThingMatcher.Operator is Op_Str_Any)
+        {
+            return Text.CalcSize(_ThingMatcher.Operator.ToString());
+        }
+
+        var size = Text.CalcSize(
+            _ThingMatcher.Operator.ToString() + _ThingMatcher.Value
+        );
+        size.x += Constants.EstimatedInputFieldInnerPadding * 2;
+
+        return size;
+    }
+    protected override void DrawContent(Rect rect)
+    {
+        if
+        (
+            Widgets.ButtonTextSubtle(
+                _ThingMatcher.Operator is Op_Str_Any
+                    ? rect
+                    : rect.CutByX(rect.height),
+                _ThingMatcher.Operator.ToString()
+            )
+        )
         {
             Find.WindowStack.Add(OperatorsMenu);
         }
 
-        if (CurOperator != Operator.Any)
+        if (_ThingMatcher.Operator is not Op_Str_Any)
         {
-            CurValue = Widgets.TextField(targetRect, CurValue);
-            TooltipHandler.TipRegion(targetRect, Description);
+            _ThingMatcher.Value = Widgets.TextField(rect, _ThingMatcher.Value);
+            TooltipHandler.TipRegion(rect, Description);
         }
     }
-    private enum Operator
+    public IWidget_FilterInput Clone()
     {
-        Any,
-        Eq,
-        EqNot,
+        return new Widget_FilterInput_Str(_ThingMatcher);
     }
+
+    public sealed class ThingMatcher_Str
+        : ThingMatcher<string>
+    {
+        public ThingMatcher_Str(Func<ThingRec, string> valueFunc)
+            : base("", Op_Str_Any.Instance, valueFunc)
+        {
+        }
+    }
+
+    private sealed class Op_Str_Any
+        : IBinaryOp<string>
+    {
+        private Op_Str_Any() { }
+        public bool Eval(string lhs, string rhs) => true;
+        public override string ToString() => "Any";
+        public static IBinaryOp<string> Instance { get; } = new Op_Str_Any();
+    }
+
+    private sealed class Op_Str_Contains
+        : IBinaryOp<string>
+    {
+        private Op_Str_Contains() { }
+        public bool Eval(string lhs, string rhs) =>
+            rhs
+            .Split(',')
+            .Any(s => lhs.Contains(s, StringComparison.CurrentCultureIgnoreCase));
+        public override string ToString() => "~=";
+        public static IBinaryOp<string> Instance { get; } = new Op_Str_Contains();
+    }
+
+    private sealed class Op_Str_ContainsNot
+        : IBinaryOp<string>
+    {
+        private Op_Str_ContainsNot() { }
+        public bool Eval(string lhs, string rhs) =>
+            !rhs
+            .Split(',')
+            .Any(s => lhs.Contains(s, StringComparison.CurrentCultureIgnoreCase));
+        public override string ToString() => "!~=";
+        public static IBinaryOp<string> Instance { get; } = new Op_Str_ContainsNot();
+    }
+
+    private static readonly ReadOnlyCollection<IBinaryOp<string>> Operatos =
+        new([
+            Op_Str_Any.Instance,
+            Op_Str_Contains.Instance,
+            Op_Str_ContainsNot.Instance,
+        ]);
 }

@@ -1,110 +1,155 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using UnityEngine;
 using Verse;
 
 namespace Stats;
 
 public sealed class Widget_FilterInput_Num
-    : IWidget_FilterInput
+    : Widget,
+      IWidget_FilterInput
 {
-    private float CurValue = 0f;
-    private string CurValueStrBuffer = "";
-    public bool WasUpdated { get; set; } = false;
-    public bool HasValue => CurOperator != Operator.Any;
-    private Operator _curOperator = Operator.Any;
-    private Operator CurOperator
-    {
-        get => _curOperator;
-        set
-        {
-            if (_curOperator == value) return;
-
-            _curOperator = value;
-            CurOperatorStr = value switch
-            {
-                #pragma warning disable format
-                Operator.Any    => "Any",
-                Operator.Eq     => "==",
-                Operator.EqNot  => "!=",
-                Operator.GT     => ">",
-                Operator.LT     => "<",
-                Operator.GTorEq => ">=",
-                Operator.LTorEq => "<=",
-                _               => throw new NotImplementedException(),
-                #pragma warning restore format
-            };
-            WasUpdated = true;
-        }
-    }
-    private string CurOperatorStr = "Any";
+    protected override Vector2 Size { get; set; }
+    private readonly ThingMatcher_Num _ThingMatcher;
+    public IThingMatcher ThingMatcher => _ThingMatcher;
     private readonly FloatMenu OperatorsMenu;
-    private readonly Func<ThingRec, float> ValueFunc;
-    public Widget_FilterInput_Num(Func<ThingRec, float> valueFunc)
+    public Widget_FilterInput_Num(ThingMatcher_Num thingMatcher)
     {
-        ValueFunc = valueFunc;
-        OperatorsMenu = new([
-            #pragma warning disable format
-            new("Any", () => CurOperator = Operator.Any),
-            new(  "=", () => CurOperator = Operator.Eq),
-            new( "!=", () => CurOperator = Operator.EqNot),
-            new(  ">", () => CurOperator = Operator.GT),
-            new(  "<", () => CurOperator = Operator.LT),
-            new( ">=", () => CurOperator = Operator.GTorEq),
-            new( "<=", () => CurOperator = Operator.LTorEq),
-            #pragma warning restore format
-        ]);
-    }
-    public bool Match(ThingRec thing)
-    {
-        var value = ValueFunc(thing);
-
-        return CurOperator switch
+        _ThingMatcher = thingMatcher;
+        var menuOptions = new List<FloatMenuOption>(Operatos.Count);
+        foreach (var op in Operatos)
         {
-            #pragma warning disable format
-            Operator.Any    => true,
-            Operator.Eq     => value == CurValue,
-            Operator.EqNot  => value != CurValue,
-            Operator.GT     => value >  CurValue,
-            Operator.LT     => value <  CurValue,
-            Operator.GTorEq => value >= CurValue,
-            Operator.LTorEq => value <= CurValue,
-            _               => throw new NotImplementedException(),
-            #pragma warning restore format
-        };
+            var optText = op.ToString();
+            void optCb() => _ThingMatcher.Operator = op;
+            menuOptions.Add(new FloatMenuOption(optText, optCb));
+        }
+        OperatorsMenu = new FloatMenu(menuOptions);
+        Size = GetSize();
+        thingMatcher.OnChange += UpdateSize;
     }
-    public void Draw(Rect targetRect)
+    public override Vector2 GetSize()
     {
-        if (Widgets.ButtonTextSubtle(
-            CurOperator == Operator.Any
-                ? targetRect
-                : targetRect.CutByX(targetRect.height),
-            CurOperatorStr
-        ))
+        if (_ThingMatcher.Operator is Op_Float_Any)
+        {
+            return Text.CalcSize(_ThingMatcher.Operator.ToString());
+        }
+
+        var size = Text.CalcSize(
+            _ThingMatcher.Operator.ToString() + _ThingMatcher.ValueStrBuffer
+        );
+        size.x += Constants.EstimatedInputFieldInnerPadding * 2;
+
+        return size;
+    }
+    protected override void DrawContent(Rect rect)
+    {
+        if
+        (
+            Widgets.ButtonTextSubtle(
+                _ThingMatcher.Operator is Op_Float_Any
+                    ? rect
+                    : rect.CutByX(rect.height),
+                _ThingMatcher.Operator.ToString()
+            )
+        )
         {
             Find.WindowStack.Add(OperatorsMenu);
         }
 
-        if (CurOperator != Operator.Any)
+        if (_ThingMatcher.Operator is not Op_Float_Any)
         {
-            var num = CurValue;
-
-            Widgets.TextFieldNumeric(targetRect, ref num, ref CurValueStrBuffer);
-
-            if (CurValue != num)
-            {
-                CurValue = num;
-                WasUpdated = true;
-            }
+            var num = _ThingMatcher.Value;
+            Widgets.TextFieldNumeric(rect, ref num, ref _ThingMatcher.ValueStrBuffer);
+            _ThingMatcher.Value = num;
         }
     }
-    private enum Operator
+    public IWidget_FilterInput Clone()
     {
-        Any,
-        Eq,
-        EqNot,
-        GT,
-        LT,
-        GTorEq,
-        LTorEq,
+        return new Widget_FilterInput_Num(_ThingMatcher);
     }
+
+    public sealed class ThingMatcher_Num
+        : ThingMatcher<float>
+    {
+        public string ValueStrBuffer = "";
+        public ThingMatcher_Num(Func<ThingRec, float> valueFunc)
+            : base(0f, Op_Float_Any.Instance, valueFunc)
+        {
+        }
+    }
+
+    private sealed class Op_Float_Any
+        : IBinaryOp<float>
+    {
+        private Op_Float_Any() { }
+        public bool Eval(float lhs, float rhs) => true;
+        public override string ToString() => "Any";
+        public static IBinaryOp<float> Instance { get; } = new Op_Float_Any();
+    }
+
+    private sealed class Op_Float_Eq
+        : IBinaryOp<float>
+    {
+        private Op_Float_Eq() { }
+        public bool Eval(float lhs, float rhs) => lhs == rhs;
+        public override string ToString() => "==";
+        public static IBinaryOp<float> Instance { get; } = new Op_Float_Eq();
+    }
+
+    private sealed class Op_Float_EqNot
+        : IBinaryOp<float>
+    {
+        private Op_Float_EqNot() { }
+        public bool Eval(float lhs, float rhs) => lhs != rhs;
+        public override string ToString() => "!=";
+        public static IBinaryOp<float> Instance { get; } = new Op_Float_EqNot();
+    }
+
+    private sealed class Op_Float_Gt
+        : IBinaryOp<float>
+    {
+        private Op_Float_Gt() { }
+        public bool Eval(float lhs, float rhs) => lhs > rhs;
+        public override string ToString() => ">";
+        public static IBinaryOp<float> Instance { get; } = new Op_Float_Gt();
+    }
+
+    private sealed class Op_Float_Lt
+        : IBinaryOp<float>
+    {
+        private Op_Float_Lt() { }
+        public bool Eval(float lhs, float rhs) => lhs < rhs;
+        public override string ToString() => "<";
+        public static IBinaryOp<float> Instance { get; } = new Op_Float_Lt();
+    }
+
+    private sealed class Op_Float_GtOrEq
+        : IBinaryOp<float>
+    {
+        private Op_Float_GtOrEq() { }
+        public bool Eval(float lhs, float rhs) => lhs >= rhs;
+        public override string ToString() => ">=";
+        public static IBinaryOp<float> Instance { get; } = new Op_Float_GtOrEq();
+    }
+
+    private sealed class Op_Float_LtOrEq
+        : IBinaryOp<float>
+    {
+        private Op_Float_LtOrEq() { }
+        public bool Eval(float lhs, float rhs) => lhs <= rhs;
+        public override string ToString() => "<=";
+        public static IBinaryOp<float> Instance { get; } = new Op_Float_LtOrEq();
+    }
+
+    private static readonly ReadOnlyCollection<IBinaryOp<float>> Operatos =
+        new([
+            Op_Float_Any.Instance,
+            Op_Float_Eq.Instance,
+            Op_Float_EqNot.Instance,
+            Op_Float_Gt.Instance,
+            Op_Float_Lt.Instance,
+            Op_Float_GtOrEq.Instance,
+            Op_Float_LtOrEq.Instance,
+        ]);
 }

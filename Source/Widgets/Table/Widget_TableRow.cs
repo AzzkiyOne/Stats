@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using UnityEngine;
 using Verse;
 
@@ -7,23 +6,14 @@ namespace Stats;
 
 internal class Widget_TableRow
 {
-    private readonly List<WidgetComp_TableCell> _Cells = [];
-    public ReadOnlyCollection<WidgetComp_TableCell> Cells => _Cells.AsReadOnly();
+    public List<WidgetComp_TableCell> Cells { get; } = [];
     public float Height = 0f;
+    public bool IsHidden = false;
     private readonly OnDraw DrawBG;
     private bool IsHovered = false;
     public Widget_TableRow(OnDraw onDraw)
     {
         DrawBG = onDraw;
-    }
-    public void AddCell(WidgetComp_TableCell cell)
-    {
-        var cellSize = cell.GetSize();
-
-        cell.Column.Width = Mathf.Max(cell.Column.Width, cellSize.x);
-        Height = Mathf.Max(Height, cellSize.y);
-
-        _Cells.Add(cell);
     }
     public void Draw(
         Rect rect,
@@ -48,7 +38,7 @@ internal class Widget_TableRow
         // Cells
         var cellRect = new Rect(-offsetX, rect.y, 0f, rect.height);
 
-        foreach (var cell in _Cells)
+        foreach (var cell in Cells)
         {
             if (cell.Column.IsPinned != drawPinned) continue;
             if (cellRect.x >= rect.width) break;
@@ -64,7 +54,7 @@ internal class Widget_TableRow
         }
     }
 
-    internal delegate void OnDraw(ref Rect rect, in bool isHovered, in int index);
+    internal delegate void OnDraw(ref Rect rect, bool isHovered, int index);
 }
 
 internal sealed class Widget_TableRow<IdType>

@@ -1,5 +1,4 @@
-﻿using UnityEngine;
-using Verse;
+﻿using Verse;
 
 namespace Stats;
 
@@ -14,19 +13,15 @@ public class ColumnWorker_Name
     }
     protected override IWidget GetTableCellContent(string? value, ThingRec thing)
     {
-        void onDrawIcon(ref Rect rect)
+        void handleIconClick()
         {
-            Widgets.DrawHighlightIfMouseover(rect);
-
-            if (Widgets.ButtonInvisible(rect))
-            {
-                Widget_DefInfoDialog.Draw(thing.Def, thing.StuffDef);
-            }
+            Widget_DefInfoDialog.Draw(thing.Def, thing.StuffDef);
         }
 
         IWidget icon = new Widget_Icon_Thing(thing);
         new WidgetComp_Size_Abs(ref icon, Text.LineHeight);
-        new WidgetComp_Generic(ref icon, onDrawIcon);
+        new WidgetComp_Bg_Tex_Hover(ref icon, TexUI.HighlightTex);
+        new WidgetComp_OnClick(ref icon, handleIconClick);
 
         IWidget label = new Widget_Label(value!);
 
