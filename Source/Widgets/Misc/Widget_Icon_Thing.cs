@@ -68,6 +68,7 @@ public class Widget_Icon_Thing
     protected override void DrawContent(Rect rect)
     {
         rect.position += Offset * rect.size;
+        var origGUIColor = GUI.color;
         GUI.color = Color;
         Widgets.DrawTextureFitted(
             rect,
@@ -77,6 +78,6 @@ public class Widget_Icon_Thing
             Coords,
             Angle
         );
-        GUI.color = Color.white;
+        GUI.color = origGUIColor;
     }
 }

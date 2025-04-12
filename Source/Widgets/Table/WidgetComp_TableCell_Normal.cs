@@ -29,11 +29,12 @@ internal sealed class WidgetComp_TableCell_Normal
     }
     public override void Draw(Rect rect, in Vector2 containerSize)
     {
+        var origTextAnchor = Text.Anchor;
         Text.Anchor = TextAnchor;
 
         Widget.Draw(rect, containerSize);
 
-        Text.Anchor = Constants.DefaultTextAnchor;
+        Text.Anchor = origTextAnchor;
     }
     public override void UpdateSize()
     {

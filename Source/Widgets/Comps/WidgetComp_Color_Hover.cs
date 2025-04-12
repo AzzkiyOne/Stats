@@ -18,10 +18,16 @@ public class WidgetComp_Color_Hover
     }
     public override void Draw(Rect rect, in Vector2 containerSize)
     {
-        if (Mouse.IsOver(rect)) GUI.color = Color;
-
-        Widget.Draw(rect, containerSize);
-
-        GUI.color = Color.white;
+        if (Mouse.IsOver(rect))
+        {
+            var origGUIColor = GUI.color;
+            GUI.color = Color;
+            Widget.Draw(rect, containerSize);
+            GUI.color = origGUIColor;
+        }
+        else
+        {
+            Widget.Draw(rect, containerSize);
+        }
     }
 }

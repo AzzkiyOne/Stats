@@ -209,6 +209,8 @@ internal sealed class Widget_Table_Things
     {
         if (IsFiltersBeingReset) return;
 
+        // It is important not to skip selected rows here so we don't have to
+        // re-aplly filters when a row is unselected.
         foreach (Widget_TableRow<ThingRec> row in Table.BodyRows)
         {
             row.IsHidden = false;

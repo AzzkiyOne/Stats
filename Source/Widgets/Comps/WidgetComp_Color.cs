@@ -13,10 +13,11 @@ public class WidgetComp_Color
     }
     public override void Draw(Rect rect, in Vector2 containerSize)
     {
+        var origGUIColor = GUI.color;
         GUI.color = Color;
 
         Widget.Draw(rect, containerSize);
 
-        GUI.color = Color.white;
+        GUI.color = origGUIColor;
     }
 }

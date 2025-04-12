@@ -69,9 +69,10 @@ internal static class GUIDebugger
 
             Widgets.DrawBoxSolid(rect, bgColor);
 
+            var origGUIColor = GUI.color;
             if (bgColor.WithinDiffThresholdFrom(Color.white, 1.1f)) GUI.color = Color.black;
             Widgets.Label(rect.ContractedBy(Padding, 0f), text);
-            GUI.color = Color.white;
+            GUI.color = origGUIColor;
 
             rect.y += size.y;
         }

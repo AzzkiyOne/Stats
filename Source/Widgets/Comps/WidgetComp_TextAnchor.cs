@@ -14,10 +14,11 @@ public class WidgetComp_TextAnchor
     }
     public override void Draw(Rect rect, in Vector2 containerSize)
     {
+        var origTextAnchor = Text.Anchor;
         Text.Anchor = Value;
 
         Widget.Draw(rect, containerSize);
 
-        Text.Anchor = Constants.DefaultTextAnchor;
+        Text.Anchor = origTextAnchor;
     }
 }

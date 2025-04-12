@@ -138,14 +138,16 @@ internal sealed class Widget_Table
 
         var y = 0f;
 
-        foreach (var row in HeaderRows)
+        for (int i = 0; i < HeaderRows.Count; i++)
         {
+            var row = HeaderRows[i];
             row.Draw(
                 new Rect(0f, y, rect.width, row.Height),
                 offsetX,
                 drawPinned,
                 cellExtraWidth,
-                0
+                i,
+                this
             );
 
             y += row.Height;
@@ -165,19 +167,16 @@ internal sealed class Widget_Table
         var rowRect = new Rect(0f, -scrollPos.y, rect.width, 0f);
 
         var drawIndex = 0;
-        for (int i = 0; i < BodyRows.Count; i++)
+        foreach (var row in BodyRows)
         {
             if (rowRect.y >= rect.height) break;
-
-            var row = BodyRows[i];
-
-            if (row.IsHidden) continue;
+            if (row.IsHidden && row.IsSelected == false) continue;
 
             rowRect.height = row.Height;
 
             if (rowRect.yMax > 0f)
             {
-                row.Draw(rowRect, scrollPos.x, drawPinned, cellExtraWidth, drawIndex);
+                row.Draw(rowRect, scrollPos.x, drawPinned, cellExtraWidth, drawIndex, this);
             }
 
             rowRect.y = rowRect.yMax;
@@ -263,7 +262,7 @@ internal sealed class Widget_Table
         // Body rows
         foreach (var row in BodyRows)
         {
-            if (row.IsHidden) continue;
+            if (row.IsHidden && row.IsSelected == false) continue;
 
             TotalBodyRowsHeight += RecalcRow(row);
         }

@@ -11,29 +11,28 @@ internal class Widget_TableRow
     public bool IsHidden = false;
     private readonly OnDraw DrawBG;
     private bool IsHovered = false;
+    public bool IsSelected = false;
     public Widget_TableRow(OnDraw onDraw)
     {
         DrawBG = onDraw;
     }
     public void Draw(
         Rect rect,
-        in float offsetX,
-        in bool drawPinned,
-        in float cellExtraWidth,
-        in int index
+        float offsetX,
+        bool drawPinned,
+        float cellExtraWidth,
+        int index,
+        Widget_Table parent
     )
     {
-        if (Mouse.IsOver(rect))
-        {
-            IsHovered = true;
-        }
+        var mouseIsOverRect = Mouse.IsOver(rect);
 
+        if (mouseIsOverRect) IsHovered = true;
+
+        if (IsSelected) Widgets.DrawHighlightSelected(rect);
         DrawBG(ref rect, IsHovered, index);
 
-        if (Mouse.IsOver(rect) == false)
-        {
-            IsHovered = false;
-        }
+        if (mouseIsOverRect == false) IsHovered = false;
 
         // Cells
         var cellRect = new Rect(-offsetX, rect.y, 0f, rect.height);
@@ -51,6 +50,19 @@ internal class Widget_TableRow
             }
 
             cellRect.x = cellRect.xMax;
+        }
+
+        // This must go after cells to not interfere with their GUI events.
+        if (Event.current.type == EventType.MouseDown && mouseIsOverRect)
+        {
+            // It is important to switch row's selected flag before
+            // layout recalculation, because it skips hidden and unselected rows.
+            IsSelected = !IsSelected;
+            if (IsSelected == false && IsHidden) parent.RecalcLayout();
+            // Not sure if this is usefull.
+            // Better would be to stop rendering altogether, because of layout
+            // recalculation.
+            Event.current.Use();
         }
     }
 
