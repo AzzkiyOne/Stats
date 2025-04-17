@@ -12,33 +12,39 @@ internal sealed class Widget_Table_Things
     private const float cellPadVer = 5f;
     private readonly List<IThingMatcher> ThingMatchers = [];
     private readonly Widget_Table Table;
-    private bool IsFiltersBeingReset = false;
+    private bool ShouldApplyFilters = false;
     public Widget_Table_Things(TableDef tableDef)
     {
         List<ColumnDef> columnDefs = [ColumnDefOf.Name, .. tableDef.columns];
-        var columns = new List<Widget_Table.Column>();
 
         // Header rows and columns
+        var columns = new List<Widget_Table.Column>();
         var headerRows = new List<Widget_TableRow>();
         var headerRow = new Widget_TableRow(DrawHeaderRowBG);
         var filtersRow = new Widget_TableRow(DrawFiltersRowBG);
+
         foreach (var columnDef in columnDefs)
         {
             var column = new Widget_Table.Column(columnDef == ColumnDefOf.Name);
             columns.Add(column);
+
             headerRow.Cells.Add(CreateHeaderCell(columnDef, column));
             filtersRow.Cells.Add(CreateFilterCell(columnDef, column, out var tm));
+
             ThingMatchers.Add(tm);
-            tm.OnChange += ApplyFilters;
+            tm.OnChange += ScheduleFiltersApplication;
         }
+
         headerRows.Add(headerRow);
         headerRows.Add(filtersRow);
 
         // Body rows
         var bodyRows = new List<Widget_TableRow>();
+
         foreach (var rec in tableDef.Worker.GetRecords())
         {
             var row = new Widget_TableRow<ThingRec>(DrawBodyRowBG, rec);
+
             for (int i = 0; i < columnDefs.Count; i++)
             {
                 var columnDef = columnDefs[i];
@@ -46,14 +52,22 @@ internal sealed class Widget_Table_Things
 
                 row.Cells.Add(CreateBodyCell(columnDef, column, rec));
             }
+
             bodyRows.Add(row);
         }
 
+        // Finalize
         Table = new Widget_Table(columns, headerRows, bodyRows);
+
         SortRowsByColumn(SortColumn);
     }
     public void Draw(Rect rect)
     {
+        if (ShouldApplyFilters && Event.current.type == EventType.Layout)
+        {
+            ApplyFilters();
+        }
+
         Table.Draw(rect);
     }
     private WidgetComp_TableCell CreateHeaderCell(
@@ -116,7 +130,7 @@ internal sealed class Widget_Table_Things
 
         return new WidgetComp_TableCell_Normal(cell, column, columnDef.Worker.CellStyle);
     }
-    private WidgetComp_TableCell CreateFilterCell(
+    private static WidgetComp_TableCell CreateFilterCell(
         ColumnDef columnDef,
         Widget_Table.Column column,
         out IThingMatcher thingMatcher
@@ -129,7 +143,7 @@ internal sealed class Widget_Table_Things
         thingMatcher = filterWidget.ThingMatcher;
         return new WidgetComp_TableCell_Normal(widget, column, columnDef.Worker.CellStyle);
     }
-    private WidgetComp_TableCell CreateBodyCell(
+    private static WidgetComp_TableCell CreateBodyCell(
         ColumnDef columnDef,
         Widget_Table.Column column,
         ThingRec rec
@@ -157,7 +171,7 @@ internal sealed class Widget_Table_Things
             return new WidgetComp_TableCell_Normal(cell, column, columnDef.Worker.CellStyle);
         }
     }
-    private static void DrawHeaderRowBG(ref Rect rect, bool _, int __)
+    private static void DrawHeaderRowBG(Rect rect, bool _, int __)
     {
         Widgets.DrawHighlight(rect);
         //Widgets.DrawLineHorizontal(
@@ -167,7 +181,7 @@ internal sealed class Widget_Table_Things
         //    StatsMainTabWindow.BorderLineColor
         //);
     }
-    private static void DrawFiltersRowBG(ref Rect rect, bool _, int __)
+    private static void DrawFiltersRowBG(Rect rect, bool _, int __)
     {
         //Widgets.DrawLineHorizontal(
         //    rect.x,
@@ -176,7 +190,7 @@ internal sealed class Widget_Table_Things
         //    StatsMainTabWindow.BorderLineColor
         //);
     }
-    private static void DrawBodyRowBG(ref Rect rect, bool isHovered, int index)
+    private static void DrawBodyRowBG(Rect rect, bool isHovered, int index)
     {
         if (isHovered)
         {
@@ -205,37 +219,41 @@ internal sealed class Widget_Table_Things
             ) * (int)SortDirection
         );
     }
+    private void ScheduleFiltersApplication()
+    {
+        ShouldApplyFilters = true;
+    }
     private void ApplyFilters()
     {
-        if (IsFiltersBeingReset) return;
-
         // It is important not to skip selected rows here so we don't have to
         // re-aplly filters when a row is unselected.
         foreach (Widget_TableRow<ThingRec> row in Table.BodyRows)
         {
-            row.IsHidden = false;
+            row.IsHidden = !RowPassesFilters(row, ThingMatchers);
+        }
 
-            foreach (var thingMatcher in ThingMatchers)
+        ShouldApplyFilters = false;
+    }
+    private static bool RowPassesFilters(
+        Widget_TableRow<ThingRec> row,
+        List<IThingMatcher> thingMatchers
+    )
+    {
+        foreach (var thingMatcher in thingMatchers)
+        {
+            if (thingMatcher.Match(row.Id) == false)
             {
-                if (thingMatcher.Match(row.Id) == false)
-                {
-                    row.IsHidden = true;
-                    break;
-                }
+                return false;
             }
         }
 
-        Table.RecalcLayout();
+        return true;
     }
     public void ResetFilters()
     {
-        IsFiltersBeingReset = true;
         foreach (var thingMatcher in ThingMatchers)
         {
             thingMatcher.Reset();
         }
-        IsFiltersBeingReset = false;
-
-        ApplyFilters();
     }
 }

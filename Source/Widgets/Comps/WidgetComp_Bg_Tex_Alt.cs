@@ -20,13 +20,16 @@ public class WidgetComp_Bg_Tex_Alt
     }
     public override void Draw(Rect rect, in Vector2 containerSize)
     {
-        if (Mouse.IsOver(rect))
+        if (Event.current.type == EventType.Repaint)
         {
-            GUI.DrawTexture(rect, TexHover);
-        }
-        else
-        {
-            GUI.DrawTexture(rect, TexIdle);
+            if (Mouse.IsOver(rect))
+            {
+                GUI.DrawTexture(rect, TexHover);
+            }
+            else
+            {
+                GUI.DrawTexture(rect, TexIdle);
+            }
         }
 
         Widget.Draw(rect, containerSize);

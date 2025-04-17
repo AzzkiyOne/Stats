@@ -24,6 +24,19 @@ public class TableDef
     internal Color IconColor { get; private set; } = Color.white;
     private Widget_Table_Things? _widget;
     internal Widget_Table_Things Widget => _widget ??= new(this);
+    public override void PostLoad()
+    {
+        base.PostLoad();
+
+        LongEventHandler.ExecuteWhenFinished(ResolveIcon);
+    }
+    public override void ResolveReferences()
+    {
+        base.ResolveReferences();
+
+        Worker = (ITableWorker)Activator.CreateInstance(workerClass);
+        Worker.TableDef = this;
+    }
     private void ResolveIcon()
     {
         if (iconPath?.Length > 0)
@@ -45,18 +58,5 @@ public class TableDef
                 IconColor = iconThingDef.uiIconColor;
             }
         }
-    }
-    public override void PostLoad()
-    {
-        base.PostLoad();
-
-        LongEventHandler.ExecuteWhenFinished(ResolveIcon);
-    }
-    public override void ResolveReferences()
-    {
-        base.ResolveReferences();
-
-        Worker = (ITableWorker)Activator.CreateInstance(workerClass);
-        Worker.TableDef = this;
     }
 }

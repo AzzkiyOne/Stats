@@ -62,7 +62,10 @@ public class Widget_Container_Ver
 
         foreach (var child in Children)
         {
-            if (rect.y >= yMax) break;
+            if (rect.y >= yMax)
+            {
+                break;
+            }
 
             rect.size = child.GetSize(size);
 

@@ -15,7 +15,10 @@ internal static class GUIDebugger
     [Conditional("DEBUG")]
     public static void DebugRect(IWidget widget, Rect rect)
     {
-        if (!(Event.current.control && Mouse.IsOver(rect))) return;
+        if (!(Event.current.control && Mouse.IsOver(rect)))
+        {
+            return;
+        }
 
         var name = widget.GetType().Name;
         var color = name.ToUniqueColorRGB().SaturationChanged(0.5f);
@@ -24,7 +27,11 @@ internal static class GUIDebugger
         var xStr = rect.x.ToString("F0");
         var yStr = rect.y.ToString("F0");
         var text = $"<b>{name}:</b> <i>{widthStr} x {heightStr} ({xStr}, {yStr})</i>";
-        if (widget is WidgetComp) text = $"<b>@[</b>{text}<b>]</b>";
+        if (widget is WidgetComp)
+        {
+            text = $"<b>@[</b>{text}<b>]</b>";
+        }
+
         var textSize = Text.CalcSize(text);
 
         DebugData.Add((text, color, textSize));
@@ -40,7 +47,10 @@ internal static class GUIDebugger
     [Conditional("DEBUG")]
     public static void DrawDebugInfo(Rect viewRect)
     {
-        if (DebugData.Count == 0) return;
+        if (DebugData.Count == 0)
+        {
+            return;
+        }
 
         DebugData.Reverse();
 
@@ -51,8 +61,14 @@ internal static class GUIDebugger
 
         // GenUI.GetMouseAttachedWindowPos actually does this already, but it
         // uses screen size instead of window size (which is passed as viewRect).
-        if (rect.xMax > viewRect.xMax) rect.x -= rect.width;
-        if (rect.yMax > viewRect.yMax) rect.y -= rect.height;
+        if (rect.xMax > viewRect.xMax)
+        {
+            rect.x -= rect.width;
+        }
+        if (rect.yMax > viewRect.yMax)
+        {
+            rect.y -= rect.height;
+        }
 
         Widgets.DrawBoxSolidWithOutline(
             rect,
@@ -70,8 +86,13 @@ internal static class GUIDebugger
             Widgets.DrawBoxSolid(rect, bgColor);
 
             var origGUIColor = GUI.color;
-            if (bgColor.WithinDiffThresholdFrom(Color.white, 1.1f)) GUI.color = Color.black;
+            if (bgColor.WithinDiffThresholdFrom(Color.white, 1.1f))
+            {
+                GUI.color = Color.black;
+            }
+
             Widgets.Label(rect.ContractedBy(Padding, 0f), text);
+
             GUI.color = origGUIColor;
 
             rect.y += size.y;

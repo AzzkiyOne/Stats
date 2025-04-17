@@ -9,7 +9,10 @@ public class ColumnWorker_WeaponRanged_DirectHitChance
     {
         var verb = thing.Def.Verbs.Primary();
 
-        if (verb?.ForcedMissRadius == null) return 0f;
+        if (verb?.ForcedMissRadius == null)
+        {
+            return 0f;
+        }
 
         return 1f / GenRadial.NumCellsInRadius(verb.ForcedMissRadius);
     }

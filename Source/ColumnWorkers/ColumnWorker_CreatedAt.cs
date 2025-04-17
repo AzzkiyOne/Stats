@@ -15,9 +15,11 @@ public class ColumnWorker_CreatedAt
 
         foreach (var recipe in DefDatabase<RecipeDef>.AllDefs)
         {
-            if (
+            if
+            (
                 recipe is { products.Count: 1, IsSurgery: false }
-                && recipe.products.First().thingDef == thing.Def
+                &&
+                recipe.products.First().thingDef == thing.Def
             )
             {
                 foreach (var recipeUser in recipe.AllRecipeUsers)

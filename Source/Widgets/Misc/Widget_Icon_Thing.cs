@@ -67,6 +67,11 @@ public class Widget_Icon_Thing
     }
     protected override void DrawContent(Rect rect)
     {
+        if (Event.current.type != EventType.Repaint)
+        {
+            return;
+        }
+
         rect.position += Offset * rect.size;
         var origGUIColor = GUI.color;
         GUI.color = Color;

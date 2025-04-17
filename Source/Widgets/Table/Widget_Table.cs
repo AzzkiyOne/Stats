@@ -13,6 +13,7 @@ internal sealed class Widget_Table
     private float TotalBodyRowsHeight = 0f;
     private Vector2 ScrollPos = new();
     private static Color ColumnSeparatorLineColor = new(1f, 1f, 1f, 0.05f);
+    private bool ShouldRecalcLayout = true;
     public Widget_Table(
         List<Column> columns,
         List<Widget_TableRow> headerRows,
@@ -23,10 +24,16 @@ internal sealed class Widget_Table
         HeaderRows = headerRows;
         BodyRows = bodyRows;
 
-        RecalcLayout();
+        AttachTo(headerRows);
+        AttachTo(bodyRows);
     }
     public void Draw(Rect rect)
     {
+        if (ShouldRecalcLayout && Event.current.type == EventType.Layout)
+        {
+            RecalcLayout();
+        }
+
         HandleHorScroll(rect);
 
         // Probably could cache this.
@@ -50,7 +57,7 @@ internal sealed class Widget_Table
         var contentSizeMax = new Vector2(
             // Min. row width
             leftColumnsMinWidth + rightColumnsMinWidth,
-            // Total rows height
+            // Total rows totalHeight
             TotalBodyRowsHeight + TotalHeaderRowsHeight
         );
         var contentSizeVisible = new Vector2(
@@ -71,33 +78,28 @@ internal sealed class Widget_Table
         Widgets.BeginScrollView(rect, ref ScrollPos, contentRectMax, true);
 
         var contentRectVisible = new Rect(ScrollPos, contentSizeVisible);
+
         // Left part
-        var leftPartRect = contentRectVisible.CutByX(leftColumnsMinWidth);
+        if (leftColumnsMinWidth > 0f)
+        {
+            var leftPartRect = contentRectVisible.CutByX(leftColumnsMinWidth);
 
-        DrawPart(
-            leftPartRect,
-            new Vector2(0f, ScrollPos.y),
-            0f,
-            true
-        );
+            DrawPart(leftPartRect, ScrollPos with { x = 0f }, 0f, true);
 
-        // Separator line
-        Widget_LineVertical.Draw(
-            leftPartRect.xMax,
-            leftPartRect.y,
-            rect.height,
-            StatsMainTabWindow.BorderLineColor
-        );
+            // Separator line
+            Widget_LineVertical.Draw(
+                leftPartRect.xMax,
+                leftPartRect.y,
+                rect.height,
+                StatsMainTabWindow.BorderLineColor
+            );
+        }
 
         // Right part
         var rightPartFreeSpace = contentRectVisible.width - rightColumnsMinWidth;
+        var cellExtraWidth = Mathf.Max(rightPartFreeSpace / rightColumnsCount, 0f);
 
-        DrawPart(
-            contentRectVisible,
-            ScrollPos,
-            Mathf.Max(rightPartFreeSpace / rightColumnsCount, 0f),
-            false
-        );
+        DrawPart(contentRectVisible, ScrollPos, cellExtraWidth, false);
 
         Widgets.EndScrollView();
     }
@@ -108,55 +110,16 @@ internal sealed class Widget_Table
         bool drawPinned
     )
     {
-        DrawColumnSeparators(
-            rect,
-            scrollPos.x,
-            cellExtraWidth,
-            drawPinned
-        );
-        DrawHeaders(
-            rect.CutByY(TotalHeaderRowsHeight),
-            scrollPos.x,
-            cellExtraWidth,
-            drawPinned
-        );
-        DrawBody(
-            rect,
-            scrollPos,
-            cellExtraWidth,
-            drawPinned
-        );
+        DrawColumnSeparators(rect, Columns, scrollPos.x, cellExtraWidth, drawPinned);
+
+        var headersRect = rect.CutByY(TotalHeaderRowsHeight);
+
+        DrawRows(headersRect, HeaderRows, scrollPos with { y = 0f }, cellExtraWidth, drawPinned);
+        DrawRows(rect, BodyRows, scrollPos, cellExtraWidth, drawPinned);
     }
-    private void DrawHeaders(
+    private static void DrawRows(
         Rect rect,
-        float offsetX,
-        float cellExtraWidth,
-        bool drawPinned
-    )
-    {
-        GUI.BeginClip(rect);
-
-        var y = 0f;
-
-        for (int i = 0; i < HeaderRows.Count; i++)
-        {
-            var row = HeaderRows[i];
-            row.Draw(
-                new Rect(0f, y, rect.width, row.Height),
-                offsetX,
-                drawPinned,
-                cellExtraWidth,
-                i,
-                this
-            );
-
-            y += row.Height;
-        }
-
-        GUI.EndClip();
-    }
-    private void DrawBody(
-        Rect rect,
+        List<Widget_TableRow> rows,
         Vector2 scrollPos,
         float cellExtraWidth,
         bool drawPinned
@@ -164,119 +127,130 @@ internal sealed class Widget_Table
     {
         GUI.BeginClip(rect);
 
-        var rowRect = new Rect(0f, -scrollPos.y, rect.width, 0f);
+        var yMax = rect.height;
+        rect.x = 0f;
+        rect.y = -scrollPos.y;
+        var i = 0;
 
-        var drawIndex = 0;
-        foreach (var row in BodyRows)
+        foreach (var row in rows)
         {
-            if (rowRect.y >= rect.height) break;
-            if (row.IsHidden && row.IsSelected == false) continue;
-
-            rowRect.height = row.Height;
-
-            if (rowRect.yMax > 0f)
+            if (rect.y >= yMax)
             {
-                row.Draw(rowRect, scrollPos.x, drawPinned, cellExtraWidth, drawIndex, this);
+                break;
             }
 
-            rowRect.y = rowRect.yMax;
-            drawIndex++;
+            if (row.IsVisible == false)
+            {
+                continue;
+            }
+
+            rect.height = row.Height;
+            if (rect.yMax > 0f)
+            {
+                row.Draw(rect, scrollPos.x, drawPinned, cellExtraWidth, i);
+            }
+
+            rect.y = rect.yMax;
+            i++;
         }
 
         GUI.EndClip();
     }
     // The performance impact of instead drawing a vertical border for each
-    // individual column is huge. So we have to keep this.
-    private void DrawColumnSeparators(
+    // individual column's cell is huge. So we have to keep this.
+    private static void DrawColumnSeparators(
         Rect rect,
+        List<Column> columns,
         float offsetX,
         float cellExtraWidth,
         bool drawPinned
     )
     {
-        if (Event.current.type != EventType.Repaint) return;
+        if (Event.current.type != EventType.Repaint)
+        {
+            return;
+        }
 
         var x = -offsetX;
 
-        foreach (var column in Columns)
+        foreach (var column in columns)
         {
-            if (column.IsPinned != drawPinned) continue;
+            if (column.IsPinned != drawPinned)
+            {
+                continue;
+            }
 
-            var xMax = x + column.Width + cellExtraWidth;
+            x += column.Width + cellExtraWidth;
+            if (x >= rect.width)
+            {
+                break;
+            }
 
-            if (xMax >= rect.width) break;
-
-            if (xMax > 0f)
+            if (x > 0f)
             {
                 Widget_LineVertical.Draw(
-                    xMax + rect.x,
+                    x + rect.x,
                     rect.y,
                     rect.height,
                     ColumnSeparatorLineColor
                 );
             }
-
-            x = xMax;
         }
     }
     private void HandleHorScroll(Rect rect)
     {
         if
         (
-            Event.current.isScrollWheel
-            &&
-            Event.current.control
+            Event.current is { control: true, isScrollWheel: true }
             &&
             Mouse.IsOver(rect)
         )
         {
-            var newScrollX = ScrollPos.x + Event.current.delta.y * 10f;
+            ScrollPos.x = Mathf.Max(
+                ScrollPos.x + Event.current.delta.y * 10f,
+                0f
+            );
 
-            ScrollPos.x = newScrollX >= 0f ? newScrollX : 0f;
             Event.current.Use();
         }
     }
-    public void RecalcLayout()
+    public void ScheduleLayoutRecalc()
     {
-        // Reset
-
-        // Columns widths
+        ShouldRecalcLayout = true;
+    }
+    // TODO: Could it be faster to recalc by column?
+    private void RecalcLayout()
+    {
         foreach (var column in Columns)
         {
             column.Width = 0f;
         }
 
-        // Misc
-        TotalHeaderRowsHeight = 0f;
-        TotalBodyRowsHeight = 0f;
-        ScrollPos.y = 0f;
-
-        // Recalc
-
-        // Header rows
-        foreach (var row in HeaderRows)
-        {
-            TotalHeaderRowsHeight += RecalcRow(row);
-        }
-
-        // Body rows
-        foreach (var row in BodyRows)
-        {
-            if (row.IsHidden && row.IsSelected == false) continue;
-
-            TotalBodyRowsHeight += RecalcRow(row);
-        }
+        //ScrollPos.y = 0f;
+        TotalHeaderRowsHeight = RecalcRows(HeaderRows);
+        TotalBodyRowsHeight = RecalcRows(BodyRows);
+        ShouldRecalcLayout = false;
     }
-    private float RecalcRow(Widget_TableRow row)
+    private static float RecalcRows(List<Widget_TableRow> rows)
     {
-        foreach (var cell in row.Cells)
+        var totalHeight = 0f;
+
+        foreach (var row in rows)
         {
-            var cellSize = cell.GetSize();
-            cell.Column.Width = Mathf.Max(cell.Column.Width, cellSize.x);
-            row.Height = Mathf.Max(row.Height, cellSize.y);
+            if (row.IsVisible)
+            {
+                totalHeight += row.RecalcLayout();
+            }
         }
 
-        return row.Height;
+        return totalHeight;
+    }
+    private void AttachTo(List<Widget_TableRow> rows)
+    {
+        foreach (var row in rows)
+        {
+            row.Parent = this;
+        }
     }
 
     public class Column

@@ -14,9 +14,15 @@ public abstract class TableWorker
     {
         foreach (var thingDef in DefDatabase<ThingDef>.AllDefs)
         {
-            if (IsValidThingDef(thingDef) == false) continue;
+            if (IsValidThingDef(thingDef) == false)
+            {
+                continue;
+            }
 
-            if (thingDef.MadeFromStuff == false) yield return new(thingDef);
+            if (thingDef.MadeFromStuff == false)
+            {
+                yield return new(thingDef);
+            }
 
             var allowedStuffs = GenStuff.AllowedStuffsFor(thingDef);
 

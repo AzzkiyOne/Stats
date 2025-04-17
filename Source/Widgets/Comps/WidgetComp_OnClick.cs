@@ -18,8 +18,15 @@ public class WidgetComp_OnClick
     }
     public override void Draw(Rect rect, in Vector2 containerSize)
     {
-        if (PlaySound) MouseoverSounds.DoRegion(rect);
-        if (GUI.Button(rect, "", Widgets.EmptyStyle)) CB();
+        if (PlaySound)
+        {
+            MouseoverSounds.DoRegion(rect);
+        }
+
+        if (GUI.Button(rect, "", Widgets.EmptyStyle))
+        {
+            CB();
+        }
 
         Widget.Draw(rect, containerSize);
     }

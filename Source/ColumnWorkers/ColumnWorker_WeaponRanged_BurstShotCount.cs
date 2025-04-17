@@ -7,7 +7,10 @@ public class ColumnWorker_WeaponRanged_BurstShotCount
     {
         var verb = thing.Def.Verbs.Primary();
 
-        if (verb is not { Ranged: true, showBurstShotStats: true, burstShotCount: > 1 }) return 0f;
+        if (verb is not { Ranged: true, showBurstShotStats: true, burstShotCount: > 1 })
+        {
+            return 0f;
+        }
 
         return verb.burstShotCount;
     }

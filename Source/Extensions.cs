@@ -9,16 +9,16 @@ public static class Ext_UnityEngine_Rect
 {
     public static Rect CutByX(ref this Rect rect, float amount)
     {
-        var result = new Rect(rect.x, rect.y, amount, rect.height);
-        // Changing "xMin" also auto corrects width. Changing "x" don't.
+        var result = rect with { width = amount };
+        // Changing "xMin" also auto corrects width. Changing "x" doesn't.
         rect.xMin += amount;
 
         return result;
     }
     public static Rect CutByY(ref this Rect rect, float amount)
     {
-        var result = new Rect(rect.x, rect.y, rect.width, amount);
-        // Changing "yMin" also auto corrects height. Changing "y" don't.
+        var result = rect with { height = amount };
+        // Changing "yMin" also auto corrects height. Changing "y" doesn't.
         rect.yMin += amount;
 
         return result;
@@ -29,11 +29,11 @@ public static class Ext_VerbList
 {
     public static VerbProperties? Primary(this List<VerbProperties> verbs)
     {
-        return verbs.FirstOrFallback(v => v?.isPrimary == true);
+        return verbs.FirstOrFallback(static v => v?.isPrimary == true);
     }
 }
 
-public static class Widget_Ext
+public static class Ext_Widget
 {
     // Doesn't include widget's "own" size.
     public static Vector2 GetFixedSize(this IWidget widget)
@@ -42,12 +42,12 @@ public static class Widget_Ext
     }
     public static void DrawIn(this IWidget widget, Rect rect)
     {
-        rect.size = widget.GetSize(rect.size);
-        widget.Draw(rect, rect.size);
+        var size = widget.GetSize(rect.size);
+        widget.Draw(rect with { size = size }, rect.size);
     }
 }
 
-public static class String_Ext
+public static class Ext_String
 {
     public static Color ToUniqueColorRGB(this string str)
     {

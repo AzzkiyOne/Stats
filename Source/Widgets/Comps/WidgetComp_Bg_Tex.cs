@@ -13,7 +13,10 @@ public class WidgetComp_Bg_Tex
     }
     public override void Draw(Rect rect, in Vector2 containerSize)
     {
-        GUI.DrawTexture(rect, Tex);
+        if (Event.current.type == EventType.Repaint)
+        {
+            GUI.DrawTexture(rect, Tex);
+        }
 
         Widget.Draw(rect, containerSize);
     }

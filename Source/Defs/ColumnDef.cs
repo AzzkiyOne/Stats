@@ -27,13 +27,7 @@ public class ColumnDef
     {
         base.PostLoad();
 
-        LongEventHandler.ExecuteWhenFinished(() =>
-        {
-            if (iconPath?.Length > 0)
-            {
-                Icon = ContentFinder<Texture2D>.Get(iconPath);
-            }
-        });
+        LongEventHandler.ExecuteWhenFinished(ResolveIcon);
     }
     public override void ResolveReferences()
     {
@@ -69,5 +63,12 @@ public class ColumnDef
 
         Worker = (IColumnWorker)Activator.CreateInstance(workerClass);
         Worker.ColumnDef = this;
+    }
+    private void ResolveIcon()
+    {
+        if (iconPath?.Length > 0)
+        {
+            Icon = ContentFinder<Texture2D>.Get(iconPath);
+        }
     }
 }

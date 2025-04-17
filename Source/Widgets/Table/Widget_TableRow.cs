@@ -6,12 +6,30 @@ namespace Stats;
 
 internal class Widget_TableRow
 {
+    public Widget_Table? Parent { private get; set; }
     public List<WidgetComp_TableCell> Cells { get; } = [];
     public float Height = 0f;
-    public bool IsHidden = false;
+    private bool _IsHidden = false;
+    public bool IsHidden
+    {
+        set
+        {
+            _IsHidden = value;
+            Parent?.ScheduleLayoutRecalc();
+        }
+    }
     private readonly OnDraw DrawBG;
     private bool IsHovered = false;
-    public bool IsSelected = false;
+    private bool _IsSelected = false;
+    private bool IsSelected
+    {
+        set
+        {
+            _IsSelected = value;
+            Parent?.ScheduleLayoutRecalc();
+        }
+    }
+    public bool IsVisible => !_IsHidden || _IsSelected;
     public Widget_TableRow(OnDraw onDraw)
     {
         DrawBG = onDraw;
@@ -21,52 +39,76 @@ internal class Widget_TableRow
         float offsetX,
         bool drawPinned,
         float cellExtraWidth,
-        int index,
-        Widget_Table parent
+        int index
     )
     {
+        if (_IsSelected)
+        {
+            Widgets.DrawHighlightSelected(rect);
+        }
+
         var mouseIsOverRect = Mouse.IsOver(rect);
 
-        if (mouseIsOverRect) IsHovered = true;
+        if (mouseIsOverRect)
+        {
+            IsHovered = true;
+        }
 
-        if (IsSelected) Widgets.DrawHighlightSelected(rect);
-        DrawBG(ref rect, IsHovered, index);
+        DrawBG(rect, IsHovered, index);
 
-        if (mouseIsOverRect == false) IsHovered = false;
+        if (mouseIsOverRect == false)
+        {
+            IsHovered = false;
+        }
 
-        // Cells
-        var cellRect = new Rect(-offsetX, rect.y, 0f, rect.height);
+        var xMax = rect.width;
+        rect.x = -offsetX;
 
         foreach (var cell in Cells)
         {
-            if (cell.Column.IsPinned != drawPinned) continue;
-            if (cellRect.x >= rect.width) break;
-
-            cellRect.width = cell.Column.Width + cellExtraWidth;
-
-            if (cellRect.xMax > 0f)
+            if (rect.x >= xMax)
             {
-                cell.DrawIn(cellRect);
+                break;
             }
 
-            cellRect.x = cellRect.xMax;
+            if (cell.Column.IsPinned != drawPinned)
+            {
+                continue;
+            }
+
+            rect.width = cell.Column.Width + cellExtraWidth;
+            if (rect.xMax > 0f)
+            {
+                cell.DrawIn(rect);
+            }
+
+            rect.x = rect.xMax;
         }
 
         // This must go after cells to not interfere with their GUI events.
         if (Event.current.type == EventType.MouseDown && mouseIsOverRect)
         {
-            // It is important to switch row's selected flag before
-            // layout recalculation, because it skips hidden and unselected rows.
-            IsSelected = !IsSelected;
-            if (IsSelected == false && IsHidden) parent.RecalcLayout();
-            // Not sure if this is usefull.
-            // Better would be to stop rendering altogether, because of layout
-            // recalculation.
-            Event.current.Use();
+            IsSelected = !_IsSelected;
         }
     }
+    public float RecalcLayout()
+    {
+        Height = 0f;
 
-    internal delegate void OnDraw(ref Rect rect, bool isHovered, int index);
+        foreach (var cell in Cells)
+        {
+            var cellSize = cell.GetSize();
+
+            cell.Column.Width = Mathf.Max(cell.Column.Width, cellSize.x);
+            // This seems pointless (at least for now). But i'll just leave it for
+            // correctness sake.
+            Height = Mathf.Max(Height, cellSize.y);
+        }
+
+        return Height;
+    }
+
+    public delegate void OnDraw(Rect rect, bool isHovered, int index);
 }
 
 internal sealed class Widget_TableRow<IdType>

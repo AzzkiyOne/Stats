@@ -7,7 +7,10 @@ public class ColumnWorker_WeaponRanged_MissRadius
     {
         var verb = thing.Def.Verbs.Primary();
 
-        if (verb?.ForcedMissRadius == null) return 0f;
+        if (verb?.ForcedMissRadius == null)
+        {
+            return 0f;
+        }
 
         return verb.ForcedMissRadius;
     }

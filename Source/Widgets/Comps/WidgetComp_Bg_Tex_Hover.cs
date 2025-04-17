@@ -14,7 +14,12 @@ public class WidgetComp_Bg_Tex_Hover
     }
     public override void Draw(Rect rect, in Vector2 containerSize)
     {
-        if (Mouse.IsOver(rect))
+        if
+        (
+            Event.current.type == EventType.Repaint
+            &&
+            Mouse.IsOver(rect)
+        )
         {
             GUI.DrawTexture(rect, Tex);
         }

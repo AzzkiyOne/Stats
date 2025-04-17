@@ -7,7 +7,10 @@ public class ColumnWorker_WeaponRanged_AimingTime
     {
         var verb = thing.Def.Verbs.Primary();
 
-        if (verb?.warmupTime == null) return 0f;
+        if (verb?.warmupTime == null)
+        {
+            return 0f;
+        }
 
         return verb.warmupTime;
     }

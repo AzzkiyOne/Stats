@@ -14,7 +14,10 @@ public abstract class ThingMatcher<T>
         get => _Value;
         set
         {
-            if (_Value.Equals(value)) return;
+            if (_Value.Equals(value))
+            {
+                return;
+            }
 
             _Value = value;
             OnChange?.Invoke();
@@ -27,7 +30,10 @@ public abstract class ThingMatcher<T>
         get => _Operator;
         set
         {
-            if (_Operator == value) return;
+            if (_Operator == value)
+            {
+                return;
+            }
 
             _Operator = value;
             OnChange?.Invoke();

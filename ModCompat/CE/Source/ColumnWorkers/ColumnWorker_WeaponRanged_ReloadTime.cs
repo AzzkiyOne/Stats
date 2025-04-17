@@ -10,7 +10,10 @@ public class ColumnWorker_WeaponRanged_ReloadTime
     {
         var statReq = StatRequest.For(thing.Def, thing.StuffDef);
 
-        if (CE_StatDefOf.MagazineCapacity.Worker.ShouldShowFor(statReq) == false) return 0f;
+        if (CE_StatDefOf.MagazineCapacity.Worker.ShouldShowFor(statReq) == false)
+        {
+            return 0f;
+        }
 
         return ColumnDef.stat!.Worker.GetValue(statReq);
     }

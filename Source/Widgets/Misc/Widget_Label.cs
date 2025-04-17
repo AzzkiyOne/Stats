@@ -30,6 +30,11 @@ public sealed class Widget_Label
     }
     protected override void DrawContent(Rect rect)
     {
+        if (Event.current.type != EventType.Repaint)
+        {
+            return;
+        }
+
         Widgets.Label(rect, Text);
     }
 }

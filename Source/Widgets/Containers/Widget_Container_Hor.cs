@@ -62,7 +62,10 @@ public class Widget_Container_Hor
 
         foreach (var child in Children)
         {
-            if (rect.x >= xMax) break;
+            if (rect.x >= xMax)
+            {
+                break;
+            }
 
             rect.size = child.GetSize(size);
 

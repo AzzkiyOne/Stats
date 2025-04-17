@@ -17,7 +17,10 @@ public abstract class ColumnWorker<ValueType>
     {
         var value = GetValue(thing);
 
-        if (ShouldShowValue(value) == false) return null;
+        if (ShouldShowValue(value) == false)
+        {
+            return null;
+        }
 
         return GetTableCellContent(value, thing);
     }

@@ -31,7 +31,7 @@ internal sealed class Widget_WindowTitleBar
         AsIcon(ref resetTableFiltersBtn, resetTableFilters, "Reset filters");
 
         IWidget dragIcon = new Widget_Icon(HoldToDragTex);
-        AsIcon(ref dragIcon, "Hold to drag the window (if there's nothing more to hold on to)");
+        AsIcon(ref dragIcon, "Hold to drag the window (if there's nothing else to hold on to)");
 
         IWidget infoIcon = new Widget_Icon(TexButton.Info);
         AsIcon(ref infoIcon, Manual);
@@ -73,7 +73,7 @@ internal sealed class Widget_WindowTitleBar
 
         Widget.Draw(rect, containerSize);
     }
-    private void AsIcon(
+    private static void AsIcon(
         ref IWidget widget,
         Action onClick,
         string tooltip,
@@ -84,7 +84,7 @@ internal sealed class Widget_WindowTitleBar
         new WidgetComp_Bg_Tex_Hover(ref widget, TexUI.HighlightTex);
         new WidgetComp_OnClick(ref widget, onClick);
     }
-    private void AsIcon(ref IWidget widget, string tooltip, float pad = IconPadding)
+    private static void AsIcon(ref IWidget widget, string tooltip, float pad = IconPadding)
     {
         new WidgetComp_Size_Inc_Abs(ref widget, pad);
         new WidgetComp_Size_Abs(ref widget, StatsMainTabWindow.TitleBarHeight);

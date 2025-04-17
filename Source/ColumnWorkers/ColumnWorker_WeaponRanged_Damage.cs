@@ -8,7 +8,10 @@ public class ColumnWorker_WeaponRanged_Damage
         var verb = thing.Def.Verbs.Primary();
         var defaultProj = verb?.defaultProjectile?.projectile;
 
-        if (defaultProj?.damageDef?.harmsHealth is null or false) return 0f;
+        if (defaultProj?.damageDef?.harmsHealth is null or false)
+        {
+            return 0f;
+        }
 
         return defaultProj.GetDamageAmount(thing.Def, thing.StuffDef);
     }

@@ -23,7 +23,10 @@ public abstract class ColumnWorker_Str
 
         if (v1 == null)
         {
-            if (v2 == null) return 0;
+            if (v2 == null)
+            {
+                return 0;
+            }
 
             return -1;
         }

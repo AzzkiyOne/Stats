@@ -20,6 +20,11 @@ public class Widget_Icon
     }
     protected override void DrawContent(Rect rect)
     {
+        if (Event.current.type != EventType.Repaint)
+        {
+            return;
+        }
+
         GUI.DrawTexture(rect, Tex);
     }
 }
