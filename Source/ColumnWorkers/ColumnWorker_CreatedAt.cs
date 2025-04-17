@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using UnityEngine;
 using Verse;
 
 namespace Stats;
@@ -9,7 +8,7 @@ public class ColumnWorker_CreatedAt
     : ColumnWorker<IEnumerable<ThingDef>>
 {
     public override ColumnCellStyle CellStyle => ColumnCellStyle.String;
-    public override IEnumerable<ThingDef> GetValue(ThingRec thing)
+    protected override IEnumerable<ThingDef> GetValue(ThingRec thing)
     {
         var things = new HashSet<ThingDef>();
 
@@ -50,7 +49,7 @@ public class ColumnWorker_CreatedAt
             }
 
             IWidget icon = new Widget_Icon_Thing(thingDef);
-            new WidgetComp_Tooltip(ref icon, $"{thingDef.LabelCap}\n\n{thingDef.description}");
+            new WidgetComp_Tooltip(ref icon, $"<i>{thingDef.LabelCap}</i>\n\n{thingDef.description}");
             new WidgetComp_Bg_Tex_Hover(ref icon, TexUI.HighlightTex);
             new WidgetComp_OnClick(ref icon, handleIconClick);
 
@@ -62,11 +61,11 @@ public class ColumnWorker_CreatedAt
     public override IWidget_FilterInput GetFilterWidget()
     {
         return new Widget_FilterInput_Str(
-            new(thing => string.Join(", ", GetValue(thing).Select(thing => thing.LabelCap)))
+            new(thing => string.Join(",", GetValueCached(thing).Select(thing => thing.LabelCap)))
         );
     }
     public override int Compare(ThingRec thing1, ThingRec thing2)
     {
-        return GetValue(thing1).Count().CompareTo(GetValue(thing2).Count());
+        return GetValueCached(thing1).Count().CompareTo(GetValueCached(thing2).Count());
     }
 }

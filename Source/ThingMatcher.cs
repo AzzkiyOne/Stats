@@ -71,7 +71,7 @@ public abstract class ThingMatcher<T>
             return false;
         }
     }
-    public void Reset()
+    public virtual void Reset()
     {
         Set(DefaultValue, DefaultOp);
     }

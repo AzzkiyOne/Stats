@@ -7,7 +7,7 @@ public class ColumnWorker_Stat
     : ColumnWorker<float>
 {
     public override ColumnCellStyle CellStyle => ColumnCellStyle.Number;
-    public override float GetValue(ThingRec thing)
+    protected override float GetValue(ThingRec thing)
     {
         var statReq = StatRequest.For(thing.Def, thing.StuffDef);
 
@@ -79,10 +79,10 @@ public class ColumnWorker_Stat
     }
     public override IWidget_FilterInput GetFilterWidget()
     {
-        return new Widget_FilterInput_Num(new(GetValue));
+        return new Widget_FilterInput_Num(new(GetValueCached));
     }
     public override int Compare(ThingRec thing1, ThingRec thing2)
     {
-        return GetValue(thing1).CompareTo(GetValue(thing2));
+        return GetValueCached(thing1).CompareTo(GetValueCached(thing2));
     }
 }

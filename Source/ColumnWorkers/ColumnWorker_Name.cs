@@ -5,7 +5,7 @@ namespace Stats;
 public class ColumnWorker_Name
     : ColumnWorker_Str
 {
-    public override string? GetValue(ThingRec thing)
+    protected override string? GetValue(ThingRec thing)
     {
         return thing.StuffDef == null
             ? thing.Def.LabelCap

@@ -6,7 +6,7 @@ namespace Stats.Compat.CE;
 public class ColumnWorker_WeaponRanged_ReloadTime
     : ColumnWorker_Stat
 {
-    public override float GetValue(ThingRec thing)
+    protected override float GetValue(ThingRec thing)
     {
         var statReq = StatRequest.For(thing.Def, thing.StuffDef);
 

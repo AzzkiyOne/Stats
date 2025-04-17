@@ -21,10 +21,10 @@ public abstract class ColumnWorker_Bool
     }
     public override IWidget_FilterInput GetFilterWidget()
     {
-        return new Widget_FilterInput_Bool(new(GetValue));
+        return new Widget_FilterInput_Bool(new(GetValueCached));
     }
     public override int Compare(ThingRec thing1, ThingRec thing2)
     {
-        return GetValue(thing1).CompareTo(GetValue(thing2));
+        return GetValueCached(thing1).CompareTo(GetValueCached(thing2));
     }
 }

@@ -123,7 +123,7 @@ internal sealed class Widget_Table_Things
 
         new WidgetComp_Size_Inc_Abs(ref cell, cellPadHor, cellPadVer);
         new WidgetComp_Width_Rel(ref cell, 1f);
-        new WidgetComp_Tooltip(ref cell, $"{columnDef.LabelCap}\n\n{columnDef.description}");
+        new WidgetComp_Tooltip(ref cell, $"<i>{columnDef.LabelCap}</i>\n\n{columnDef.description}");
         new WidgetComp_Bg_Tex_Hover(ref cell, TexUI.HighlightTex);
         new WidgetComp_OnClick(ref cell, handleCellClick);
         new WidgetComp_Generic(ref cell, drawSortIndicator);
@@ -153,7 +153,7 @@ internal sealed class Widget_Table_Things
 
         try
         {
-            cell = columnDef.Worker.GetTableCellContent(rec);
+            cell = columnDef.Worker.GetTableCellWidget(rec);
         }
         catch
         {

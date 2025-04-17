@@ -18,6 +18,8 @@ public class ColumnDef
 #pragma warning disable CS8618
     public Type workerClass;
 #pragma warning restore CS8618
+    // Indicates whether a value is "good" or "bad" in general.
+    // Isn't used anywhere.
     public bool isNegative = false;
     internal Texture2D? Icon { get; private set; }
 #pragma warning disable CS8618

@@ -14,12 +14,12 @@ public abstract class ColumnWorker_Str
     }
     public override IWidget_FilterInput GetFilterWidget()
     {
-        return new Widget_FilterInput_Str(new(GetValue));
+        return new Widget_FilterInput_Str(new(GetValueCached));
     }
     public override int Compare(ThingRec thing1, ThingRec thing2)
     {
-        var v1 = GetValue(thing1);
-        var v2 = GetValue(thing2);
+        var v1 = GetValueCached(thing1);
+        var v2 = GetValueCached(thing2);
 
         if (v1 == null)
         {

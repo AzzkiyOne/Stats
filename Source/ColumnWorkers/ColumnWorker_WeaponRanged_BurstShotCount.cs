@@ -3,7 +3,7 @@
 public class ColumnWorker_WeaponRanged_BurstShotCount
     : ColumnWorker_Num
 {
-    public override float GetValue(ThingRec thing)
+    protected override float GetValue(ThingRec thing)
     {
         var verb = thing.Def.Verbs.Primary();
 

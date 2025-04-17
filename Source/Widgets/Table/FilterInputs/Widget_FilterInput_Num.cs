@@ -77,6 +77,12 @@ public sealed class Widget_FilterInput_Num
             : base(0f, Op_Float_Any.Instance, valueFunc)
         {
         }
+        public override void Reset()
+        {
+            base.Reset();
+
+            ValueStrBuffer = "";
+        }
     }
 
     private sealed class Op_Float_Any

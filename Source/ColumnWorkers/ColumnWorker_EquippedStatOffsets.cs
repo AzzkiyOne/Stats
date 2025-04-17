@@ -9,7 +9,7 @@ public class ColumnWorker_EquippedStatOffsets
     : ColumnWorker_Num
 {
     public override ColumnCellStyle CellStyle => ColumnCellStyle.String;
-    public override float GetValue(ThingRec thing)
+    protected override float GetValue(ThingRec thing)
     {
         return thing.Def.equippedStatOffsets?.Count ?? 0f;
     }

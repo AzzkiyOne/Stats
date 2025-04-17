@@ -5,7 +5,7 @@ namespace Stats;
 public class ColumnWorker_Apparel_Layers
     : ColumnWorker_Str
 {
-    public override string? GetValue(ThingRec thing)
+    protected override string? GetValue(ThingRec thing)
     {
         var labels =
             thing

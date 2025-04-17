@@ -3,7 +3,7 @@
 public class ColumnWorker_ContentSource
     : ColumnWorker_Str
 {
-    public override string? GetValue(ThingRec thing)
+    protected override string? GetValue(ThingRec thing)
     {
         return thing.Def.modContentPack?.Name;
     }

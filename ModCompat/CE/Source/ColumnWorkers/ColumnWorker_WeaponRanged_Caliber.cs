@@ -6,7 +6,7 @@ namespace Stats.Compat.CE;
 public class ColumnWorker_WeaponRanged_Caliber
     : ColumnWorker_Str
 {
-    public override string GetValue(ThingRec thing)
+    protected override string GetValue(ThingRec thing)
     {
         var statReq = StatRequest.For(thing.Def, thing.StuffDef);
 
