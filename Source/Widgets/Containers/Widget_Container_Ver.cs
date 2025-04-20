@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-namespace Stats;
+namespace Stats.Widgets.Containers;
 
 public class Widget_Container_Ver
     : Widget

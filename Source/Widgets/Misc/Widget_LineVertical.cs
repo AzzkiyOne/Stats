@@ -1,7 +1,6 @@
 ﻿using UnityEngine;
-using Verse;
 
-namespace Stats;
+namespace Stats.Widgets.Misc;
 
 internal static class Widget_LineVertical
 {
@@ -14,7 +13,7 @@ internal static class Widget_LineVertical
 
         var origGUIColor = GUI.color;
         GUI.color = color;
-        Widgets.DrawLineVertical(x, y, length);
+        Verse.Widgets.DrawLineVertical(x, y, length);
         GUI.color = origGUIColor;
     }
 }

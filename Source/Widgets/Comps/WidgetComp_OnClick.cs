@@ -1,9 +1,8 @@
 ﻿using System;
 using UnityEngine;
-using Verse;
 using Verse.Sound;
 
-namespace Stats;
+namespace Stats.Widgets.Comps;
 
 public class WidgetComp_OnClick
     : WidgetComp
@@ -23,7 +22,7 @@ public class WidgetComp_OnClick
             MouseoverSounds.DoRegion(rect);
         }
 
-        if (GUI.Button(rect, "", Widgets.EmptyStyle))
+        if (GUI.Button(rect, "", Verse.Widgets.EmptyStyle))
         {
             CB();
         }

@@ -1,13 +1,13 @@
 ﻿using UnityEngine;
 
-namespace Stats;
+namespace Stats.Widgets.Table;
 
 internal abstract class WidgetComp_TableCell
     : IWidget
 {
     public abstract IWidget? Parent { set; }
-    public Widget_Table.Column Column;
-    public WidgetComp_TableCell(Widget_Table.Column column)
+    public Widget_Table_Generic.Column Column;
+    public WidgetComp_TableCell(Widget_Table_Generic.Column column)
     {
         Column = column;
     }

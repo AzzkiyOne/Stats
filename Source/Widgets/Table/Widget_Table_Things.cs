@@ -1,8 +1,14 @@
 ﻿using System.Collections.Generic;
+using Stats.Widgets.Comps;
+using Stats.Widgets.Comps.Size;
+using Stats.Widgets.Comps.Size.Constraints;
+using Stats.Widgets.Containers;
+using Stats.Widgets.Misc;
+using Stats.Widgets.Table.Filters;
 using UnityEngine;
 using Verse;
 
-namespace Stats;
+namespace Stats.Widgets.Table;
 
 internal sealed class Widget_Table_Things
 {
@@ -11,21 +17,21 @@ internal sealed class Widget_Table_Things
     private const float cellPadHor = 15f;
     private const float cellPadVer = 5f;
     private readonly List<IThingMatcher> ThingMatchers = [];
-    private readonly Widget_Table Table;
+    private readonly Widget_Table_Generic Table;
     private bool ShouldApplyFilters = false;
     public Widget_Table_Things(TableDef tableDef)
     {
         List<ColumnDef> columnDefs = [ColumnDefOf.Name, .. tableDef.columns];
 
         // Header rows and columns
-        var columns = new List<Widget_Table.Column>();
+        var columns = new List<Widget_Table_Generic.Column>();
         var headerRows = new List<Widget_TableRow>();
         var headerRow = new Widget_TableRow(DrawHeaderRowBG);
         var filtersRow = new Widget_TableRow(DrawFiltersRowBG);
 
         foreach (var columnDef in columnDefs)
         {
-            var column = new Widget_Table.Column(columnDef == ColumnDefOf.Name);
+            var column = new Widget_Table_Generic.Column(columnDef == ColumnDefOf.Name);
             columns.Add(column);
 
             headerRow.Cells.Add(CreateHeaderCell(columnDef, column));
@@ -57,7 +63,7 @@ internal sealed class Widget_Table_Things
         }
 
         // Finalize
-        Table = new Widget_Table(columns, headerRows, bodyRows);
+        Table = new Widget_Table_Generic(columns, headerRows, bodyRows);
 
         SortRowsByColumn(SortColumn);
     }
@@ -72,7 +78,7 @@ internal sealed class Widget_Table_Things
     }
     private WidgetComp_TableCell CreateHeaderCell(
         ColumnDef columnDef,
-        Widget_Table.Column column
+        Widget_Table_Generic.Column column
     )
     {
         IWidget cell;
@@ -99,9 +105,14 @@ internal sealed class Widget_Table_Things
 
         void drawSortIndicator(Rect rect)
         {
-            if (SortColumn == columnDef)
+            if
+            (
+                Event.current.type == EventType.Repaint
+                &&
+                SortColumn == columnDef
+            )
             {
-                Widgets.DrawBoxSolid(
+                Verse.Widgets.DrawBoxSolid(
                     SortDirection == SortDirection.Ascending
                         ? rect.BottomPartPixels(5f)
                         : rect.TopPartPixels(5f),
@@ -132,7 +143,7 @@ internal sealed class Widget_Table_Things
     }
     private static WidgetComp_TableCell CreateFilterCell(
         ColumnDef columnDef,
-        Widget_Table.Column column,
+        Widget_Table_Generic.Column column,
         out IThingMatcher thingMatcher
     )
     {
@@ -145,7 +156,7 @@ internal sealed class Widget_Table_Things
     }
     private static WidgetComp_TableCell CreateBodyCell(
         ColumnDef columnDef,
-        Widget_Table.Column column,
+        Widget_Table_Generic.Column column,
         ThingRec rec
     )
     {
@@ -173,8 +184,8 @@ internal sealed class Widget_Table_Things
     }
     private static void DrawHeaderRowBG(Rect rect, bool _, int __)
     {
-        Widgets.DrawHighlight(rect);
-        //Widgets.DrawLineHorizontal(
+        Verse.Widgets.DrawHighlight(rect);
+        //Verse.Widgets.DrawLineHorizontal(
         //    rect.x,
         //    rect.yMax - 1f,
         //    rect.width,
@@ -183,7 +194,7 @@ internal sealed class Widget_Table_Things
     }
     private static void DrawFiltersRowBG(Rect rect, bool _, int __)
     {
-        //Widgets.DrawLineHorizontal(
+        //Verse.Widgets.DrawLineHorizontal(
         //    rect.x,
         //    rect.yMax - 1f,
         //    rect.width,
@@ -194,11 +205,11 @@ internal sealed class Widget_Table_Things
     {
         if (isHovered)
         {
-            Widgets.DrawHighlight(rect);
+            Verse.Widgets.DrawHighlight(rect);
         }
         else if (index % 2 == 0)
         {
-            Widgets.DrawLightHighlight(rect);
+            Verse.Widgets.DrawLightHighlight(rect);
         }
     }
     private void SortRowsByColumn(ColumnDef columnDef)
@@ -219,7 +230,7 @@ internal sealed class Widget_Table_Things
             ) * (int)SortDirection
         );
     }
-    private void ScheduleFiltersApplication()
+    private void ScheduleFiltersApplication(IThingMatcher thingMatcher)
     {
         ShouldApplyFilters = true;
     }
@@ -239,6 +250,8 @@ internal sealed class Widget_Table_Things
         List<IThingMatcher> thingMatchers
     )
     {
+        // Why to evaluate all thing matchers? We can make a list of "active"
+        // thing matchers and only evaluate those.
         foreach (var thingMatcher in thingMatchers)
         {
             if (thingMatcher.Match(row.Id) == false)

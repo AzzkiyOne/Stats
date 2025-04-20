@@ -1,4 +1,9 @@
-﻿namespace Stats;
+﻿using Stats.Widgets;
+using Stats.Widgets.Misc;
+using Stats.Widgets.Table.Filters;
+using Stats.Widgets.Table.Filters.Widgets;
+
+namespace Stats;
 
 public abstract class ColumnWorker_Str
     : ColumnWorker<string?>
@@ -14,7 +19,7 @@ public abstract class ColumnWorker_Str
     }
     public override IWidget_FilterInput GetFilterWidget()
     {
-        return new Widget_FilterInput_Str(new(GetValueCached));
+        return new Widget_FilterInput_Str(GetValueCached);
     }
     public override int Compare(ThingRec thing1, ThingRec thing2)
     {

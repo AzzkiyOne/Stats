@@ -1,5 +1,9 @@
-﻿using System.Collections.Generic;
-using System.Text;
+﻿using System.Text;
+using Stats.Widgets;
+using Stats.Widgets.Comps;
+using Stats.Widgets.Comps.Size.Constraints;
+using Stats.Widgets.Containers;
+using Stats.Widgets.Misc;
 using UnityEngine;
 using Verse;
 

@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Stats;
+namespace Stats.Widgets;
 
 public abstract class Widget
     : IWidget

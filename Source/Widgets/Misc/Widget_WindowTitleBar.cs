@@ -1,8 +1,12 @@
 ﻿using System;
+using Stats.Widgets.Comps;
+using Stats.Widgets.Comps.Size;
+using Stats.Widgets.Comps.Size.Constraints;
+using Stats.Widgets.Containers;
 using UnityEngine;
 using Verse;
 
-namespace Stats;
+namespace Stats.Widgets.Misc;
 
 // Just to make RW stop throwing warning regarding assets loading.
 [StaticConstructorOnStartup]
@@ -61,15 +65,15 @@ internal sealed class Widget_WindowTitleBar
             GenUI.Pad,
             true
         );
-        new WidgetComp_Bg_Tex(ref container, Widgets.LightHighlight);
+        new WidgetComp_Bg_Tex(ref container, Verse.Widgets.LightHighlight);
 
         Widget = container;
     }
     public override void Draw(Rect rect, in Vector2 containerSize)
     {
-        Widgets.DrawLineHorizontal(
+        Verse.Widgets.DrawLineHorizontal(
             rect.x,
-            rect.yMax,
+            rect.yMax - 1f,
             rect.width,
             StatsMainTabWindow.BorderLineColor
         );

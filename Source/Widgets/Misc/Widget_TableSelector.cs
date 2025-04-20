@@ -1,8 +1,12 @@
 ﻿using System.Linq;
+using Stats.Widgets.Comps;
+using Stats.Widgets.Comps.Size;
+using Stats.Widgets.Comps.Size.Constraints;
+using Stats.Widgets.Containers;
 using UnityEngine;
 using Verse;
 
-namespace Stats;
+namespace Stats.Widgets.Misc;
 
 internal sealed class Widget_TableSelector
     : WidgetDecorator
@@ -40,7 +44,7 @@ internal sealed class Widget_TableSelector
         IWidget button = new Widget_Container_Hor([icon, label], GenUI.Pad);
         new WidgetComp_Size_Inc_Abs(ref button, GenUI.Pad, 0f);
         new WidgetComp_Bg_Tex_Alt(ref button,
-            Widgets.LightHighlight,
+            Verse.Widgets.LightHighlight,
             TexUI.HighlightTex
         );
         new WidgetComp_OnClick(ref button, ShowMenu);

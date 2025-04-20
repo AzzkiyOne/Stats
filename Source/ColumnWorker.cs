@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using Stats.Widgets;
+using Stats.Widgets.Table.Filters;
 
 namespace Stats;
 

@@ -2,11 +2,11 @@
 using UnityEngine;
 using Verse;
 
-namespace Stats;
+namespace Stats.Widgets.Table;
 
 internal class Widget_TableRow
 {
-    public Widget_Table? Parent { private get; set; }
+    public Widget_Table_Generic? Parent { private get; set; }
     public List<WidgetComp_TableCell> Cells { get; } = [];
     public float Height = 0f;
     private bool _IsHidden = false;
@@ -44,7 +44,7 @@ internal class Widget_TableRow
     {
         if (_IsSelected)
         {
-            Widgets.DrawHighlightSelected(rect);
+            Verse.Widgets.DrawHighlightSelected(rect);
         }
 
         var mouseIsOverRect = Mouse.IsOver(rect);

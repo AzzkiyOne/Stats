@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics;
+using Stats.Widgets;
 using UnityEngine;
 using Verse;
 
@@ -41,7 +42,7 @@ internal static class GUIDebugger
         ContentSize.x = Mathf.Max(textSize.x + textWidthCalcError, ContentSize.x);
         ContentSize.y += textSize.y;
 
-        Widgets.DrawBoxSolidWithOutline(rect, color, OutlineColor);
+        Verse.Widgets.DrawBoxSolidWithOutline(rect, color, OutlineColor);
         TooltipHandler.ClearTooltipsFrom(rect);
     }
     [Conditional("DEBUG")]
@@ -70,9 +71,9 @@ internal static class GUIDebugger
             rect.y -= rect.height;
         }
 
-        Widgets.DrawBoxSolidWithOutline(
+        Verse.Widgets.DrawBoxSolidWithOutline(
             rect,
-            Widgets.WindowBGFillColor,
+            Verse.Widgets.WindowBGFillColor,
             Color.white,
             BorderWidth
         );
@@ -83,7 +84,7 @@ internal static class GUIDebugger
         {
             rect.height = size.y;
 
-            Widgets.DrawBoxSolid(rect, bgColor);
+            Verse.Widgets.DrawBoxSolid(rect, bgColor);
 
             var origGUIColor = GUI.color;
             if (bgColor.WithinDiffThresholdFrom(Color.white, 1.1f))
@@ -91,7 +92,7 @@ internal static class GUIDebugger
                 GUI.color = Color.black;
             }
 
-            Widgets.Label(rect.ContractedBy(Padding, 0f), text);
+            Verse.Widgets.Label(rect.ContractedBy(Padding, 0f), text);
 
             GUI.color = origGUIColor;
 

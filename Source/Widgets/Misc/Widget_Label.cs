@@ -1,7 +1,6 @@
 ﻿using UnityEngine;
-using Verse;
 
-namespace Stats;
+namespace Stats.Widgets.Misc;
 
 // Maybe text shouldn't be a widget, but rather just a text node with "ContentSize" prop?
 // You can't set a width of a text. It must always have the width based on the text.
@@ -35,6 +34,6 @@ public sealed class Widget_Label
             return;
         }
 
-        Widgets.Label(rect, Text);
+        Verse.Widgets.Label(rect, Text);
     }
 }

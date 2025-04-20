@@ -1,4 +1,4 @@
-﻿namespace Stats;
+﻿namespace Stats.Widgets.Table.Filters;
 
 public interface IWidget_FilterInput
     : IWidget

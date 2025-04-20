@@ -1,4 +1,8 @@
-﻿using Verse;
+﻿using Stats.Widgets;
+using Stats.Widgets.Comps;
+using Stats.Widgets.Containers;
+using Stats.Widgets.Misc;
+using Verse;
 
 namespace Stats;
 

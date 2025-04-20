@@ -1,4 +1,11 @@
-﻿using Verse;
+﻿using Stats.Widgets;
+using Stats.Widgets.Comps.Size;
+using Stats.Widgets.Comps.Size.Constraints;
+using Stats.Widgets.Containers;
+using Stats.Widgets.Misc;
+using Stats.Widgets.Table.Filters;
+using Stats.Widgets.Table.Filters.Widgets;
+using Verse;
 
 namespace Stats;
 
@@ -12,7 +19,7 @@ public abstract class ColumnWorker_Bool
     }
     protected override IWidget GetTableCellContent(bool value, ThingRec thing)
     {
-        var tex = Widgets.GetCheckboxTexture(value);
+        var tex = Verse.Widgets.GetCheckboxTexture(value);
         IWidget icon = new Widget_Icon(tex);
         new WidgetComp_Size_Abs(ref icon, Text.LineHeight);
         new WidgetComp_Size_Inc_Rel(ref icon, 0.5f, 0f);
@@ -21,7 +28,7 @@ public abstract class ColumnWorker_Bool
     }
     public override IWidget_FilterInput GetFilterWidget()
     {
-        return new Widget_FilterInput_Bool(new(GetValueCached));
+        return new Widget_FilterInput_Bool(GetValueCached);
     }
     public override int Compare(ThingRec thing1, ThingRec thing2)
     {

@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using Verse;
 
-namespace Stats;
+namespace Stats.Widgets.Misc;
 
 // Instead of scale, use padding.
 public class Widget_Icon

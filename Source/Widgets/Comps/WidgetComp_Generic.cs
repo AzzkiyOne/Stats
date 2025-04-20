@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Stats;
+namespace Stats.Widgets.Comps;
 
 public class WidgetComp_Generic
     : WidgetComp

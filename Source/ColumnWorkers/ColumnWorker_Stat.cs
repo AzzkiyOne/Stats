@@ -1,4 +1,9 @@
 ﻿using RimWorld;
+using Stats.Widgets;
+using Stats.Widgets.Comps;
+using Stats.Widgets.Misc;
+using Stats.Widgets.Table.Filters;
+using Stats.Widgets.Table.Filters.Widgets;
 using Verse;
 
 namespace Stats;
@@ -79,7 +84,7 @@ public class ColumnWorker_Stat
     }
     public override IWidget_FilterInput GetFilterWidget()
     {
-        return new Widget_FilterInput_Num(new(GetValueCached));
+        return new Widget_FilterInput_Num(GetValueCached);
     }
     public override int Compare(ThingRec thing1, ThingRec thing2)
     {

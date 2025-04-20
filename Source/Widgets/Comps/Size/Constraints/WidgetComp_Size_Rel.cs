@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Stats;
+namespace Stats.Widgets.Comps.Size.Constraints;
 
 public class WidgetComp_Size_Rel
     : WidgetComp

@@ -2,7 +2,7 @@
 using UnityEngine;
 using Verse;
 
-namespace Stats;
+namespace Stats.Widgets.Misc;
 
 public class Widget_Icon_Thing
     : Widget
@@ -21,7 +21,7 @@ public class Widget_Icon_Thing
     }
     public Widget_Icon_Thing(ThingDef thingDef, ThingDef? stuffDef = null)
     {
-        Texture = Widgets.GetIconFor(thingDef, stuffDef) ?? BaseContent.BadTex;
+        Texture = Verse.Widgets.GetIconFor(thingDef, stuffDef) ?? BaseContent.BadTex;
         Scale = GenUI.IconDrawScale(thingDef);
         Angle = thingDef.uiIconAngle;
         Offset = thingDef.uiIconOffset;
@@ -75,7 +75,7 @@ public class Widget_Icon_Thing
         rect.position += Offset * rect.size;
         var origGUIColor = GUI.color;
         GUI.color = Color;
-        Widgets.DrawTextureFitted(
+        Verse.Widgets.DrawTextureFitted(
             rect,
             Texture,
             Scale,

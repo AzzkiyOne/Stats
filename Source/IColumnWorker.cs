@@ -1,4 +1,7 @@
-﻿namespace Stats;
+﻿using Stats.Widgets;
+using Stats.Widgets.Table.Filters;
+
+namespace Stats;
 
 public interface IColumnWorker
 {

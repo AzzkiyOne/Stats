@@ -1,7 +1,7 @@
 ﻿using System.Reflection;
 using Verse;
 
-namespace Stats;
+namespace Stats.Widgets.Misc;
 
 internal static class Widget_DefInfoDialog
 {

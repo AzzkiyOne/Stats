@@ -1,10 +1,11 @@
 ﻿using System.Collections.Generic;
+using Stats.Widgets.Misc;
 using UnityEngine;
 using Verse;
 
-namespace Stats;
+namespace Stats.Widgets.Table;
 
-internal sealed class Widget_Table
+internal sealed class Widget_Table_Generic
 {
     private readonly List<Column> Columns;
     private readonly List<Widget_TableRow> HeaderRows;
@@ -14,7 +15,7 @@ internal sealed class Widget_Table
     private Vector2 ScrollPos = new();
     private static Color ColumnSeparatorLineColor = new(1f, 1f, 1f, 0.05f);
     private bool ShouldRecalcLayout = true;
-    public Widget_Table(
+    public Widget_Table_Generic(
         List<Column> columns,
         List<Widget_TableRow> headerRows,
         List<Widget_TableRow> bodyRows
@@ -75,7 +76,7 @@ internal sealed class Widget_Table
             Vector2.Max(contentSizeMax, contentSizeVisible)
         );
 
-        Widgets.BeginScrollView(rect, ref ScrollPos, contentRectMax, true);
+        Verse.Widgets.BeginScrollView(rect, ref ScrollPos, contentRectMax, true);
 
         var contentRectVisible = new Rect(ScrollPos, contentSizeVisible);
 
@@ -88,7 +89,7 @@ internal sealed class Widget_Table
 
             // Separator line
             Widget_LineVertical.Draw(
-                leftPartRect.xMax,
+                leftPartRect.xMax - 1f,
                 leftPartRect.y,
                 rect.height,
                 StatsMainTabWindow.BorderLineColor
@@ -101,7 +102,7 @@ internal sealed class Widget_Table
 
         DrawPart(contentRectVisible, ScrollPos, cellExtraWidth, false);
 
-        Widgets.EndScrollView();
+        Verse.Widgets.EndScrollView();
     }
     private void DrawPart(
         Rect rect,
@@ -189,7 +190,7 @@ internal sealed class Widget_Table
             if (x > 0f)
             {
                 Widget_LineVertical.Draw(
-                    x + rect.x,
+                    x + rect.x - 1f,
                     rect.y,
                     rect.height,
                     ColumnSeparatorLineColor

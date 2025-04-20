@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using Verse;
 
-namespace Stats;
+namespace Stats.Widgets.Comps;
 
 public class WidgetComp_TextAnchor
     : WidgetComp

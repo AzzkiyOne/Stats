@@ -1,4 +1,9 @@
-﻿namespace Stats;
+﻿using Stats.Widgets;
+using Stats.Widgets.Misc;
+using Stats.Widgets.Table.Filters;
+using Stats.Widgets.Table.Filters.Widgets;
+
+namespace Stats;
 
 public abstract class ColumnWorker_Num
     : ColumnWorker<float>
@@ -25,7 +30,7 @@ public abstract class ColumnWorker_Num
     }
     public override IWidget_FilterInput GetFilterWidget()
     {
-        return new Widget_FilterInput_Num(new(GetValueCached));
+        return new Widget_FilterInput_Num(GetValueCached);
     }
     public override int Compare(ThingRec thing1, ThingRec thing2)
     {

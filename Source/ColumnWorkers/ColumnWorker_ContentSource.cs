@@ -1,4 +1,8 @@
-﻿namespace Stats;
+﻿using Stats.Widgets;
+using Stats.Widgets.Comps;
+using Stats.Widgets.Misc;
+
+namespace Stats;
 
 public class ColumnWorker_ContentSource
     : ColumnWorker_Str

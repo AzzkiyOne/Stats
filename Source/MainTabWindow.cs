@@ -1,4 +1,7 @@
 ﻿using RimWorld;
+using Stats.Widgets;
+using Stats.Widgets.Comps.Size.Constraints;
+using Stats.Widgets.Misc;
 using UnityEngine;
 using Verse;
 

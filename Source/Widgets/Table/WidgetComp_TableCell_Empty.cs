@@ -1,12 +1,12 @@
 ﻿using UnityEngine;
 
-namespace Stats;
+namespace Stats.Widgets.Table;
 
 internal sealed class WidgetComp_TableCell_Empty
     : WidgetComp_TableCell
 {
     public override IWidget? Parent { set { } }
-    public WidgetComp_TableCell_Empty(Widget_Table.Column column)
+    public WidgetComp_TableCell_Empty(Widget_Table_Generic.Column column)
         : base(column)
     {
     }

@@ -1,10 +1,10 @@
 ﻿using System;
 
-namespace Stats;
+namespace Stats.Widgets.Table.Filters;
 
-public abstract class ThingMatcher<T>
+public class ThingMatcher<T>
     : IThingMatcher
-    where T : IEquatable<T>
+    where T : notnull
 {
     private readonly Func<ThingRec, T> ValueFunc;
     private readonly T DefaultValue;
@@ -20,12 +20,12 @@ public abstract class ThingMatcher<T>
             }
 
             _Value = value;
-            OnChange?.Invoke();
+            OnChange?.Invoke(this);
         }
     }
-    private readonly IBinaryOp<T> DefaultOp;
-    private IBinaryOp<T> _Operator;
-    public IBinaryOp<T> Operator
+    private readonly IRelationalOperator<T> DefaultOp;
+    private IRelationalOperator<T> _Operator;
+    public IRelationalOperator<T> Operator
     {
         get => _Operator;
         set
@@ -36,28 +36,33 @@ public abstract class ThingMatcher<T>
             }
 
             _Operator = value;
-            OnChange?.Invoke();
+            OnChange?.Invoke(this);
         }
     }
-    public event Action? OnChange;
+    public event Action<IThingMatcher>? OnChange;
+    public bool IsActive => _Operator is Operators.Generic.Any<T>;
     public ThingMatcher(
+        Func<ThingRec, T> valueFunc,
         T defaultValue,
-        IBinaryOp<T> defaultOp,
-        Func<ThingRec, T> valueFunc
+        IRelationalOperator<T> defaultOp
     )
     {
         _Value = DefaultValue = defaultValue;
         _Operator = DefaultOp = defaultOp;
         ValueFunc = valueFunc;
     }
+    public ThingMatcher(Func<ThingRec, T> valueFunc, T defaultValue)
+        : this(valueFunc, defaultValue, Operators.Generic.Any<T>.Instance)
+    {
+    }
     // Use this to avoid emitting 2 events when setting both props.
-    public void Set(T value, IBinaryOp<T> op)
+    public void Set(T value, IRelationalOperator<T> op)
     {
         if (_Value.Equals(value) == false || _Operator != op)
         {
             _Value = value;
             _Operator = op;
-            OnChange?.Invoke();
+            OnChange?.Invoke(this);
         }
     }
     public bool Match(ThingRec thing)
@@ -71,7 +76,7 @@ public abstract class ThingMatcher<T>
             return false;
         }
     }
-    public virtual void Reset()
+    public void Reset()
     {
         Set(DefaultValue, DefaultOp);
     }

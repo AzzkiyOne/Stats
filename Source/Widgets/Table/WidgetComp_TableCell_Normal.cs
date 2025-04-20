@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using Verse;
 
-namespace Stats;
+namespace Stats.Widgets.Table;
 
 internal sealed class WidgetComp_TableCell_Normal
     : WidgetComp_TableCell
@@ -11,7 +11,7 @@ internal sealed class WidgetComp_TableCell_Normal
     private readonly TextAnchor TextAnchor;
     public WidgetComp_TableCell_Normal(
         IWidget widget,
-        Widget_Table.Column column,
+        Widget_Table_Generic.Column column,
         ColumnCellStyle style
     )
         : base(column)

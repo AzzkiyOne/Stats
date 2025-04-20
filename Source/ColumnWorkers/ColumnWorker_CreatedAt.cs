@@ -1,5 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Stats.Widgets;
+using Stats.Widgets.Comps;
+using Stats.Widgets.Comps.Size.Constraints;
+using Stats.Widgets.Containers;
+using Stats.Widgets.Misc;
+using Stats.Widgets.Table.Filters;
+using Stats.Widgets.Table.Filters.Widgets;
 using Verse;
 
 namespace Stats;
@@ -60,12 +67,25 @@ public class ColumnWorker_CreatedAt
     }
     public override IWidget_FilterInput GetFilterWidget()
     {
-        return new Widget_FilterInput_Str(
-            new(thing => string.Join(",", GetValueCached(thing).Select(thing => thing.LabelCap)))
+        var craftingBenches = DefDatabase<ThingDef>.AllDefsListForReading.Where(def => def.IsWorkTable);
+
+        return new Widget_FilterInput_Enum<ThingDef>(
+            GetValueCached,
+            craftingBenches,
+            MakeFilterOptionWidget
         );
     }
     public override int Compare(ThingRec thing1, ThingRec thing2)
     {
         return GetValueCached(thing1).Count().CompareTo(GetValueCached(thing2).Count());
+    }
+    private static IWidget MakeFilterOptionWidget(ThingDef thingDef)
+    {
+        var icon = new Widget_Icon_Thing(thingDef);
+
+        IWidget label = new Widget_Label(thingDef.LabelCap);
+        new WidgetComp_Width_Rel(ref label, 1f);
+
+        return new Widget_Container_Hor([icon, label], 5f, true);
     }
 }
