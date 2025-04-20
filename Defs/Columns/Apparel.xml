@@ -5,63 +5,63 @@
         <defName>Apparel_Insulation_Cold</defName>
         <labelShort>Ins. (C)</labelShort>
         <stat>Insulation_Cold</stat>
-        <workerClass>Stats.ColumnWorker_Stat</workerClass>
+        <workerClass>Stats.ColumnWorkers.Generic.StatColumnWorker</workerClass>
     </Stats.ColumnDef>
 
     <Stats.ColumnDef>
         <defName>Apparel_Insulation_Heat</defName>
         <labelShort>Ins. (H)</labelShort>
         <stat>Insulation_Heat</stat>
-        <workerClass>Stats.ColumnWorker_Stat</workerClass>
+        <workerClass>Stats.ColumnWorkers.Generic.StatColumnWorker</workerClass>
     </Stats.ColumnDef>
 
     <Stats.ColumnDef>
         <defName>Apparel_ArmorRating_Sharp</defName>
         <labelShort>Armor (S)</labelShort>
         <stat>ArmorRating_Sharp</stat>
-        <workerClass>Stats.ColumnWorker_Stat</workerClass>
+        <workerClass>Stats.ColumnWorkers.Generic.StatColumnWorker</workerClass>
     </Stats.ColumnDef>
 
     <Stats.ColumnDef>
         <defName>Apparel_ArmorRating_Blunt</defName>
         <labelShort>Armor (B)</labelShort>
         <stat>ArmorRating_Blunt</stat>
-        <workerClass>Stats.ColumnWorker_Stat</workerClass>
+        <workerClass>Stats.ColumnWorkers.Generic.StatColumnWorker</workerClass>
     </Stats.ColumnDef>
 
     <Stats.ColumnDef>
         <defName>Apparel_ArmorRating_Heat</defName>
         <labelShort>Armor (H)</labelShort>
         <stat>ArmorRating_Heat</stat>
-        <workerClass>Stats.ColumnWorker_Stat</workerClass>
+        <workerClass>Stats.ColumnWorkers.Generic.StatColumnWorker</workerClass>
     </Stats.ColumnDef>
 
     <Stats.ColumnDef>
         <defName>Apparel_Shield_EnergyMax</defName>
         <labelShort>Shiled (En)</labelShort>
         <stat>EnergyShieldEnergyMax</stat>
-        <workerClass>Stats.ColumnWorker_Stat</workerClass>
+        <workerClass>Stats.ColumnWorkers.Generic.StatColumnWorker</workerClass>
     </Stats.ColumnDef>
 
     <Stats.ColumnDef>
         <defName>Apparel_Shield_RechargeRate</defName>
         <labelShort>Shiled (R)</labelShort>
         <stat>EnergyShieldRechargeRate</stat>
-        <workerClass>Stats.ColumnWorker_Stat</workerClass>
+        <workerClass>Stats.ColumnWorkers.Generic.StatColumnWorker</workerClass>
     </Stats.ColumnDef>
 
     <Stats.ColumnDef>
         <defName>Apparel_Layers</defName>
         <labelKey>Layer</labelKey>
         <descriptionKey>Stat_Thing_Apparel_Layer_Desc</descriptionKey>
-        <workerClass>Stats.ColumnWorker_Apparel_Layers</workerClass>
+        <workerClass>Stats.ColumnWorkers.Apparel.LayersColumnWorker</workerClass>
     </Stats.ColumnDef>
 
     <Stats.ColumnDef>
         <defName>Apparel_Coverage</defName>
         <labelKey>Covers</labelKey>
         <descriptionKey>Stat_Thing_Apparel_Covers_Desc</descriptionKey>
-        <workerClass>Stats.ColumnWorker_Apparel_Coverage</workerClass>
+        <workerClass>Stats.ColumnWorkers.Apparel.CoverageColumnWorker</workerClass>
     </Stats.ColumnDef>
 
 </Defs>

@@ -6,7 +6,7 @@ namespace Stats.Widgets.Table;
 
 internal class Widget_TableRow
 {
-    public Widget_Table_Generic? Parent { private get; set; }
+    public GenericTableWidget? Parent { private get; set; }
     public List<WidgetComp_TableCell> Cells { get; } = [];
     public float Height = 0f;
     private bool _IsHidden = false;

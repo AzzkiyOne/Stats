@@ -5,14 +5,14 @@
         <defName>MarketValue</defName>
         <labelShort>$$$</labelShort>
         <stat>MarketValue</stat>
-        <workerClass>Stats.ColumnWorker_Stat</workerClass>
+        <workerClass>Stats.ColumnWorkers.Generic.StatColumnWorker</workerClass>
     </Stats.ColumnDef>
 
     <Stats.ColumnDef>
         <defName>MaxHitPoints</defName>
         <labelShort>Max HP</labelShort>
         <stat>MaxHitPoints</stat>
-        <workerClass>Stats.ColumnWorker_Stat</workerClass>
+        <workerClass>Stats.ColumnWorkers.Generic.StatColumnWorker</workerClass>
     </Stats.ColumnDef>
 
     <Stats.ColumnDef>
@@ -20,21 +20,21 @@
         <iconPath>UI/Icons/ColonistBar/Burning</iconPath>
         <stat>Flammability</stat>
         <isNegative>true</isNegative>
-        <workerClass>Stats.ColumnWorker_Stat</workerClass>
+        <workerClass>Stats.ColumnWorkers.Generic.StatColumnWorker</workerClass>
     </Stats.ColumnDef>
 
     <Stats.ColumnDef>
         <defName>Mass</defName>
         <stat>Mass</stat>
         <isNegative>true</isNegative>
-        <workerClass>Stats.ColumnWorker_Stat</workerClass>
+        <workerClass>Stats.ColumnWorkers.Generic.StatColumnWorker</workerClass>
     </Stats.ColumnDef>
 
     <Stats.ColumnDef>
         <defName>CreatedAt</defName>
         <labelKey>CreatedAt</labelKey>
         <descriptionKey>Stat_Thing_CreatedAt_Desc</descriptionKey>
-        <workerClass>Stats.ColumnWorker_CreatedAt</workerClass>
+        <workerClass>Stats.ColumnWorkers.CreatedAtColumnWorker</workerClass>
     </Stats.ColumnDef>
 
     <!-- Ingredients? -->
@@ -44,13 +44,13 @@
         <labelShort>Work</labelShort>
         <stat>WorkToMake</stat>
         <isNegative>true</isNegative>
-        <workerClass>Stats.ColumnWorker_Stat</workerClass>
+        <workerClass>Stats.ColumnWorkers.Generic.StatColumnWorker</workerClass>
     </Stats.ColumnDef>
 
     <Stats.ColumnDef>
         <defName>Beauty</defName>
         <stat>Beauty</stat>
-        <workerClass>Stats.ColumnWorker_Stat</workerClass>
+        <workerClass>Stats.ColumnWorkers.Generic.StatColumnWorker</workerClass>
     </Stats.ColumnDef>
 
     <Stats.ColumnDef>
@@ -58,7 +58,7 @@
         <labelShort>$$$ %</labelShort>
         <stat>SellPriceFactor</stat>
         <isNegative>true</isNegative>
-        <workerClass>Stats.ColumnWorker_Stat</workerClass>
+        <workerClass>Stats.ColumnWorkers.Generic.StatColumnWorker</workerClass>
     </Stats.ColumnDef>
 
     <Stats.ColumnDef>
@@ -66,26 +66,26 @@
         <labelShort>-HP / d</labelShort>
         <stat>DeteriorationRate</stat>
         <isNegative>true</isNegative>
-        <workerClass>Stats.ColumnWorker_Stat</workerClass>
+        <workerClass>Stats.ColumnWorkers.Generic.StatColumnWorker</workerClass>
         <formatString>0.00 / d</formatString>
     </Stats.ColumnDef>
 
     <Stats.ColumnDef>
         <defName>ContentSource</defName>
         <labelKey>Stat_Source_Label</labelKey>
-        <workerClass>Stats.ColumnWorker_ContentSource</workerClass>
+        <workerClass>Stats.ColumnWorkers.ContentSourceColumnWorker</workerClass>
     </Stats.ColumnDef>
 
     <Stats.ColumnDef>
         <defName>Food_Nutrition</defName>
         <stat>Nutrition</stat>
-        <workerClass>Stats.ColumnWorker_Stat</workerClass>
+        <workerClass>Stats.ColumnWorkers.Generic.StatColumnWorker</workerClass>
     </Stats.ColumnDef>
 
     <Stats.ColumnDef>
         <defName>TechLevel</defName>
         <label>tech level</label>
-        <workerClass>Stats.ColumnWorker_TechLevel</workerClass>
+        <workerClass>Stats.ColumnWorkers.TechLevelColumnWorker</workerClass>
     </Stats.ColumnDef>
 
 </Defs>

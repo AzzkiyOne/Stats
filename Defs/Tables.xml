@@ -5,7 +5,7 @@
         <defName>RangedWeapons</defName>
         <label>ranged weapons</label>
         <iconThingDef>Gun_Revolver</iconThingDef>
-        <workerClass>Stats.TableWorker_RangedWeapons</workerClass>
+        <workerClass>Stats.TableWorkers.RangedWeaponsTableWorker</workerClass>
         <columns>
             <li>WeaponRanged_Damage</li>
             <li>WeaponRanged_StoppingPower</li>
@@ -39,7 +39,7 @@
         <defName>MeleeWeapons</defName>
         <label>melee weapons</label>
         <iconThingDef>MeleeWeapon_Club</iconThingDef>
-        <workerClass>Stats.TableWorker_MeleeWeapons</workerClass>
+        <workerClass>Stats.TableWorkers.MeleeWeaponsTableWorker</workerClass>
         <columns>
             <li>WeaponMelee_DPS</li>
             <li>WeaponMelee_ArmorPenetration</li>
@@ -58,7 +58,7 @@
         <defName>Clothing</defName>
         <label>clothing</label>
         <iconThingDef>Apparel_Duster</iconThingDef>
-        <workerClass>Stats.TableWorker_Clothing</workerClass>
+        <workerClass>Stats.TableWorkers.ClothingTableWorker</workerClass>
         <columns>
             <li>Apparel_Insulation_Cold</li>
             <li>Apparel_Insulation_Heat</li>
@@ -83,7 +83,7 @@
         <defName>Armor</defName>
         <label>armor</label>
         <iconThingDef>Apparel_PowerArmor</iconThingDef>
-        <workerClass>Stats.TableWorker_Armor</workerClass>
+        <workerClass>Stats.TableWorkers.ArmorTableWorker</workerClass>
         <columns>
             <li>Apparel_ArmorRating_Sharp</li>
             <li>Apparel_ArmorRating_Blunt</li>
@@ -110,7 +110,7 @@
         <defName>UtilityApparel</defName>
         <label>utility apparel</label>
         <iconThingDef>Apparel_FirefoampopPack</iconThingDef>
-        <workerClass>Stats.TableWorker_UtilityApparel</workerClass>
+        <workerClass>Stats.TableWorkers.UtilityApparelTableWorker</workerClass>
         <columns>
             <li>Apparel_Shield_EnergyMax</li>
             <li>Apparel_Shield_RechargeRate</li>
@@ -130,7 +130,7 @@
         <defName>Animals</defName>
         <label>animals</label>
         <iconThingDef>Cow</iconThingDef>
-        <workerClass>Stats.TableWorker_Animals</workerClass>
+        <workerClass>Stats.TableWorkers.AnimalsTableWorker</workerClass>
         <columns>
             <li>MarketValue</li>
             <li>ContentSource</li>
@@ -141,7 +141,7 @@
         <defName>Stuff</defName>
         <label>stuff</label>
         <iconThingDef>Cloth</iconThingDef>
-        <workerClass>Stats.TableWorker_Stuff</workerClass>
+        <workerClass>Stats.TableWorkers.StuffTableWorker</workerClass>
         <columns>
             <li>Stuff_Category</li>
             <li>MarketValue</li>
@@ -156,7 +156,7 @@
         <defName>Plants</defName>
         <label>plants</label>
         <iconThingDef>Plant_TreeOak</iconThingDef>
-        <workerClass>Stats.TableWorker_Plants</workerClass>
+        <workerClass>Stats.TableWorkers.PlantsTableWorker</workerClass>
         <columns>
             <li>MaxHitPoints</li>
             <li>Flammability</li>
@@ -169,7 +169,7 @@
         <defName>Food</defName>
         <label>food</label>
         <iconThingDef>MealLavish</iconThingDef>
-        <workerClass>Stats.TableWorker_Food</workerClass>
+        <workerClass>Stats.TableWorkers.FoodTableWorker</workerClass>
         <columns>
             <li>Food_Nutrition</li>
             <li>Mass</li>
@@ -184,7 +184,7 @@
         <defName>Drugs</defName>
         <label>drugs</label>
         <iconThingDef>Yayo</iconThingDef>
-        <workerClass>Stats.TableWorker_Drugs</workerClass>
+        <workerClass>Stats.TableWorkers.DrugsTableWorker</workerClass>
         <columns>
             <li>Food_Nutrition</li>
             <li>Mass</li>

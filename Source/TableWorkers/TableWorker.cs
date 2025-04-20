@@ -1,0 +1,36 @@
+﻿using System.Collections.Generic;
+using RimWorld;
+using Verse;
+
+namespace Stats.TableWorkers;
+
+public abstract class TableWorker
+    : ITableWorker
+{
+#pragma warning disable CS8618
+    public TableDef TableDef { get; set; }
+#pragma warning restore CS8618
+    public IEnumerable<ThingAlike> GetRecords()
+    {
+        foreach (var thingDef in DefDatabase<ThingDef>.AllDefs)
+        {
+            if (IsValidThingDef(thingDef) == false)
+            {
+                continue;
+            }
+
+            if (thingDef.MadeFromStuff == false)
+            {
+                yield return new(thingDef);
+            }
+
+            var allowedStuffs = GenStuff.AllowedStuffsFor(thingDef);
+
+            foreach (var stuffDef in allowedStuffs)
+            {
+                yield return new(thingDef, stuffDef);
+            }
+        }
+    }
+    protected abstract bool IsValidThingDef(ThingDef thingDef);
+}

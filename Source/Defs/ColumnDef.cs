@@ -1,5 +1,6 @@
 ﻿using System;
 using RimWorld;
+using Stats.ColumnWorkers;
 using UnityEngine;
 using Verse;
 

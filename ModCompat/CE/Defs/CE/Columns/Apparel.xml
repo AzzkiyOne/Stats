@@ -6,14 +6,14 @@
         <labelShort>Bulk (W)</labelShort>
         <stat>WornBulk</stat>
         <isNegative>true</isNegative>
-        <workerClass>Stats.ColumnWorker_Stat</workerClass>
+        <workerClass>Stats.ColumnWorkers.Generic.StatColumnWorker</workerClass>
     </Stats.ColumnDef>
 
     <Stats.ColumnDef>
         <defName>CE_Apparel_ArmorRating_Electric</defName>
         <labelShort>Armor (E)</labelShort>
         <stat>ArmorRating_Electric</stat>
-        <workerClass>Stats.ColumnWorker_Stat</workerClass>
+        <workerClass>Stats.ColumnWorkers.Generic.StatColumnWorker</workerClass>
     </Stats.ColumnDef>
 
 </Defs>

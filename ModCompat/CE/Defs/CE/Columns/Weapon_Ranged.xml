@@ -5,7 +5,7 @@
         <defName>CE_WeaponRanged_ShotSpread</defName>
         <stat>ShotSpread</stat>
         <isNegative>true</isNegative>
-        <workerClass>Stats.ColumnWorker_Stat</workerClass>
+        <workerClass>Stats.ColumnWorkers.Generic.StatColumnWorker</workerClass>
     </Stats.ColumnDef>
 
     <Stats.ColumnDef>
@@ -13,7 +13,7 @@
         <labelShort>Sway</labelShort>
         <stat>SwayFactor</stat>
         <isNegative>true</isNegative>
-        <workerClass>Stats.ColumnWorker_Stat</workerClass>
+        <workerClass>Stats.ColumnWorkers.Generic.StatColumnWorker</workerClass>
     </Stats.ColumnDef>
 
     <Stats.ColumnDef>
@@ -21,21 +21,21 @@
         <labelShort>Recoil</labelShort>
         <stat>Recoil</stat>
         <isNegative>true</isNegative>
-        <workerClass>Stats.ColumnWorker_Stat</workerClass>
+        <workerClass>Stats.ColumnWorkers.Generic.StatColumnWorker</workerClass>
     </Stats.ColumnDef>
 
     <Stats.ColumnDef>
         <defName>CE_WeaponRanged_SightsEfficiency</defName>
         <labelShort>Sights</labelShort>
         <stat>SightsEfficiency</stat>
-        <workerClass>Stats.ColumnWorker_Stat</workerClass>
+        <workerClass>Stats.ColumnWorkers.Generic.StatColumnWorker</workerClass>
     </Stats.ColumnDef>
 
     <Stats.ColumnDef>
         <defName>CE_WeaponRanged_MagazineCapacity</defName>
         <labelShort>Mag. cap</labelShort>
         <stat>MagazineCapacity</stat>
-        <workerClass>Stats.ColumnWorker_Stat</workerClass>
+        <workerClass>Stats.ColumnWorkers.Generic.StatColumnWorker</workerClass>
         <formatString></formatString>
     </Stats.ColumnDef>
 
@@ -43,7 +43,7 @@
         <defName>CE_WeaponRanged_ReloadTime</defName>
         <stat>ReloadTime</stat>
         <isNegative>true</isNegative>
-        <workerClass>Stats.Compat.CE.ColumnWorker_WeaponRanged_ReloadTime</workerClass>
+        <workerClass>Stats.ModCompat.CE.ColumnWorkers.RangedWeapon.ReloadTimeColumnWorker</workerClass>
         <formatString>0.00 s</formatString>
     </Stats.ColumnDef>
 
@@ -52,13 +52,13 @@
         <labelShort>One-handed</labelShort>
         <iconPath>Things/Apparel/BallisticShield/CE_BallisticShield</iconPath>
         <stat>OneHandedness</stat>
-        <workerClass>Stats.Compat.CE.ColumnWorker_WeaponRanged_OneHandedness</workerClass>
+        <workerClass>Stats.ModCompat.CE.ColumnWorkers.RangedWeapon.OneHandednessColumnWorker</workerClass>
     </Stats.ColumnDef>
 
     <Stats.ColumnDef>
         <defName>CE_WeaponRanged_Caliber</defName>
         <stat>Caliber</stat>
-        <workerClass>Stats.Compat.CE.ColumnWorker_WeaponRanged_Caliber</workerClass>
+        <workerClass>Stats.ModCompat.CE.ColumnWorkers.RangedWeapon.CaliberColumnWorker</workerClass>
     </Stats.ColumnDef>
 
 </Defs>

@@ -4,7 +4,7 @@
     <Stats.ColumnDef>
         <defName>Stuff_Category</defName>
         <label>category</label>
-        <workerClass>Stats.ColumnWorker_Stuff_Category</workerClass>
+        <workerClass>Stats.ColumnWorkers.StuffCategoryColumnWorker</workerClass>
     </Stats.ColumnDef>
 
 </Defs>
