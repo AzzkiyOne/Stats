@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Stats.Widgets.Comps;
-using Stats.Widgets.Comps.Size;
-using Stats.Widgets.Comps.Size.Constraints;
 using Stats.Widgets.Containers;
+using Stats.Widgets.Extensions;
+using Stats.Widgets.Extensions.Size;
+using Stats.Widgets.Extensions.Size.Constraints;
 using Stats.Widgets.Misc;
 using Stats.Widgets.Table.Filters.Operators;
 using Stats.Widgets.Table.Filters.Operators.Enumerable;
@@ -40,34 +40,33 @@ public sealed class EnumerableFilterWidget<T>
 
         foreach (var option in options)
         {
-            IWidget optionWidget = MakeOptionWidget(option);
-            new IncreaseSizeByAbs(ref optionWidget, 5f, 3f);
-            new SetWidthToRel(ref optionWidget, 1f);
-            new DrawTextureOnHover(ref optionWidget, TexUI.HighlightTex);
-            //new WidgetComp_Color_Hover(ref optionWidget, FloatMenuOption.ColorBGActiveMouseover);
-            new AddClickEventHandler(ref optionWidget, () =>
-            {
-                if (filterExpression.Value.Contains(option))
-                {
-                    filterExpression.Value = filterExpression.Value.Where(opt => opt.Equals(option) == false);
-                }
-                else
-                {
-                    filterExpression.Value = [.. filterExpression.Value, option];
-                }
-            });
-            new Draw(ref optionWidget, rect =>
-            {
-                if (Event.current.type == EventType.Repaint)
+            var optionWidget = MakeOptionWidget(option)
+                .PadAbs(5f, 3f)
+                .WidthRel(1f)
+                .HoverBackground(TexUI.HighlightTex)
+                .OnClick(() =>
                 {
                     if (filterExpression.Value.Contains(option))
                     {
-                        Verse.Widgets.DrawHighlightSelected(rect);
+                        filterExpression.Value = filterExpression.Value.Where(opt => opt.Equals(option) == false);
                     }
+                    else
+                    {
+                        filterExpression.Value = [.. filterExpression.Value, option];
+                    }
+                })
+                .Background(rect =>
+                {
+                    if (Event.current.type == EventType.Repaint)
+                    {
+                        if (filterExpression.Value.Contains(option))
+                        {
+                            Verse.Widgets.DrawHighlightSelected(rect);
+                        }
 
-                    Verse.Widgets.DrawLineHorizontal(rect.x, rect.yMax - 1f, rect.width, Verse.Widgets.SeparatorLineColor);
-                }
-            });
+                        Verse.Widgets.DrawLineHorizontal(rect.x, rect.yMax - 1f, rect.width, Verse.Widgets.SeparatorLineColor);
+                    }
+                });
 
             optionWidgets.Add(optionWidget);
         }

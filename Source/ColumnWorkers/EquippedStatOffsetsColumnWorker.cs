@@ -1,9 +1,9 @@
 ﻿using System.Text;
 using Stats.ColumnWorkers.Generic;
 using Stats.Widgets;
-using Stats.Widgets.Comps;
-using Stats.Widgets.Comps.Size.Constraints;
 using Stats.Widgets.Containers;
+using Stats.Widgets.Extensions;
+using Stats.Widgets.Extensions.Size.Constraints;
 using Stats.Widgets.Misc;
 using UnityEngine;
 using Verse;
@@ -36,13 +36,16 @@ public class EquippedStatOffsetsColumnWorker
             values.AppendInNewLine(offsetValueStr);
         }
 
-        IWidget leftCol = new Label(labels.ToString());
-        new SetTextAnchor(ref leftCol, TextAnchor.LowerLeft);
-
-        IWidget rightCol = new Label(values.ToString());
-        new SetWidthToRel(ref rightCol, 1f);
-        new SetTextAnchor(ref rightCol, TextAnchor.LowerRight);
-
-        return new HorizontalContainer([leftCol, rightCol], 10f, true);
+        return new HorizontalContainer(
+            [
+                new Label(labels.ToString())
+                    .TextAnchor(TextAnchor.LowerLeft),
+                new Label(values.ToString())
+                    .WidthRel(1f)
+                    .TextAnchor(TextAnchor.LowerRight),
+            ],
+            10f,
+            true
+        );
     }
 }

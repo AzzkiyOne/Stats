@@ -1,12 +1,12 @@
 ﻿using UnityEngine;
 
-namespace Stats.Widgets.Comps;
+namespace Stats.Widgets.Extensions;
 
-public class HideOverflow
-    : WidgetComp
+public sealed class HideOverflow
+    : WidgetExtension
 {
-    public HideOverflow(ref IWidget widget)
-        : base(ref widget)
+    internal HideOverflow(IWidget widget)
+        : base(widget)
     {
     }
     public override void Draw(Rect rect, in Vector2 containerSize)

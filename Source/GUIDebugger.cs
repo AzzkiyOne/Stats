@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics;
 using Stats.Widgets;
+using Stats.Widgets.Extensions;
 using UnityEngine;
 using Verse;
 
@@ -28,7 +29,7 @@ internal static class GUIDebugger
         var xStr = rect.x.ToString("F0");
         var yStr = rect.y.ToString("F0");
         var text = $"<b>{name}:</b> <i>{widthStr} x {heightStr} ({xStr}, {yStr})</i>";
-        if (widget is WidgetComp)
+        if (widget is WidgetExtension)
         {
             text = $"<b>@[</b>{text}<b>]</b>";
         }

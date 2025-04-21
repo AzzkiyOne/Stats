@@ -1,14 +1,14 @@
 ﻿using UnityEngine;
 using Verse;
 
-namespace Stats.Widgets.Comps;
+namespace Stats.Widgets.Extensions;
 
-public class DrawTextureOnHover
-    : WidgetComp
+public sealed class DrawTextureOnHover
+    : WidgetExtension
 {
     private readonly Texture2D Texture;
-    public DrawTextureOnHover(ref IWidget widget, Texture2D texture)
-        : base(ref widget)
+    internal DrawTextureOnHover(IWidget widget, Texture2D texture)
+        : base(widget)
     {
         Texture = texture;
     }
@@ -25,5 +25,16 @@ public class DrawTextureOnHover
         }
 
         Widget.Draw(rect, containerSize);
+    }
+}
+
+public static partial class WidgetAPI
+{
+    public static DrawTextureOnHover HoverBackground(
+        this IWidget widget,
+        Texture2D texture
+    )
+    {
+        return new(widget, texture);
     }
 }

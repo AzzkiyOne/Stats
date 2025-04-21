@@ -6,8 +6,8 @@ internal abstract class WidgetComp_TableCell
     : IWidget
 {
     public abstract IWidget? Parent { set; }
-    public GenericTableWidget.Column Column;
-    public WidgetComp_TableCell(GenericTableWidget.Column column)
+    public GenericTable.Column Column;
+    public WidgetComp_TableCell(GenericTable.Column column)
     {
         Column = column;
     }

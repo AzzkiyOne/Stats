@@ -1,6 +1,6 @@
 ﻿using RimWorld;
 using Stats.Widgets;
-using Stats.Widgets.Comps.Size.Constraints;
+using Stats.Widgets.Extensions.Size.Constraints;
 using Stats.Widgets.Misc;
 using UnityEngine;
 using Verse;
@@ -37,8 +37,7 @@ public class MainTabWindowWidget
             ExpandOrCollapseWidow,
             () => Close(),
             ResetCurTableFilters
-        );
-        new SetWidthToRel(ref TitleBar, 1f);
+        ).WidthRel(1f);
     }
     public override void DoWindowContents(Rect rect)
     {

@@ -1,6 +1,6 @@
 ﻿using RimWorld;
 using Stats.Widgets;
-using Stats.Widgets.Comps;
+using Stats.Widgets.Extensions;
 using Stats.Widgets.Misc;
 using Stats.Widgets.Table.Filters.Widgets;
 using Verse;
@@ -72,11 +72,11 @@ public class StatColumnWorker
     {
         var valueStr = FormatValue(value, thing);
         var tooltip = GetValueExplanation(value, thing);
-        IWidget widget = new Label(valueStr);
+        var widget = new Label(valueStr);
 
         if (tooltip?.Length > 0)
         {
-            new DrawTooltipOnHover(ref widget, tooltip);
+            return widget.Tooltip(tooltip);
         }
 
         return widget;

@@ -1,14 +1,14 @@
 ﻿using UnityEngine;
 
-namespace Stats.Widgets.Comps;
+namespace Stats.Widgets.Extensions;
 
-public class ScrollOverflow
-    : WidgetComp
+public sealed class ScrollOverflow
+    : WidgetExtension
 {
     private Vector2 ScrollPosition;
     private IScrollable WidgetScrollable => (IScrollable)Widget;
-    public ScrollOverflow(ref IWidget widget)
-        : base(ref widget)
+    internal ScrollOverflow(IWidget widget)
+        : base(widget)
     {
     }
     public override void Draw(Rect rect, in Vector2 containerSize)

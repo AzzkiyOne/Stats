@@ -6,7 +6,7 @@ public abstract class WidgetDecorator
     : IWidget
 {
     public IWidget? Parent { set => Widget.Parent = value; }
-    protected abstract IWidget Widget { get; }
+    public abstract IWidget Widget { get; }
     public virtual Vector2 GetSize(in Vector2 containerSize)
     {
         return Widget.GetSize(containerSize);

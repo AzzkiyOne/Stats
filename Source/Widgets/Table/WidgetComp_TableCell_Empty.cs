@@ -6,7 +6,7 @@ internal sealed class WidgetComp_TableCell_Empty
     : WidgetComp_TableCell
 {
     public override IWidget? Parent { set { } }
-    public WidgetComp_TableCell_Empty(GenericTableWidget.Column column)
+    public WidgetComp_TableCell_Empty(GenericTable.Column column)
         : base(column)
     {
     }

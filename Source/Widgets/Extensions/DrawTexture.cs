@@ -1,13 +1,13 @@
 ﻿using UnityEngine;
 
-namespace Stats.Widgets.Comps;
+namespace Stats.Widgets.Extensions;
 
-public class DrawTexture
-    : WidgetComp
+public sealed class DrawTexture
+    : WidgetExtension
 {
     private readonly Texture2D Texture;
-    public DrawTexture(ref IWidget widget, Texture2D texture)
-        : base(ref widget)
+    internal DrawTexture(IWidget widget, Texture2D texture)
+        : base(widget)
     {
         Texture = texture;
     }
@@ -19,5 +19,13 @@ public class DrawTexture
         }
 
         Widget.Draw(rect, containerSize);
+    }
+}
+
+public static partial class WidgetAPI
+{
+    public static DrawTexture Background(this IWidget widget, Texture2D texture)
+    {
+        return new(widget, texture);
     }
 }

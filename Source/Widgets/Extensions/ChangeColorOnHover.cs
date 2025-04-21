@@ -1,19 +1,19 @@
 ﻿using UnityEngine;
 using Verse;
 
-namespace Stats.Widgets.Comps;
+namespace Stats.Widgets.Extensions;
 
-public class SetColorOnHover
-    : WidgetComp
+public sealed class ChangeColorOnHover
+    : WidgetExtension
 {
     private readonly Color Color;
-    public SetColorOnHover(ref IWidget widget, Color color)
-        : base(ref widget)
+    internal ChangeColorOnHover(IWidget widget, Color color)
+        : base(widget)
     {
         Color = color;
     }
-    public SetColorOnHover(ref IWidget widget)
-        : this(ref widget, GenUI.MouseoverColor)
+    public ChangeColorOnHover(ref IWidget widget)
+        : this(widget, GenUI.MouseoverColor)
     {
     }
     public override void Draw(Rect rect, in Vector2 containerSize)
@@ -29,5 +29,13 @@ public class SetColorOnHover
         {
             Widget.Draw(rect, containerSize);
         }
+    }
+}
+
+public static partial class WidgetAPI
+{
+    public static ChangeColorOnHover HoverColor(this IWidget widget, Color color)
+    {
+        return new(widget, color);
     }
 }

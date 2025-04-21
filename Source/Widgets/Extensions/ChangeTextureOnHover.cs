@@ -1,19 +1,19 @@
 ﻿using UnityEngine;
 using Verse;
 
-namespace Stats.Widgets.Comps;
+namespace Stats.Widgets.Extensions;
 
-public class ChangeTextureOnHover
-    : WidgetComp
+public sealed class ChangeTextureOnHover
+    : WidgetExtension
 {
     private readonly Texture2D IdleTexture;
     private readonly Texture2D HoverTexture;
-    public ChangeTextureOnHover(
-        ref IWidget widget,
+    internal ChangeTextureOnHover(
+        IWidget widget,
         Texture2D idleTexture,
         Texture2D hoverTexture
     )
-        : base(ref widget)
+        : base(widget)
     {
         IdleTexture = idleTexture;
         HoverTexture = hoverTexture;
@@ -33,5 +33,17 @@ public class ChangeTextureOnHover
         }
 
         Widget.Draw(rect, containerSize);
+    }
+}
+
+public static partial class WidgetAPI
+{
+    public static ChangeTextureOnHover Background(
+        this IWidget widget,
+        Texture2D idleTexture,
+        Texture2D hoverTexture
+    )
+    {
+        return new(widget, idleTexture, hoverTexture);
     }
 }

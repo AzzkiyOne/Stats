@@ -8,10 +8,10 @@ public class Icon
     : Widget
 {
     protected override Vector2 Size { get; set; }
-    public Texture2D Tex { get; set; }
+    public Texture2D Texture { get; set; }
     public Icon(Texture2D tex)
     {
-        Tex = tex;
+        Texture = tex;
         Size = GetSize();
     }
     public override Vector2 GetSize()
@@ -25,6 +25,6 @@ public class Icon
             return;
         }
 
-        GUI.DrawTexture(rect, Tex);
+        GUI.DrawTexture(rect, Texture);
     }
 }

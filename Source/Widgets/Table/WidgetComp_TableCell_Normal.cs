@@ -11,7 +11,7 @@ internal sealed class WidgetComp_TableCell_Normal
     private readonly TextAnchor TextAnchor;
     public WidgetComp_TableCell_Normal(
         IWidget widget,
-        GenericTableWidget.Column column,
+        GenericTable.Column column,
         ColumnCellStyle style
     )
         : base(column)

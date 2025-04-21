@@ -1,6 +1,6 @@
 ﻿using Stats.ColumnWorkers.Generic;
 using Stats.Widgets;
-using Stats.Widgets.Comps;
+using Stats.Widgets.Extensions;
 using Stats.Widgets.Misc;
 
 namespace Stats.ColumnWorkers;
@@ -14,10 +14,7 @@ public class ContentSourceColumnWorker
     }
     protected override IWidget GetTableCellContent(string? value, ThingAlike thing)
     {
-        var tooltip = thing.Def.modContentPack.PackageIdPlayerFacing;
-        IWidget widget = new Label(value);
-        new DrawTooltipOnHover(ref widget, tooltip);
-
-        return widget;
+        return new Label(value)
+            .Tooltip(thing.Def.modContentPack.PackageIdPlayerFacing);
     }
 }

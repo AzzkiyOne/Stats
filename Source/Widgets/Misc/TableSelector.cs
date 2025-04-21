@@ -1,8 +1,8 @@
 ﻿using System.Linq;
-using Stats.Widgets.Comps;
-using Stats.Widgets.Comps.Size;
-using Stats.Widgets.Comps.Size.Constraints;
 using Stats.Widgets.Containers;
+using Stats.Widgets.Extensions;
+using Stats.Widgets.Extensions.Size;
+using Stats.Widgets.Extensions.Size.Constraints;
 using UnityEngine;
 using Verse;
 
@@ -18,38 +18,35 @@ internal sealed class TableSelector
         private set
         {
             _CurTableDef = value;
-            Icon.Tex = value.Icon;
-            IconColorComp.Color = value.IconColor;
-            Label.Text = value.LabelCap;
+            IconWidget.Texture = value.Icon;
+            IconColorExtension.Color = value.IconColor;
+            LabelWidget.Text = value.LabelCap;
         }
     }
     private readonly FloatMenu Menu;
-    private readonly Icon Icon;
-    private readonly SetColor IconColorComp;
-    private readonly Label Label;
-    protected override IWidget Widget { get; }
+    private readonly Icon IconWidget;
+    private readonly SetColor IconColorExtension;
+    private readonly Label LabelWidget;
+    public override IWidget Widget { get; }
     public TableSelector()
         : base()
     {
-        IWidget icon = Icon = new Icon(CurTableDef.Icon);
-        new IncreaseSizeByAbs(ref icon, 3f);
-        new SetSizeToAbs(ref icon, MainTabWindowWidget.TitleBarHeight);
-        IconColorComp =
-        new SetColor(ref icon, CurTableDef.IconColor);
+        var icon = new Icon(CurTableDef.Icon)
+            .PadAbs(3f)
+            .SizeAbs(MainTabWindowWidget.TitleBarHeight)
+            .Color(CurTableDef.IconColor);
+        IconWidget = icon.Get<Icon>();
+        IconColorExtension = icon.Get<SetColor>();
 
-        IWidget label = Label = new Label(CurTableDef.LabelCap);
-        new SetHeightToAbs(ref label, MainTabWindowWidget.TitleBarHeight);
-        new SetTextAnchor(ref label, TextAnchor.MiddleLeft);
+        var label = new Label(CurTableDef.LabelCap)
+            .HeightAbs(MainTabWindowWidget.TitleBarHeight)
+            .TextAnchor(TextAnchor.MiddleLeft);
+        LabelWidget = label.Get<Label>();
 
-        IWidget button = new HorizontalContainer([icon, label], GenUI.Pad);
-        new IncreaseSizeByAbs(ref button, GenUI.Pad, 0f);
-        new ChangeTextureOnHover(ref button,
-            Verse.Widgets.LightHighlight,
-            TexUI.HighlightTex
-        );
-        new AddClickEventHandler(ref button, ShowMenu);
-
-        Widget = button;
+        Widget = new HorizontalContainer([icon, label], GenUI.Pad)
+            .PadAbs(GenUI.Pad, 0f)
+            .Background(Verse.Widgets.LightHighlight, TexUI.HighlightTex)
+            .OnClick(ShowMenu);
 
         var menuOptions =
             DefDatabase<TableDef>

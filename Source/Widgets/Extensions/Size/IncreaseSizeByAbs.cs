@@ -1,29 +1,21 @@
 ﻿using UnityEngine;
 
-namespace Stats.Widgets.Comps.Size;
+namespace Stats.Widgets.Extensions.Size;
 
-public class IncreaseSizeByAbs
-    : WidgetComp
+public sealed class IncreaseSizeByAbs
+    : WidgetExtension
 {
     private readonly float L;
     private readonly float T;
     private readonly float Hor;
     private readonly float Ver;
-    public IncreaseSizeByAbs(ref IWidget widget, float l, float r, float t, float b)
-        : base(ref widget)
+    internal IncreaseSizeByAbs(IWidget widget, float l, float r, float t, float b)
+        : base(widget)
     {
         L = l;
         T = t;
         Hor = l + r;
         Ver = t + b;
-    }
-    public IncreaseSizeByAbs(ref IWidget widget, float hor, float ver)
-        : this(ref widget, hor, hor, ver, ver)
-    {
-    }
-    public IncreaseSizeByAbs(ref IWidget widget, float amount)
-        : this(ref widget, amount, amount, amount, amount)
-    {
     }
     public override Vector2 GetSize(in Vector2 containerSize)
     {
@@ -51,5 +43,21 @@ public class IncreaseSizeByAbs
         rect.height -= Ver;
 
         Widget.Draw(rect, containerSize);
+    }
+}
+
+public static partial class WidgetAPI
+{
+    public static IncreaseSizeByAbs PadAbs(this IWidget widget, float l, float r, float t, float b)
+    {
+        return new(widget, l, r, t, b);
+    }
+    public static IncreaseSizeByAbs PadAbs(this IWidget widget, float hor, float ver)
+    {
+        return widget.PadAbs(hor, hor, ver, ver);
+    }
+    public static IncreaseSizeByAbs PadAbs(this IWidget widget, float amount)
+    {
+        return widget.PadAbs(amount, amount, amount, amount);
     }
 }

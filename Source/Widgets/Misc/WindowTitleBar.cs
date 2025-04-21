@@ -1,8 +1,8 @@
 ﻿using System;
-using Stats.Widgets.Comps;
-using Stats.Widgets.Comps.Size;
-using Stats.Widgets.Comps.Size.Constraints;
 using Stats.Widgets.Containers;
+using Stats.Widgets.Extensions;
+using Stats.Widgets.Extensions.Size;
+using Stats.Widgets.Extensions.Size.Constraints;
 using UnityEngine;
 using Verse;
 
@@ -13,7 +13,7 @@ namespace Stats.Widgets.Misc;
 internal sealed class WindowTitleBar
     : WidgetDecorator
 {
-    protected override IWidget Widget { get; }
+    public override IWidget Widget { get; }
     private static readonly Texture2D HoldToDragTex;
     private static readonly Texture2D ResetWindowTex;
     private static readonly Texture2D ExpandWindowTex;
@@ -32,42 +32,42 @@ internal sealed class WindowTitleBar
         Action resetTableFilters
     )
     {
-        new IncreaseSizeByRel(ref tableSelector, 0f, 1f, 0f, 0f);
-
-        IWidget resetTableFiltersBtn = new Icon(TexUI.RotRightTex);
-        AsIcon(ref resetTableFiltersBtn, resetTableFilters, "Reset filters");
-
-        IWidget dragIcon = new Icon(HoldToDragTex);
-        AsIcon(ref dragIcon, "Hold to drag the window (if there's nothing else to hold on to)");
-
-        IWidget infoIcon = new Icon(TexButton.Info);
-        AsIcon(ref infoIcon, Manual);
-
-        IWidget resetWindowBtn = new Icon(ResetWindowTex);
-        AsIcon(ref resetWindowBtn, resetWindow, "Reset");
-
-        IWidget expandWindowBtn = new Icon(ExpandWindowTex);
-        AsIcon(ref expandWindowBtn, expandWindow, "Expand");
-
-        IWidget closeWindowBtn = new Icon(TexButton.CloseXSmall);
-        AsIcon(ref closeWindowBtn, closeWindow, "Close", IconPadding + 2f);
-
-        IWidget container = new HorizontalContainer(
+        Widget = new HorizontalContainer(
             [
-                tableSelector,
-                resetTableFiltersBtn,
-                dragIcon,
-                infoIcon,
-                resetWindowBtn,
-                expandWindowBtn,
-                closeWindowBtn,
+                tableSelector.PadRel(0f, 1f, 0f, 0f),
+                ToToolbarIcon(
+                    new Icon(TexUI.RotRightTex),
+                    resetTableFilters,
+                    "Reset filters"
+                ),
+                ToToolbarIcon(
+                    new Icon(HoldToDragTex),
+                    "Hold to drag the window (if there's nothing else to hold on to)"
+                ),
+                ToToolbarIcon(
+                    new Icon(TexButton.Info),
+                    Manual
+                ),
+                ToToolbarIcon(
+                    new Icon(ResetWindowTex),
+                    resetWindow,
+                    "Reset"
+                ),
+                ToToolbarIcon(
+                    new Icon(ExpandWindowTex),
+                    expandWindow,
+                    "Expand"
+                ),
+                ToToolbarIcon(
+                    new Icon(TexButton.CloseXSmall),
+                    closeWindow,
+                    "Close",
+                    IconPadding + 2f
+                ),
             ],
             GenUI.Pad,
             true
-        );
-        new DrawTexture(ref container, Verse.Widgets.LightHighlight);
-
-        Widget = container;
+        ).Background(Verse.Widgets.LightHighlight);
     }
     public override void Draw(Rect rect, in Vector2 containerSize)
     {
@@ -80,22 +80,27 @@ internal sealed class WindowTitleBar
 
         Widget.Draw(rect, containerSize);
     }
-    private static void AsIcon(
-        ref IWidget widget,
+    private static IWidget ToToolbarIcon(
+        IWidget widget,
         Action clickEventHandler,
         string tooltip,
         float pad = IconPadding
     )
     {
-        AsIcon(ref widget, tooltip, pad);
-        new DrawTextureOnHover(ref widget, TexUI.HighlightTex);
-        new AddClickEventHandler(ref widget, clickEventHandler);
+        return ToToolbarIcon(widget, tooltip, pad)
+            .HoverBackground(TexUI.HighlightTex)
+            .OnClick(clickEventHandler);
     }
-    private static void AsIcon(ref IWidget widget, string tooltip, float pad = IconPadding)
+    private static IWidget ToToolbarIcon(
+        IWidget widget,
+        string tooltip,
+        float pad = IconPadding
+    )
     {
-        new IncreaseSizeByAbs(ref widget, pad);
-        new SetSizeToAbs(ref widget, MainTabWindowWidget.TitleBarHeight);
-        new DrawTooltipOnHover(ref widget, tooltip);
+        return widget
+            .PadAbs(pad)
+            .SizeAbs(MainTabWindowWidget.TitleBarHeight)
+            .Tooltip(tooltip);
     }
 
     static WindowTitleBar()

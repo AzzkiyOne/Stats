@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
-using Stats.Widgets.Comps;
-using Stats.Widgets.Comps.Size;
-using Stats.Widgets.Comps.Size.Constraints;
 using Stats.Widgets.Containers;
+using Stats.Widgets.Extensions;
+using Stats.Widgets.Extensions.Size;
+using Stats.Widgets.Extensions.Size.Constraints;
 using Stats.Widgets.Misc;
 using Stats.Widgets.Table.Filters;
 using Stats.Widgets.Table.Filters.Widgets;
@@ -11,7 +11,7 @@ using Verse;
 
 namespace Stats.Widgets.Table;
 
-internal sealed class ThingTableWidget
+internal sealed class ThingTable
 {
     private ColumnDef SortColumn = ColumnDefOf.Name;
     private int SortDirection = SortDirectionDescending;
@@ -20,28 +20,28 @@ internal sealed class ThingTableWidget
     private const float cellPadHor = 15f;
     private const float cellPadVer = 5f;
     private readonly List<IFilterExpression> ThingMatchers = [];
-    private readonly GenericTableWidget Table;
+    private readonly GenericTable Table;
     private bool ShouldApplyFilters = false;
-    public ThingTableWidget(TableDef tableDef)
+    public ThingTable(TableDef tableDef)
     {
         List<ColumnDef> columnDefs = [ColumnDefOf.Name, .. tableDef.columns];
 
         // Header rows and columns
-        var columns = new List<GenericTableWidget.Column>();
+        var columns = new List<GenericTable.Column>();
         var headerRows = new List<Widget_TableRow>();
         var headerRow = new Widget_TableRow(DrawHeaderRowBG);
         var filtersRow = new Widget_TableRow(DrawFiltersRowBG);
 
         foreach (var columnDef in columnDefs)
         {
-            var column = new GenericTableWidget.Column(columnDef == ColumnDefOf.Name);
+            var column = new GenericTable.Column(columnDef == ColumnDefOf.Name);
             columns.Add(column);
 
             headerRow.Cells.Add(CreateHeaderCell(columnDef, column));
-            filtersRow.Cells.Add(CreateFilterCell(columnDef, column, out var tm));
+            filtersRow.Cells.Add(CreateFilterCell(columnDef, column, out var filterExpression));
 
-            ThingMatchers.Add(tm);
-            tm.OnChange += ScheduleFiltersApplication;
+            ThingMatchers.Add(filterExpression);
+            filterExpression.OnChange += ScheduleFiltersApplication;
         }
 
         headerRows.Add(headerRow);
@@ -66,7 +66,7 @@ internal sealed class ThingTableWidget
         }
 
         // Finalize
-        Table = new GenericTableWidget(columns, headerRows, bodyRows);
+        Table = new GenericTable(columns, headerRows, bodyRows);
 
         SortRowsByColumn(SortColumn);
     }
@@ -81,7 +81,7 @@ internal sealed class ThingTableWidget
     }
     private WidgetComp_TableCell CreateHeaderCell(
         ColumnDef columnDef,
-        GenericTableWidget.Column column
+        GenericTable.Column column
     )
     {
         IWidget cell;
@@ -92,11 +92,11 @@ internal sealed class ThingTableWidget
 
             if (columnDef.Worker.CellStyle == ColumnCellStyle.Number)
             {
-                new IncreaseSizeByRel(ref cell, 1f, 0f, 0f, 0f);
+                cell = cell.PadRel(1f, 0f, 0f, 0f);
             }
             else if (columnDef.Worker.CellStyle == ColumnCellStyle.Boolean)
             {
-                new IncreaseSizeByRel(ref cell, 0.5f, 0f);
+                cell = cell.PadRel(0.5f, 0f);
             }
 
             cell = new SingleElementContainer(cell);
@@ -135,34 +135,38 @@ internal sealed class ThingTableWidget
             }
         }
 
-        new IncreaseSizeByAbs(ref cell, cellPadHor, cellPadVer);
-        new SetWidthToRel(ref cell, 1f);
-        new DrawTooltipOnHover(
-            ref cell,
-            $"<i>{columnDef.LabelCap}</i>\n\n{columnDef.description}"
-        );
-        new DrawTextureOnHover(ref cell, TexUI.HighlightTex);
-        new AddClickEventHandler(ref cell, handleCellClick);
-        new Draw(ref cell, drawSortIndicator);
+        cell = cell
+            .PadAbs(cellPadHor, cellPadVer)
+            .WidthRel(1f)
+            .Tooltip($"<i>{columnDef.LabelCap}</i>\n\n{columnDef.description}")
+            .HoverBackground(TexUI.HighlightTex)
+            .OnClick(handleCellClick)
+            .Background(drawSortIndicator);
 
-        return new WidgetComp_TableCell_Normal(cell, column, columnDef.Worker.CellStyle);
+        return new WidgetComp_TableCell_Normal(
+            cell,
+            column,
+            columnDef.Worker.CellStyle
+        );
     }
     private static WidgetComp_TableCell CreateFilterCell(
         ColumnDef columnDef,
-        GenericTableWidget.Column column,
-        out IFilterExpression thingMatcher
+        GenericTable.Column column,
+        out IFilterExpression filterExpression
     )
     {
         IFilterWidget filterWidget = columnDef.Worker.GetFilterWidget();
-        var widget = (IWidget)filterWidget;
-        new SetWidthToRel(ref widget, 1f);
 
-        thingMatcher = filterWidget.FilterExpression;
-        return new WidgetComp_TableCell_Normal(widget, column, columnDef.Worker.CellStyle);
+        filterExpression = filterWidget.FilterExpression;
+        return new WidgetComp_TableCell_Normal(
+            filterWidget.WidthRel(1f),
+            column,
+            columnDef.Worker.CellStyle
+        );
     }
     private static WidgetComp_TableCell CreateBodyCell(
         ColumnDef columnDef,
-        GenericTableWidget.Column column,
+        GenericTable.Column column,
         ThingAlike thing
     )
     {
@@ -182,10 +186,10 @@ internal sealed class ThingTableWidget
         }
         else
         {
-            new IncreaseSizeByAbs(ref cell, cellPadHor, cellPadVer);
-            new SetWidthToRel(ref cell, 1f);
-
-            return new WidgetComp_TableCell_Normal(cell, column, columnDef.Worker.CellStyle);
+            return new WidgetComp_TableCell_Normal(
+                cell.PadAbs(cellPadHor, cellPadVer).WidthRel(1f),
+                column,
+                columnDef.Worker.CellStyle);
         }
     }
     private static void DrawHeaderRowBG(Rect rect, bool _, int __)

@@ -2,15 +2,15 @@
 using UnityEngine;
 using Verse.Sound;
 
-namespace Stats.Widgets.Comps;
+namespace Stats.Widgets.Extensions;
 
-public class AddClickEventHandler
-    : WidgetComp
+public sealed class AddClickEventHandler
+    : WidgetExtension
 {
     private readonly Action Action;
     private readonly bool PlaySound;
-    public AddClickEventHandler(ref IWidget widget, Action action, bool playSound = true)
-        : base(ref widget)
+    internal AddClickEventHandler(IWidget widget, Action action, bool playSound = true)
+        : base(widget)
     {
         Action = action;
         PlaySound = playSound;
@@ -28,5 +28,13 @@ public class AddClickEventHandler
         }
 
         Widget.Draw(rect, containerSize);
+    }
+}
+
+public static partial class WidgetAPI
+{
+    public static AddClickEventHandler OnClick(this IWidget widget, Action action)
+    {
+        return new(widget, action);
     }
 }

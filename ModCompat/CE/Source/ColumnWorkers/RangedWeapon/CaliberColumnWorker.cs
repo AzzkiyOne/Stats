@@ -1,7 +1,7 @@
 ﻿using RimWorld;
 using Stats.ColumnWorkers.Generic;
 using Stats.Widgets;
-using Stats.Widgets.Comps;
+using Stats.Widgets.Extensions;
 using Stats.Widgets.Misc;
 using Verse;
 
@@ -29,9 +29,7 @@ public class CaliberColumnWorker
             ToStringNumberSense.Absolute,
             ColumnDef.stat!.Worker.GetValue(statReq)
         );
-        IWidget widget = new Label(value);
-        new DrawTooltipOnHover(ref widget, tooltip);
 
-        return widget;
+        return new Label(value).Tooltip(tooltip);
     }
 }

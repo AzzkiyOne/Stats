@@ -46,6 +46,19 @@ public static class Ext_Widget
         var size = widget.GetSize(rect.size);
         widget.Draw(rect with { size = size }, rect.size);
     }
+    public static T Get<T>(this IWidget widget) where T : IWidget
+    {
+        if (widget is T t)
+        {
+            return t;
+        }
+        else if (widget is WidgetDecorator widgetDecorator)
+        {
+            return widgetDecorator.Widget.Get<T>();
+        }
+
+        throw new Exception($"[{nameof(T)}] was not found!");
+    }
 }
 
 public static class Ext_String

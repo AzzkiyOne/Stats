@@ -5,7 +5,7 @@ using Verse;
 
 namespace Stats.Widgets.Table;
 
-internal sealed class GenericTableWidget
+internal sealed class GenericTable
 {
     private readonly List<Column> Columns;
     private readonly List<Widget_TableRow> HeaderRows;
@@ -15,7 +15,7 @@ internal sealed class GenericTableWidget
     private Vector2 ScrollPos = new();
     private static Color ColumnSeparatorLineColor = new(1f, 1f, 1f, 0.05f);
     private bool ShouldRecalcLayout = true;
-    public GenericTableWidget(
+    public GenericTable(
         List<Column> columns,
         List<Widget_TableRow> headerRows,
         List<Widget_TableRow> bodyRows

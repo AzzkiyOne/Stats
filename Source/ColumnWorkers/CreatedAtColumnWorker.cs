@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Stats.Widgets;
-using Stats.Widgets.Comps;
-using Stats.Widgets.Comps.Size.Constraints;
 using Stats.Widgets.Containers;
+using Stats.Widgets.Extensions;
+using Stats.Widgets.Extensions.Size.Constraints;
 using Stats.Widgets.Misc;
 using Stats.Widgets.Table.Filters.Widgets;
 using Verse;
@@ -49,15 +49,15 @@ public class CreatedAtColumnWorker
 
         foreach (var thingDef in things.OrderBy(def => def.label))
         {
-            void handleIconClick()
+            void openDefInfoDialog()
             {
                 DefInfoDialog.Draw(thingDef);
             }
 
-            IWidget icon = new ThingIcon(thingDef);
-            new DrawTooltipOnHover(ref icon, $"<i>{thingDef.LabelCap}</i>\n\n{thingDef.description}");
-            new DrawTextureOnHover(ref icon, TexUI.HighlightTex);
-            new AddClickEventHandler(ref icon, handleIconClick);
+            IWidget icon = new ThingIcon(thingDef)
+                .Tooltip($"<i>{thingDef.LabelCap}</i>\n\n{thingDef.description}")
+                .HoverBackground(TexUI.HighlightTex)
+                .OnClick(openDefInfoDialog);
 
             icons.Add(icon);
         }
@@ -80,11 +80,13 @@ public class CreatedAtColumnWorker
     }
     private static IWidget MakeFilterOptionWidget(ThingDef thingDef)
     {
-        var icon = new ThingIcon(thingDef);
-
-        IWidget label = new Label(thingDef.LabelCap);
-        new SetWidthToRel(ref label, 1f);
-
-        return new HorizontalContainer([icon, label], 5f, true);
+        return new HorizontalContainer(
+            [
+                new ThingIcon(thingDef),
+                new Label(thingDef.LabelCap).WidthRel(1f)
+            ],
+            5f,
+            true
+        );
     }
 }
