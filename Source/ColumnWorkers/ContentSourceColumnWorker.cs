@@ -15,8 +15,8 @@ public class ContentSourceColumnWorker
     protected override IWidget GetTableCellContent(string? value, ThingAlike thing)
     {
         var tooltip = thing.Def.modContentPack.PackageIdPlayerFacing;
-        IWidget widget = new LabelWidget(value);
-        new TooltipWidgetComp(ref widget, tooltip);
+        IWidget widget = new Label(value);
+        new DrawTooltipOnHover(ref widget, tooltip);
 
         return widget;
     }

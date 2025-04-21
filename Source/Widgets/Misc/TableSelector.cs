@@ -8,7 +8,7 @@ using Verse;
 
 namespace Stats.Widgets.Misc;
 
-internal sealed class TableSelectorWidget
+internal sealed class TableSelector
     : WidgetDecorator
 {
     private TableDef _CurTableDef = TableDefOf.RangedWeapons;
@@ -24,30 +24,30 @@ internal sealed class TableSelectorWidget
         }
     }
     private readonly FloatMenu Menu;
-    private readonly IconWidget Icon;
-    private readonly ColorWidgetComp IconColorComp;
-    private readonly LabelWidget Label;
+    private readonly Icon Icon;
+    private readonly SetColor IconColorComp;
+    private readonly Label Label;
     protected override IWidget Widget { get; }
-    public TableSelectorWidget()
+    public TableSelector()
         : base()
     {
-        IWidget icon = Icon = new IconWidget(CurTableDef.Icon);
-        new WidgetComp_Size_Inc_Abs(ref icon, 3f);
-        new WidgetComp_Size_Abs(ref icon, MainTabWindowWidget.TitleBarHeight);
+        IWidget icon = Icon = new Icon(CurTableDef.Icon);
+        new IncreaseSizeByAbs(ref icon, 3f);
+        new SetSizeToAbs(ref icon, MainTabWindowWidget.TitleBarHeight);
         IconColorComp =
-        new ColorWidgetComp(ref icon, CurTableDef.IconColor);
+        new SetColor(ref icon, CurTableDef.IconColor);
 
-        IWidget label = Label = new LabelWidget(CurTableDef.LabelCap);
-        new WidgetComp_Height_Abs(ref label, MainTabWindowWidget.TitleBarHeight);
-        new TextAnchorWidgetComp(ref label, TextAnchor.MiddleLeft);
+        IWidget label = Label = new Label(CurTableDef.LabelCap);
+        new SetHeightToAbs(ref label, MainTabWindowWidget.TitleBarHeight);
+        new SetTextAnchor(ref label, TextAnchor.MiddleLeft);
 
-        IWidget button = new HorizontalContainerWidget([icon, label], GenUI.Pad);
-        new WidgetComp_Size_Inc_Abs(ref button, GenUI.Pad, 0f);
-        new TextureAlternatingWidgetComp(ref button,
+        IWidget button = new HorizontalContainer([icon, label], GenUI.Pad);
+        new IncreaseSizeByAbs(ref button, GenUI.Pad, 0f);
+        new ChangeTextureOnHover(ref button,
             Verse.Widgets.LightHighlight,
             TexUI.HighlightTex
         );
-        new OnClickWidgetComp(ref button, ShowMenu);
+        new AddClickEventHandler(ref button, ShowMenu);
 
         Widget = button;
 

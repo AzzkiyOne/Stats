@@ -36,13 +36,13 @@ public class EquippedStatOffsetsColumnWorker
             values.AppendInNewLine(offsetValueStr);
         }
 
-        IWidget leftCol = new LabelWidget(labels.ToString());
-        new TextAnchorWidgetComp(ref leftCol, TextAnchor.LowerLeft);
+        IWidget leftCol = new Label(labels.ToString());
+        new SetTextAnchor(ref leftCol, TextAnchor.LowerLeft);
 
-        IWidget rightCol = new LabelWidget(values.ToString());
-        new WidgetComp_Width_Rel(ref rightCol, 1f);
-        new TextAnchorWidgetComp(ref rightCol, TextAnchor.LowerRight);
+        IWidget rightCol = new Label(values.ToString());
+        new SetWidthToRel(ref rightCol, 1f);
+        new SetTextAnchor(ref rightCol, TextAnchor.LowerRight);
 
-        return new HorizontalContainerWidget([leftCol, rightCol], 10f, true);
+        return new HorizontalContainer([leftCol, rightCol], 10f, true);
     }
 }

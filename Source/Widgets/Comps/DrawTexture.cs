@@ -2,20 +2,20 @@
 
 namespace Stats.Widgets.Comps;
 
-public class TextureWidgetComp
+public class DrawTexture
     : WidgetComp
 {
-    private readonly Texture2D Tex;
-    public TextureWidgetComp(ref IWidget widget, Texture2D tex)
+    private readonly Texture2D Texture;
+    public DrawTexture(ref IWidget widget, Texture2D texture)
         : base(ref widget)
     {
-        Tex = tex;
+        Texture = texture;
     }
     public override void Draw(Rect rect, in Vector2 containerSize)
     {
         if (Event.current.type == EventType.Repaint)
         {
-            GUI.DrawTexture(rect, Tex);
+            GUI.DrawTexture(rect, Texture);
         }
 
         Widget.Draw(rect, containerSize);

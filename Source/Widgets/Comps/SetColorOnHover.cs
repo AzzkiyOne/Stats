@@ -3,16 +3,16 @@ using Verse;
 
 namespace Stats.Widgets.Comps;
 
-public class ColorHoverWidgetComp
+public class SetColorOnHover
     : WidgetComp
 {
     private readonly Color Color;
-    public ColorHoverWidgetComp(ref IWidget widget, Color color)
+    public SetColorOnHover(ref IWidget widget, Color color)
         : base(ref widget)
     {
         Color = color;
     }
-    public ColorHoverWidgetComp(ref IWidget widget)
+    public SetColorOnHover(ref IWidget widget)
         : this(ref widget, GenUI.MouseoverColor)
     {
     }

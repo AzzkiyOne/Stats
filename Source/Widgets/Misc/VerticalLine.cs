@@ -2,7 +2,7 @@
 
 namespace Stats.Widgets.Misc;
 
-internal static class VerticalLineWidget
+internal static class VerticalLine
 {
     public static void Draw(float x, float y, float length, Color color)
     {

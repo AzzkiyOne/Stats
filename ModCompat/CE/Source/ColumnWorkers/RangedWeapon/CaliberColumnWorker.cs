@@ -29,8 +29,8 @@ public class CaliberColumnWorker
             ToStringNumberSense.Absolute,
             ColumnDef.stat!.Worker.GetValue(statReq)
         );
-        IWidget widget = new LabelWidget(value);
-        new TooltipWidgetComp(ref widget, tooltip);
+        IWidget widget = new Label(value);
+        new DrawTooltipOnHover(ref widget, tooltip);
 
         return widget;
     }

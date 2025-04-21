@@ -41,11 +41,11 @@ public sealed class EnumerableFilterWidget<T>
         foreach (var option in options)
         {
             IWidget optionWidget = MakeOptionWidget(option);
-            new WidgetComp_Size_Inc_Abs(ref optionWidget, 5f, 3f);
-            new WidgetComp_Width_Rel(ref optionWidget, 1f);
-            new TextureHoverWidgetComp(ref optionWidget, TexUI.HighlightTex);
+            new IncreaseSizeByAbs(ref optionWidget, 5f, 3f);
+            new SetWidthToRel(ref optionWidget, 1f);
+            new DrawTextureOnHover(ref optionWidget, TexUI.HighlightTex);
             //new WidgetComp_Color_Hover(ref optionWidget, FloatMenuOption.ColorBGActiveMouseover);
-            new OnClickWidgetComp(ref optionWidget, () =>
+            new AddClickEventHandler(ref optionWidget, () =>
             {
                 if (filterExpression.Value.Contains(option))
                 {
@@ -56,7 +56,7 @@ public sealed class EnumerableFilterWidget<T>
                     filterExpression.Value = [.. filterExpression.Value, option];
                 }
             });
-            new GenericWidgetComp(ref optionWidget, rect =>
+            new Draw(ref optionWidget, rect =>
             {
                 if (Event.current.type == EventType.Repaint)
                 {
@@ -72,7 +72,7 @@ public sealed class EnumerableFilterWidget<T>
             optionWidgets.Add(optionWidget);
         }
 
-        IWidget optionsContainer = new VerticalContainerWidget(optionWidgets);
+        IWidget optionsContainer = new VerticalContainer(optionWidgets);
         _OptionsWindow = new OptionsWindow(optionsContainer);
     }
     public EnumerableFilterWidget(
@@ -161,8 +161,8 @@ public sealed class EnumerableFilterWidget<T>
         {
             Verse.Widgets.DrawBoxSolid(rect, Verse.Widgets.WindowBGFillColor);
             Verse.Widgets.DrawLineHorizontal(rect.x, rect.y, rect.width, Verse.Widgets.SeparatorLineColor);
-            VerticalLineWidget.Draw(rect.x, rect.y, rect.height, Verse.Widgets.SeparatorLineColor);
-            VerticalLineWidget.Draw(rect.xMax - 1f, rect.y, rect.height, Verse.Widgets.SeparatorLineColor);
+            VerticalLine.Draw(rect.x, rect.y, rect.height, Verse.Widgets.SeparatorLineColor);
+            VerticalLine.Draw(rect.xMax - 1f, rect.y, rect.height, Verse.Widgets.SeparatorLineColor);
 
             Widget.DrawIn(rect);
         }

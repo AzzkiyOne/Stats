@@ -3,7 +3,7 @@ using Verse;
 
 namespace Stats.Widgets.Misc;
 
-internal static class DefInfoDialogWidget
+internal static class DefInfoDialog
 {
     private static readonly FieldInfo DialogInfoCardStuffField =
         typeof(Dialog_InfoCard)

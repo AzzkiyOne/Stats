@@ -88,7 +88,7 @@ internal sealed class GenericTableWidget
             DrawPart(leftPartRect, ScrollPos with { x = 0f }, 0f, true);
 
             // Separator line
-            VerticalLineWidget.Draw(
+            VerticalLine.Draw(
                 leftPartRect.xMax - 1f,
                 leftPartRect.y,
                 rect.height,
@@ -189,7 +189,7 @@ internal sealed class GenericTableWidget
 
             if (x > 0f)
             {
-                VerticalLineWidget.Draw(
+                VerticalLine.Draw(
                     x + rect.x - 1f,
                     rect.y,
                     rect.height,

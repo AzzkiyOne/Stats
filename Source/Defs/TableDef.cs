@@ -24,8 +24,8 @@ public class TableDef
 #pragma warning restore CS8618
     internal Texture2D Icon { get; private set; } = BaseContent.BadTex;
     internal Color IconColor { get; private set; } = Color.white;
-    private ThingsTableWidget? _widget;
-    internal ThingsTableWidget Widget => _widget ??= new(this);
+    private ThingTableWidget? _widget;
+    internal ThingTableWidget Widget => _widget ??= new(this);
     public override void PostLoad()
     {
         base.PostLoad();

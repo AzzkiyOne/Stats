@@ -2,11 +2,11 @@
 
 namespace Stats.Widgets.Comps.Size.Constraints;
 
-public class WidgetComp_Width_Func
+public class SetWidth
     : WidgetComp
 {
     private readonly SizeFunc_SingleAxis WidthFunc;
-    public WidgetComp_Width_Func(ref IWidget widget, SizeFunc_SingleAxis widthFunc)
+    public SetWidth(ref IWidget widget, SizeFunc_SingleAxis widthFunc)
         : base(ref widget)
     {
         WidthFunc = widthFunc;

@@ -2,17 +2,17 @@
 
 namespace Stats.Widgets.Comps.Size.Constraints;
 
-public class WidgetComp_Size_Abs
+public class SetSizeToAbs
     : WidgetComp
 {
     private readonly Vector2 Size;
-    public WidgetComp_Size_Abs(ref IWidget widget, float width, float height)
+    public SetSizeToAbs(ref IWidget widget, float width, float height)
         : base(ref widget)
     {
         Size.x = width;
         Size.y = height;
     }
-    public WidgetComp_Size_Abs(ref IWidget widget, float size)
+    public SetSizeToAbs(ref IWidget widget, float size)
         : this(ref widget, size, size)
     {
     }

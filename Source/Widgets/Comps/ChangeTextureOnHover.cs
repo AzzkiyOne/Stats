@@ -3,20 +3,20 @@ using Verse;
 
 namespace Stats.Widgets.Comps;
 
-public class TextureAlternatingWidgetComp
+public class ChangeTextureOnHover
     : WidgetComp
 {
-    private readonly Texture2D TexIdle;
-    private readonly Texture2D TexHover;
-    public TextureAlternatingWidgetComp(
+    private readonly Texture2D IdleTexture;
+    private readonly Texture2D HoverTexture;
+    public ChangeTextureOnHover(
         ref IWidget widget,
-        Texture2D texIdle,
-        Texture2D texHover
+        Texture2D idleTexture,
+        Texture2D hoverTexture
     )
         : base(ref widget)
     {
-        TexIdle = texIdle;
-        TexHover = texHover;
+        IdleTexture = idleTexture;
+        HoverTexture = hoverTexture;
     }
     public override void Draw(Rect rect, in Vector2 containerSize)
     {
@@ -24,11 +24,11 @@ public class TextureAlternatingWidgetComp
         {
             if (Mouse.IsOver(rect))
             {
-                GUI.DrawTexture(rect, TexHover);
+                GUI.DrawTexture(rect, HoverTexture);
             }
             else
             {
-                GUI.DrawTexture(rect, TexIdle);
+                GUI.DrawTexture(rect, IdleTexture);
             }
         }
 

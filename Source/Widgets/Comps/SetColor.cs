@@ -2,11 +2,11 @@
 
 namespace Stats.Widgets.Comps;
 
-public class ColorWidgetComp
+public class SetColor
     : WidgetComp
 {
     public Color Color { get; set; }
-    public ColorWidgetComp(ref IWidget widget, Color color)
+    public SetColor(ref IWidget widget, Color color)
         : base(ref widget)
     {
         Color = color;

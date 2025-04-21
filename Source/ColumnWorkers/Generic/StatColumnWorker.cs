@@ -72,11 +72,11 @@ public class StatColumnWorker
     {
         var valueStr = FormatValue(value, thing);
         var tooltip = GetValueExplanation(value, thing);
-        IWidget widget = new LabelWidget(valueStr);
+        IWidget widget = new Label(valueStr);
 
         if (tooltip?.Length > 0)
         {
-            new TooltipWidgetComp(ref widget, tooltip);
+            new DrawTooltipOnHover(ref widget, tooltip);
         }
 
         return widget;

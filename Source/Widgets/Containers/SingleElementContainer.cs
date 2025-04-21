@@ -2,14 +2,14 @@
 
 namespace Stats.Widgets.Containers;
 
-public class SingleSlotContainerWidget
+public class SingleElementContainer
     : Widget
 {
     protected override Vector2 Size { get; set; }
     private readonly IWidget Widget;
     private readonly float OccupiedWidth = 0f;
     private readonly float OccupiedHeight = 0f;
-    public SingleSlotContainerWidget(IWidget widget)
+    public SingleElementContainer(IWidget widget)
     {
         Widget = widget;
         widget.Parent = this;

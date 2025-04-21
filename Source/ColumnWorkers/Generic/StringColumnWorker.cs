@@ -14,7 +14,7 @@ public abstract class StringColumnWorker
     }
     protected override IWidget GetTableCellContent(string? value, ThingAlike thing)
     {
-        return new LabelWidget(value);
+        return new Label(value);
     }
     public override IFilterWidget GetFilterWidget()
     {

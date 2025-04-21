@@ -3,8 +3,7 @@ using UnityEngine;
 
 namespace Stats.Widgets.Containers;
 
-// See vertical variant for comments.
-public class HorizontalContainerWidget
+public class VerticalContainer
     : Widget
 {
     protected override Vector2 Size { get; set; }
@@ -12,7 +11,7 @@ public class HorizontalContainerWidget
     private readonly List<IWidget> Children;
     private readonly bool ShareFreeSpace;
     private float OccupiedSpaceAmount = 0f;
-    public HorizontalContainerWidget(
+    public VerticalContainer(
         List<IWidget> children,
         float gap = 0f,
         bool shareFreeSpace = false
@@ -32,23 +31,24 @@ public class HorizontalContainerWidget
     public override Vector2 GetSize()
     {
         var totalGapAmount = (Children.Count - 1) * Gap;
-
+        // Total gap amount is not reserved in normal mode, because overflow may
+        // not happen when it should.
         OccupiedSpaceAmount = ShareFreeSpace ? totalGapAmount : 0f;
 
         Vector2 size;
-        size.x = totalGapAmount;
-        size.y = 0f;
+        size.x = 0f;
+        size.y = totalGapAmount;
 
         foreach (var child in Children)
         {
             var childSize = child.GetSize();
 
-            size.x += childSize.x;
-            size.y = Mathf.Max(size.y, childSize.y);
+            size.x = Mathf.Max(size.x, childSize.x);
+            size.y += childSize.y;
 
             if (ShareFreeSpace)
             {
-                OccupiedSpaceAmount += child.GetFixedSize().x;
+                OccupiedSpaceAmount += child.GetFixedSize().y;
             }
         }
 
@@ -56,25 +56,26 @@ public class HorizontalContainerWidget
     }
     protected override void DrawContent(Rect rect)
     {
-        var xMax = rect.xMax;
+        var yMax = rect.yMax;
         var size = rect.size;
-        size.x = Mathf.Max(size.x - OccupiedSpaceAmount, 0f);
+        size.y = Mathf.Max(size.y - OccupiedSpaceAmount, 0f);
 
         foreach (var child in Children)
         {
-            if (rect.x >= xMax)
+            if (rect.y >= yMax)
             {
                 break;
             }
 
             rect.size = child.GetSize(size);
 
-            if (rect.xMax > 0f)
+            // This is for (future) scroll component.
+            if (rect.yMax > 0f)
             {
                 child.Draw(rect, size);
             }
 
-            rect.x = rect.xMax + Gap;
+            rect.y = rect.yMax + Gap;
         }
     }
 }

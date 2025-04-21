@@ -10,7 +10,7 @@ namespace Stats.Widgets.Misc;
 
 // Just to make RW stop throwing warning regarding assets loading.
 [StaticConstructorOnStartup]
-internal sealed class WindowTitleBarWidget
+internal sealed class WindowTitleBar
     : WidgetDecorator
 {
     protected override IWidget Widget { get; }
@@ -24,7 +24,7 @@ internal sealed class WindowTitleBarWidget
         "  - You can select multiple rows.\n" +
         "  - Selected rows are unaffected by filters.";
     private const float IconPadding = 3f;
-    public WindowTitleBarWidget(
+    public WindowTitleBar(
         IWidget tableSelector,
         Action resetWindow,
         Action expandWindow,
@@ -32,27 +32,27 @@ internal sealed class WindowTitleBarWidget
         Action resetTableFilters
     )
     {
-        new WidgetComp_Size_Inc_Rel(ref tableSelector, 0f, 1f, 0f, 0f);
+        new IncreaseSizeByRel(ref tableSelector, 0f, 1f, 0f, 0f);
 
-        IWidget resetTableFiltersBtn = new IconWidget(TexUI.RotRightTex);
+        IWidget resetTableFiltersBtn = new Icon(TexUI.RotRightTex);
         AsIcon(ref resetTableFiltersBtn, resetTableFilters, "Reset filters");
 
-        IWidget dragIcon = new IconWidget(HoldToDragTex);
+        IWidget dragIcon = new Icon(HoldToDragTex);
         AsIcon(ref dragIcon, "Hold to drag the window (if there's nothing else to hold on to)");
 
-        IWidget infoIcon = new IconWidget(TexButton.Info);
+        IWidget infoIcon = new Icon(TexButton.Info);
         AsIcon(ref infoIcon, Manual);
 
-        IWidget resetWindowBtn = new IconWidget(ResetWindowTex);
+        IWidget resetWindowBtn = new Icon(ResetWindowTex);
         AsIcon(ref resetWindowBtn, resetWindow, "Reset");
 
-        IWidget expandWindowBtn = new IconWidget(ExpandWindowTex);
+        IWidget expandWindowBtn = new Icon(ExpandWindowTex);
         AsIcon(ref expandWindowBtn, expandWindow, "Expand");
 
-        IWidget closeWindowBtn = new IconWidget(TexButton.CloseXSmall);
+        IWidget closeWindowBtn = new Icon(TexButton.CloseXSmall);
         AsIcon(ref closeWindowBtn, closeWindow, "Close", IconPadding + 2f);
 
-        IWidget container = new HorizontalContainerWidget(
+        IWidget container = new HorizontalContainer(
             [
                 tableSelector,
                 resetTableFiltersBtn,
@@ -65,7 +65,7 @@ internal sealed class WindowTitleBarWidget
             GenUI.Pad,
             true
         );
-        new TextureWidgetComp(ref container, Verse.Widgets.LightHighlight);
+        new DrawTexture(ref container, Verse.Widgets.LightHighlight);
 
         Widget = container;
     }
@@ -82,23 +82,23 @@ internal sealed class WindowTitleBarWidget
     }
     private static void AsIcon(
         ref IWidget widget,
-        Action onClick,
+        Action clickEventHandler,
         string tooltip,
         float pad = IconPadding
     )
     {
         AsIcon(ref widget, tooltip, pad);
-        new TextureHoverWidgetComp(ref widget, TexUI.HighlightTex);
-        new OnClickWidgetComp(ref widget, onClick);
+        new DrawTextureOnHover(ref widget, TexUI.HighlightTex);
+        new AddClickEventHandler(ref widget, clickEventHandler);
     }
     private static void AsIcon(ref IWidget widget, string tooltip, float pad = IconPadding)
     {
-        new WidgetComp_Size_Inc_Abs(ref widget, pad);
-        new WidgetComp_Size_Abs(ref widget, MainTabWindowWidget.TitleBarHeight);
-        new TooltipWidgetComp(ref widget, tooltip);
+        new IncreaseSizeByAbs(ref widget, pad);
+        new SetSizeToAbs(ref widget, MainTabWindowWidget.TitleBarHeight);
+        new DrawTooltipOnHover(ref widget, tooltip);
     }
 
-    static WindowTitleBarWidget()
+    static WindowTitleBar()
     {
         HoldToDragTex = ContentFinder<Texture2D>.Get("UI/Icons/Trainables/Tameness");
         ExpandWindowTex = ContentFinder<Texture2D>.Get("StatsMod/UI/Icons/ExpandWindow");

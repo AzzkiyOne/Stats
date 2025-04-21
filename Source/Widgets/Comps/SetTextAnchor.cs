@@ -3,11 +3,11 @@ using Verse;
 
 namespace Stats.Widgets.Comps;
 
-public class TextAnchorWidgetComp
+public class SetTextAnchor
     : WidgetComp
 {
     private readonly TextAnchor Value;
-    public TextAnchorWidgetComp(ref IWidget widget, TextAnchor value)
+    public SetTextAnchor(ref IWidget widget, TextAnchor value)
         : base(ref widget)
     {
         Value = value;

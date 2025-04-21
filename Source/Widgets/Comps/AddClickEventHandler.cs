@@ -4,15 +4,15 @@ using Verse.Sound;
 
 namespace Stats.Widgets.Comps;
 
-public class OnClickWidgetComp
+public class AddClickEventHandler
     : WidgetComp
 {
-    private readonly Action CB;
+    private readonly Action Action;
     private readonly bool PlaySound;
-    public OnClickWidgetComp(ref IWidget widget, Action cb, bool playSound = true)
+    public AddClickEventHandler(ref IWidget widget, Action action, bool playSound = true)
         : base(ref widget)
     {
-        CB = cb;
+        Action = action;
         PlaySound = playSound;
     }
     public override void Draw(Rect rect, in Vector2 containerSize)
@@ -24,7 +24,7 @@ public class OnClickWidgetComp
 
         if (GUI.Button(rect, "", Verse.Widgets.EmptyStyle))
         {
-            CB();
+            Action();
         }
 
         Widget.Draw(rect, containerSize);

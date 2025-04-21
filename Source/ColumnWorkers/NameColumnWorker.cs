@@ -20,17 +20,17 @@ public class NameColumnWorker
     {
         void handleIconClick()
         {
-            DefInfoDialogWidget.Draw(thing.Def, thing.StuffDef);
+            DefInfoDialog.Draw(thing.Def, thing.StuffDef);
         }
 
-        IWidget icon = new ThingIconWidget(thing);
-        new TextureHoverWidgetComp(ref icon, TexUI.HighlightTex);
-        new OnClickWidgetComp(ref icon, handleIconClick);
+        IWidget icon = new ThingIcon(thing);
+        new DrawTextureOnHover(ref icon, TexUI.HighlightTex);
+        new AddClickEventHandler(ref icon, handleIconClick);
 
-        IWidget label = new LabelWidget(value);
+        IWidget label = new Label(value);
 
-        IWidget container = new HorizontalContainerWidget([icon, label], 10f);
-        new TooltipWidgetComp(ref container, thing.Def.description);
+        IWidget container = new HorizontalContainer([icon, label], 10f);
+        new DrawTooltipOnHover(ref container, thing.Def.description);
 
         return container;
     }

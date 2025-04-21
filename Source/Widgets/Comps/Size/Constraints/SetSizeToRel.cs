@@ -2,18 +2,18 @@
 
 namespace Stats.Widgets.Comps.Size.Constraints;
 
-public class WidgetComp_Size_Rel
+public class SetSizeToRel
     : WidgetComp
 {
     private readonly float WidthMult;
     private readonly float HeightMult;
-    public WidgetComp_Size_Rel(ref IWidget widget, float widthMult, float heightMult)
+    public SetSizeToRel(ref IWidget widget, float widthMult, float heightMult)
         : base(ref widget)
     {
         WidthMult = widthMult;
         HeightMult = heightMult;
     }
-    public WidgetComp_Size_Rel(ref IWidget widget, float sizeMult)
+    public SetSizeToRel(ref IWidget widget, float sizeMult)
         : this(ref widget, sizeMult, sizeMult)
     {
     }

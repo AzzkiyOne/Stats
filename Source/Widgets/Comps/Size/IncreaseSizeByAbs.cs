@@ -2,14 +2,14 @@
 
 namespace Stats.Widgets.Comps.Size;
 
-public class WidgetComp_Size_Inc_Rel
+public class IncreaseSizeByAbs
     : WidgetComp
 {
     private readonly float L;
     private readonly float T;
     private readonly float Hor;
     private readonly float Ver;
-    public WidgetComp_Size_Inc_Rel(ref IWidget widget, float l, float r, float t, float b)
+    public IncreaseSizeByAbs(ref IWidget widget, float l, float r, float t, float b)
         : base(ref widget)
     {
         L = l;
@@ -17,19 +17,27 @@ public class WidgetComp_Size_Inc_Rel
         Hor = l + r;
         Ver = t + b;
     }
-    public WidgetComp_Size_Inc_Rel(ref IWidget widget, float hor, float ver)
+    public IncreaseSizeByAbs(ref IWidget widget, float hor, float ver)
         : this(ref widget, hor, hor, ver, ver)
     {
     }
-    public WidgetComp_Size_Inc_Rel(ref IWidget widget, float amount)
+    public IncreaseSizeByAbs(ref IWidget widget, float amount)
         : this(ref widget, amount, amount, amount, amount)
     {
     }
     public override Vector2 GetSize(in Vector2 containerSize)
     {
         Vector2 size = Widget.GetSize(containerSize);
-        size.x += Hor * containerSize.x;
-        size.y += Ver * containerSize.y;
+        size.x += Hor;
+        size.y += Ver;
+
+        return size;
+    }
+    public override Vector2 GetSize()
+    {
+        Vector2 size = Widget.GetSize();
+        size.x += Hor;
+        size.y += Ver;
 
         return size;
     }
@@ -37,10 +45,10 @@ public class WidgetComp_Size_Inc_Rel
     {
         GUIDebugger.DebugRect(this, rect);
 
-        rect.x += L * containerSize.x;
-        rect.y += T * containerSize.y;
-        rect.width -= Hor * containerSize.x;
-        rect.height -= Ver * containerSize.y;
+        rect.x += L;
+        rect.y += T;
+        rect.width -= Hor;
+        rect.height -= Ver;
 
         Widget.Draw(rect, containerSize);
     }

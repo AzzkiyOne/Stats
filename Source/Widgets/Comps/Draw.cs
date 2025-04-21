@@ -2,16 +2,17 @@
 
 namespace Stats.Widgets.Comps;
 
-public class GenericWidgetComp
-    : WidgetComp
+public class Draw
+    : WidgetComp,
+      IWidget
 {
     private readonly OnDrawCB OnDraw;
-    public GenericWidgetComp(ref IWidget widget, OnDrawCB onDraw)
+    public Draw(ref IWidget widget, OnDrawCB onDraw)
         : base(ref widget)
     {
         OnDraw = onDraw;
     }
-    public override void Draw(Rect rect, in Vector2 containerSize)
+    void IWidget.Draw(Rect rect, in Vector2 containerSize)
     {
         OnDraw(rect);
 

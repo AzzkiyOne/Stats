@@ -19,11 +19,11 @@ public abstract class BooleanColumnWorker
     protected override IWidget GetTableCellContent(bool value, ThingAlike thing)
     {
         var tex = Verse.Widgets.GetCheckboxTexture(value);
-        IWidget icon = new IconWidget(tex);
-        new WidgetComp_Size_Abs(ref icon, Text.LineHeight);
-        new WidgetComp_Size_Inc_Rel(ref icon, 0.5f, 0f);
+        IWidget icon = new Icon(tex);
+        new SetSizeToAbs(ref icon, Text.LineHeight);
+        new IncreaseSizeByRel(ref icon, 0.5f, 0f);
 
-        return new SingleSlotContainerWidget(icon);
+        return new SingleElementContainer(icon);
     }
     public override IFilterWidget GetFilterWidget()
     {

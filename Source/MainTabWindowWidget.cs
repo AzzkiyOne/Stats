@@ -24,21 +24,21 @@ public class MainTabWindowWidget
     internal const float TitleBarHeight = 30f;
     internal static readonly Color BorderLineColor = new(1f, 1f, 1f, 0.4f);
     private readonly IWidget TitleBar;
-    private readonly TableSelectorWidget TableSelector;
+    private readonly TableSelector TableSelector;
     public MainTabWindowWidget()
     {
         draggable = true;
         resizeable = true;
 
-        TableSelector = new TableSelectorWidget();
-        TitleBar = new WindowTitleBarWidget(
+        TableSelector = new TableSelector();
+        TitleBar = new WindowTitleBar(
             TableSelector,
             ResetWindow,
             ExpandOrCollapseWidow,
             () => Close(),
             ResetCurTableFilters
         );
-        new WidgetComp_Width_Rel(ref TitleBar, 1f);
+        new SetWidthToRel(ref TitleBar, 1f);
     }
     public override void DoWindowContents(Rect rect)
     {

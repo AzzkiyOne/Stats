@@ -11,7 +11,7 @@ using Verse;
 
 namespace Stats.Widgets.Table;
 
-internal sealed class ThingsTableWidget
+internal sealed class ThingTableWidget
 {
     private ColumnDef SortColumn = ColumnDefOf.Name;
     private int SortDirection = SortDirectionDescending;
@@ -22,7 +22,7 @@ internal sealed class ThingsTableWidget
     private readonly List<IFilterExpression> ThingMatchers = [];
     private readonly GenericTableWidget Table;
     private bool ShouldApplyFilters = false;
-    public ThingsTableWidget(TableDef tableDef)
+    public ThingTableWidget(TableDef tableDef)
     {
         List<ColumnDef> columnDefs = [ColumnDefOf.Name, .. tableDef.columns];
 
@@ -88,22 +88,22 @@ internal sealed class ThingsTableWidget
 
         if (columnDef.Icon != null)
         {
-            cell = new IconWidget(columnDef.Icon);
+            cell = new Icon(columnDef.Icon);
 
             if (columnDef.Worker.CellStyle == ColumnCellStyle.Number)
             {
-                new WidgetComp_Size_Inc_Rel(ref cell, 1f, 0f, 0f, 0f);
+                new IncreaseSizeByRel(ref cell, 1f, 0f, 0f, 0f);
             }
             else if (columnDef.Worker.CellStyle == ColumnCellStyle.Boolean)
             {
-                new WidgetComp_Size_Inc_Rel(ref cell, 0.5f, 0f);
+                new IncreaseSizeByRel(ref cell, 0.5f, 0f);
             }
 
-            cell = new SingleSlotContainerWidget(cell);
+            cell = new SingleElementContainer(cell);
         }
         else
         {
-            cell = new LabelWidget(columnDef.labelShort);
+            cell = new Label(columnDef.labelShort);
         }
 
         void drawSortIndicator(Rect rect)
@@ -135,12 +135,15 @@ internal sealed class ThingsTableWidget
             }
         }
 
-        new WidgetComp_Size_Inc_Abs(ref cell, cellPadHor, cellPadVer);
-        new WidgetComp_Width_Rel(ref cell, 1f);
-        new TooltipWidgetComp(ref cell, $"<i>{columnDef.LabelCap}</i>\n\n{columnDef.description}");
-        new TextureHoverWidgetComp(ref cell, TexUI.HighlightTex);
-        new OnClickWidgetComp(ref cell, handleCellClick);
-        new GenericWidgetComp(ref cell, drawSortIndicator);
+        new IncreaseSizeByAbs(ref cell, cellPadHor, cellPadVer);
+        new SetWidthToRel(ref cell, 1f);
+        new DrawTooltipOnHover(
+            ref cell,
+            $"<i>{columnDef.LabelCap}</i>\n\n{columnDef.description}"
+        );
+        new DrawTextureOnHover(ref cell, TexUI.HighlightTex);
+        new AddClickEventHandler(ref cell, handleCellClick);
+        new Draw(ref cell, drawSortIndicator);
 
         return new WidgetComp_TableCell_Normal(cell, column, columnDef.Worker.CellStyle);
     }
@@ -152,7 +155,7 @@ internal sealed class ThingsTableWidget
     {
         IFilterWidget filterWidget = columnDef.Worker.GetFilterWidget();
         var widget = (IWidget)filterWidget;
-        new WidgetComp_Width_Rel(ref widget, 1f);
+        new SetWidthToRel(ref widget, 1f);
 
         thingMatcher = filterWidget.FilterExpression;
         return new WidgetComp_TableCell_Normal(widget, column, columnDef.Worker.CellStyle);
@@ -179,8 +182,8 @@ internal sealed class ThingsTableWidget
         }
         else
         {
-            new WidgetComp_Size_Inc_Abs(ref cell, cellPadHor, cellPadVer);
-            new WidgetComp_Width_Rel(ref cell, 1f);
+            new IncreaseSizeByAbs(ref cell, cellPadHor, cellPadVer);
+            new SetWidthToRel(ref cell, 1f);
 
             return new WidgetComp_TableCell_Normal(cell, column, columnDef.Worker.CellStyle);
         }

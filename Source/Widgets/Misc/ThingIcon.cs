@@ -4,7 +4,7 @@ using Verse;
 
 namespace Stats.Widgets.Misc;
 
-public class ThingIconWidget
+public class ThingIcon
     : Widget
 {
     protected override Vector2 Size { get; set; }
@@ -15,11 +15,11 @@ public class ThingIconWidget
     private readonly float Scale;
     private readonly float Angle;
     private readonly Vector2 Offset;
-    public ThingIconWidget(ThingAlike thing)
+    public ThingIcon(ThingAlike thing)
         : this(thing.Def, thing.StuffDef)
     {
     }
-    public ThingIconWidget(ThingDef thingDef, ThingDef? stuffDef = null)
+    public ThingIcon(ThingDef thingDef, ThingDef? stuffDef = null)
     {
         Texture = Verse.Widgets.GetIconFor(thingDef, stuffDef) ?? BaseContent.BadTex;
         Scale = GenUI.IconDrawScale(thingDef);

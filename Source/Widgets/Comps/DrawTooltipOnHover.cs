@@ -3,11 +3,11 @@ using Verse;
 
 namespace Stats.Widgets.Comps;
 
-public class TooltipWidgetComp
+public class DrawTooltipOnHover
     : WidgetComp
 {
     private readonly string Text;
-    public TooltipWidgetComp(ref IWidget widget, string text)
+    public DrawTooltipOnHover(ref IWidget widget, string text)
         : base(ref widget)
     {
         Text = text;

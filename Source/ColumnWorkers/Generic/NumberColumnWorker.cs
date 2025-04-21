@@ -36,7 +36,7 @@ public abstract class NumberColumnWorker<T>
     {
         var valueStr = FormatValue(value);
 
-        return new LabelWidget(valueStr);
+        return new Label(valueStr);
     }
     public override IFilterWidget GetFilterWidget()
     {

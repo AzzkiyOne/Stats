@@ -51,18 +51,18 @@ public class CreatedAtColumnWorker
         {
             void handleIconClick()
             {
-                DefInfoDialogWidget.Draw(thingDef);
+                DefInfoDialog.Draw(thingDef);
             }
 
-            IWidget icon = new ThingIconWidget(thingDef);
-            new TooltipWidgetComp(ref icon, $"<i>{thingDef.LabelCap}</i>\n\n{thingDef.description}");
-            new TextureHoverWidgetComp(ref icon, TexUI.HighlightTex);
-            new OnClickWidgetComp(ref icon, handleIconClick);
+            IWidget icon = new ThingIcon(thingDef);
+            new DrawTooltipOnHover(ref icon, $"<i>{thingDef.LabelCap}</i>\n\n{thingDef.description}");
+            new DrawTextureOnHover(ref icon, TexUI.HighlightTex);
+            new AddClickEventHandler(ref icon, handleIconClick);
 
             icons.Add(icon);
         }
 
-        return new HorizontalContainerWidget(icons, 5f);
+        return new HorizontalContainer(icons, 5f);
     }
     public override IFilterWidget GetFilterWidget()
     {
@@ -80,11 +80,11 @@ public class CreatedAtColumnWorker
     }
     private static IWidget MakeFilterOptionWidget(ThingDef thingDef)
     {
-        var icon = new ThingIconWidget(thingDef);
+        var icon = new ThingIcon(thingDef);
 
-        IWidget label = new LabelWidget(thingDef.LabelCap);
-        new WidgetComp_Width_Rel(ref label, 1f);
+        IWidget label = new Label(thingDef.LabelCap);
+        new SetWidthToRel(ref label, 1f);
 
-        return new HorizontalContainerWidget([icon, label], 5f, true);
+        return new HorizontalContainer([icon, label], 5f, true);
     }
 }

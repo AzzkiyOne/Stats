@@ -2,10 +2,10 @@
 
 namespace Stats.Widgets.Comps;
 
-public class OverflowHideWidgetComp
+public class HideOverflow
     : WidgetComp
 {
-    public OverflowHideWidgetComp(ref IWidget widget)
+    public HideOverflow(ref IWidget widget)
         : base(ref widget)
     {
     }
