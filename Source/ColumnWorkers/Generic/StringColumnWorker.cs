@@ -11,11 +11,11 @@ public abstract class StringColumnWorker
     {
         return value?.Length > 0;
     }
-    protected override IWidget GetTableCellContent(string? value, ThingAlike thing)
+    protected override Widget GetTableCellContent(string? value, ThingAlike thing)
     {
         return new Label(value);
     }
-    public override IFilterWidget GetFilterWidget()
+    public override FilterWidget GetFilterWidget()
     {
         return new StringFilter(GetValueCached);
     }

@@ -24,7 +24,7 @@ public sealed class ColumnDef
     public bool isNegative = false;
     internal Texture2D? Icon { get; private set; }
 #pragma warning disable CS8618
-    internal IColumnWorker Worker { get; private set; }
+    internal ColumnWorker Worker { get; private set; }
 #pragma warning restore CS8618
     public override void PostLoad()
     {
@@ -64,7 +64,7 @@ public sealed class ColumnDef
             labelShort = LabelCap;
         }
 
-        Worker = (IColumnWorker)Activator.CreateInstance(workerClass);
+        Worker = (ColumnWorker)Activator.CreateInstance(workerClass);
         Worker.ColumnDef = this;
     }
     private void ResolveIcon()

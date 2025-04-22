@@ -4,16 +4,18 @@ using Verse;
 namespace Stats.Widgets.Extensions;
 
 public sealed class AlternatingBackgroundWidgetExtension
-    : WidgetExtension
+    : WidgetDecorator
 {
+    public override Widget Widget { get; }
     private readonly Texture2D IdleTexture;
     private readonly Texture2D HoverTexture;
     internal AlternatingBackgroundWidgetExtension(
-        IWidget widget,
+        Widget widget,
         Texture2D idleTexture,
         Texture2D hoverTexture
-    ) : base(widget)
+    )
     {
+        Widget = widget;
         IdleTexture = idleTexture;
         HoverTexture = hoverTexture;
     }

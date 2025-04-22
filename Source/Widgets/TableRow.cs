@@ -7,7 +7,7 @@ namespace Stats.Widgets;
 internal class TableRow
 {
     public Table? Parent { private get; set; }
-    public List<IWidget> Cells { get; } = [];
+    public List<Widget> Cells { get; } = [];
     public float Height = 0f;
     private bool _IsHidden = false;
     public bool IsHidden
@@ -103,7 +103,7 @@ internal class TableRow
 
         for (int i = 0; i < Cells.Count; i++)
         {
-            IWidget? cell = Cells[i];
+            Widget? cell = Cells[i];
             var cellSize = cell.GetSize();
             var column = Parent!.Columns[i];
 

@@ -4,16 +4,17 @@ using UnityEngine;
 namespace Stats.Widgets.Extensions;
 
 public sealed class DrawBackgroundWidgetExtension
-    : WidgetExtension,
-      IWidget
+    : WidgetDecorator
 {
+    public override Widget Widget { get; }
     private readonly Action<Rect> _DrawBackground;
     internal DrawBackgroundWidgetExtension(
-        IWidget widget,
+        Widget widget,
         Action<Rect>
         drawBackground
-    ) : base(widget)
+    )
     {
+        Widget = widget;
         _DrawBackground = drawBackground;
     }
     public override void Draw(Rect rect, Vector2 containerSize)

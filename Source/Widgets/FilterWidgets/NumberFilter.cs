@@ -12,7 +12,7 @@ public sealed class NumberFilter<T>
         IEquatable<T>,
         IComparable<T>
 {
-    private static readonly IRelationalOperator<T>[] DefaultOperators =
+    private static readonly RelationalOperator<T>[] DefaultOperators =
         [
             Any<T>.Instance,
             Eq<T>.Instance,
@@ -25,7 +25,7 @@ public sealed class NumberFilter<T>
     private string ValueStrBuffer = "";
     public NumberFilter(
         FilterExpression<T> filterExpression,
-        IEnumerable<IRelationalOperator<T>> operators
+        IEnumerable<RelationalOperator<T>> operators
     ) : base(filterExpression, operators)
     {
     }
@@ -47,7 +47,7 @@ public sealed class NumberFilter<T>
         Verse.Widgets.TextFieldNumeric(rect, ref value, ref ValueStrBuffer);
         _FilterExpression.Value = value;
     }
-    public override IFilterWidget Clone()
+    public override FilterWidget Clone()
     {
         return new NumberFilter<T>(_FilterExpression, DefaultOperators);
     }

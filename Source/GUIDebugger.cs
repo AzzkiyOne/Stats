@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics;
 using Stats.Widgets;
-using Stats.Widgets.Extensions;
 using UnityEngine;
 using Verse;
 
@@ -15,7 +14,7 @@ internal static class GUIDebugger
     private const float Padding = GenUI.Pad;
     private static Vector2 ContentSize = Vector2.zero;
     [Conditional("DEBUG")]
-    public static void DebugRect(IWidget widget, Rect rect)
+    public static void DebugRect(Widget widget, Rect rect)
     {
         if (!(Event.current.control && Mouse.IsOver(rect)))
         {
@@ -29,7 +28,7 @@ internal static class GUIDebugger
         var xStr = rect.x.ToString("F0");
         var yStr = rect.y.ToString("F0");
         var text = $"<b>{name}:</b> <i>{widthStr} x {heightStr} ({xStr}, {yStr})</i>";
-        if (widget is WidgetExtension)
+        if (widget is WidgetDecorator)
         {
             text = $"<b>@[</b>{text}<b>]</b>";
         }

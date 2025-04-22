@@ -3,14 +3,16 @@
 namespace Stats.Widgets.Extensions.Size.Constraints;
 
 public sealed class RelWidthWidgetExtension
-    : WidgetExtension
+    : WidgetDecorator
 {
+    public override Widget Widget { get; }
     private readonly float ParentWidthMultiplier;
     internal RelWidthWidgetExtension(
-        IWidget widget,
+        Widget widget,
         float parentWidthMultiplier
-    ) : base(widget)
+    )
     {
+        Widget = widget;
         ParentWidthMultiplier = parentWidthMultiplier;
     }
     public override Vector2 GetSize(Vector2 containerSize)

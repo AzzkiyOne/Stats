@@ -10,7 +10,7 @@ public sealed class ContentSourceColumnWorker
     {
         return thing.Def.modContentPack?.Name;
     }
-    protected override IWidget GetTableCellContent(string? value, ThingAlike thing)
+    protected override Widget GetTableCellContent(string? value, ThingAlike thing)
     {
         return new Label(value)
             .Tooltip(thing.Def.modContentPack.PackageIdPlayerFacing);

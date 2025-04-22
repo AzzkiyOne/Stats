@@ -36,12 +36,12 @@ public sealed class CreatedAtColumnWorker
     {
         return things.Count() > 0;
     }
-    protected override IWidget GetTableCellContent(
+    protected override Widget GetTableCellContent(
         IEnumerable<ThingDef> things,
         ThingAlike thing
     )
     {
-        var icons = new List<IWidget>();
+        var icons = new List<Widget>();
 
         foreach (var thingDef in things.OrderBy(def => def.label))
         {
@@ -50,7 +50,7 @@ public sealed class CreatedAtColumnWorker
                 DefInfoDialog.Draw(thingDef);
             }
 
-            IWidget icon = new ThingIcon(thingDef)
+            Widget icon = new ThingIcon(thingDef)
                 .ToButtonSubtle(
                     openDefInfoDialog,
                     $"<i>{thingDef.LabelCap}</i>\n\n{thingDef.description}"
@@ -61,7 +61,7 @@ public sealed class CreatedAtColumnWorker
 
         return new HorizontalContainer(icons, 5f);
     }
-    public override IFilterWidget GetFilterWidget()
+    public override FilterWidget GetFilterWidget()
     {
         var craftingBenches = DefDatabase<ThingDef>.AllDefsListForReading.Where(def => def.IsWorkTable);
 
@@ -75,7 +75,7 @@ public sealed class CreatedAtColumnWorker
     {
         return GetValueCached(thing1).Count().CompareTo(GetValueCached(thing2).Count());
     }
-    private static IWidget MakeFilterOptionWidget(ThingDef thingDef)
+    private static Widget MakeFilterOptionWidget(ThingDef thingDef)
     {
         return new HorizontalContainer(
             [

@@ -5,7 +5,7 @@ namespace Stats.Widgets;
 
 // Instead of scale, use padding.
 public sealed class Icon
-    : Widget
+    : WidgetBase
 {
     protected override Vector2 Size { get; set; }
     public Texture2D Texture { get; set; }

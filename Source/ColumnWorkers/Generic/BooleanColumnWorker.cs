@@ -12,16 +12,16 @@ public abstract class BooleanColumnWorker
     {
         return value == true;
     }
-    protected override IWidget GetTableCellContent(bool value, ThingAlike thing)
+    protected override Widget GetTableCellContent(bool value, ThingAlike thing)
     {
         var tex = Verse.Widgets.GetCheckboxTexture(value);
-        IWidget icon = new Icon(tex)
+        Widget icon = new Icon(tex)
             .SizeAbs(Text.LineHeight)
             .PaddingRel(0.5f, 0f);
 
         return new SingleElementContainer(icon);
     }
-    public override IFilterWidget GetFilterWidget()
+    public override FilterWidget GetFilterWidget()
     {
         return new BooleanFilter(GetValueCached);
     }

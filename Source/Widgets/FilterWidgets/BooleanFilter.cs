@@ -6,12 +6,11 @@ using Verse;
 namespace Stats.Widgets.FilterWidgets;
 
 public sealed class BooleanFilter
-    : Widget,
-      IFilterWidget
+    : FilterWidget
 {
     protected override Vector2 Size { get; set; }
     private readonly FilterExpression<bool> _FilterExpression;
-    public IFilterExpression FilterExpression => _FilterExpression;
+    public override FilterExpression FilterExpression => _FilterExpression;
     public BooleanFilter(FilterExpression<bool> filterExpression)
     {
         _FilterExpression = filterExpression;
@@ -22,7 +21,7 @@ public sealed class BooleanFilter
         : this(new FilterExpression<bool>(valueFunc, true, Any<bool>.Instance, Any<bool>.Instance))
     {
     }
-    private void HandleThingMatcherChange(IFilterExpression _)
+    private void HandleThingMatcherChange(FilterExpression _)
     {
         UpdateSize();
     }
@@ -59,7 +58,7 @@ public sealed class BooleanFilter
                 break;
         }
     }
-    public IFilterWidget Clone()
+    public override FilterWidget Clone()
     {
         return new BooleanFilter(_FilterExpression);
     }

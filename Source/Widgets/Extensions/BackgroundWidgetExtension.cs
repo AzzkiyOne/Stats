@@ -3,12 +3,13 @@
 namespace Stats.Widgets.Extensions;
 
 public sealed class BackgroundWidgetExtension
-    : WidgetExtension
+    : WidgetDecorator
 {
+    public override Widget Widget { get; }
     private readonly Texture2D Texture;
-    internal BackgroundWidgetExtension(IWidget widget, Texture2D texture)
-        : base(widget)
+    internal BackgroundWidgetExtension(Widget widget, Texture2D texture)
     {
+        Widget = widget;
         Texture = texture;
     }
     public override void Draw(Rect rect, Vector2 containerSize)

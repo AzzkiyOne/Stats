@@ -16,7 +16,7 @@ public static class WidgetAPI
     // --- Size constraints: absolute ---
 
     public static AbsSizeWidgetExtension SizeAbs(
-        this IWidget widget,
+        this Widget widget,
         float width,
         float height
     ) => new(
@@ -25,21 +25,21 @@ public static class WidgetAPI
         height
     );
     public static AbsSizeWidgetExtension SizeAbs(
-        this IWidget widget,
+        this Widget widget,
         float size
     ) => widget.SizeAbs(
         size,
         size
     );
     public static AbsWidthWidgetExtension WidthAbs(
-        this IWidget widget,
+        this Widget widget,
         float width
     ) => new(
         widget,
         width
     );
     public static AbsHeightWidgetExtension HeightAbs(
-        this IWidget widget,
+        this Widget widget,
         float height
     ) => new(
         widget,
@@ -49,7 +49,7 @@ public static class WidgetAPI
     // --- Size constraints: relative ---
 
     public static RelSizeWidgetExtension SizeRel(
-        this IWidget widget,
+        this Widget widget,
         float parentWidthMultiplier,
         float parentHeightMultiplier
     ) => new(
@@ -58,28 +58,28 @@ public static class WidgetAPI
         parentHeightMultiplier
     );
     public static RelSizeWidgetExtension SizeRel(
-        this IWidget widget,
+        this Widget widget,
         float parentSizeMultiplier
     ) => widget.SizeRel(
         parentSizeMultiplier,
         parentSizeMultiplier
     );
     public static RelWidthWidgetExtension WidthRel(
-        this IWidget widget,
+        this Widget widget,
         float parentWidthMultiplier
     ) => new(
         widget,
         parentWidthMultiplier
     );
     public static CalcWidthWidgetExtension WidthRel(
-        this IWidget widget,
+        this Widget widget,
         SingleAxisSizeFunc widthFunction
     ) => new(
         widget,
         widthFunction
     );
     public static RelHeightWidgetExtension HeightRel(
-        this IWidget widget,
+        this Widget widget,
         float parentHeightMultiplier
     ) => new(
         widget,
@@ -89,7 +89,7 @@ public static class WidgetAPI
     // --- Size modifiers: absolute ---
 
     public static AbsPaddingWidgetExtension PaddingAbs(
-        this IWidget widget,
+        this Widget widget,
         float left,
         float right,
         float top,
@@ -102,7 +102,7 @@ public static class WidgetAPI
         bottom
     );
     public static AbsPaddingWidgetExtension PaddingAbs(
-        this IWidget widget,
+        this Widget widget,
         float horizontal,
         float vertical
     ) => widget.PaddingAbs(
@@ -112,7 +112,7 @@ public static class WidgetAPI
         vertical
     );
     public static AbsPaddingWidgetExtension PaddingAbs(
-        this IWidget widget,
+        this Widget widget,
         float amount
     ) => widget.PaddingAbs(
         amount,
@@ -122,7 +122,7 @@ public static class WidgetAPI
     // --- Size modifiers: relative ---
 
     public static RelPaddingWidgetExtension PaddingRel(
-        this IWidget widget,
+        this Widget widget,
         float left,
         float right,
         float top,
@@ -135,7 +135,7 @@ public static class WidgetAPI
         bottom
     );
     public static RelPaddingWidgetExtension PaddingRel(
-        this IWidget widget,
+        this Widget widget,
         float horizontal,
         float vertical
     ) => widget.PaddingRel(
@@ -145,7 +145,7 @@ public static class WidgetAPI
         vertical
     );
     public static RelPaddingWidgetExtension PaddingRel(
-        this IWidget widget,
+        this Widget widget,
         float amount
     ) => widget.PaddingRel(
         amount,
@@ -155,14 +155,14 @@ public static class WidgetAPI
     // --- Misc ---
 
     public static BackgroundWidgetExtension Background(
-        this IWidget widget,
+        this Widget widget,
         Texture2D texture
     ) => new(
         widget,
         texture
     );
     public static AlternatingBackgroundWidgetExtension Background(
-        this IWidget widget,
+        this Widget widget,
         Texture2D idleTexture,
         Texture2D hoverTexture
     ) => new(
@@ -171,56 +171,56 @@ public static class WidgetAPI
         hoverTexture
     );
     public static DrawBackgroundWidgetExtension Background(
-        this IWidget widget,
+        this Widget widget,
         Action<Rect> drawBackground
     ) => new(
         widget,
         drawBackground
     );
     public static HoverBackgroundWidgetExtension HoverBackground(
-        this IWidget widget,
+        this Widget widget,
         Texture2D texture
     ) => new(
         widget,
         texture
     );
     public static ColorWidgetExtension Color(
-        this IWidget widget,
+        this Widget widget,
         Color color
     ) => new(
         widget,
         color
     );
     public static ColorWidgetExtension Color(
-        this IWidget widget,
+        this Widget widget,
         Color color,
         out ColorWidgetExtension colorExtension
     ) => colorExtension = widget.Color(
         color
     );
     public static HoverColorWidgetExtension HoverColor(
-        this IWidget widget,
+        this Widget widget,
         Color color
     ) => new(
         widget,
         color
     );
     public static TextAnchorWidgetExtension TextAnchor(
-        this IWidget widget,
+        this Widget widget,
         TextAnchor textAnchor
     ) => new(
         widget,
         textAnchor
     );
     public static TooltipWidgetExtension Tooltip(
-        this IWidget widget,
+        this Widget widget,
         string text
     ) => new(
         widget,
         text
     );
     public static ClickEventWidgetExtension OnClick(
-        this IWidget widget,
+        this Widget widget,
         Action action
     ) => new(
         widget,
@@ -229,14 +229,14 @@ public static class WidgetAPI
 
     // --- Transformers ---
 
-    public static IWidget ToButtonSubtle(
-        this IWidget widget,
+    public static Widget ToButtonSubtle(
+        this Widget widget,
         Action clickEventHandler
     ) => widget
         .HoverBackground(TexUI.HighlightTex)
         .OnClick(clickEventHandler);
-    public static IWidget ToButtonSubtle(
-        this IWidget widget,
+    public static Widget ToButtonSubtle(
+        this Widget widget,
         Action clickEventHandler,
         string tooltip
     ) => widget
@@ -246,16 +246,16 @@ public static class WidgetAPI
     // --- Utils ---
 
     // Doesn't include widget's "own" size.
-    public static Vector2 GetFixedSize(this IWidget widget)
+    public static Vector2 GetFixedSize(this Widget widget)
     {
         return widget.GetSize(Vector2.zero);
     }
-    public static void DrawIn(this IWidget widget, Rect rect)
+    public static void DrawIn(this Widget widget, Rect rect)
     {
         var size = widget.GetSize(rect.size);
         widget.Draw(rect with { size = size }, rect.size);
     }
-    public static T Get<T>(this IWidget widget) where T : IWidget
+    public static T Get<T>(this Widget widget) where T : Widget
     {
         if (widget is T t)
         {

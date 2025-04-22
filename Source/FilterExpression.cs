@@ -3,8 +3,16 @@ using Stats.RelationalOperators;
 
 namespace Stats;
 
+public abstract class FilterExpression
+{
+    public abstract bool IsActive { get; }
+    public abstract event Action<FilterExpression> OnChange;
+    public abstract bool Match(ThingAlike thing);
+    public abstract void Reset();
+}
+
 public sealed class FilterExpression<T>
-    : IFilterExpression
+    : FilterExpression
     where T : notnull
 {
     private readonly Func<ThingAlike, T> ValueFunction;
@@ -24,9 +32,9 @@ public sealed class FilterExpression<T>
             OnChange?.Invoke(this);
         }
     }
-    private readonly IRelationalOperator<T> InitialOperator;
-    private IRelationalOperator<T> _Operator;
-    public IRelationalOperator<T> Operator
+    private readonly RelationalOperator<T> InitialOperator;
+    private RelationalOperator<T> _Operator;
+    public RelationalOperator<T> Operator
     {
         get => _Operator;
         set
@@ -40,16 +48,16 @@ public sealed class FilterExpression<T>
             OnChange?.Invoke(this);
         }
     }
-    public event Action<IFilterExpression>? OnChange;
-    private readonly IRelationalOperator<T> InactiveStateOperator;
+    public override event Action<FilterExpression>? OnChange;
+    private readonly RelationalOperator<T> InactiveStateOperator;
     // IsConstant/True?
-    public bool IsActive => _Operator != InactiveStateOperator;
+    public override bool IsActive => _Operator != InactiveStateOperator;
     public FilterExpression(
         // LhsValue?
         Func<ThingAlike, T> valueFunction,
         T initialValue,
-        IRelationalOperator<T> initialOperator,
-        IRelationalOperator<T> inactiveStateOperator
+        RelationalOperator<T> initialOperator,
+        RelationalOperator<T> inactiveStateOperator
     )
     {
         _Value = InitialValue = initialValue;
@@ -58,7 +66,7 @@ public sealed class FilterExpression<T>
         ValueFunction = valueFunction;
     }
     // Use this to avoid emitting 2 events when setting both props.
-    public void Set(T value, IRelationalOperator<T> @operator)
+    public void Set(T value, RelationalOperator<T> @operator)
     {
         if (_Value.Equals(value) == false || _Operator != @operator)
         {
@@ -68,7 +76,7 @@ public sealed class FilterExpression<T>
         }
     }
     // Eval?
-    public bool Match(ThingAlike thing)
+    public override bool Match(ThingAlike thing)
     {
         try
         {
@@ -79,7 +87,7 @@ public sealed class FilterExpression<T>
             return false;
         }
     }
-    public void Reset()
+    public override void Reset()
     {
         Set(InitialValue, InitialOperator);
     }

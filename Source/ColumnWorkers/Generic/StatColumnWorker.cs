@@ -66,7 +66,7 @@ public class StatColumnWorker
             _ => null,
         };
     }
-    protected override IWidget GetTableCellContent(float value, ThingAlike thing)
+    protected override Widget GetTableCellContent(float value, ThingAlike thing)
     {
         var valueStr = FormatValue(value, thing);
         var tooltip = GetValueExplanation(value, thing);
@@ -79,7 +79,7 @@ public class StatColumnWorker
 
         return widget;
     }
-    public override IFilterWidget GetFilterWidget()
+    public override FilterWidget GetFilterWidget()
     {
         return new NumberFilter<float>(GetValueCached);
     }

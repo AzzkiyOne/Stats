@@ -5,7 +5,6 @@ using Verse;
 namespace Stats.TableWorkers;
 
 public abstract class TableWorker
-    : ITableWorker
 {
 #pragma warning disable CS8618
     public TableDef TableDef { get; set; }

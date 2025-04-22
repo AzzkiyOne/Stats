@@ -3,12 +3,13 @@
 namespace Stats.Widgets.Extensions.Size.Constraints;
 
 public sealed class AbsSizeWidgetExtension
-    : WidgetExtension
+    : WidgetDecorator
 {
+    public override Widget Widget { get; }
     private readonly Vector2 Size;
-    internal AbsSizeWidgetExtension(IWidget widget, float width, float height)
-        : base(widget)
+    internal AbsSizeWidgetExtension(Widget widget, float width, float height)
     {
+        Widget = widget;
         Size.x = width;
         Size.y = height;
     }

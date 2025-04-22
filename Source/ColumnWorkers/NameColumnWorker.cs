@@ -12,7 +12,7 @@ public sealed class NameColumnWorker
             ? thing.Def.LabelCap
             : $"{thing.Def.LabelCap} ({thing.StuffDef.LabelCap})";
     }
-    protected override IWidget GetTableCellContent(string? value, ThingAlike thing)
+    protected override Widget GetTableCellContent(string? value, ThingAlike thing)
     {
         void openDefInfoDialog()
         {

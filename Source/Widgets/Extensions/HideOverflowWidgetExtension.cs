@@ -3,11 +3,12 @@
 namespace Stats.Widgets.Extensions;
 
 public sealed class HideOverflowWidgetExtension
-    : WidgetExtension
+    : WidgetDecorator
 {
-    internal HideOverflowWidgetExtension(IWidget widget)
-        : base(widget)
+    public override Widget Widget { get; }
+    internal HideOverflowWidgetExtension(Widget widget)
     {
+        Widget = widget;
     }
     public override void Draw(Rect rect, Vector2 containerSize)
     {

@@ -3,20 +3,22 @@
 namespace Stats.Widgets.Extensions.Size;
 
 public sealed class RelPaddingWidgetExtension
-    : WidgetExtension
+    : WidgetDecorator
 {
+    public override Widget Widget { get; }
     private readonly float Left;
     private readonly float Top;
     private readonly float Horizontal;
     private readonly float Vertical;
     internal RelPaddingWidgetExtension(
-        IWidget widget,
+        Widget widget,
         float left,
         float right,
         float top,
         float bottom
-    ) : base(widget)
+    )
     {
+        Widget = widget;
         Left = left;
         Top = top;
         Horizontal = left + right;

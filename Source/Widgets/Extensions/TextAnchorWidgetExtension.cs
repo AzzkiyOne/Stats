@@ -4,12 +4,13 @@ using Verse;
 namespace Stats.Widgets.Extensions;
 
 public sealed class TextAnchorWidgetExtension
-    : WidgetExtension
+    : WidgetDecorator
 {
+    public override Widget Widget { get; }
     private readonly TextAnchor Value;
-    internal TextAnchorWidgetExtension(IWidget widget, TextAnchor value)
-        : base(widget)
+    internal TextAnchorWidgetExtension(Widget widget, TextAnchor value)
     {
+        Widget = widget;
         Value = value;
     }
     public override void Draw(Rect rect, Vector2 containerSize)

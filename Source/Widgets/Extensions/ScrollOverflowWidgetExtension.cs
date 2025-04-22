@@ -3,13 +3,14 @@
 namespace Stats.Widgets.Extensions;
 
 public sealed class ScrollOverflowWidgetExtension
-    : WidgetExtension
+    : WidgetDecorator
 {
+    public override Widget Widget { get; }
     private Vector2 ScrollPosition;
     private IScrollable WidgetScrollable => (IScrollable)Widget;
-    internal ScrollOverflowWidgetExtension(IWidget widget)
-        : base(widget)
+    internal ScrollOverflowWidgetExtension(Widget widget)
     {
+        Widget = widget;
     }
     public override void Draw(Rect rect, Vector2 containerSize)
     {
@@ -35,7 +36,6 @@ public sealed class ScrollOverflowWidgetExtension
     }
 
     public interface IScrollable
-        : IWidget
     {
         // TODO: Pass scroll position to child.
         Vector2 CalcContentSize(in Vector2 size);

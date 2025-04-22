@@ -4,13 +4,20 @@ using Stats.Widgets.FilterWidgets;
 
 namespace Stats.ColumnWorkers;
 
-public abstract class ColumnWorker<ValueType>
-    : IColumnWorker
+public abstract class ColumnWorker
 {
-    public abstract TableColumnCellStyle CellStyle { get; }
 #pragma warning disable CS8618
     public ColumnDef ColumnDef { get; set; }
 #pragma warning restore CS8618
+    public abstract TableColumnCellStyle CellStyle { get; }
+    public abstract Widget? GetTableCellWidget(ThingAlike thing);
+    public abstract FilterWidget GetFilterWidget();
+    public abstract int Compare(ThingAlike thing1, ThingAlike thing2);
+}
+
+public abstract class ColumnWorker<ValueType>
+    : ColumnWorker
+{
     private readonly Dictionary<ThingAlike, ValueType> ValuesCache = [];
     protected abstract ValueType GetValue(ThingAlike thing);
     public ValueType GetValueCached(ThingAlike thing)
@@ -44,11 +51,11 @@ public abstract class ColumnWorker<ValueType>
     {
         return value != null;
     }
-    protected abstract IWidget GetTableCellContent(
+    protected abstract Widget GetTableCellContent(
         ValueType value,
         ThingAlike thing
     );
-    public IWidget? GetTableCellWidget(ThingAlike thing)
+    public override Widget? GetTableCellWidget(ThingAlike thing)
     {
         var value = GetValueCached(thing);
 
@@ -59,6 +66,4 @@ public abstract class ColumnWorker<ValueType>
 
         return GetTableCellContent(value, thing);
     }
-    public abstract IFilterWidget GetFilterWidget();
-    public abstract int Compare(ThingAlike thing1, ThingAlike thing2);
 }

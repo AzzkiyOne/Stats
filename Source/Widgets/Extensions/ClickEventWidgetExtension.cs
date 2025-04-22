@@ -5,16 +5,18 @@ using Verse.Sound;
 namespace Stats.Widgets.Extensions;
 
 public sealed class ClickEventWidgetExtension
-    : WidgetExtension
+    : WidgetDecorator
 {
+    public override Widget Widget { get; }
     private readonly Action Action;
     private readonly bool PlaySound;
     internal ClickEventWidgetExtension(
-        IWidget widget,
+        Widget widget,
         Action action,
         bool playSound = true
-    ) : base(widget)
+    )
     {
+        Widget = widget;
         Action = action;
         PlaySound = playSound;
     }

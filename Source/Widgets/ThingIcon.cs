@@ -5,7 +5,7 @@ using Verse;
 namespace Stats.Widgets;
 
 public sealed class ThingIcon
-    : Widget
+    : WidgetBase
 {
     protected override Vector2 Size { get; set; }
     private readonly Texture2D Texture;

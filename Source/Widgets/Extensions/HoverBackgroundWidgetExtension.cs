@@ -4,12 +4,13 @@ using Verse;
 namespace Stats.Widgets.Extensions;
 
 public sealed class HoverBackgroundWidgetExtension
-    : WidgetExtension
+    : WidgetDecorator
 {
+    public override Widget Widget { get; }
     private readonly Texture2D Texture;
-    internal HoverBackgroundWidgetExtension(IWidget widget, Texture2D texture)
-        : base(widget)
+    internal HoverBackgroundWidgetExtension(Widget widget, Texture2D texture)
     {
+        Widget = widget;
         Texture = texture;
     }
     public override void Draw(Rect rect, Vector2 containerSize)

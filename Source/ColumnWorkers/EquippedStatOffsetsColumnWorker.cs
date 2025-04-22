@@ -14,7 +14,7 @@ public sealed class EquippedStatOffsetsColumnWorker
     {
         return thing.Def.equippedStatOffsets?.Count ?? 0f;
     }
-    protected override IWidget GetTableCellContent(float value, ThingAlike thing)
+    protected override Widget GetTableCellContent(float value, ThingAlike thing)
     {
         var labels = new StringBuilder();
         var values = new StringBuilder();

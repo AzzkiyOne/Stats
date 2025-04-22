@@ -4,12 +4,13 @@ using Verse;
 namespace Stats.Widgets.Extensions;
 
 public sealed class HoverColorWidgetExtension
-    : WidgetExtension
+    : WidgetDecorator
 {
+    public override Widget Widget { get; }
     private readonly Color Color;
-    internal HoverColorWidgetExtension(IWidget widget, Color color)
-        : base(widget)
+    internal HoverColorWidgetExtension(Widget widget, Color color)
     {
+        Widget = widget;
         Color = color;
     }
     public override void Draw(Rect rect, Vector2 containerSize)

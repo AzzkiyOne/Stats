@@ -14,7 +14,6 @@ public abstract class NumberColumnWorker<T>
         IFormattable
 {
     public override TableColumnCellStyle CellStyle => TableColumnCellStyle.Number;
-    private
     protected virtual string FormatValue(T value)
     {
         if (ColumnDef.formatString != null)
@@ -31,13 +30,13 @@ public abstract class NumberColumnWorker<T>
     {
         return value.Equals(default) == false;
     }
-    protected override IWidget GetTableCellContent(T value, ThingAlike thing)
+    protected override Widget GetTableCellContent(T value, ThingAlike thing)
     {
         var valueStr = FormatValue(value);
 
         return new Label(valueStr);
     }
-    public override IFilterWidget GetFilterWidget()
+    public override FilterWidget GetFilterWidget()
     {
         return new NumberFilter<T>(GetValueCached);
     }

@@ -19,7 +19,7 @@ public sealed class CaliberColumnWorker
             statReq
         );
     }
-    protected override IWidget GetTableCellContent(string? value, ThingAlike thing)
+    protected override Widget GetTableCellContent(string? value, ThingAlike thing)
     {
         var statReq = StatRequest.For(thing.Def, thing.StuffDef);
         var tooltip = ColumnDef.stat!.Worker.GetExplanationFull(

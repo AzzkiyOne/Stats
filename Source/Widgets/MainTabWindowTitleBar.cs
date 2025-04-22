@@ -9,7 +9,7 @@ namespace Stats.Widgets;
 internal sealed class MainTabWindowTitleBar
     : WidgetDecorator
 {
-    public override IWidget Widget { get; }
+    public override Widget Widget { get; }
     private static readonly Texture2D HoldToDragTex;
     private static readonly Texture2D ResetWindowTex;
     private static readonly Texture2D ExpandWindowTex;
@@ -21,7 +21,7 @@ internal sealed class MainTabWindowTitleBar
         "  - Selected rows are unaffected by filters.";
     private const float IconPadding = 3f;
     public MainTabWindowTitleBar(
-        IWidget tableSelector,
+        Widget tableSelector,
         Action resetWindow,
         Action expandWindow,
         Action closeWindow,
@@ -76,8 +76,8 @@ internal sealed class MainTabWindowTitleBar
 
         Widget.Draw(rect, containerSize);
     }
-    private static IWidget ToToolbarIcon(
-        IWidget widget,
+    private static Widget ToToolbarIcon(
+        Widget widget,
         Action clickEventHandler,
         string tooltip,
         float pad = IconPadding
@@ -86,8 +86,8 @@ internal sealed class MainTabWindowTitleBar
         return ToToolbarIcon(widget, tooltip, pad)
             .ToButtonSubtle(clickEventHandler);
     }
-    private static IWidget ToToolbarIcon(
-        IWidget widget,
+    private static Widget ToToolbarIcon(
+        Widget widget,
         string tooltip,
         float pad = IconPadding
     )

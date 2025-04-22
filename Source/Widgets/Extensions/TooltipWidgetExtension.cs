@@ -4,12 +4,13 @@ using Verse;
 namespace Stats.Widgets.Extensions;
 
 public sealed class TooltipWidgetExtension
-    : WidgetExtension
+    : WidgetDecorator
 {
+    public override Widget Widget { get; }
     private readonly string Text;
-    internal TooltipWidgetExtension(IWidget widget, string text)
-        : base(widget)
+    internal TooltipWidgetExtension(Widget widget, string text)
     {
+        Widget = widget;
         Text = text;
     }
     public override void Draw(Rect rect, Vector2 containerSize)

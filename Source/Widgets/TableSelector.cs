@@ -24,7 +24,7 @@ internal sealed class TableSelector
     private readonly Icon IconWidget;
     private readonly ColorWidgetExtension IconColorExtension;
     private readonly Label LabelWidget;
-    public override IWidget Widget { get; }
+    public override Widget Widget { get; }
     public TableSelector()
     {
         Widget = new HorizontalContainer(

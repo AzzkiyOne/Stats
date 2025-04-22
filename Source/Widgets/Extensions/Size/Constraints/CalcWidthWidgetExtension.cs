@@ -3,12 +3,16 @@
 namespace Stats.Widgets.Extensions.Size.Constraints;
 
 public sealed class CalcWidthWidgetExtension
-    : WidgetExtension
+    : WidgetDecorator
 {
+    public override Widget Widget { get; }
     private readonly SingleAxisSizeFunc WidthFunction;
-    internal CalcWidthWidgetExtension(IWidget widget, SingleAxisSizeFunc widthFunction)
-        : base(widget)
+    internal CalcWidthWidgetExtension(
+        Widget widget,
+        SingleAxisSizeFunc widthFunction
+    )
     {
+        Widget = widget;
         WidthFunction = widthFunction;
     }
     public override Vector2 GetSize(Vector2 containerSize)

@@ -4,15 +4,15 @@ using UnityEngine;
 namespace Stats.Widgets;
 
 public sealed class VerticalContainer
-    : Widget
+    : WidgetBase
 {
     protected override Vector2 Size { get; set; }
     private readonly float Gap;
-    private readonly List<IWidget> Children;
+    private readonly List<Widget> Children;
     private readonly bool ShareFreeSpace;
     private float OccupiedSpaceAmount = 0f;
     public VerticalContainer(
-        List<IWidget> children,
+        List<Widget> children,
         float gap = 0f,
         bool shareFreeSpace = false
     )

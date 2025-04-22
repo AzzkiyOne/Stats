@@ -20,7 +20,7 @@ public sealed class TableDef
     public string? iconPath;
     public ThingDef? iconThingDef;
 #pragma warning disable CS8618
-    internal ITableWorker Worker { get; private set; }
+    internal TableWorker Worker { get; private set; }
 #pragma warning restore CS8618
     internal Texture2D Icon { get; private set; } = BaseContent.BadTex;
     internal Color IconColor { get; private set; } = Color.white;
@@ -36,7 +36,7 @@ public sealed class TableDef
     {
         base.ResolveReferences();
 
-        Worker = (ITableWorker)Activator.CreateInstance(workerClass);
+        Worker = (TableWorker)Activator.CreateInstance(workerClass);
         Worker.TableDef = this;
     }
     private void ResolveIcon()

@@ -20,7 +20,7 @@ public sealed class MainTabWindow
     );
     internal const float TitleBarHeight = 30f;
     internal static readonly Color BorderLineColor = new(1f, 1f, 1f, 0.4f);
-    private readonly IWidget TitleBar;
+    private readonly Widget TitleBar;
     private readonly TableSelector TableSelector;
     public MainTabWindow()
     {

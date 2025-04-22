@@ -3,13 +3,13 @@
 namespace Stats.Widgets;
 
 public sealed class SingleElementContainer
-    : Widget
+    : WidgetBase
 {
     protected override Vector2 Size { get; set; }
-    private readonly IWidget Widget;
+    private readonly Widget Widget;
     private readonly float OccupiedWidth = 0f;
     private readonly float OccupiedHeight = 0f;
-    public SingleElementContainer(IWidget widget)
+    public SingleElementContainer(Widget widget)
     {
         Widget = widget;
         widget.Parent = this;

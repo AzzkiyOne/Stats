@@ -12,7 +12,7 @@ internal sealed class ThingTable
     private const int SortDirectionDescending = -1;
     private const float cellPadHor = 15f;
     private const float cellPadVer = 5f;
-    private readonly List<IFilterExpression> ThingMatchers = [];
+    private readonly List<FilterExpression> FlterExpressions = [];
     private readonly Table Table;
     private bool ShouldApplyFilters = false;
     public ThingTable(TableDef tableDef)
@@ -33,7 +33,7 @@ internal sealed class ThingTable
             headerRow.Cells.Add(CreateHeaderCell(columnDef, column));
             filtersRow.Cells.Add(CreateFilterCell(columnDef, out var filterExpression));
 
-            ThingMatchers.Add(filterExpression);
+            FlterExpressions.Add(filterExpression);
             filterExpression.OnChange += ScheduleFiltersApplication;
         }
 
@@ -72,12 +72,12 @@ internal sealed class ThingTable
 
         Table.Draw(rect);
     }
-    private IWidget CreateHeaderCell(
+    private Widget CreateHeaderCell(
         ColumnDef columnDef,
         Table.Column column
     )
     {
-        IWidget cell;
+        Widget cell;
 
         if (columnDef.Icon != null)
         {
@@ -138,9 +138,9 @@ internal sealed class ThingTable
                 $"<i>{columnDef.LabelCap}</i>\n\n{columnDef.description}"
             );
     }
-    private static IWidget CreateFilterCell(
+    private static Widget CreateFilterCell(
         ColumnDef columnDef,
-        out IFilterExpression filterExpression
+        out FilterExpression filterExpression
     )
     {
         var filterWidget = columnDef.Worker.GetFilterWidget();
@@ -150,7 +150,7 @@ internal sealed class ThingTable
             .TextAnchor((TextAnchor)columnDef.Worker.CellStyle)
             .WidthRel(1f);
     }
-    private static IWidget CreateBodyCell(
+    private static Widget CreateBodyCell(
         ColumnDef columnDef,
         ThingAlike thing
     )
@@ -209,7 +209,7 @@ internal sealed class ThingTable
             ) * SortDirection
         );
     }
-    private void ScheduleFiltersApplication(IFilterExpression thingMatcher)
+    private void ScheduleFiltersApplication(FilterExpression flterExpression)
     {
         ShouldApplyFilters = true;
     }
@@ -219,21 +219,21 @@ internal sealed class ThingTable
         // re-aplly filters when a row is unselected.
         foreach (TableRow<ThingAlike> row in Table.BodyRows)
         {
-            row.IsHidden = !RowPassesFilters(row, ThingMatchers);
+            row.IsHidden = !RowPassesFilters(row, FlterExpressions);
         }
 
         ShouldApplyFilters = false;
     }
     private static bool RowPassesFilters(
         TableRow<ThingAlike> row,
-        List<IFilterExpression> thingMatchers
+        List<FilterExpression> flterExpressions
     )
     {
-        // Why to evaluate all thing matchers? We can make a list of "active"
-        // thing matchers and only evaluate those.
-        foreach (var thingMatcher in thingMatchers)
+        // Why to evaluate all filter expressions? We can make a list of "active"
+        // filter expressions and only evaluate those.
+        foreach (var flterExpression in flterExpressions)
         {
-            if (thingMatcher.Match(row.Id) == false)
+            if (flterExpression.Match(row.Id) == false)
             {
                 return false;
             }
@@ -243,9 +243,9 @@ internal sealed class ThingTable
     }
     public void ResetFilters()
     {
-        foreach (var thingMatcher in ThingMatchers)
+        foreach (var flterExpression in FlterExpressions)
         {
-            thingMatcher.Reset();
+            flterExpression.Reset();
         }
     }
 }

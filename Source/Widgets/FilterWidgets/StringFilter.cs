@@ -9,7 +9,7 @@ namespace Stats.Widgets.FilterWidgets;
 public sealed class StringFilter
     : FilterWidgetWithInputField<string>
 {
-    private static readonly IRelationalOperator<string>[] DefaultOperators =
+    private static readonly RelationalOperator<string>[] DefaultOperators =
         [
             Any<string>.Instance,
             Contains.Instance,
@@ -18,7 +18,7 @@ public sealed class StringFilter
     private const string Description = "Use \",\" to search by multiple terms.";
     public StringFilter(
         FilterExpression<string> filterExpression,
-        IEnumerable<IRelationalOperator<string>> operators
+        IEnumerable<RelationalOperator<string>> operators
     ) : base(filterExpression, operators)
     {
     }
@@ -39,7 +39,7 @@ public sealed class StringFilter
         _FilterExpression.Value = Verse.Widgets.TextField(rect, _FilterExpression.Value);
         TooltipHandler.TipRegion(rect, Description);
     }
-    public override IFilterWidget Clone()
+    public override FilterWidget Clone()
     {
         return new StringFilter(_FilterExpression, DefaultOperators);
     }

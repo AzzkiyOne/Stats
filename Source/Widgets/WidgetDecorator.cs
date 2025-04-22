@@ -3,23 +3,23 @@
 namespace Stats.Widgets;
 
 public abstract class WidgetDecorator
-    : IWidget
+    : Widget
 {
-    public IWidget? Parent { set => Widget.Parent = value; }
-    public abstract IWidget Widget { get; }
-    public virtual Vector2 GetSize(Vector2 containerSize)
+    public override Widget? Parent { set => Widget.Parent = value; }
+    public abstract Widget Widget { get; }
+    public override Vector2 GetSize(Vector2 containerSize)
     {
         return Widget.GetSize(containerSize);
     }
-    public virtual Vector2 GetSize()
+    public override Vector2 GetSize()
     {
         return Widget.GetSize();
     }
-    public virtual void Draw(Rect rect, Vector2 containerSize)
+    public override void Draw(Rect rect, Vector2 containerSize)
     {
         Widget.Draw(rect, containerSize);
     }
-    public void UpdateSize()
+    public override void UpdateSize()
     {
         Widget.UpdateSize();
     }

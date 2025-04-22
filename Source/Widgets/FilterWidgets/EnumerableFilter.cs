@@ -10,26 +10,26 @@ namespace Stats.Widgets.FilterWidgets;
 public sealed class EnumerableFilter<T>
     : FilterWidget<IEnumerable<T>>
 {
-    private static readonly IRelationalOperator<IEnumerable<T>>[] DefaultOperators =
+    private static readonly RelationalOperator<IEnumerable<T>>[] DefaultOperators =
         [
             Any<IEnumerable<T>>.Instance,
             Contains_Any<T>.Instance,
             Contains_All<T>.Instance,
         ];
     private readonly IEnumerable<T> Options;
-    private readonly Func<T, IWidget> MakeOptionWidget;
+    private readonly Func<T, Widget> MakeOptionWidget;
     private readonly OptionsWindow _OptionsWindow;
     public EnumerableFilter(
         FilterExpression<IEnumerable<T>> filterExpression,
-        IEnumerable<IRelationalOperator<IEnumerable<T>>> operators,
+        IEnumerable<RelationalOperator<IEnumerable<T>>> operators,
         IEnumerable<T> options,
-        Func<T, IWidget> makeOptionWidget
+        Func<T, Widget> makeOptionWidget
     ) : base(filterExpression, operators)
     {
         Options = options;
         MakeOptionWidget = makeOptionWidget;
 
-        var optionWidgets = new List<IWidget>();
+        var optionWidgets = new List<Widget>();
 
         foreach (var option in options)
         {
@@ -64,13 +64,13 @@ public sealed class EnumerableFilter<T>
             optionWidgets.Add(optionWidget);
         }
 
-        IWidget optionsContainer = new VerticalContainer(optionWidgets);
+        Widget optionsContainer = new VerticalContainer(optionWidgets);
         _OptionsWindow = new OptionsWindow(optionsContainer);
     }
     public EnumerableFilter(
         Func<ThingAlike, IEnumerable<T>> valueFunc,
         IEnumerable<T> options,
-        Func<T, IWidget> makeOptionWidget
+        Func<T, Widget> makeOptionWidget
     ) : this(
         new FilterExpression<IEnumerable<T>>(
             valueFunc,
@@ -126,7 +126,7 @@ public sealed class EnumerableFilter<T>
             }
         }
     }
-    public override IFilterWidget Clone()
+    public override FilterWidget Clone()
     {
         return new EnumerableFilter<T>(
             _FilterExpression,
@@ -141,8 +141,8 @@ public sealed class EnumerableFilter<T>
     {
         protected override float Margin => 0f;
         public override Vector2 InitialSize => Widget.GetSize();
-        private readonly IWidget Widget;
-        public OptionsWindow(IWidget widget)
+        private readonly Widget Widget;
+        public OptionsWindow(Widget widget)
         {
             Widget = widget;
             doWindowBackground = false;

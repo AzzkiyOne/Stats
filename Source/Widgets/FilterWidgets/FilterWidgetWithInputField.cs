@@ -11,7 +11,7 @@ public abstract class FilterWidgetWithInputField<T>
 {
     public FilterWidgetWithInputField(
         FilterExpression<T> filterExpression,
-        IEnumerable<IRelationalOperator<T>> operators
+        IEnumerable<RelationalOperator<T>> operators
     ) : base(filterExpression, operators)
     {
     }

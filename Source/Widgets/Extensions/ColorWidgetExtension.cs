@@ -3,12 +3,13 @@
 namespace Stats.Widgets.Extensions;
 
 public sealed class ColorWidgetExtension
-    : WidgetExtension
+    : WidgetDecorator
 {
+    public override Widget Widget { get; }
     public Color Color { get; set; }
-    internal ColorWidgetExtension(IWidget widget, Color color)
-        : base(widget)
+    internal ColorWidgetExtension(Widget widget, Color color)
     {
+        Widget = widget;
         Color = color;
     }
     public override void Draw(Rect rect, Vector2 containerSize)
