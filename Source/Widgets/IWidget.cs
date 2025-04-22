@@ -10,7 +10,7 @@ var containerSize = new Vector2(50f, 50f);
 
 --- CSS box-sizing: border-box ---
 
-var widget = new Widget_Example()
+var widget = new ExampleWidget()
     .PadAbs(10f)
     .SizeAbs(100f);
 
@@ -18,7 +18,7 @@ widget.GetSize(containerSize);// (100, 100)
 
 --- CSS box-sizing: content-box ---
 
-var widget = new Widget_Example()
+var widget = new ExampleWidget()
     .SizeAbs(100f)
     .PadAbs(10f);
 
@@ -30,10 +30,10 @@ widget.GetSize(containerSize);// (110, 110)
 
 One case that isn't supported is the following:
 
-var label = new Widget_Label("Label")
+var label = new Label("Label")
     .HeightRel(0.5f);
 
-IWidget container = new Widget_Container_Ver([label]);
+var container = new VerticalContainer([label]);
 
 var viewSize = new Vector2(100f, 100f);// Doesn't really matter.
 
@@ -43,7 +43,7 @@ container.Draw(containerSize, viewSize);// Child is drawn 11px tall.
 
 In CSS, label will be drawn 22px tall. There, if a child has no base to calculate its relative dimension from, the child's "own" size will be used instead for respective axis.
 
-Supporting this case can deoptimize all normal cases because it ultimately boils down to conditionally disabling any relative size components on a child widget. And if they are not used, then why to have them?
+Supporting this case can deoptimize all normal cases because it ultimately boils down to conditionally disabling any relative size extensions on a child widget. And if they are not used, then why to have them?
 
 */
 
@@ -59,16 +59,14 @@ public interface IWidget
 
     var containerSize = new Vector2(100f, 100f);
 
-    var widget = new Widget_Example()
+    var widget = new ExampleWidget()
         .SizeRel(0.5f, 0.25f);
 
     widget.GetSize(containerSize);// (50, 25)
 
     */
-    // Does containerSize really have to be declared as immutable?
-    // Could cause issues with performance.
-    Vector2 GetSize(in Vector2 containerSize);
+    Vector2 GetSize(Vector2 containerSize);
     Vector2 GetSize();
-    void Draw(Rect rect, in Vector2 containerSize);
+    void Draw(Rect rect, Vector2 containerSize);
     void UpdateSize();
 }

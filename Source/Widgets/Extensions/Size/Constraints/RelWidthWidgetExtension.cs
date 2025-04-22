@@ -13,7 +13,7 @@ public sealed class RelWidthWidgetExtension
     {
         ParentWidthMultiplier = parentWidthMultiplier;
     }
-    public override Vector2 GetSize(in Vector2 containerSize)
+    public override Vector2 GetSize(Vector2 containerSize)
     {
         return Widget.GetSize(containerSize) with
         {

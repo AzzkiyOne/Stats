@@ -12,7 +12,7 @@ public sealed class AbsSizeWidgetExtension
         Size.x = width;
         Size.y = height;
     }
-    public override Vector2 GetSize(in Vector2 containerSize)
+    public override Vector2 GetSize(Vector2 containerSize)
     {
         return Size;
     }

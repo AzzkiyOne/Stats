@@ -12,9 +12,15 @@ public sealed class TooltipWidgetExtension
     {
         Text = text;
     }
-    public override void Draw(Rect rect, in Vector2 containerSize)
+    public override void Draw(Rect rect, Vector2 containerSize)
     {
-        TooltipHandler.TipRegion(rect, Text);
+        // Although this is a duplicate check, things should be faster on
+        // average, because TooltipHandler.TipRegion takes TipSignal as an
+        // argument, which has an implicit conversion from string.
+        if (Mouse.IsOver(rect))
+        {
+            TooltipHandler.TipRegion(rect, Text);
+        }
 
         Widget.Draw(rect, containerSize);
     }

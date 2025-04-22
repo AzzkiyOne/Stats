@@ -11,7 +11,7 @@ public sealed class ColorWidgetExtension
     {
         Color = color;
     }
-    public override void Draw(Rect rect, in Vector2 containerSize)
+    public override void Draw(Rect rect, Vector2 containerSize)
     {
         var origGUIColor = GUI.color;
         GUI.color = Color;

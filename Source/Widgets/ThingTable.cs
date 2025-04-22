@@ -155,25 +155,23 @@ internal sealed class ThingTable
         ThingAlike thing
     )
     {
-        IWidget? cell = null;
-
         try
         {
-            cell = columnDef.Worker.GetTableCellWidget(thing);
+            var cell = columnDef.Worker.GetTableCellWidget(thing);
+
+            if (cell != null)
+            {
+                return cell
+                    .TextAnchor((TextAnchor)columnDef.Worker.CellStyle)
+                    .PaddingAbs(cellPadHor, cellPadVer)
+                    .WidthRel(1f);
+            }
         }
         catch
         {
         }
 
-        if (cell == null)
-        {
-            return new EmptyWidget();
-        }
-
-        return cell
-            .TextAnchor((TextAnchor)columnDef.Worker.CellStyle)
-            .PaddingAbs(cellPadHor, cellPadVer)
-            .WidthRel(1f);
+        return new EmptyWidget();
     }
     private static void DrawHeaderRowBG(Rect rect, bool _, int __)
     {

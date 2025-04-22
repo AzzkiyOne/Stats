@@ -11,7 +11,7 @@ public sealed class ScrollOverflowWidgetExtension
         : base(widget)
     {
     }
-    public override void Draw(Rect rect, in Vector2 containerSize)
+    public override void Draw(Rect rect, Vector2 containerSize)
     {
         // Note to myself: Do the same thing as in table widget. Only this time, you probably don't need to pass offset because it can be read from rect.
         // TODO: Test with padding.

@@ -7,7 +7,7 @@ public abstract class WidgetDecorator
 {
     public IWidget? Parent { set => Widget.Parent = value; }
     public abstract IWidget Widget { get; }
-    public virtual Vector2 GetSize(in Vector2 containerSize)
+    public virtual Vector2 GetSize(Vector2 containerSize)
     {
         return Widget.GetSize(containerSize);
     }
@@ -15,7 +15,7 @@ public abstract class WidgetDecorator
     {
         return Widget.GetSize();
     }
-    public virtual void Draw(Rect rect, in Vector2 containerSize)
+    public virtual void Draw(Rect rect, Vector2 containerSize)
     {
         Widget.Draw(rect, containerSize);
     }

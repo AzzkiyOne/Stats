@@ -16,7 +16,7 @@ public sealed class RelSizeWidgetExtension
         ParentWidthMultiplier = parentWidthMultiplier;
         ParentHeightMultiplier = parentHeightMultiplier;
     }
-    public override Vector2 GetSize(in Vector2 containerSize)
+    public override Vector2 GetSize(Vector2 containerSize)
     {
         Vector2 size;
         size.x = ParentWidthMultiplier * containerSize.x;

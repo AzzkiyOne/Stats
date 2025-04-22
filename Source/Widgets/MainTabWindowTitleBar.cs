@@ -65,7 +65,7 @@ internal sealed class MainTabWindowTitleBar
             true
         ).Background(Verse.Widgets.LightHighlight);
     }
-    public override void Draw(Rect rect, in Vector2 containerSize)
+    public override void Draw(Rect rect, Vector2 containerSize)
     {
         Verse.Widgets.DrawLineHorizontal(
             rect.x,

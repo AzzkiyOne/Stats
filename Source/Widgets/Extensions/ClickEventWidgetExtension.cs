@@ -18,7 +18,7 @@ public sealed class ClickEventWidgetExtension
         Action = action;
         PlaySound = playSound;
     }
-    public override void Draw(Rect rect, in Vector2 containerSize)
+    public override void Draw(Rect rect, Vector2 containerSize)
     {
         if (PlaySound)
         {

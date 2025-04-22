@@ -12,7 +12,7 @@ public sealed class HoverColorWidgetExtension
     {
         Color = color;
     }
-    public override void Draw(Rect rect, in Vector2 containerSize)
+    public override void Draw(Rect rect, Vector2 containerSize)
     {
         if (Mouse.IsOver(rect))
         {

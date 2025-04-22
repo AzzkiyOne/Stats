@@ -12,7 +12,7 @@ public sealed class TextAnchorWidgetExtension
     {
         Value = value;
     }
-    public override void Draw(Rect rect, in Vector2 containerSize)
+    public override void Draw(Rect rect, Vector2 containerSize)
     {
         var origTextAnchor = Text.Anchor;
         Text.Anchor = Value;

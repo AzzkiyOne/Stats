@@ -11,7 +11,7 @@ public sealed class CalcWidthWidgetExtension
     {
         WidthFunction = widthFunction;
     }
-    public override Vector2 GetSize(in Vector2 containerSize)
+    public override Vector2 GetSize(Vector2 containerSize)
     {
         return Widget.GetSize(containerSize) with
         { x = WidthFunction(containerSize) };

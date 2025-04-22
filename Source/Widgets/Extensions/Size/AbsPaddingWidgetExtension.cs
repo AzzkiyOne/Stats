@@ -22,7 +22,7 @@ public sealed class AbsPaddingWidgetExtension
         Horizontal = left + right;
         Vertical = top + bottom;
     }
-    public override Vector2 GetSize(in Vector2 containerSize)
+    public override Vector2 GetSize(Vector2 containerSize)
     {
         Vector2 size = Widget.GetSize(containerSize);
         size.x += Horizontal;
@@ -38,7 +38,7 @@ public sealed class AbsPaddingWidgetExtension
 
         return size;
     }
-    public override void Draw(Rect rect, in Vector2 containerSize)
+    public override void Draw(Rect rect, Vector2 containerSize)
     {
         GUIDebugger.DebugRect(this, rect);
 
