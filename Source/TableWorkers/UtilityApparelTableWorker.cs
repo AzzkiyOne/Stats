@@ -2,7 +2,7 @@
 
 namespace Stats.TableWorkers;
 
-public class UtilityApparelTableWorker
+public sealed class UtilityApparelTableWorker
     : TableWorker
 {
     private readonly ThingCategoryDef UtilityCatDef =

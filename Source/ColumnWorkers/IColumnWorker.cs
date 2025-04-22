@@ -1,11 +1,11 @@
 ﻿using Stats.Widgets;
-using Stats.Widgets.Table.Filters.Widgets;
+using Stats.Widgets.FilterWidgets;
 
 namespace Stats.ColumnWorkers;
 
 public interface IColumnWorker
 {
-    ColumnCellStyle CellStyle { get; }
+    TableColumnCellStyle CellStyle { get; }
     ColumnDef ColumnDef { get; set; }
     IWidget? GetTableCellWidget(ThingAlike thing);
     IFilterWidget GetFilterWidget();

@@ -6,7 +6,7 @@ using Verse;
 
 namespace Stats;
 
-public class ColumnDef
+public sealed class ColumnDef
     : Def
 {
     public StatDef? stat;

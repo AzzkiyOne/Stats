@@ -2,13 +2,13 @@
 using System.Collections.Generic;
 using RimWorld;
 using Stats.TableWorkers;
-using Stats.Widgets.Table;
+using Stats.Widgets;
 using UnityEngine;
 using Verse;
 
 namespace Stats;
 
-public class TableDef
+public sealed class TableDef
     : Def
 {
 #pragma warning disable CS8618

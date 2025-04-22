@@ -1,13 +1,12 @@
 ﻿using Stats.Widgets;
-using Stats.Widgets.Misc;
-using Stats.Widgets.Table.Filters.Widgets;
+using Stats.Widgets.FilterWidgets;
 
 namespace Stats.ColumnWorkers.Generic;
 
 public abstract class StringColumnWorker
     : ColumnWorker<string?>
 {
-    public override ColumnCellStyle CellStyle => ColumnCellStyle.String;
+    public override TableColumnCellStyle CellStyle => TableColumnCellStyle.String;
     protected override bool ShouldShowValue(string? value)
     {
         return value?.Length > 0;
@@ -18,7 +17,7 @@ public abstract class StringColumnWorker
     }
     public override IFilterWidget GetFilterWidget()
     {
-        return new StringFilterWidget(GetValueCached);
+        return new StringFilter(GetValueCached);
     }
     public override int Compare(ThingAlike thing1, ThingAlike thing2)
     {

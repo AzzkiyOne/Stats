@@ -39,7 +39,7 @@ internal static class GUIDebugger
         DebugData.Add((text, color, textSize));
 
         // Verse.Text.CalcSize does not account for bold text.
-        var textWidthCalcError = name.Length * 0.7f;
+        var textWidthCalcError = name.Length * 1f;
         ContentSize.x = Mathf.Max(textSize.x + textWidthCalcError, ContentSize.x);
         ContentSize.y += textSize.y;
 

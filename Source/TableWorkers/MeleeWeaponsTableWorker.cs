@@ -2,7 +2,7 @@
 
 namespace Stats.TableWorkers;
 
-public class MeleeWeaponsTableWorker
+public sealed class MeleeWeaponsTableWorker
     : TableWorker
 {
     protected override bool IsValidThingDef(ThingDef thingDef)

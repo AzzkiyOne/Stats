@@ -4,7 +4,7 @@
         <defName>StatsTab</defName>
         <label>Stats</label>
         <description>Open stats browser.</description>
-        <tabWindowClass>Stats.MainTabWindowWidget</tabWindowClass>
+        <tabWindowClass>Stats.Widgets.MainTabWindow</tabWindowClass>
         <order>21</order>
     </MainButtonDef>
 </Defs>

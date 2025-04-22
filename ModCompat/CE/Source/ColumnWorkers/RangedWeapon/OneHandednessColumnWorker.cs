@@ -3,7 +3,7 @@ using Stats.ColumnWorkers.Generic;
 
 namespace Stats.ModCompat.CE.ColumnWorkers.RangedWeapon;
 
-public class OneHandednessColumnWorker
+public sealed class OneHandednessColumnWorker
     : BooleanColumnWorker
 {
     protected override bool GetValue(ThingAlike thing)

@@ -1,19 +1,15 @@
 ﻿using System.Text;
 using Stats.ColumnWorkers.Generic;
 using Stats.Widgets;
-using Stats.Widgets.Containers;
-using Stats.Widgets.Extensions;
-using Stats.Widgets.Extensions.Size.Constraints;
-using Stats.Widgets.Misc;
 using UnityEngine;
 using Verse;
 
 namespace Stats.ColumnWorkers;
 
-public class EquippedStatOffsetsColumnWorker
+public sealed class EquippedStatOffsetsColumnWorker
     : NumberColumnWorker<float>
 {
-    public override ColumnCellStyle CellStyle => ColumnCellStyle.String;
+    public override TableColumnCellStyle CellStyle => TableColumnCellStyle.String;
     protected override float GetValue(ThingAlike thing)
     {
         return thing.Def.equippedStatOffsets?.Count ?? 0f;

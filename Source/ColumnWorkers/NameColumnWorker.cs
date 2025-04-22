@@ -1,13 +1,9 @@
 ﻿using Stats.ColumnWorkers.Generic;
 using Stats.Widgets;
-using Stats.Widgets.Containers;
-using Stats.Widgets.Extensions;
-using Stats.Widgets.Misc;
-using Verse;
 
 namespace Stats.ColumnWorkers;
 
-public class NameColumnWorker
+public sealed class NameColumnWorker
     : StringColumnWorker
 {
     protected override string? GetValue(ThingAlike thing)
@@ -25,9 +21,7 @@ public class NameColumnWorker
 
         return new HorizontalContainer(
             [
-                new ThingIcon(thing)
-                    .HoverBackground(TexUI.HighlightTex)
-                    .OnClick(openDefInfoDialog),
+                new ThingIcon(thing).ToButtonSubtle(openDefInfoDialog),
                 new Label(value),
             ],
             10f

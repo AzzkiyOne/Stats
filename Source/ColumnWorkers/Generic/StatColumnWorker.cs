@@ -1,8 +1,6 @@
 ﻿using RimWorld;
 using Stats.Widgets;
-using Stats.Widgets.Extensions;
-using Stats.Widgets.Misc;
-using Stats.Widgets.Table.Filters.Widgets;
+using Stats.Widgets.FilterWidgets;
 using Verse;
 
 namespace Stats.ColumnWorkers.Generic;
@@ -10,7 +8,7 @@ namespace Stats.ColumnWorkers.Generic;
 public class StatColumnWorker
     : ColumnWorker<float>
 {
-    public override ColumnCellStyle CellStyle => ColumnCellStyle.Number;
+    public override TableColumnCellStyle CellStyle => TableColumnCellStyle.Number;
     protected override float GetValue(ThingAlike thing)
     {
         var statReq = StatRequest.For(thing.Def, thing.StuffDef);
@@ -83,7 +81,7 @@ public class StatColumnWorker
     }
     public override IFilterWidget GetFilterWidget()
     {
-        return new NumberFilterWidget<float>(GetValueCached);
+        return new NumberFilter<float>(GetValueCached);
     }
     public override int Compare(ThingAlike thing1, ThingAlike thing2)
     {

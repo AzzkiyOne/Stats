@@ -1,13 +1,11 @@
 ﻿using RimWorld;
 using Stats.ColumnWorkers.Generic;
 using Stats.Widgets;
-using Stats.Widgets.Extensions;
-using Stats.Widgets.Misc;
 using Verse;
 
 namespace Stats.ModCompat.CE.ColumnWorkers.RangedWeapon;
 
-public class CaliberColumnWorker
+public sealed class CaliberColumnWorker
     : StringColumnWorker
 {
     protected override string GetValue(ThingAlike thing)

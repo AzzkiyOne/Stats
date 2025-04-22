@@ -1,11 +1,9 @@
 ﻿using Stats.ColumnWorkers.Generic;
 using Stats.Widgets;
-using Stats.Widgets.Extensions;
-using Stats.Widgets.Misc;
 
 namespace Stats.ColumnWorkers;
 
-public class ContentSourceColumnWorker
+public sealed class ContentSourceColumnWorker
     : StringColumnWorker
 {
     protected override string? GetValue(ThingAlike thing)

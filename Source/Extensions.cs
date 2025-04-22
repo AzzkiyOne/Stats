@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using Stats.Widgets;
 using UnityEngine;
 using Verse;
 
 namespace Stats;
 
-public static class Ext_UnityEngine_Rect
+public static class UnityEngineRectExtensions
 {
     public static Rect CutByX(ref this Rect rect, float amount)
     {
@@ -26,7 +25,7 @@ public static class Ext_UnityEngine_Rect
     }
 }
 
-public static class Ext_VerbList
+public static class VerseVerbPropertiesListExtensions
 {
     public static VerbProperties? Primary(this List<VerbProperties> verbs)
     {
@@ -34,34 +33,7 @@ public static class Ext_VerbList
     }
 }
 
-public static class Ext_Widget
-{
-    // Doesn't include widget's "own" size.
-    public static Vector2 GetFixedSize(this IWidget widget)
-    {
-        return widget.GetSize(Vector2.zero);
-    }
-    public static void DrawIn(this IWidget widget, Rect rect)
-    {
-        var size = widget.GetSize(rect.size);
-        widget.Draw(rect with { size = size }, rect.size);
-    }
-    public static T Get<T>(this IWidget widget) where T : IWidget
-    {
-        if (widget is T t)
-        {
-            return t;
-        }
-        else if (widget is WidgetDecorator widgetDecorator)
-        {
-            return widgetDecorator.Widget.Get<T>();
-        }
-
-        throw new Exception($"[{nameof(T)}] was not found!");
-    }
-}
-
-public static class Ext_String
+public static class StringExtensions
 {
     public static Color ToUniqueColorRGB(this string str)
     {

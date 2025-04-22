@@ -2,7 +2,7 @@
 
 namespace Stats.ColumnWorkers.RangedWeapon;
 
-public class BurstShotCountColumnWorker
+public sealed class BurstShotCountColumnWorker
     : NumberColumnWorker<float>
 {
     protected override float GetValue(ThingAlike thing)

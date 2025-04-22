@@ -3,7 +3,7 @@ using Verse;
 
 namespace Stats.ColumnWorkers.RangedWeapon;
 
-public class DirectHitChanceColumnWorker
+public sealed class DirectHitChanceColumnWorker
     : NumberColumnWorker<float>
 {
     protected override float GetValue(ThingAlike thing)

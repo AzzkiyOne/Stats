@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Globalization;
 using Stats.Widgets;
-using Stats.Widgets.Misc;
-using Stats.Widgets.Table.Filters.Widgets;
+using Stats.Widgets.FilterWidgets;
 
 namespace Stats.ColumnWorkers.Generic;
 
@@ -14,7 +13,7 @@ public abstract class NumberColumnWorker<T>
         IComparable<T>,
         IFormattable
 {
-    public override ColumnCellStyle CellStyle => ColumnCellStyle.Number;
+    public override TableColumnCellStyle CellStyle => TableColumnCellStyle.Number;
     private
     protected virtual string FormatValue(T value)
     {
@@ -40,7 +39,7 @@ public abstract class NumberColumnWorker<T>
     }
     public override IFilterWidget GetFilterWidget()
     {
-        return new NumberFilterWidget<T>(GetValueCached);
+        return new NumberFilter<T>(GetValueCached);
     }
     public override int Compare(ThingAlike thing1, ThingAlike thing2)
     {

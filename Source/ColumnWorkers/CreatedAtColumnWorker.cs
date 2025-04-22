@@ -1,19 +1,15 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Stats.Widgets;
-using Stats.Widgets.Containers;
-using Stats.Widgets.Extensions;
-using Stats.Widgets.Extensions.Size.Constraints;
-using Stats.Widgets.Misc;
-using Stats.Widgets.Table.Filters.Widgets;
+using Stats.Widgets.FilterWidgets;
 using Verse;
 
 namespace Stats.ColumnWorkers;
 
-public class CreatedAtColumnWorker
+public sealed class CreatedAtColumnWorker
     : ColumnWorker<IEnumerable<ThingDef>>
 {
-    public override ColumnCellStyle CellStyle => ColumnCellStyle.String;
+    public override TableColumnCellStyle CellStyle => TableColumnCellStyle.String;
     protected override IEnumerable<ThingDef> GetValue(ThingAlike thing)
     {
         var things = new HashSet<ThingDef>();
@@ -55,9 +51,10 @@ public class CreatedAtColumnWorker
             }
 
             IWidget icon = new ThingIcon(thingDef)
-                .Tooltip($"<i>{thingDef.LabelCap}</i>\n\n{thingDef.description}")
-                .HoverBackground(TexUI.HighlightTex)
-                .OnClick(openDefInfoDialog);
+                .ToButtonSubtle(
+                    openDefInfoDialog,
+                    $"<i>{thingDef.LabelCap}</i>\n\n{thingDef.description}"
+                );
 
             icons.Add(icon);
         }
@@ -68,7 +65,7 @@ public class CreatedAtColumnWorker
     {
         var craftingBenches = DefDatabase<ThingDef>.AllDefsListForReading.Where(def => def.IsWorkTable);
 
-        return new EnumerableFilterWidget<ThingDef>(
+        return new EnumerableFilter<ThingDef>(
             GetValueCached,
             craftingBenches,
             MakeFilterOptionWidget

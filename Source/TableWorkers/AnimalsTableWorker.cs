@@ -2,7 +2,7 @@
 
 namespace Stats.TableWorkers;
 
-public class AnimalsTableWorker
+public sealed class AnimalsTableWorker
     : TableWorker
 {
     protected override bool IsValidThingDef(ThingDef thingDef)

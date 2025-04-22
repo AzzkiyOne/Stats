@@ -4,25 +4,25 @@ namespace Stats.Widgets;
 
 /*
 
-Comps that change widget's size affect it differently depending on the order of application.
+Extensions that change widget's size affect it differently depending on the order of application.
 
 var containerSize = new Vector2(50f, 50f);
 
 --- CSS box-sizing: border-box ---
 
-IWidget w = new Widget_Example();
-new WidgetComp_Size_Inc_Abs(ref w, 10f);
-new WidgetComp_Size_Abs(ref w, 100f);
+var widget = new Widget_Example()
+    .PadAbs(10f)
+    .SizeAbs(100f);
 
-w.GetSize(containerSize);// (100, 100)
+widget.GetSize(containerSize);// (100, 100)
 
 --- CSS box-sizing: content-box ---
 
-IWidget w = new Widget_Example();
-new WidgetComp_Size_Abs(ref w, 100f);
-new WidgetComp_Size_Inc_Abs(ref w, 10f);
+var widget = new Widget_Example()
+    .SizeAbs(100f)
+    .PadAbs(10f);
 
-w.GetSize(containerSize);// (110, 110)
+widget.GetSize(containerSize);// (110, 110)
 
 */
 
@@ -30,8 +30,8 @@ w.GetSize(containerSize);// (110, 110)
 
 One case that isn't supported is the following:
 
-IWidget label = new Widget_Label("Label");
-new WidgetComp_Height_Rel(ref label, 0.5f);
+var label = new Widget_Label("Label")
+    .HeightRel(0.5f);
 
 IWidget container = new Widget_Container_Ver([label]);
 
@@ -49,7 +49,7 @@ Supporting this case can deoptimize all normal cases because it ultimately boils
 
 public interface IWidget
 {
-    // Comps doesn't count as parents.
+    // Extensions doesn't count as parents.
     IWidget? Parent { set; }
     /*
     
@@ -59,12 +59,14 @@ public interface IWidget
 
     var containerSize = new Vector2(100f, 100f);
 
-    IWidget w = new Widget_Example();
-    new WidgetComp_Size_Rel(ref w, 0.5f, 0.25f);
+    var widget = new Widget_Example()
+        .SizeRel(0.5f, 0.25f);
 
-    w.GetSize(containerSize);// (50, 25)
+    widget.GetSize(containerSize);// (50, 25)
 
     */
+    // Does containerSize really have to be declared as immutable?
+    // Could cause issues with performance.
     Vector2 GetSize(in Vector2 containerSize);
     Vector2 GetSize();
     void Draw(Rect rect, in Vector2 containerSize);

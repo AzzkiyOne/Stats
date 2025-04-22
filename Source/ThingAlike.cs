@@ -11,4 +11,4 @@ Reasons for ThingAlike to be defined as a struct instead of a class:
 
 */
 public readonly record struct ThingAlike(ThingDef Def, ThingDef? StuffDef = null);
-//public record class ThingAlike(ThingDef Def, ThingDef? StuffDef = null);
+//public sealed record class ThingAlike(ThingDef Def, ThingDef? StuffDef = null);

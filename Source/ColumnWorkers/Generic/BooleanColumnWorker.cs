@@ -1,9 +1,5 @@
 ﻿using Stats.Widgets;
-using Stats.Widgets.Containers;
-using Stats.Widgets.Extensions.Size;
-using Stats.Widgets.Extensions.Size.Constraints;
-using Stats.Widgets.Misc;
-using Stats.Widgets.Table.Filters.Widgets;
+using Stats.Widgets.FilterWidgets;
 using Verse;
 
 namespace Stats.ColumnWorkers.Generic;
@@ -11,7 +7,7 @@ namespace Stats.ColumnWorkers.Generic;
 public abstract class BooleanColumnWorker
     : ColumnWorker<bool>
 {
-    public override ColumnCellStyle CellStyle => ColumnCellStyle.Boolean;
+    public override TableColumnCellStyle CellStyle => TableColumnCellStyle.Boolean;
     protected override bool ShouldShowValue(bool value)
     {
         return value == true;
@@ -21,13 +17,13 @@ public abstract class BooleanColumnWorker
         var tex = Verse.Widgets.GetCheckboxTexture(value);
         IWidget icon = new Icon(tex)
             .SizeAbs(Text.LineHeight)
-            .PadRel(0.5f, 0f);
+            .PaddingRel(0.5f, 0f);
 
         return new SingleElementContainer(icon);
     }
     public override IFilterWidget GetFilterWidget()
     {
-        return new BooleanFilterWidget(GetValueCached);
+        return new BooleanFilter(GetValueCached);
     }
     public override int Compare(ThingAlike thing1, ThingAlike thing2)
     {

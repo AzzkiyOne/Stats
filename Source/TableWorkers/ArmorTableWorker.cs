@@ -3,7 +3,7 @@ using Verse;
 
 namespace Stats.TableWorkers;
 
-public class ArmorTableWorker
+public sealed class ArmorTableWorker
     : TableWorker
 {
     protected override bool IsValidThingDef(ThingDef thingDef)
