@@ -2,8 +2,7 @@
 
 namespace Stats.ColumnWorkers.RangedWeapon;
 
-public sealed class MissRadiusColumnWorker
-    : NumberColumnWorker<float>
+public sealed class MissRadiusColumnWorker : NumberColumnWorker<float>
 {
     protected override float GetValue(ThingAlike thing)
     {

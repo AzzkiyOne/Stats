@@ -4,8 +4,7 @@ using Stats.ColumnWorkers.Generic;
 
 namespace Stats.ModCompat.CE.ColumnWorkers.RangedWeapon;
 
-public sealed class ReloadTimeColumnWorker
-    : StatColumnWorker
+public sealed class ReloadTimeColumnWorker : StatColumnWorker
 {
     protected override float GetValue(ThingAlike thing)
     {

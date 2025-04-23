@@ -6,8 +6,7 @@ using Verse;
 
 namespace Stats;
 
-public sealed class ColumnDef
-    : Def
+public sealed class ColumnDef : Def
 {
     public StatDef? stat;
     public string? labelKey;

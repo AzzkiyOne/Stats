@@ -4,8 +4,7 @@ using Verse;
 
 namespace Stats.ColumnWorkers.Generic;
 
-public abstract class BooleanColumnWorker
-    : ColumnWorker<bool>
+public abstract class BooleanColumnWorker : ColumnWorker<bool>
 {
     public override TableColumnCellStyle CellStyle => TableColumnCellStyle.Boolean;
     protected override bool ShouldShowValue(bool value)

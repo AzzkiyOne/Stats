@@ -3,8 +3,7 @@ using Verse;
 
 namespace Stats.ColumnWorkers.RangedWeapon;
 
-public sealed class RPMColumnWorker
-    : NumberColumnWorker<float>
+public sealed class RPMColumnWorker : NumberColumnWorker<float>
 {
     protected override float GetValue(ThingAlike thing)
     {

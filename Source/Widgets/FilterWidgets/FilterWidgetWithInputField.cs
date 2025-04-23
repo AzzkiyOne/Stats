@@ -5,8 +5,7 @@ using Verse;
 
 namespace Stats.Widgets.FilterWidgets;
 
-public abstract class FilterWidgetWithInputField<T>
-    : FilterWidget<T>
+public abstract class FilterWidgetWithInputField<T> : FilterWidget<T>
     where T : notnull
 {
     public FilterWidgetWithInputField(

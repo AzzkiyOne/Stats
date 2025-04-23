@@ -6,8 +6,7 @@ using Verse;
 
 namespace Stats.ColumnWorkers;
 
-public sealed class CreatedAtColumnWorker
-    : ColumnWorker<IEnumerable<ThingDef>>
+public sealed class CreatedAtColumnWorker : ColumnWorker<IEnumerable<ThingDef>>
 {
     public override TableColumnCellStyle CellStyle => TableColumnCellStyle.String;
     protected override IEnumerable<ThingDef> GetValue(ThingAlike thing)

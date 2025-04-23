@@ -3,8 +3,7 @@ using Verse;
 
 namespace Stats.TableWorkers;
 
-public sealed class ClothingTableWorker
-    : TableWorker
+public sealed class ClothingTableWorker : TableWorker
 {
     private readonly ThingCategoryDef UtilityCatDef = DefDatabase<ThingCategoryDef>.GetNamed("ApparelUtility");
     protected override bool IsValidThingDef(ThingDef thingDef)

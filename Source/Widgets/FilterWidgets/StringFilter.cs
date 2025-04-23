@@ -6,8 +6,7 @@ using Verse;
 
 namespace Stats.Widgets.FilterWidgets;
 
-public sealed class StringFilter
-    : FilterWidgetWithInputField<string>
+public sealed class StringFilter : FilterWidgetWithInputField<string>
 {
     private static readonly RelationalOperator<string>[] DefaultOperators =
         [

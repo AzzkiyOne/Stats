@@ -3,8 +3,7 @@ using System.Linq;
 
 namespace Stats.RelationalOperators;
 
-public sealed class Contains
-    : RelationalOperator<string>
+public sealed class Contains : RelationalOperator<string>
 {
     private Contains() { }
     public override bool Eval(string lhs, string rhs) =>
@@ -15,8 +14,7 @@ public sealed class Contains
     public static RelationalOperator<string> Instance { get; } = new Contains();
 }
 
-public sealed class ContainsNot
-    : RelationalOperator<string>
+public sealed class ContainsNot : RelationalOperator<string>
 {
     private ContainsNot() { }
     public override bool Eval(string lhs, string rhs) =>

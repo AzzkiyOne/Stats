@@ -7,8 +7,7 @@ using Verse;
 
 namespace Stats.Widgets.FilterWidgets;
 
-public sealed class EnumerableFilter<T>
-    : FilterWidget<IEnumerable<T>>
+public sealed class EnumerableFilter<T> : FilterWidget<IEnumerable<T>>
 {
     private static readonly RelationalOperator<IEnumerable<T>>[] DefaultOperators =
         [

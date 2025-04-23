@@ -1,18 +1,15 @@
 ﻿using UnityEngine;
 
-namespace Stats.Widgets.Extensions.Size.Constraints;
+namespace Stats.Widgets.Extensions.Size;
 
-public sealed class RelWidthWidgetExtension
-    : WidgetDecorator
+public sealed class RelWidthWidgetExtension : WidgetExtension
 {
-    public override Widget Widget { get; }
     private readonly float ParentWidthMultiplier;
     internal RelWidthWidgetExtension(
         Widget widget,
         float parentWidthMultiplier
-    )
+    ) : base(widget)
     {
-        Widget = widget;
         ParentWidthMultiplier = parentWidthMultiplier;
     }
     public override Vector2 GetSize(Vector2 containerSize)

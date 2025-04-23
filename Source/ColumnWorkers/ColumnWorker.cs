@@ -15,8 +15,7 @@ public abstract class ColumnWorker
     public abstract int Compare(ThingAlike thing1, ThingAlike thing2);
 }
 
-public abstract class ColumnWorker<ValueType>
-    : ColumnWorker
+public abstract class ColumnWorker<ValueType> : ColumnWorker
 {
     private readonly Dictionary<ThingAlike, ValueType> ValuesCache = [];
     protected abstract ValueType GetValue(ThingAlike thing);

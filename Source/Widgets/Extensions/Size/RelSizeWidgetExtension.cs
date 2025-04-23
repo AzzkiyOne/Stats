@@ -1,20 +1,17 @@
 ﻿using UnityEngine;
 
-namespace Stats.Widgets.Extensions.Size.Constraints;
+namespace Stats.Widgets.Extensions.Size;
 
-public sealed class RelSizeWidgetExtension
-    : WidgetDecorator
+public sealed class RelSizeWidgetExtension : WidgetExtension
 {
-    public override Widget Widget { get; }
     private readonly float ParentWidthMultiplier;
     private readonly float ParentHeightMultiplier;
     internal RelSizeWidgetExtension(
         Widget widget,
         float parentWidthMultiplier,
         float parentHeightMultiplier
-    )
+    ) : base(widget)
     {
-        Widget = widget;
         ParentWidthMultiplier = parentWidthMultiplier;
         ParentHeightMultiplier = parentHeightMultiplier;
     }

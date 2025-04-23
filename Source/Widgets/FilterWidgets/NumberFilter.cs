@@ -5,12 +5,8 @@ using UnityEngine;
 
 namespace Stats.Widgets.FilterWidgets;
 
-public sealed class NumberFilter<T>
-    : FilterWidgetWithInputField<T>
-    where T :
-        struct,
-        IEquatable<T>,
-        IComparable<T>
+public sealed class NumberFilter<T> : FilterWidgetWithInputField<T>
+    where T : struct, IEquatable<T>, IComparable<T>
 {
     private static readonly RelationalOperator<T>[] DefaultOperators =
         [

@@ -1,16 +1,13 @@
 ﻿using UnityEngine;
 using Verse;
 
-namespace Stats.Widgets.Extensions;
+namespace Stats.Widgets.Extensions.Color;
 
-public sealed class HoverColorWidgetExtension
-    : WidgetDecorator
+public sealed class HoverColorWidgetExtension : WidgetExtension
 {
-    public override Widget Widget { get; }
-    private readonly Color Color;
-    internal HoverColorWidgetExtension(Widget widget, Color color)
+    private readonly UnityEngine.Color Color;
+    internal HoverColorWidgetExtension(Widget widget, UnityEngine.Color color) : base(widget)
     {
-        Widget = widget;
         Color = color;
     }
     public override void Draw(Rect rect, Vector2 containerSize)

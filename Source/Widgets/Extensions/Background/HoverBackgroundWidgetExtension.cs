@@ -1,16 +1,13 @@
 ﻿using UnityEngine;
 using Verse;
 
-namespace Stats.Widgets.Extensions;
+namespace Stats.Widgets.Extensions.Background;
 
-public sealed class HoverBackgroundWidgetExtension
-    : WidgetDecorator
+public sealed class HoverBackgroundWidgetExtension : WidgetExtension
 {
-    public override Widget Widget { get; }
     private readonly Texture2D Texture;
-    internal HoverBackgroundWidgetExtension(Widget widget, Texture2D texture)
+    internal HoverBackgroundWidgetExtension(Widget widget, Texture2D texture) : base(widget)
     {
-        Widget = widget;
         Texture = texture;
     }
     public override void Draw(Rect rect, Vector2 containerSize)

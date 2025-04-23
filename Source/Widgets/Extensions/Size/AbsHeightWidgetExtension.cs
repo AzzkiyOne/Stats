@@ -1,15 +1,12 @@
 ﻿using UnityEngine;
 
-namespace Stats.Widgets.Extensions.Size.Constraints;
+namespace Stats.Widgets.Extensions.Size;
 
-public sealed class AbsHeightWidgetExtension
-    : WidgetDecorator
+public sealed class AbsHeightWidgetExtension : WidgetExtension
 {
-    public override Widget Widget { get; }
     private readonly float Height;
-    internal AbsHeightWidgetExtension(Widget widget, float height)
+    internal AbsHeightWidgetExtension(Widget widget, float height) : base(widget)
     {
-        Widget = widget;
         Height = height;
     }
     public override Vector2 GetSize(Vector2 containerSize)

@@ -1,15 +1,12 @@
 ﻿using UnityEngine;
 
-namespace Stats.Widgets.Extensions;
+namespace Stats.Widgets.Extensions.Color;
 
-public sealed class ColorWidgetExtension
-    : WidgetDecorator
+public sealed class ColorWidgetExtension : WidgetExtension
 {
-    public override Widget Widget { get; }
-    public Color Color { get; set; }
-    internal ColorWidgetExtension(Widget widget, Color color)
+    public UnityEngine.Color Color { get; set; }
+    internal ColorWidgetExtension(Widget widget, UnityEngine.Color color) : base(widget)
     {
-        Widget = widget;
         Color = color;
     }
     public override void Draw(Rect rect, Vector2 containerSize)

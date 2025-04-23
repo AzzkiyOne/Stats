@@ -3,8 +3,7 @@ using Stats.ColumnWorkers.Generic;
 
 namespace Stats.ColumnWorkers.Apparel;
 
-public sealed class LayersColumnWorker
-    : StringColumnWorker
+public sealed class LayersColumnWorker : StringColumnWorker
 {
     protected override string? GetValue(ThingAlike thing)
     {

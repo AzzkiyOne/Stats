@@ -11,9 +11,7 @@ public abstract class FilterExpression
     public abstract void Reset();
 }
 
-public sealed class FilterExpression<T>
-    : FilterExpression
-    where T : notnull
+public sealed class FilterExpression<T> : FilterExpression where T : notnull
 {
     private readonly Func<ThingAlike, T> ValueFunction;
     private readonly T InitialValue;

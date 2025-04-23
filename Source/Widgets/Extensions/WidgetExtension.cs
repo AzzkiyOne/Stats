@@ -1,12 +1,15 @@
 ﻿using UnityEngine;
 
-namespace Stats.Widgets;
+namespace Stats.Widgets.Extensions;
 
-public abstract class WidgetDecorator
-    : Widget
+public abstract class WidgetExtension : Widget
 {
-    public override Widget? Parent { set => Widget.Parent = value; }
-    public abstract Widget Widget { get; }
+    public sealed override Widget? Parent { set => Widget.Parent = value; }
+    public Widget Widget { get; }
+    public WidgetExtension(Widget widget)
+    {
+        Widget = widget;
+    }
     public override Vector2 GetSize(Vector2 containerSize)
     {
         return Widget.GetSize(containerSize);
@@ -19,7 +22,7 @@ public abstract class WidgetDecorator
     {
         Widget.Draw(rect, containerSize);
     }
-    public override void UpdateSize()
+    public sealed override void UpdateSize()
     {
         Widget.UpdateSize();
     }

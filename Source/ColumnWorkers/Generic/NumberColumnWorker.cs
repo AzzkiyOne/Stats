@@ -5,13 +5,8 @@ using Stats.Widgets.FilterWidgets;
 
 namespace Stats.ColumnWorkers.Generic;
 
-public abstract class NumberColumnWorker<T>
-    : ColumnWorker<T>
-    where T :
-        struct,
-        IEquatable<T>,
-        IComparable<T>,
-        IFormattable
+public abstract class NumberColumnWorker<T> : ColumnWorker<T>
+    where T : struct, IEquatable<T>, IComparable<T>, IFormattable
 {
     public override TableColumnCellStyle CellStyle => TableColumnCellStyle.Number;
     protected virtual string FormatValue(T value)

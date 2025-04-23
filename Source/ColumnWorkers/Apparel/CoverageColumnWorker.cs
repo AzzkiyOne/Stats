@@ -10,8 +10,7 @@ namespace Stats.ColumnWorkers.Apparel;
 // Luckily, it looks like in a definition it is allowed to only list the whole
 // groups of body parts. The resulting list is of course significantly smaller
 // and can be safely displayed in a single row/column.
-public sealed class CoverageColumnWorker
-    : StringColumnWorker
+public sealed class CoverageColumnWorker : StringColumnWorker
 {
     protected override string? GetValue(ThingAlike thing)
     {

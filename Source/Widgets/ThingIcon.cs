@@ -4,8 +4,7 @@ using Verse;
 
 namespace Stats.Widgets;
 
-public sealed class ThingIcon
-    : WidgetBase
+public sealed class ThingIcon : WidgetBase
 {
     protected override Vector2 Size { get; set; }
     private readonly Texture2D Texture;
@@ -15,8 +14,7 @@ public sealed class ThingIcon
     private readonly float Scale;
     private readonly float Angle;
     private readonly Vector2 Offset;
-    public ThingIcon(ThingAlike thing)
-        : this(thing.Def, thing.StuffDef)
+    public ThingIcon(ThingAlike thing) : this(thing.Def, thing.StuffDef)
     {
     }
     public ThingIcon(ThingDef thingDef, ThingDef? stuffDef = null)

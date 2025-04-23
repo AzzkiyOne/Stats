@@ -2,8 +2,7 @@
 
 namespace Stats.TableWorkers;
 
-public sealed class UtilityApparelTableWorker
-    : TableWorker
+public sealed class UtilityApparelTableWorker : TableWorker
 {
     private readonly ThingCategoryDef UtilityCatDef =
         DefDatabase<ThingCategoryDef>.GetNamed("ApparelUtility");

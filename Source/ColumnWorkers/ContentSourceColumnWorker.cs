@@ -3,8 +3,7 @@ using Stats.Widgets;
 
 namespace Stats.ColumnWorkers;
 
-public sealed class ContentSourceColumnWorker
-    : StringColumnWorker
+public sealed class ContentSourceColumnWorker : StringColumnWorker
 {
     protected override string? GetValue(ThingAlike thing)
     {

@@ -2,8 +2,7 @@
 
 namespace Stats.ColumnWorkers.RangedWeapon;
 
-public sealed class BuildingDamageFactorImpassableColumnWorker
-    : NumberColumnWorker<float>
+public sealed class BuildingDamageFactorImpassableColumnWorker : NumberColumnWorker<float>
 {
     protected override float GetValue(ThingAlike thing)
     {

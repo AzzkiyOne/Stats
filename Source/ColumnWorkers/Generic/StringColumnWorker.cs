@@ -3,8 +3,7 @@ using Stats.Widgets.FilterWidgets;
 
 namespace Stats.ColumnWorkers.Generic;
 
-public abstract class StringColumnWorker
-    : ColumnWorker<string?>
+public abstract class StringColumnWorker : ColumnWorker<string?>
 {
     public override TableColumnCellStyle CellStyle => TableColumnCellStyle.String;
     protected override bool ShouldShowValue(string? value)

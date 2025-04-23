@@ -2,8 +2,7 @@
 
 namespace Stats.ColumnWorkers.RangedWeapon;
 
-public sealed class StoppingPowerColumnWorker
-    : NumberColumnWorker<float>
+public sealed class StoppingPowerColumnWorker : NumberColumnWorker<float>
 {
     protected override float GetValue(ThingAlike thing)
     {

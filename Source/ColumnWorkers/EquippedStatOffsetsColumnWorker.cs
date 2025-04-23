@@ -6,8 +6,7 @@ using Verse;
 
 namespace Stats.ColumnWorkers;
 
-public sealed class EquippedStatOffsetsColumnWorker
-    : NumberColumnWorker<float>
+public sealed class EquippedStatOffsetsColumnWorker : NumberColumnWorker<float>
 {
     public override TableColumnCellStyle CellStyle => TableColumnCellStyle.String;
     protected override float GetValue(ThingAlike thing)

@@ -2,8 +2,7 @@
 
 namespace Stats.Widgets;
 
-public sealed class SingleElementContainer
-    : WidgetBase
+public sealed class SingleElementContainer : WidgetBase
 {
     protected override Vector2 Size { get; set; }
     private readonly Widget Widget;

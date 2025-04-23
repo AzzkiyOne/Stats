@@ -1,21 +1,18 @@
 ﻿using UnityEngine;
 using Verse;
 
-namespace Stats.Widgets.Extensions;
+namespace Stats.Widgets.Extensions.Background;
 
-public sealed class AlternatingBackgroundWidgetExtension
-    : WidgetDecorator
+public sealed class AlternatingBackgroundWidgetExtension : WidgetExtension
 {
-    public override Widget Widget { get; }
     private readonly Texture2D IdleTexture;
     private readonly Texture2D HoverTexture;
     internal AlternatingBackgroundWidgetExtension(
         Widget widget,
         Texture2D idleTexture,
         Texture2D hoverTexture
-    )
+    ) : base(widget)
     {
-        Widget = widget;
         IdleTexture = idleTexture;
         HoverTexture = hoverTexture;
     }

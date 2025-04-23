@@ -5,8 +5,7 @@ using Verse;
 
 namespace Stats.ColumnWorkers.Generic;
 
-public class StatColumnWorker
-    : ColumnWorker<float>
+public class StatColumnWorker : ColumnWorker<float>
 {
     public override TableColumnCellStyle CellStyle => TableColumnCellStyle.Number;
     protected override float GetValue(ThingAlike thing)

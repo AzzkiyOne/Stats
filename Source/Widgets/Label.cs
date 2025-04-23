@@ -4,8 +4,7 @@ namespace Stats.Widgets;
 
 // Maybe text shouldn't be a widget, but rather just a text node with "ContentSize" prop?
 // You can't set a width of a text. It must always have the width based on the text.
-public sealed class Label
-    : WidgetBase
+public sealed class Label : WidgetBase
 {
     protected override Vector2 Size { get; set; }
     private string? _Text;
@@ -23,8 +22,7 @@ public sealed class Label
         _Text = text;
         Size = GetSize();
     }
-    public Label(string? text, out Label labelWidget)
-        : this(text)
+    public Label(string? text, out Label labelWidget) : this(text)
     {
         labelWidget = this;
     }

@@ -2,8 +2,7 @@
 
 namespace Stats.ColumnWorkers.RangedWeapon;
 
-public sealed class RangeColumnWorker
-    : NumberColumnWorker<float>
+public sealed class RangeColumnWorker : NumberColumnWorker<float>
 {
     protected override float GetValue(ThingAlike thing)
     {

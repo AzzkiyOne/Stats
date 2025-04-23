@@ -3,14 +3,11 @@ using Verse;
 
 namespace Stats.Widgets.Extensions;
 
-public sealed class TooltipWidgetExtension
-    : WidgetDecorator
+public sealed class TooltipWidgetExtension : WidgetExtension
 {
-    public override Widget Widget { get; }
     private readonly string Text;
-    internal TooltipWidgetExtension(Widget widget, string text)
+    internal TooltipWidgetExtension(Widget widget, string text) : base(widget)
     {
-        Widget = widget;
         Text = text;
     }
     public override void Draw(Rect rect, Vector2 containerSize)

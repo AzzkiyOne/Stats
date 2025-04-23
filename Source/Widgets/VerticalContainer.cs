@@ -3,8 +3,7 @@ using UnityEngine;
 
 namespace Stats.Widgets;
 
-public sealed class VerticalContainer
-    : WidgetBase
+public sealed class VerticalContainer : WidgetBase
 {
     protected override Vector2 Size { get; set; }
     private readonly float Gap;

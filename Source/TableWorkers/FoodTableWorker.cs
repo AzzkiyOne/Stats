@@ -3,8 +3,7 @@ using Verse;
 
 namespace Stats.TableWorkers;
 
-public sealed class FoodTableWorker
-    : TableWorker
+public sealed class FoodTableWorker : TableWorker
 {
     protected override bool IsValidThingDef(ThingDef thingDef)
     {

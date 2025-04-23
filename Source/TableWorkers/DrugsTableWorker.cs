@@ -2,8 +2,7 @@
 
 namespace Stats.TableWorkers;
 
-public sealed class DrugsTableWorker
-    : TableWorker
+public sealed class DrugsTableWorker : TableWorker
 {
     protected override bool IsValidThingDef(ThingDef thingDef)
     {

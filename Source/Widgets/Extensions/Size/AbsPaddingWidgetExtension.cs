@@ -3,9 +3,8 @@
 namespace Stats.Widgets.Extensions.Size;
 
 public sealed class AbsPaddingWidgetExtension
-    : WidgetDecorator
+    : WidgetExtension
 {
-    public override Widget Widget { get; }
     private readonly float Left;
     private readonly float Top;
     private readonly float Horizontal;
@@ -16,9 +15,8 @@ public sealed class AbsPaddingWidgetExtension
         float right,
         float top,
         float bottom
-    )
+    ) : base(widget)
     {
-        Widget = widget;
         Left = left;
         Top = top;
         Horizontal = left + right;

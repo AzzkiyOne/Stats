@@ -6,15 +6,13 @@ using Verse;
 
 namespace Stats.Widgets.FilterWidgets;
 
-public abstract class FilterWidget
-    : WidgetBase
+public abstract class FilterWidget : WidgetBase
 {
     public abstract FilterExpression FilterExpression { get; }
     public abstract FilterWidget Clone();
 }
 
-public abstract class FilterWidget<T>
-    : FilterWidget
+public abstract class FilterWidget<T> : FilterWidget
     where T : notnull
 {
     protected override Vector2 Size { get; set; }

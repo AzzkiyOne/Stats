@@ -1,20 +1,17 @@
 ﻿using System;
 using UnityEngine;
 
-namespace Stats.Widgets.Extensions;
+namespace Stats.Widgets.Extensions.Background;
 
-public sealed class DrawBackgroundWidgetExtension
-    : WidgetDecorator
+public sealed class DrawBackgroundWidgetExtension : WidgetExtension
 {
-    public override Widget Widget { get; }
     private readonly Action<Rect> _DrawBackground;
     internal DrawBackgroundWidgetExtension(
         Widget widget,
         Action<Rect>
         drawBackground
-    )
+    ) : base(widget)
     {
-        Widget = widget;
         _DrawBackground = drawBackground;
     }
     public override void Draw(Rect rect, Vector2 containerSize)

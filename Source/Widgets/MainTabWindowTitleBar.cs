@@ -6,10 +6,9 @@ namespace Stats.Widgets;
 
 // Just to make RW stop throwing warning regarding assets loading.
 [StaticConstructorOnStartup]
-internal sealed class MainTabWindowTitleBar
-    : WidgetDecorator
+internal sealed class MainTabWindowTitleBar : WidgetWrapper
 {
-    public override Widget Widget { get; }
+    protected override Widget Widget { get; }
     private static readonly Texture2D HoldToDragTex;
     private static readonly Texture2D ResetWindowTex;
     private static readonly Texture2D ExpandWindowTex;
@@ -63,18 +62,9 @@ internal sealed class MainTabWindowTitleBar
             ],
             GenUI.Pad,
             true
-        ).Background(Verse.Widgets.LightHighlight);
-    }
-    public override void Draw(Rect rect, Vector2 containerSize)
-    {
-        Verse.Widgets.DrawLineHorizontal(
-            rect.x,
-            rect.yMax - 1f,
-            rect.width,
-            MainTabWindow.BorderLineColor
-        );
-
-        Widget.Draw(rect, containerSize);
+        )
+        .BorderBottom(1f, MainTabWindow.BorderLineColor)
+        .Background(Verse.Widgets.LightHighlight);
     }
     private static Widget ToToolbarIcon(
         Widget widget,

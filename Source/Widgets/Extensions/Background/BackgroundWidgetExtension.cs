@@ -1,15 +1,12 @@
 ﻿using UnityEngine;
 
-namespace Stats.Widgets.Extensions;
+namespace Stats.Widgets.Extensions.Background;
 
-public sealed class BackgroundWidgetExtension
-    : WidgetDecorator
+public sealed class BackgroundWidgetExtension : WidgetExtension
 {
-    public override Widget Widget { get; }
     private readonly Texture2D Texture;
-    internal BackgroundWidgetExtension(Widget widget, Texture2D texture)
+    internal BackgroundWidgetExtension(Widget widget, Texture2D texture) : base(widget)
     {
-        Widget = widget;
         Texture = texture;
     }
     public override void Draw(Rect rect, Vector2 containerSize)

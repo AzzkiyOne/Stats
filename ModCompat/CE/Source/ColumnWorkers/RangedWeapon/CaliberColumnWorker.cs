@@ -5,8 +5,7 @@ using Verse;
 
 namespace Stats.ModCompat.CE.ColumnWorkers.RangedWeapon;
 
-public sealed class CaliberColumnWorker
-    : StringColumnWorker
+public sealed class CaliberColumnWorker : StringColumnWorker
 {
     protected override string GetValue(ThingAlike thing)
     {

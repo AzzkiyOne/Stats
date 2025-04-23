@@ -1,12 +1,11 @@
 ﻿using System.Linq;
-using Stats.Widgets.Extensions;
+using Stats.Widgets.Extensions.Color;
 using UnityEngine;
 using Verse;
 
 namespace Stats.Widgets;
 
-internal sealed class TableSelector
-    : WidgetDecorator
+internal sealed class TableSelector : WidgetWrapper
 {
     private TableDef _CurTableDef = TableDefOf.RangedWeapons;
     public TableDef CurTableDef
@@ -24,7 +23,7 @@ internal sealed class TableSelector
     private readonly Icon IconWidget;
     private readonly ColorWidgetExtension IconColorExtension;
     private readonly Label LabelWidget;
-    public override Widget Widget { get; }
+    protected override Widget Widget { get; }
     public TableSelector()
     {
         Widget = new HorizontalContainer(

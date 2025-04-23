@@ -4,8 +4,7 @@ using Verse;
 
 namespace Stats.Widgets;
 
-public sealed class MainTabWindow
-    : RimWorld.MainTabWindow
+public sealed class MainTabWindow : RimWorld.MainTabWindow
 {
     protected override float Margin { get => 1f; }
     public override Vector2 RequestedTabSize => new(UI.screenWidth, base.RequestedTabSize.y);

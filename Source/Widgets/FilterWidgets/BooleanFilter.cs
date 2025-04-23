@@ -5,8 +5,7 @@ using Verse;
 
 namespace Stats.Widgets.FilterWidgets;
 
-public sealed class BooleanFilter
-    : FilterWidget
+public sealed class BooleanFilter : FilterWidget
 {
     protected override Vector2 Size { get; set; }
     private readonly FilterExpression<bool> _FilterExpression;

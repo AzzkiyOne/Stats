@@ -2,8 +2,7 @@
 
 namespace Stats.Widgets;
 
-public sealed class EmptyWidget
-    : WidgetBase
+public sealed class EmptyWidget : WidgetBase
 {
     protected override Vector2 Size { get; set; }
     public EmptyWidget()

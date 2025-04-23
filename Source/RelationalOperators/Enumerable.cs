@@ -3,8 +3,7 @@ using System.Linq;
 
 namespace Stats.RelationalOperators;
 
-public sealed class Contains_Any<T>
-    : RelationalOperator<IEnumerable<T>>
+public sealed class Contains_Any<T> : RelationalOperator<IEnumerable<T>>
 {
     private Contains_Any() { }
     public override bool Eval(IEnumerable<T> lhs, IEnumerable<T> rhs) =>
@@ -14,8 +13,7 @@ public sealed class Contains_Any<T>
         new Contains_Any<T>();
 }
 
-public sealed class Contains_All<T>
-    : RelationalOperator<IEnumerable<T>>
+public sealed class Contains_All<T> : RelationalOperator<IEnumerable<T>>
 {
     private Contains_All() { }
     public override bool Eval(IEnumerable<T> lhs, IEnumerable<T> rhs) =>

@@ -4,8 +4,7 @@ using Verse;
 namespace Stats.Widgets;
 
 // Instead of scale, use padding.
-public sealed class Icon
-    : WidgetBase
+public sealed class Icon : WidgetBase
 {
     protected override Vector2 Size { get; set; }
     public Texture2D Texture { get; set; }
@@ -14,8 +13,7 @@ public sealed class Icon
         Texture = texture;
         Size = GetSize();
     }
-    public Icon(Texture2D texture, out Icon iconWidget)
-        : this(texture)
+    public Icon(Texture2D texture, out Icon iconWidget) : this(texture)
     {
         iconWidget = this;
     }

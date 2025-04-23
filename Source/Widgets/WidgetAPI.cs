@@ -1,7 +1,9 @@
 ﻿using System;
 using Stats.Widgets.Extensions;
+using Stats.Widgets.Extensions.Background;
+using Stats.Widgets.Extensions.Border;
+using Stats.Widgets.Extensions.Color;
 using Stats.Widgets.Extensions.Size;
-using Stats.Widgets.Extensions.Size.Constraints;
 using UnityEngine;
 using Verse;
 
@@ -152,7 +154,7 @@ public static class WidgetAPI
         amount
     );
 
-    // --- Misc ---
+    // --- Background ---
 
     public static BackgroundWidgetExtension Background(
         this Widget widget,
@@ -184,6 +186,9 @@ public static class WidgetAPI
         widget,
         texture
     );
+
+    // --- Color ---
+
     public static ColorWidgetExtension Color(
         this Widget widget,
         Color color
@@ -205,6 +210,28 @@ public static class WidgetAPI
         widget,
         color
     );
+
+    // --- Borders ---
+
+    public static BorderBottomWidgetExtension BorderBottom(
+        this Widget widget,
+        float thickness,
+        Color color
+    ) => new(
+        widget,
+        thickness,
+        color
+    );
+    public static BorderBottomWidgetExtension BorderBottom(
+        this Widget widget,
+        float thickness
+    ) => widget.BorderBottom(
+        thickness,
+        UnityEngine.Color.white
+    );
+
+    // --- Misc ---
+
     public static TextAnchorWidgetExtension TextAnchor(
         this Widget widget,
         TextAnchor textAnchor
@@ -261,9 +288,9 @@ public static class WidgetAPI
         {
             return t;
         }
-        else if (widget is WidgetDecorator widgetDecorator)
+        else if (widget is WidgetExtension widgetExtension)
         {
-            return widgetDecorator.Widget.Get<T>();
+            return widgetExtension.Widget.Get<T>();
         }
 
         throw new Exception($"[{nameof(T)}] was not found!");

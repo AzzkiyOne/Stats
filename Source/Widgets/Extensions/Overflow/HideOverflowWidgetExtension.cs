@@ -1,14 +1,11 @@
 ﻿using UnityEngine;
 
-namespace Stats.Widgets.Extensions;
+namespace Stats.Widgets.Extensions.Overflow;
 
-public sealed class HideOverflowWidgetExtension
-    : WidgetDecorator
+public sealed class HideOverflowWidgetExtension : WidgetExtension
 {
-    public override Widget Widget { get; }
-    internal HideOverflowWidgetExtension(Widget widget)
+    internal HideOverflowWidgetExtension(Widget widget) : base(widget)
     {
-        Widget = widget;
     }
     public override void Draw(Rect rect, Vector2 containerSize)
     {
