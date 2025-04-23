@@ -58,7 +58,7 @@ public sealed class CreatedAtColumnWorker : ColumnWorker<IEnumerable<ThingDef>>
             icons.Add(icon);
         }
 
-        return new HorizontalContainer(icons, 5f);
+        return new HorizontalContainer(icons, Globals.UI.PadSm);
     }
     public override FilterWidget GetFilterWidget()
     {
@@ -81,7 +81,7 @@ public sealed class CreatedAtColumnWorker : ColumnWorker<IEnumerable<ThingDef>>
                 new ThingIcon(thingDef),
                 new Label(thingDef.LabelCap).WidthRel(1f)
             ],
-            5f,
+            Globals.UI.PadSm,
             true
         );
     }

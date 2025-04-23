@@ -18,7 +18,7 @@ internal sealed class MainTabWindowTitleBar : WidgetWrapper
         "- Click on a row to select/deselect it.\n" +
         "  - You can select multiple rows.\n" +
         "  - Selected rows are unaffected by filters.";
-    private const float IconPadding = 3f;
+    private const float IconPadding = Globals.UI.PadXs;
     public MainTabWindowTitleBar(
         Widget tableSelector,
         Action resetWindow,
@@ -60,7 +60,7 @@ internal sealed class MainTabWindowTitleBar : WidgetWrapper
                     IconPadding + 2f
                 ),
             ],
-            GenUI.Pad,
+            Globals.UI.Pad,
             true
         )
         .BorderBottom(1f, MainTabWindow.BorderLineColor)

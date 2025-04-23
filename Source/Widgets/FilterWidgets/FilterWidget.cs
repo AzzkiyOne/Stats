@@ -12,16 +12,16 @@ public abstract class FilterWidget : WidgetBase
     public abstract FilterWidget Clone();
 }
 
-public abstract class FilterWidget<T> : FilterWidget
-    where T : notnull
+public abstract class FilterWidget<Lhs, Rhs> : FilterWidget
+    where Rhs : notnull
 {
     protected override Vector2 Size { get; set; }
-    protected readonly FilterExpression<T> _FilterExpression;
+    protected readonly FilterExpression<Lhs, Rhs> _FilterExpression;
     public override FilterExpression FilterExpression => _FilterExpression;
     protected FloatMenu OperatorsMenu { get; }
     public FilterWidget(
-        FilterExpression<T> filterExpression,
-        IEnumerable<RelationalOperator<T>> operators
+        FilterExpression<Lhs, Rhs> filterExpression,
+        IEnumerable<RelationalOperator<Lhs, Rhs>> operators
     )
     {
         _FilterExpression = filterExpression;
@@ -35,8 +35,8 @@ public abstract class FilterWidget<T> : FilterWidget
         UpdateSize();
     }
     private static FloatMenu MakeFloatMenu(
-        FilterExpression<T> filterExpression,
-        IEnumerable<RelationalOperator<T>> operators
+        FilterExpression<Lhs, Rhs> filterExpression,
+        IEnumerable<RelationalOperator<Lhs, Rhs>> operators
     )
     {
         var operatorsMenuOptions = new List<FloatMenuOption>(operators.Count());

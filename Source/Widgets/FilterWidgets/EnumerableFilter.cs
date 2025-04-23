@@ -7,20 +7,20 @@ using Verse;
 
 namespace Stats.Widgets.FilterWidgets;
 
-public sealed class EnumerableFilter<T> : FilterWidget<IEnumerable<T>>
+public sealed class EnumerableFilter<T> : FilterWidget<IEnumerable<T>, ICollection<T>>
 {
-    private static readonly RelationalOperator<IEnumerable<T>>[] DefaultOperators =
+    private static readonly RelationalOperator<IEnumerable<T>, ICollection<T>>[] DefaultOperators =
         [
-            Any<IEnumerable<T>>.Instance,
-            Contains_Any<T>.Instance,
-            Contains_All<T>.Instance,
+            Any<IEnumerable<T>, ICollection<T>>.Instance,
+            ContainsAnyElementOf<IEnumerable<T>, ICollection<T>, T>.Instance,
+            ContainsAllElementsOf<IEnumerable<T>, ICollection<T>, T>.Instance,
         ];
     private readonly IEnumerable<T> Options;
     private readonly Func<T, Widget> MakeOptionWidget;
     private readonly OptionsWindow _OptionsWindow;
     public EnumerableFilter(
-        FilterExpression<IEnumerable<T>> filterExpression,
-        IEnumerable<RelationalOperator<IEnumerable<T>>> operators,
+        FilterExpression<IEnumerable<T>, ICollection<T>> filterExpression,
+        IEnumerable<RelationalOperator<IEnumerable<T>, ICollection<T>>> operators,
         IEnumerable<T> options,
         Func<T, Widget> makeOptionWidget
     ) : base(filterExpression, operators)
@@ -33,19 +33,21 @@ public sealed class EnumerableFilter<T> : FilterWidget<IEnumerable<T>>
         foreach (var option in options)
         {
             var optionWidget = MakeOptionWidget(option)
-                .PaddingAbs(5f, 3f)
+                .PaddingAbs(Globals.UI.PadSm, Globals.UI.PadXs)
                 .WidthRel(1f)
                 .HoverBackground(TexUI.HighlightTex)
                 .OnClick(() =>
                 {
                     if (filterExpression.Value.Contains(option))
                     {
-                        filterExpression.Value = filterExpression.Value.Where(opt => opt.Equals(option) == false);
+                        filterExpression.Value.Remove(option);
                     }
                     else
                     {
-                        filterExpression.Value = [.. filterExpression.Value, option];
+                        filterExpression.Value.Add(option);
                     }
+
+                    filterExpression.NotifyChanged();
                 })
                 .Background(rect =>
                 {
@@ -71,11 +73,11 @@ public sealed class EnumerableFilter<T> : FilterWidget<IEnumerable<T>>
         IEnumerable<T> options,
         Func<T, Widget> makeOptionWidget
     ) : this(
-        new FilterExpression<IEnumerable<T>>(
+        new FilterExpression<IEnumerable<T>, ICollection<T>>(
             valueFunc,
             [],
-            Any<IEnumerable<T>>.Instance,
-            Any<IEnumerable<T>>.Instance
+            Any<IEnumerable<T>, ICollection<T>>.Instance,
+            Any<IEnumerable<T>, ICollection<T>>.Instance
         ),
         DefaultOperators,
         options,
@@ -85,7 +87,7 @@ public sealed class EnumerableFilter<T> : FilterWidget<IEnumerable<T>>
     }
     public override Vector2 GetSize()
     {
-        if (_FilterExpression.IsActive == false)
+        if (_FilterExpression.IsEmpty)
         {
             return Text.CalcSize(_FilterExpression.Operator.ToString());
         }
@@ -103,7 +105,7 @@ public sealed class EnumerableFilter<T> : FilterWidget<IEnumerable<T>>
         if
         (
             Verse.Widgets.ButtonTextSubtle(
-                _FilterExpression.IsActive == false
+                _FilterExpression.IsEmpty
                     ? rect
                     : rect.CutByX(Text.CalcSize(opStr).x * 1.3f),// Bad performance.
                 opStr
@@ -113,7 +115,7 @@ public sealed class EnumerableFilter<T> : FilterWidget<IEnumerable<T>>
             Find.WindowStack.Add(OperatorsMenu);
         }
 
-        if (_FilterExpression.IsActive)
+        if (_FilterExpression.IsEmpty == false)
         {
             _OptionsWindow.windowRect.x = UI.GUIToScreenRect(rect).xMax;
             _OptionsWindow.windowRect.y = UI.GUIToScreenRect(rect).y;

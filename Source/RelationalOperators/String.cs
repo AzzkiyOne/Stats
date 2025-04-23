@@ -3,22 +3,24 @@ using System.Linq;
 
 namespace Stats.RelationalOperators;
 
-public sealed class Contains : RelationalOperator<string>
+public sealed class ContainsAnyOf : RelationalOperator<string, string>
 {
-    private Contains() { }
+    private ContainsAnyOf() { }
     public override bool Eval(string lhs, string rhs) =>
         rhs
         .Split(',')
         .Any(s => lhs.Contains(s, StringComparison.CurrentCultureIgnoreCase));
     public override string ToString() => "~=";
-    public static RelationalOperator<string> Instance { get; } = new Contains();
+    public static RelationalOperator<string, string> Instance { get; } =
+        new ContainsAnyOf();
 }
 
-public sealed class ContainsNot : RelationalOperator<string>
+public sealed class NotContainsAnyOf : RelationalOperator<string, string>
 {
-    private ContainsNot() { }
+    private NotContainsAnyOf() { }
     public override bool Eval(string lhs, string rhs) =>
-        Contains.Instance.Eval(lhs, rhs) == false;
+        ContainsAnyOf.Instance.Eval(lhs, rhs) == false;
     public override string ToString() => "!~=";
-    public static RelationalOperator<string> Instance { get; } = new ContainsNot();
+    public static RelationalOperator<string, string> Instance { get; } =
+        new NotContainsAnyOf();
 }

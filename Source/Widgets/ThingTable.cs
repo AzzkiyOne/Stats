@@ -12,7 +12,7 @@ internal sealed class ThingTable
     private const int SortDirectionDescending = -1;
     private const float cellPadHor = 15f;
     private const float cellPadVer = 5f;
-    private readonly List<FilterExpression> FlterExpressions = [];
+    private readonly HashSet<FilterExpression> ActiveFlterExpressions;
     private readonly Table Table;
     private bool ShouldApplyFilters = false;
     public ThingTable(TableDef tableDef)
@@ -24,6 +24,7 @@ internal sealed class ThingTable
         var headerRows = new List<TableRow>();
         var headerRow = new TableRow(DrawHeaderRowBG);
         var filtersRow = new TableRow(DrawFiltersRowBG);
+        ActiveFlterExpressions = new(columnDefs.Count);
 
         foreach (var columnDef in columnDefs)
         {
@@ -33,8 +34,7 @@ internal sealed class ThingTable
             headerRow.Cells.Add(CreateHeaderCell(columnDef, column));
             filtersRow.Cells.Add(CreateFilterCell(columnDef, out var filterExpression));
 
-            FlterExpressions.Add(filterExpression);
-            filterExpression.OnChange += ScheduleFiltersApplication;
+            filterExpression.OnChange += HandleFilterExpressionChange;
         }
 
         headerRows.Add(headerRow);
@@ -209,8 +209,17 @@ internal sealed class ThingTable
             ) * SortDirection
         );
     }
-    private void ScheduleFiltersApplication(FilterExpression flterExpression)
+    private void HandleFilterExpressionChange(FilterExpression filterExpression)
     {
+        if (filterExpression.IsEmpty)
+        {
+            ActiveFlterExpressions.Remove(filterExpression);
+        }
+        else
+        {
+            ActiveFlterExpressions.Add(filterExpression);
+        }
+
         ShouldApplyFilters = true;
     }
     private void ApplyFilters()
@@ -219,21 +228,19 @@ internal sealed class ThingTable
         // re-aplly filters when a row is unselected.
         foreach (TableRow<ThingAlike> row in Table.BodyRows)
         {
-            row.IsHidden = !RowPassesFilters(row, FlterExpressions);
+            row.IsHidden = !RowPassesFilters(row, ActiveFlterExpressions);
         }
 
         ShouldApplyFilters = false;
     }
     private static bool RowPassesFilters(
         TableRow<ThingAlike> row,
-        List<FilterExpression> flterExpressions
+        HashSet<FilterExpression> flterExpressions
     )
     {
-        // Why to evaluate all filter expressions? We can make a list of "active"
-        // filter expressions and only evaluate those.
         foreach (var flterExpression in flterExpressions)
         {
-            if (flterExpression.Match(row.Id) == false)
+            if (flterExpression.Eval(row.Id) == false)
             {
                 return false;
             }
@@ -243,9 +250,17 @@ internal sealed class ThingTable
     }
     public void ResetFilters()
     {
-        foreach (var flterExpression in FlterExpressions)
+        if (ActiveFlterExpressions.Count == 0)
         {
-            flterExpression.Reset();
+            return;
         }
+
+        foreach (var flterExpression in ActiveFlterExpressions)
+        {
+            flterExpression.Reset(true);
+        }
+
+        ActiveFlterExpressions.Clear();
+        ShouldApplyFilters = true;
     }
 }

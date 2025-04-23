@@ -3,20 +3,23 @@ using Stats.RelationalOperators;
 
 namespace Stats;
 
+// RelationalExpression? It is only used in table filters, but is it that specific?
 public abstract class FilterExpression
 {
-    public abstract bool IsActive { get; }
+    public abstract bool IsEmpty { get; }
     public abstract event Action<FilterExpression> OnChange;
-    public abstract bool Match(ThingAlike thing);
-    public abstract void Reset();
+    public abstract bool Eval(ThingAlike thing);
+    public abstract void Reset(bool silent = false);
+    // Clear?
+    public abstract void NotifyChanged();
 }
 
-public sealed class FilterExpression<T> : FilterExpression where T : notnull
+public sealed class FilterExpression<Lhs, Rhs> : FilterExpression where Rhs : notnull
 {
-    private readonly Func<ThingAlike, T> ValueFunction;
-    private readonly T InitialValue;
-    private T _Value;
-    public T Value
+    private readonly Func<ThingAlike, Lhs> LhsValueFunction;
+    private readonly Rhs InitialValue;
+    private Rhs _Value;
+    public Rhs Value
     {
         get => _Value;
         set
@@ -30,9 +33,9 @@ public sealed class FilterExpression<T> : FilterExpression where T : notnull
             OnChange?.Invoke(this);
         }
     }
-    private readonly RelationalOperator<T> InitialOperator;
-    private RelationalOperator<T> _Operator;
-    public RelationalOperator<T> Operator
+    private readonly RelationalOperator<Lhs, Rhs> InitialOperator;
+    private RelationalOperator<Lhs, Rhs> _Operator;
+    public RelationalOperator<Lhs, Rhs> Operator
     {
         get => _Operator;
         set
@@ -47,46 +50,53 @@ public sealed class FilterExpression<T> : FilterExpression where T : notnull
         }
     }
     public override event Action<FilterExpression>? OnChange;
-    private readonly RelationalOperator<T> InactiveStateOperator;
+    private readonly RelationalOperator<Lhs, Rhs> InactiveStateOperator;
     // IsConstant/True?
-    public override bool IsActive => _Operator != InactiveStateOperator;
+    public override bool IsEmpty => _Operator == InactiveStateOperator;
     public FilterExpression(
-        // LhsValue?
-        Func<ThingAlike, T> valueFunction,
-        T initialValue,
-        RelationalOperator<T> initialOperator,
-        RelationalOperator<T> inactiveStateOperator
+        Func<ThingAlike, Lhs> lhsValueFunction,
+        Rhs initialValue,
+        RelationalOperator<Lhs, Rhs> initialOperator,
+        RelationalOperator<Lhs, Rhs> inactiveStateOperator
     )
     {
         _Value = InitialValue = initialValue;
         _Operator = InitialOperator = initialOperator;
         InactiveStateOperator = inactiveStateOperator;
-        ValueFunction = valueFunction;
+        LhsValueFunction = lhsValueFunction;
     }
     // Use this to avoid emitting 2 events when setting both props.
-    public void Set(T value, RelationalOperator<T> @operator)
+    public void Set(Rhs value, RelationalOperator<Lhs, Rhs> @operator, bool silent = false)
     {
         if (_Value.Equals(value) == false || _Operator != @operator)
         {
             _Value = value;
             _Operator = @operator;
-            OnChange?.Invoke(this);
+
+            if (silent == false)
+            {
+                OnChange?.Invoke(this);
+            }
         }
     }
     // Eval?
-    public override bool Match(ThingAlike thing)
+    public override bool Eval(ThingAlike thing)
     {
         try
         {
-            return Operator.Eval(ValueFunction(thing), _Value);
+            return Operator.Eval(LhsValueFunction(thing), _Value);
         }
         catch
         {
             return false;
         }
     }
-    public override void Reset()
+    public override void Reset(bool silent = false)
     {
         Set(InitialValue, InitialOperator);
+    }
+    public override void NotifyChanged()
+    {
+        OnChange?.Invoke(this);
     }
 }

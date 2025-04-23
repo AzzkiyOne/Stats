@@ -8,16 +8,23 @@ namespace Stats.Widgets.FilterWidgets;
 public sealed class BooleanFilter : FilterWidget
 {
     protected override Vector2 Size { get; set; }
-    private readonly FilterExpression<bool> _FilterExpression;
+    private readonly FilterExpression<bool, bool> _FilterExpression;
     public override FilterExpression FilterExpression => _FilterExpression;
-    public BooleanFilter(FilterExpression<bool> filterExpression)
+    public BooleanFilter(FilterExpression<bool, bool> filterExpression)
     {
         _FilterExpression = filterExpression;
         Size = GetSize();
         filterExpression.OnChange += HandleThingMatcherChange;
     }
     public BooleanFilter(Func<ThingAlike, bool> valueFunc)
-        : this(new FilterExpression<bool>(valueFunc, true, Any<bool>.Instance, Any<bool>.Instance))
+        : this(
+              new FilterExpression<bool, bool>(
+                  valueFunc,
+                  true,
+                  Any<bool, bool>.Instance,
+                  Any<bool, bool>.Instance
+              )
+        )
     {
     }
     private void HandleThingMatcherChange(FilterExpression _)
@@ -26,7 +33,7 @@ public sealed class BooleanFilter : FilterWidget
     }
     public override Vector2 GetSize()
     {
-        if (_FilterExpression.IsActive == false)
+        if (_FilterExpression.IsEmpty)
         {
             return Text.CalcSize(_FilterExpression.Operator.ToString());
         }
@@ -37,10 +44,10 @@ public sealed class BooleanFilter : FilterWidget
     {
         switch (_FilterExpression)
         {
-            case { IsActive: false }:
+            case { IsEmpty: true }:
                 if (Verse.Widgets.ButtonTextSubtle(rect, _FilterExpression.Operator.ToString()))
                 {
-                    _FilterExpression.Set(true, Eq<bool>.Instance);
+                    _FilterExpression.Set(true, Equals<bool, bool>.Instance);
                 }
                 break;
             case { Value: true }:

@@ -6,28 +6,28 @@ using Verse;
 
 namespace Stats.Widgets.FilterWidgets;
 
-public sealed class StringFilter : FilterWidgetWithInputField<string>
+public sealed class StringFilter : FilterWidgetWithInputField<string, string>
 {
-    private static readonly RelationalOperator<string>[] DefaultOperators =
+    private static readonly RelationalOperator<string, string>[] DefaultOperators =
         [
-            Any<string>.Instance,
-            Contains.Instance,
-            ContainsNot.Instance,
+            Any<string, string>.Instance,
+            ContainsAnyOf.Instance,
+            NotContainsAnyOf.Instance,
         ];
     private const string Description = "Use \",\" to search by multiple terms.";
     public StringFilter(
-        FilterExpression<string> filterExpression,
-        IEnumerable<RelationalOperator<string>> operators
+        FilterExpression<string, string> filterExpression,
+        IEnumerable<RelationalOperator<string, string>> operators
     ) : base(filterExpression, operators)
     {
     }
     public StringFilter(Func<ThingAlike, string> valueFunc)
         : this(
-            new FilterExpression<string>(
+            new FilterExpression<string, string>(
                 valueFunc,
                 "",
-                Any<string>.Instance,
-                Any<string>.Instance
+                Any<string, string>.Instance,
+                Any<string, string>.Instance
             ),
             DefaultOperators
         )

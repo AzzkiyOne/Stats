@@ -29,16 +29,16 @@ internal sealed class TableSelector : WidgetWrapper
         Widget = new HorizontalContainer(
             [
                 new Icon(CurTableDef.Icon, out IconWidget)
-                    .PaddingAbs(3f)
+                    .PaddingAbs(Globals.UI.PadXs)
                     .SizeAbs(MainTabWindow.TitleBarHeight)
                     .Color(CurTableDef.IconColor, out IconColorExtension),
                 new Label(CurTableDef.LabelCap, out LabelWidget)
                     .HeightAbs(MainTabWindow.TitleBarHeight)
                     .TextAnchor(TextAnchor.MiddleLeft),
             ],
-            GenUI.Pad
+            Globals.UI.Pad
         )
-        .PaddingAbs(GenUI.Pad, 0f)
+        .PaddingAbs(Globals.UI.Pad, 0f)
         .Background(Verse.Widgets.LightHighlight, TexUI.HighlightTex)
         .OnClick(ShowMenu);
 

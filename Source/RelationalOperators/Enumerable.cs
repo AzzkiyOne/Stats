@@ -3,24 +3,26 @@ using System.Linq;
 
 namespace Stats.RelationalOperators;
 
-public sealed class Contains_Any<T> : RelationalOperator<IEnumerable<T>>
+public sealed class ContainsAnyElementOf<Lhs, Rhs, ItemType> : RelationalOperator<Lhs, Rhs>
+    where Lhs : IEnumerable<ItemType>
+    where Rhs : IEnumerable<ItemType>
 {
-    private Contains_Any() { }
-    public override bool Eval(IEnumerable<T> lhs, IEnumerable<T> rhs) =>
-        rhs.Any(item => lhs.Contains(item));
+    private ContainsAnyElementOf() { }
+    public override bool Eval(Lhs lhs, Rhs rhs) => rhs.Any(lhs.Contains);
     public override string ToString() => "[Any]";
-    public static RelationalOperator<IEnumerable<T>> Instance { get; } =
-        new Contains_Any<T>();
+    public static RelationalOperator<Lhs, Rhs> Instance { get; } =
+        new ContainsAnyElementOf<Lhs, Rhs, ItemType>();
 }
 
-public sealed class Contains_All<T> : RelationalOperator<IEnumerable<T>>
+public sealed class ContainsAllElementsOf<Lhs, Rhs, ItemType> : RelationalOperator<Lhs, Rhs>
+    where Lhs : IEnumerable<ItemType>
+    where Rhs : IEnumerable<ItemType>
 {
-    private Contains_All() { }
-    public override bool Eval(IEnumerable<T> lhs, IEnumerable<T> rhs) =>
-        rhs.All(item => lhs.Contains(item));
+    private ContainsAllElementsOf() { }
+    public override bool Eval(Lhs lhs, Rhs rhs) => rhs.All(lhs.Contains);
     public override string ToString() => "[All]";
-    public static RelationalOperator<IEnumerable<T>> Instance { get; } =
-        new Contains_All<T>();
+    public static RelationalOperator<Lhs, Rhs> Instance { get; } =
+        new ContainsAllElementsOf<Lhs, Rhs, ItemType>();
 }
 
 // "Contains only" op?

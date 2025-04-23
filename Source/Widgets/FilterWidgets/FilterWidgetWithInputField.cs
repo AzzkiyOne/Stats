@@ -5,18 +5,18 @@ using Verse;
 
 namespace Stats.Widgets.FilterWidgets;
 
-public abstract class FilterWidgetWithInputField<T> : FilterWidget<T>
-    where T : notnull
+public abstract class FilterWidgetWithInputField<Lhs, Rhs> : FilterWidget<Lhs, Rhs>
+    where Rhs : notnull, Lhs
 {
     public FilterWidgetWithInputField(
-        FilterExpression<T> filterExpression,
-        IEnumerable<RelationalOperator<T>> operators
+        FilterExpression<Lhs, Rhs> filterExpression,
+        IEnumerable<RelationalOperator<Lhs, Rhs>> operators
     ) : base(filterExpression, operators)
     {
     }
     public override Vector2 GetSize()
     {
-        if (_FilterExpression.IsActive == false)
+        if (_FilterExpression.IsEmpty)
         {
             return Text.CalcSize(_FilterExpression.Operator.ToString());
         }
@@ -24,7 +24,7 @@ public abstract class FilterWidgetWithInputField<T> : FilterWidget<T>
         var size = Text.CalcSize(
             _FilterExpression.Operator.ToString() + _FilterExpression.Value
         );
-        size.x += Constants.EstimatedInputFieldInnerPadding * 2f;
+        size.x += Globals.UI.EstimatedInputFieldInnerPadding * 2f;
 
         return size;
     }
@@ -33,7 +33,7 @@ public abstract class FilterWidgetWithInputField<T> : FilterWidget<T>
         if
         (
             Verse.Widgets.ButtonTextSubtle(
-                _FilterExpression.IsActive == false
+                _FilterExpression.IsEmpty
                     ? rect
                     : rect.CutByX(rect.height),
                 _FilterExpression.Operator.ToString()
@@ -43,7 +43,7 @@ public abstract class FilterWidgetWithInputField<T> : FilterWidget<T>
             Find.WindowStack.Add(OperatorsMenu);
         }
 
-        if (_FilterExpression.IsActive)
+        if (_FilterExpression.IsEmpty == false)
         {
             DrawInputField(rect);
         }
