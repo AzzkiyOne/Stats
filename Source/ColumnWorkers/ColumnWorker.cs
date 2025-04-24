@@ -15,11 +15,11 @@ public abstract class ColumnWorker
     public abstract int Compare(ThingAlike thing1, ThingAlike thing2);
 }
 
-public abstract class ColumnWorker<ValueType> : ColumnWorker
+public abstract class ColumnWorker<T> : ColumnWorker
 {
-    private readonly Dictionary<ThingAlike, ValueType> ValuesCache = [];
-    protected abstract ValueType GetValue(ThingAlike thing);
-    public ValueType GetValueCached(ThingAlike thing)
+    private readonly Dictionary<ThingAlike, T> ValuesCache = [];
+    protected abstract T GetValue(ThingAlike thing);
+    public T GetValueCached(ThingAlike thing)
     {
         var wasValueCached = ValuesCache.TryGetValue(
             thing,
@@ -46,14 +46,11 @@ public abstract class ColumnWorker<ValueType> : ColumnWorker
 
         return cachedValue;
     }
-    protected virtual bool ShouldShowValue(ValueType value)
+    protected virtual bool ShouldShowValue(T value)
     {
         return value != null;
     }
-    protected abstract Widget GetTableCellContent(
-        ValueType value,
-        ThingAlike thing
-    );
+    protected abstract Widget GetTableCellContent(T value, ThingAlike thing);
     public override Widget? GetTableCellWidget(ThingAlike thing)
     {
         var value = GetValueCached(thing);

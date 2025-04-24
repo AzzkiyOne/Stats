@@ -23,7 +23,7 @@ public sealed class NameColumnWorker : StringColumnWorker
                 new ThingIcon(thing).ToButtonSubtle(openDefInfoDialog),
                 new Label(value),
             ],
-            Globals.UI.Pad
+            Globals.GUI.Pad
         ).Tooltip(thing.Def.description);
     }
 }

@@ -21,7 +21,7 @@ public sealed class BorderBottomWidgetExtension : WidgetExtension
         {
             Verse.Widgets.DrawBoxSolid(
                 rect with { y = rect.yMax - Thickness, height = Thickness },
-                Color
+                Color with { a = Color.a * Globals.GUI.opacity }
             );
         }
 

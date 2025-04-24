@@ -72,7 +72,7 @@ public sealed class ThingIcon : WidgetBase
 
         rect.position += Offset * rect.size;
         var origGUIColor = GUI.color;
-        GUI.color = Color;
+        GUI.color = Color with { a = Color.a * Globals.GUI.opacity };
         Verse.Widgets.DrawTextureFitted(
             rect,
             Texture,

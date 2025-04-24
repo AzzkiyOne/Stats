@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using RimWorld;
 using Stats.RelationalOperators;
 using UnityEngine;
 using Verse;
+using Verse.Sound;
 
 namespace Stats.Widgets.FilterWidgets;
 
@@ -11,169 +13,170 @@ public sealed class EnumerableFilter<T> : FilterWidget<IEnumerable<T>, ICollecti
 {
     private static readonly RelationalOperator<IEnumerable<T>, ICollection<T>>[] DefaultOperators =
         [
-            Any<IEnumerable<T>, ICollection<T>>.Instance,
             ContainsAnyElementOf<IEnumerable<T>, ICollection<T>, T>.Instance,
             ContainsAllElementsOf<IEnumerable<T>, ICollection<T>, T>.Instance,
         ];
     private readonly IEnumerable<T> Options;
     private readonly Func<T, Widget> MakeOptionWidget;
-    private readonly OptionsWindow _OptionsWindow;
+    private readonly OptionsWindowWidget OptionsWindow;
+    private string SelectedItemsCountString;
     public EnumerableFilter(
-        FilterExpression<IEnumerable<T>, ICollection<T>> filterExpression,
+        FilterExpression<IEnumerable<T>, ICollection<T>> value,
         IEnumerable<RelationalOperator<IEnumerable<T>, ICollection<T>>> operators,
         IEnumerable<T> options,
         Func<T, Widget> makeOptionWidget
-    ) : base(filterExpression, operators)
+    ) : base(value, operators)
     {
         Options = options;
         MakeOptionWidget = makeOptionWidget;
-
-        var optionWidgets = new List<Widget>();
-
-        foreach (var option in options)
-        {
-            var optionWidget = MakeOptionWidget(option)
-                .PaddingAbs(Globals.UI.PadSm, Globals.UI.PadXs)
-                .WidthRel(1f)
-                .HoverBackground(TexUI.HighlightTex)
-                .OnClick(() =>
-                {
-                    if (filterExpression.Value.Contains(option))
-                    {
-                        filterExpression.Value.Remove(option);
-                    }
-                    else
-                    {
-                        filterExpression.Value.Add(option);
-                    }
-
-                    filterExpression.NotifyChanged();
-                })
-                .Background(rect =>
-                {
-                    if (Event.current.type == EventType.Repaint)
-                    {
-                        if (filterExpression.Value.Contains(option))
-                        {
-                            Verse.Widgets.DrawHighlightSelected(rect);
-                        }
-
-                        Verse.Widgets.DrawLineHorizontal(rect.x, rect.yMax - 1f, rect.width, Verse.Widgets.SeparatorLineColor);
-                    }
-                });
-
-            optionWidgets.Add(optionWidget);
-        }
-
-        Widget optionsContainer = new VerticalContainer(optionWidgets);
-        _OptionsWindow = new OptionsWindow(optionsContainer);
+        OptionsWindow = new OptionsWindowWidget(options, makeOptionWidget, value);
+        SelectedItemsCountString = value.Rhs.Count.ToString();
     }
     public EnumerableFilter(
-        Func<ThingAlike, IEnumerable<T>> valueFunc,
+        Func<ThingAlike, IEnumerable<T>> lhs,
         IEnumerable<T> options,
         Func<T, Widget> makeOptionWidget
     ) : this(
-        new FilterExpression<IEnumerable<T>, ICollection<T>>(
-            valueFunc,
-            [],
-            Any<IEnumerable<T>, ICollection<T>>.Instance,
-            Any<IEnumerable<T>, ICollection<T>>.Instance
-        ),
+        new FilterExpression<IEnumerable<T>, ICollection<T>>(lhs, []),
         DefaultOperators,
         options,
         makeOptionWidget
     )
     {
     }
-    public override Vector2 GetSize()
+    protected override Vector2 CalcInputFieldSize()
     {
-        if (_FilterExpression.IsEmpty)
-        {
-            return Text.CalcSize(_FilterExpression.Operator.ToString());
-        }
+        var size = Text.CalcSize(SelectedItemsCountString);
+        size.x *= 1.3f;
 
-        var size = Text.CalcSize(
-            _FilterExpression.Operator.ToString() + _FilterExpression.Value.Count()
-        );
-
-        return size with { x = size.x * 1.3f };
+        return size;
     }
-    protected override void DrawContent(Rect rect)
+    protected override void DrawInputField(Rect rect)
     {
-        var opStr = _FilterExpression.Operator.ToString();
-
-        if
-        (
-            Verse.Widgets.ButtonTextSubtle(
-                _FilterExpression.IsEmpty
-                    ? rect
-                    : rect.CutByX(Text.CalcSize(opStr).x * 1.3f),// Bad performance.
-                opStr
-            )
-        )
+        if (Verse.Widgets.ButtonTextSubtle(rect, SelectedItemsCountString))
         {
-            Find.WindowStack.Add(OperatorsMenu);
+            Find.WindowStack.Add(OptionsWindow);
         }
+    }
+    protected override void HandleValueChange(FilterExpression value)
+    {
+        SelectedItemsCountString = _Value.Rhs.Count.ToString();
 
-        if (_FilterExpression.IsEmpty == false)
-        {
-            _OptionsWindow.windowRect.x = UI.GUIToScreenRect(rect).xMax;
-            _OptionsWindow.windowRect.y = UI.GUIToScreenRect(rect).y;
-
-            // !!! Count().ToString() will produce temporary string objects.
-            if (Verse.Widgets.ButtonTextSubtle(rect, _FilterExpression.Value.Count().ToString()))
-            {
-                Find.WindowStack.Add(_OptionsWindow);
-            }
-        }
+        base.HandleValueChange(value);
     }
     public override FilterWidget Clone()
     {
-        return new EnumerableFilter<T>(
-            _FilterExpression,
-            DefaultOperators,
-            Options,
-            MakeOptionWidget
-        );
+        return new EnumerableFilter<T>(_Value, DefaultOperators, Options, MakeOptionWidget);
     }
 
-    private sealed class OptionsWindow
-        : Window
+    private sealed class OptionsWindowWidget : Window
     {
         protected override float Margin => 0f;
-        public override Vector2 InitialSize => Widget.GetSize();
-        private readonly Widget Widget;
-        public OptionsWindow(Widget widget)
+        public override Vector2 InitialSize => OptionsList.GetSize();
+        private readonly Widget OptionsList;
+        private static readonly Color BorderColor = Verse.Widgets.SeparatorLineColor;
+        public OptionsWindowWidget(
+            IEnumerable<T> options,
+            Func<T, Widget> makeOptionWidget,
+            FilterExpression<IEnumerable<T>, ICollection<T>> value
+        )
         {
-            Widget = widget;
             doWindowBackground = false;
             drawShadow = false;
-            windowRect = new Rect(Vector2.zero, InitialSize);
+            closeOnClickedOutside = true;
+
+            var optionWidgets = new List<Widget>(options.Count());
+
+            foreach (var option in options)
+            {
+                var optionWidget = makeOptionWidget(option)
+                    .PaddingAbs(Globals.GUI.PadSm, Globals.GUI.PadXs)
+                    .WidthRel(1f)
+                    .BorderBottom(1f, BorderColor)
+                    .Background(rect =>
+                    {
+                        if (Event.current.type == EventType.Repaint)
+                        {
+                            if (value.Rhs.Contains(option))
+                            {
+                                Verse.Widgets.DrawHighlightSelected(rect);
+                            }
+                        }
+                    })
+                    .HoverBackground(FloatMenuOption.ColorBGActiveMouseover)
+                    .OnClick(() =>
+                    {
+                        if (value.Rhs.Contains(option))
+                        {
+                            value.Rhs.Remove(option);
+                        }
+                        else
+                        {
+                            value.Rhs.Add(option);
+                        }
+
+                        value.NotifyChanged();
+                    });
+
+                optionWidgets.Add(optionWidget);
+            }
+
+            OptionsList = new VerticalContainer(optionWidgets);
         }
         public override void DoWindowContents(Rect rect)
         {
-            Verse.Widgets.DrawBoxSolid(rect, Verse.Widgets.WindowBGFillColor);
-            Verse.Widgets.DrawLineHorizontal(rect.x, rect.y, rect.width, Verse.Widgets.SeparatorLineColor);
-            VerticalLine.Draw(rect.x, rect.y, rect.height, Verse.Widgets.SeparatorLineColor);
-            VerticalLine.Draw(rect.xMax - 1f, rect.y, rect.height, Verse.Widgets.SeparatorLineColor);
+            var origGUIOpacity = Globals.GUI.opacity;
+            var origGUIColor = GUI.color;
+            var fadeRect = rect.ContractedBy(-5f);
 
-            Widget.DrawIn(rect);
+            if (fadeRect.Contains(Event.current.mousePosition) == false)
+            {
+                var mouseDistanceFromFadeRect = GenUI.DistFromRect(
+                    fadeRect,
+                    Event.current.mousePosition
+                );
+
+                Globals.GUI.opacity = 1f - mouseDistanceFromFadeRect / 95f;
+                GUI.color = GUI.color with { a = GUI.color.a * Globals.GUI.opacity };
+
+                if (mouseDistanceFromFadeRect > 95f)
+                {
+                    Close(doCloseSound: false);
+                    SoundDefOf.FloatMenu_Cancel.PlayOneShotOnCamera();
+                    Find.WindowStack.TryRemove(this);
+                }
+            }
+
+            var backgroundColor = Verse.Widgets.WindowBGFillColor;
+            backgroundColor.a *= Globals.GUI.opacity;
+            Verse.Widgets.DrawBoxSolid(rect, backgroundColor);
+
+            OptionsList.Draw(rect, rect.size);
+
+            var borderColor = BorderColor;
+            borderColor.a *= Globals.GUI.opacity;
+            Verse.Widgets.DrawLineHorizontal(rect.x, rect.y, rect.width, borderColor);
+            VerticalLine.Draw(rect.x, rect.y, rect.height, borderColor);
+            VerticalLine.Draw(rect.xMax - 1f, rect.y, rect.height, borderColor);
+
+            Globals.GUI.opacity = origGUIOpacity;
+            GUI.color = origGUIColor;
         }
         protected override void SetInitialSizeAndPosition()
         {
-            //Vector2 pos = UI.MousePositionOnUIInverted;
+            Vector2 position = UI.MousePositionOnUIInverted;
 
-            //if (pos.x + InitialSize.x > UI.screenWidth)
-            //{
-            //    pos.x = UI.screenWidth - InitialSize.x;
-            //}
+            if (position.x + InitialSize.x > UI.screenWidth)
+            {
+                position.x = UI.screenWidth - InitialSize.x;
+            }
 
-            //if (pos.y + InitialSize.y > UI.screenHeight)
-            //{
-            //    pos.y = UI.screenHeight - InitialSize.y;
-            //}
+            if (position.y + InitialSize.y > UI.screenHeight)
+            {
+                position.y = UI.screenHeight - InitialSize.y;
+            }
 
-            //windowRect = new Rect(pos.x, pos.y, InitialSize.x, InitialSize.y);
+            windowRect = new Rect(position, InitialSize);
         }
     }
 }

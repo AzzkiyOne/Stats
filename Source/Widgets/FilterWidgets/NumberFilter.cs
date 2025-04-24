@@ -5,46 +5,37 @@ using UnityEngine;
 
 namespace Stats.Widgets.FilterWidgets;
 
-public sealed class NumberFilter<T> : FilterWidgetWithInputField<T, T>
+public sealed class NumberFilter<T> : FilterWidget<T, T>
     where T : struct, IEquatable<T>, IComparable<T>
 {
     private static readonly RelationalOperator<T, T>[] DefaultOperators =
         [
-            Any<T, T>.Instance,
-            Equals<T, T>.Instance,
-            NotEquals<T, T>.Instance,
+            EqualTo<T, T>.Instance,
+            NotEqualTo<T, T>.Instance,
             GreaterThan<T, T>.Instance,
             LesserThan<T, T>.Instance,
-            GreaterThanOrEquals<T, T>.Instance,
-            LesserThanOrEquals<T, T>.Instance,
+            GreaterThanOrEqualTo<T, T>.Instance,
+            LesserThanOrEqualTo<T, T>.Instance,
         ];
-    private string ValueStrBuffer = "";
+    private string TextFieldStringBuffer = "";
     public NumberFilter(
-        FilterExpression<T, T> filterExpression,
+        FilterExpression<T, T> value,
         IEnumerable<RelationalOperator<T, T>> operators
-    ) : base(filterExpression, operators)
+    ) : base(value, operators)
     {
     }
-    public NumberFilter(Func<ThingAlike, T> valueFunc)
-        : this(
-            new FilterExpression<T, T>(
-                valueFunc,
-                default,
-                Any<T, T>.Instance,
-                Any<T, T>.Instance
-            ),
-            DefaultOperators
-        )
+    public NumberFilter(Func<ThingAlike, T> lhs)
+        : this(new FilterExpression<T, T>(lhs, default), DefaultOperators)
     {
     }
     protected override void DrawInputField(Rect rect)
     {
-        var value = _FilterExpression.Value;
-        Verse.Widgets.TextFieldNumeric(rect, ref value, ref ValueStrBuffer);
-        _FilterExpression.Value = value;
+        var value = _Value.Rhs;
+        Verse.Widgets.TextFieldNumeric(rect, ref value, ref TextFieldStringBuffer);
+        _Value.Rhs = value;
     }
     public override FilterWidget Clone()
     {
-        return new NumberFilter<T>(_FilterExpression, DefaultOperators);
+        return new NumberFilter<T>(_Value, DefaultOperators);
     }
 }

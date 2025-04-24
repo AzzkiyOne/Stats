@@ -39,7 +39,7 @@ public sealed class EquippedStatOffsetsColumnWorker : NumberColumnWorker<float>
                     .WidthRel(1f)
                     .TextAnchor(TextAnchor.LowerRight),
             ],
-            Globals.UI.Pad,
+            Globals.GUI.Pad,
             true
         );
     }

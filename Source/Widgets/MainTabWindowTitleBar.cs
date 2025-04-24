@@ -18,13 +18,13 @@ internal sealed class MainTabWindowTitleBar : WidgetWrapper
         "- Click on a row to select/deselect it.\n" +
         "  - You can select multiple rows.\n" +
         "  - Selected rows are unaffected by filters.";
-    private const float IconPadding = Globals.UI.PadXs;
+    private const float IconPadding = Globals.GUI.PadXs;
     public MainTabWindowTitleBar(
         Widget tableSelector,
         Action resetWindow,
         Action expandWindow,
         Action closeWindow,
-        Action resetTableFilters
+        Action clearTableFilters
     )
     {
         Widget = new HorizontalContainer(
@@ -32,8 +32,8 @@ internal sealed class MainTabWindowTitleBar : WidgetWrapper
                 tableSelector.PaddingRel(0f, 1f, 0f, 0f),
                 ToToolbarIcon(
                     new Icon(TexUI.RotRightTex),
-                    resetTableFilters,
-                    "Reset filters"
+                    clearTableFilters,
+                    "Clear filters"
                 ),
                 ToToolbarIcon(
                     new Icon(HoldToDragTex),
@@ -60,7 +60,7 @@ internal sealed class MainTabWindowTitleBar : WidgetWrapper
                     IconPadding + 2f
                 ),
             ],
-            Globals.UI.Pad,
+            Globals.GUI.Pad,
             true
         )
         .BorderBottom(1f, MainTabWindow.BorderLineColor)

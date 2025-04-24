@@ -8,64 +8,65 @@ namespace Stats.Widgets.FilterWidgets;
 public sealed class BooleanFilter : FilterWidget
 {
     protected override Vector2 Size { get; set; }
-    private readonly FilterExpression<bool, bool> _FilterExpression;
-    public override FilterExpression FilterExpression => _FilterExpression;
-    public BooleanFilter(FilterExpression<bool, bool> filterExpression)
+    private readonly FilterExpression<bool, bool> _Value;
+    public override FilterExpression Value => _Value;
+    private Action<Rect> DrawValue;
+    public BooleanFilter(FilterExpression<bool, bool> value)
     {
-        _FilterExpression = filterExpression;
+        _Value = value;
         Size = GetSize();
-        filterExpression.OnChange += HandleThingMatcherChange;
+        DrawValue = DrawEmpty;
+
+        value.OnChange += HandleValueChange;
     }
-    public BooleanFilter(Func<ThingAlike, bool> valueFunc)
-        : this(
-              new FilterExpression<bool, bool>(
-                  valueFunc,
-                  true,
-                  Any<bool, bool>.Instance,
-                  Any<bool, bool>.Instance
-              )
-        )
+    public BooleanFilter(Func<ThingAlike, bool> lhs)
+        : this(new FilterExpression<bool, bool>(lhs, true))
     {
     }
-    private void HandleThingMatcherChange(FilterExpression _)
+    private void HandleValueChange(FilterExpression _)
     {
+        DrawValue = _Value switch
+        {
+            { IsEmpty: true } => DrawEmpty,
+            { Rhs: true } => DrawTrue,
+            { Rhs: false } => DrawFalse,
+        };
+
         UpdateSize();
     }
     public override Vector2 GetSize()
     {
-        if (_FilterExpression.IsEmpty)
+        if (_Value.IsEmpty)
         {
-            return Text.CalcSize(_FilterExpression.Operator.ToString());
+            return Text.CalcSize(_Value.Operator.ToString());
         }
 
         return new Vector2(Text.LineHeight, Text.LineHeight);
     }
-    protected override void DrawContent(Rect rect)
+    protected override void DrawContent(Rect rect) => DrawValue(rect);
+    private void DrawEmpty(Rect rect)
     {
-        switch (_FilterExpression)
+        if (Verse.Widgets.ButtonTextSubtle(rect, _Value.Operator.ToString()))
         {
-            case { IsEmpty: true }:
-                if (Verse.Widgets.ButtonTextSubtle(rect, _FilterExpression.Operator.ToString()))
-                {
-                    _FilterExpression.Set(true, Equals<bool, bool>.Instance);
-                }
-                break;
-            case { Value: true }:
-                if (Verse.Widgets.ButtonImageFitted(rect, Verse.Widgets.CheckboxOnTex))
-                {
-                    _FilterExpression.Value = false;
-                }
-                break;
-            case { Value: false }:
-                if (Verse.Widgets.ButtonImageFitted(rect, Verse.Widgets.CheckboxOffTex))
-                {
-                    _FilterExpression.Reset();
-                }
-                break;
+            _Value.Set(true, EqualTo<bool, bool>.Instance);
+        }
+    }
+    private void DrawTrue(Rect rect)
+    {
+        if (Verse.Widgets.ButtonImageFitted(rect, Verse.Widgets.CheckboxOnTex))
+        {
+            _Value.Rhs = false;
+        }
+    }
+    private void DrawFalse(Rect rect)
+    {
+        if (Verse.Widgets.ButtonImageFitted(rect, Verse.Widgets.CheckboxOffTex))
+        {
+            _Value.Clear();
         }
     }
     public override FilterWidget Clone()
     {
-        return new BooleanFilter(_FilterExpression);
+        return new BooleanFilter(_Value);
     }
 }

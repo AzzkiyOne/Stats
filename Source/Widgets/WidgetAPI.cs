@@ -181,11 +181,21 @@ public static class WidgetAPI
     );
     public static HoverBackgroundWidgetExtension HoverBackground(
         this Widget widget,
-        Texture2D texture
+        Texture2D texture,
+        Color color
     ) => new(
         widget,
-        texture
+        texture,
+        color
     );
+    public static HoverBackgroundWidgetExtension HoverBackground(
+        this Widget widget,
+        Texture2D texture
+    ) => widget.HoverBackground(texture, UnityEngine.Color.white);
+    public static HoverBackgroundWidgetExtension HoverBackground(
+        this Widget widget,
+        Color color
+    ) => widget.HoverBackground(BaseContent.WhiteTex, color);
 
     // --- Color ---
 

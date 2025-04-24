@@ -1,6 +1,6 @@
 ﻿namespace Stats.RelationalOperators;
 
-public abstract class RelationalOperator<Lhs, Rhs>
+public abstract class RelationalOperator<TLhs, TRhs>
 {
-    public abstract bool Eval(Lhs lhs, Rhs rhs);
+    public abstract bool Eval(TLhs lhs, TRhs rhs);
 }

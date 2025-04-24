@@ -32,7 +32,7 @@ public sealed class MainTabWindow : RimWorld.MainTabWindow
             ResetWindow,
             ExpandOrCollapseWidow,
             () => Close(),
-            ResetCurTableFilters
+            ClearCurTableFilters
         ).WidthRel(1f);
     }
     public override void DoWindowContents(Rect rect)
@@ -101,8 +101,8 @@ public sealed class MainTabWindow : RimWorld.MainTabWindow
         base.PostClose();
         PreCloseRect = windowRect;
     }
-    private void ResetCurTableFilters()
+    private void ClearCurTableFilters()
     {
-        TableSelector.CurTableDef.Widget.ResetFilters();
+        TableSelector.CurTableDef.Widget.ClearFilters();
     }
 }

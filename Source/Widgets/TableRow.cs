@@ -119,11 +119,11 @@ internal class TableRow
     public delegate void OnDraw(Rect rect, bool isHovered, int index);
 }
 
-internal sealed class TableRow<IdType>
+internal sealed class TableRow<TId>
         : TableRow
 {
-    public IdType Id { get; }
-    public TableRow(OnDraw onDraw, IdType id)
+    public TId Id { get; }
+    public TableRow(OnDraw onDraw, TId id)
         : base(onDraw)
     {
         Id = id;

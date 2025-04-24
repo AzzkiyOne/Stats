@@ -13,7 +13,16 @@ public sealed class BackgroundWidgetExtension : WidgetExtension
     {
         if (Event.current.type == EventType.Repaint)
         {
-            GUI.DrawTexture(rect, Texture);
+            GUI.DrawTexture(
+                rect,
+                Texture,
+                ScaleMode.StretchToFill,
+                true,
+                0f,
+                GUI.color with { a = GUI.color.a * Globals.GUI.opacity },
+                0f,
+                0f
+            );
         }
 
         Widget.Draw(rect, containerSize);

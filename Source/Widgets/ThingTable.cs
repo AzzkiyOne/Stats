@@ -10,9 +10,10 @@ internal sealed class ThingTable
     private int SortDirection = SortDirectionDescending;
     private const int SortDirectionAscending = 1;
     private const int SortDirectionDescending = -1;
+    private static readonly Color SortIndicatorColor = Color.yellow.ToTransparent(0.3f);
     private const float cellPadHor = 15f;
     private const float cellPadVer = 5f;
-    private readonly HashSet<FilterExpression> ActiveFlterExpressions;
+    private readonly HashSet<FilterExpression> ActiveFilters;
     private readonly Table Table;
     private bool ShouldApplyFilters = false;
     public ThingTable(TableDef tableDef)
@@ -24,7 +25,7 @@ internal sealed class ThingTable
         var headerRows = new List<TableRow>();
         var headerRow = new TableRow(DrawHeaderRowBG);
         var filtersRow = new TableRow(DrawFiltersRowBG);
-        ActiveFlterExpressions = new(columnDefs.Count);
+        ActiveFilters = new(columnDefs.Count);
 
         foreach (var columnDef in columnDefs)
         {
@@ -32,9 +33,9 @@ internal sealed class ThingTable
             columns.Add(column);
 
             headerRow.Cells.Add(CreateHeaderCell(columnDef, column));
-            filtersRow.Cells.Add(CreateFilterCell(columnDef, out var filterExpression));
+            filtersRow.Cells.Add(CreateFilterCell(columnDef, out var filter));
 
-            filterExpression.OnChange += HandleFilterExpressionChange;
+            filter.OnChange += HandleFilterChange;
         }
 
         headerRows.Add(headerRow);
@@ -72,10 +73,7 @@ internal sealed class ThingTable
 
         Table.Draw(rect);
     }
-    private Widget CreateHeaderCell(
-        ColumnDef columnDef,
-        Table.Column column
-    )
+    private Widget CreateHeaderCell(ColumnDef columnDef, Table.Column column)
     {
         Widget cell;
 
@@ -101,19 +99,19 @@ internal sealed class ThingTable
 
         void drawSortIndicator(Rect rect)
         {
-            if
-            (
-                Event.current.type == EventType.Repaint
-                &&
-                SortColumn == columnDef
-            )
+            if (SortColumn == columnDef && Event.current.type == EventType.Repaint)
             {
-                Verse.Widgets.DrawBoxSolid(
-                    SortDirection == SortDirectionAscending
-                        ? rect.BottomPartPixels(5f)
-                        : rect.TopPartPixels(5f),
-                    Color.yellow.ToTransparent(0.3f)
-                );
+                if (SortDirection == SortDirectionAscending)
+                {
+                    rect.y = rect.yMax - 5f;
+                    rect.height = 5f;
+                }
+                else
+                {
+                    rect.height = 5f;
+                }
+
+                Verse.Widgets.DrawBoxSolid(rect, SortIndicatorColor);
             }
         }
         void handleCellClick()
@@ -138,22 +136,16 @@ internal sealed class ThingTable
                 $"<i>{columnDef.LabelCap}</i>\n\n{columnDef.description}"
             );
     }
-    private static Widget CreateFilterCell(
-        ColumnDef columnDef,
-        out FilterExpression filterExpression
-    )
+    private static Widget CreateFilterCell(ColumnDef columnDef, out FilterExpression filter)
     {
         var filterWidget = columnDef.Worker.GetFilterWidget();
 
-        filterExpression = filterWidget.FilterExpression;
+        filter = filterWidget.Value;
         return filterWidget
             .TextAnchor((TextAnchor)columnDef.Worker.CellStyle)
             .WidthRel(1f);
     }
-    private static Widget CreateBodyCell(
-        ColumnDef columnDef,
-        ThingAlike thing
-    )
+    private static Widget CreateBodyCell(ColumnDef columnDef, ThingAlike thing)
     {
         try
         {
@@ -209,15 +201,15 @@ internal sealed class ThingTable
             ) * SortDirection
         );
     }
-    private void HandleFilterExpressionChange(FilterExpression filterExpression)
+    private void HandleFilterChange(FilterExpression filter)
     {
-        if (filterExpression.IsEmpty)
+        if (filter.IsEmpty)
         {
-            ActiveFlterExpressions.Remove(filterExpression);
+            ActiveFilters.Remove(filter);
         }
         else
         {
-            ActiveFlterExpressions.Add(filterExpression);
+            ActiveFilters.Add(filter);
         }
 
         ShouldApplyFilters = true;
@@ -228,19 +220,16 @@ internal sealed class ThingTable
         // re-aplly filters when a row is unselected.
         foreach (TableRow<ThingAlike> row in Table.BodyRows)
         {
-            row.IsHidden = !RowPassesFilters(row, ActiveFlterExpressions);
+            row.IsHidden = RowPassesFilters(row, ActiveFilters) == false;
         }
 
         ShouldApplyFilters = false;
     }
-    private static bool RowPassesFilters(
-        TableRow<ThingAlike> row,
-        HashSet<FilterExpression> flterExpressions
-    )
+    private static bool RowPassesFilters(TableRow<ThingAlike> row, HashSet<FilterExpression> filters)
     {
-        foreach (var flterExpression in flterExpressions)
+        foreach (var filter in filters)
         {
-            if (flterExpression.Eval(row.Id) == false)
+            if (filter.Eval(row.Id) == false)
             {
                 return false;
             }
@@ -248,19 +237,19 @@ internal sealed class ThingTable
 
         return true;
     }
-    public void ResetFilters()
+    public void ClearFilters()
     {
-        if (ActiveFlterExpressions.Count == 0)
+        if (ActiveFilters.Count == 0)
         {
             return;
         }
 
-        foreach (var flterExpression in ActiveFlterExpressions)
+        foreach (var filter in ActiveFilters)
         {
-            flterExpression.Reset(true);
+            filter.Clear(true);
         }
 
-        ActiveFlterExpressions.Clear();
+        ActiveFilters.Clear();
         ShouldApplyFilters = true;
     }
 }

@@ -9,33 +9,30 @@ public abstract class FilterExpression
     public abstract bool IsEmpty { get; }
     public abstract event Action<FilterExpression> OnChange;
     public abstract bool Eval(ThingAlike thing);
-    public abstract void Reset(bool silent = false);
-    // Clear?
+    public abstract void Clear(bool silent = false);
     public abstract void NotifyChanged();
 }
 
-public sealed class FilterExpression<Lhs, Rhs> : FilterExpression where Rhs : notnull
+public sealed class FilterExpression<TLhs, TRhs> : FilterExpression where TRhs : notnull
 {
-    private readonly Func<ThingAlike, Lhs> LhsValueFunction;
-    private readonly Rhs InitialValue;
-    private Rhs _Value;
-    public Rhs Value
+    private readonly Func<ThingAlike, TLhs> Lhs;
+    private TRhs _Rhs;
+    public TRhs Rhs
     {
-        get => _Value;
+        get => _Rhs;
         set
         {
-            if (_Value.Equals(value))
+            if (_Rhs.Equals(value))
             {
                 return;
             }
 
-            _Value = value;
+            _Rhs = value;
             OnChange?.Invoke(this);
         }
     }
-    private readonly RelationalOperator<Lhs, Rhs> InitialOperator;
-    private RelationalOperator<Lhs, Rhs> _Operator;
-    public RelationalOperator<Lhs, Rhs> Operator
+    private RelationalOperator<TLhs, TRhs> _Operator;
+    public RelationalOperator<TLhs, TRhs> Operator
     {
         get => _Operator;
         set
@@ -50,53 +47,68 @@ public sealed class FilterExpression<Lhs, Rhs> : FilterExpression where Rhs : no
         }
     }
     public override event Action<FilterExpression>? OnChange;
-    private readonly RelationalOperator<Lhs, Rhs> InactiveStateOperator;
-    // IsConstant/True?
-    public override bool IsEmpty => _Operator == InactiveStateOperator;
+    public override bool IsEmpty => _Operator == EmptyOperator.Instance;
     public FilterExpression(
-        Func<ThingAlike, Lhs> lhsValueFunction,
-        Rhs initialValue,
-        RelationalOperator<Lhs, Rhs> initialOperator,
-        RelationalOperator<Lhs, Rhs> inactiveStateOperator
+        Func<ThingAlike, TLhs> lhs,
+        TRhs rhs,
+        RelationalOperator<TLhs, TRhs> @operator
     )
     {
-        _Value = InitialValue = initialValue;
-        _Operator = InitialOperator = initialOperator;
-        InactiveStateOperator = inactiveStateOperator;
-        LhsValueFunction = lhsValueFunction;
+        Lhs = lhs;
+        _Rhs = rhs;
+        _Operator = @operator;
+    }
+    public FilterExpression(Func<ThingAlike, TLhs> lhs, TRhs rhs)
+        : this(lhs, rhs, EmptyOperator.Instance)
+    {
     }
     // Use this to avoid emitting 2 events when setting both props.
-    public void Set(Rhs value, RelationalOperator<Lhs, Rhs> @operator, bool silent = false)
+    public void Set(TRhs rhs, RelationalOperator<TLhs, TRhs> @operator)
     {
-        if (_Value.Equals(value) == false || _Operator != @operator)
+        if (_Rhs.Equals(rhs) == false || _Operator != @operator)
         {
-            _Value = value;
+            _Rhs = rhs;
             _Operator = @operator;
 
-            if (silent == false)
-            {
-                OnChange?.Invoke(this);
-            }
+            OnChange?.Invoke(this);
         }
     }
-    // Eval?
     public override bool Eval(ThingAlike thing)
     {
         try
         {
-            return Operator.Eval(LhsValueFunction(thing), _Value);
+            return Operator.Eval(Lhs(thing), _Rhs);
         }
         catch
         {
             return false;
         }
     }
-    public override void Reset(bool silent = false)
+    public override void Clear(bool silent = false)
     {
-        Set(InitialValue, InitialOperator);
+        if (silent)
+        {
+            _Operator = EmptyOperator.Instance;
+        }
+        else
+        {
+            Operator = EmptyOperator.Instance;
+        }
     }
     public override void NotifyChanged()
     {
         OnChange?.Invoke(this);
+    }
+
+    // This operator exists only because i don't want to define Operator property as
+    // nullable, because it will slow down the whole thing a bit. The table doesn't
+    // evaluate empty expressions.
+    public sealed class EmptyOperator : RelationalOperator<TLhs, TRhs>
+    {
+        private EmptyOperator() { }
+        public override bool Eval(TLhs lhs, TRhs rhs) => true;
+        public override string ToString() => "...";
+        public static RelationalOperator<TLhs, TRhs> Instance { get; } =
+            new EmptyOperator();
     }
 }

@@ -2,70 +2,62 @@
 
 namespace Stats.RelationalOperators;
 
-public sealed class Any<Lhs, Rhs> : RelationalOperator<Lhs, Rhs>
+public sealed class EqualTo<TLhs, TRhs> : RelationalOperator<TLhs, TRhs>
+    where TLhs : IEquatable<TRhs>
 {
-    private Any() { }
-    public override bool Eval(Lhs lhs, Rhs rhs) => true;
-    public override string ToString() => "Any";
-    public static RelationalOperator<Lhs, Rhs> Instance { get; } = new Any<Lhs, Rhs>();
-}
-
-public sealed class Equals<Lhs, Rhs> : RelationalOperator<Lhs, Rhs>
-    where Lhs : IEquatable<Rhs>
-{
-    private Equals() { }
-    public override bool Eval(Lhs lhs, Rhs rhs) => lhs.Equals(rhs);
+    private EqualTo() { }
+    public override bool Eval(TLhs lhs, TRhs rhs) => lhs.Equals(rhs);
     public override string ToString() => "==";
-    public static RelationalOperator<Lhs, Rhs> Instance { get; } =
-        new Equals<Lhs, Rhs>();
+    public static RelationalOperator<TLhs, TRhs> Instance { get; } =
+        new EqualTo<TLhs, TRhs>();
 }
 
-public sealed class NotEquals<Lhs, Rhs> : RelationalOperator<Lhs, Rhs>
-    where Lhs : IEquatable<Rhs>
+public sealed class NotEqualTo<TLhs, TRhs> : RelationalOperator<TLhs, TRhs>
+    where TLhs : IEquatable<TRhs>
 {
-    private NotEquals() { }
-    public override bool Eval(Lhs lhs, Rhs rhs) => lhs.Equals(rhs) == false;
+    private NotEqualTo() { }
+    public override bool Eval(TLhs lhs, TRhs rhs) => lhs.Equals(rhs) == false;
     public override string ToString() => "!=";
-    public static RelationalOperator<Lhs, Rhs> Instance { get; } =
-        new NotEquals<Lhs, Rhs>();
+    public static RelationalOperator<TLhs, TRhs> Instance { get; } =
+        new NotEqualTo<TLhs, TRhs>();
 }
 
-public sealed class GreaterThan<Lhs, Rhs> : RelationalOperator<Lhs, Rhs>
-    where Lhs : IComparable<Rhs>
+public sealed class GreaterThan<TLhs, TRhs> : RelationalOperator<TLhs, TRhs>
+    where TLhs : IComparable<TRhs>
 {
     private GreaterThan() { }
-    public override bool Eval(Lhs lhs, Rhs rhs) => lhs.CompareTo(rhs) > 0;
+    public override bool Eval(TLhs lhs, TRhs rhs) => lhs.CompareTo(rhs) > 0;
     public override string ToString() => ">";
-    public static RelationalOperator<Lhs, Rhs> Instance { get; } =
-        new GreaterThan<Lhs, Rhs>();
+    public static RelationalOperator<TLhs, TRhs> Instance { get; } =
+        new GreaterThan<TLhs, TRhs>();
 }
 
-public sealed class LesserThan<Lhs, Rhs> : RelationalOperator<Lhs, Rhs>
-    where Lhs : IComparable<Rhs>
+public sealed class LesserThan<TLhs, TRhs> : RelationalOperator<TLhs, TRhs>
+    where TLhs : IComparable<TRhs>
 {
     private LesserThan() { }
-    public override bool Eval(Lhs lhs, Rhs rhs) => lhs.CompareTo(rhs) < 0;
+    public override bool Eval(TLhs lhs, TRhs rhs) => lhs.CompareTo(rhs) < 0;
     public override string ToString() => "<";
-    public static RelationalOperator<Lhs, Rhs> Instance { get; } =
-        new LesserThan<Lhs, Rhs>();
+    public static RelationalOperator<TLhs, TRhs> Instance { get; } =
+        new LesserThan<TLhs, TRhs>();
 }
 
-public sealed class GreaterThanOrEquals<Lhs, Rhs> : RelationalOperator<Lhs, Rhs>
-    where Lhs : IComparable<Rhs>
+public sealed class GreaterThanOrEqualTo<TLhs, TRhs> : RelationalOperator<TLhs, TRhs>
+    where TLhs : IComparable<TRhs>
 {
-    private GreaterThanOrEquals() { }
-    public override bool Eval(Lhs lhs, Rhs rhs) => lhs.CompareTo(rhs) >= 0;
+    private GreaterThanOrEqualTo() { }
+    public override bool Eval(TLhs lhs, TRhs rhs) => lhs.CompareTo(rhs) >= 0;
     public override string ToString() => ">=";
-    public static RelationalOperator<Lhs, Rhs> Instance { get; } =
-        new GreaterThanOrEquals<Lhs, Rhs>();
+    public static RelationalOperator<TLhs, TRhs> Instance { get; } =
+        new GreaterThanOrEqualTo<TLhs, TRhs>();
 }
 
-public sealed class LesserThanOrEquals<Lhs, Rhs> : RelationalOperator<Lhs, Rhs>
-    where Lhs : IComparable<Rhs>
+public sealed class LesserThanOrEqualTo<TLhs, TRhs> : RelationalOperator<TLhs, TRhs>
+    where TLhs : IComparable<TRhs>
 {
-    private LesserThanOrEquals() { }
-    public override bool Eval(Lhs lhs, Rhs rhs) => lhs.CompareTo(rhs) <= 0;
+    private LesserThanOrEqualTo() { }
+    public override bool Eval(TLhs lhs, TRhs rhs) => lhs.CompareTo(rhs) <= 0;
     public override string ToString() => "<=";
-    public static RelationalOperator<Lhs, Rhs> Instance { get; } =
-        new LesserThanOrEquals<Lhs, Rhs>();
+    public static RelationalOperator<TLhs, TRhs> Instance { get; } =
+        new LesserThanOrEqualTo<TLhs, TRhs>();
 }
