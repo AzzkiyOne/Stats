@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 using Verse;
 
@@ -7,7 +8,7 @@ namespace Stats;
 
 public static class UnityEngineRectExtensions
 {
-    public static Rect CutByX(ref this Rect rect, float amount)
+    internal static Rect CutByX(ref this Rect rect, float amount)
     {
         var result = rect with { width = amount };
         // Changing "xMin" also auto corrects width. Changing "x" doesn't.
@@ -15,7 +16,7 @@ public static class UnityEngineRectExtensions
 
         return result;
     }
-    public static Rect CutByY(ref this Rect rect, float amount)
+    internal static Rect CutByY(ref this Rect rect, float amount)
     {
         var result = rect with { height = amount };
         // Changing "yMin" also auto corrects height. Changing "y" doesn't.
@@ -35,7 +36,7 @@ public static class VerseVerbPropertiesListExtensions
 
 public static class StringExtensions
 {
-    public static Color ToUniqueColorRGB(this string str)
+    internal static Color ToUniqueColorRGB(this string str)
     {
         // I don't think that this hash is very reliable.
         var hash = (uint)str.GetHashCode();
@@ -45,8 +46,19 @@ public static class StringExtensions
 
         return new Color(r, g, b);
     }
-    public static bool Contains(this string str, string substr, StringComparison comp)
+    internal static bool Contains(this string str, string substr, StringComparison comp)
     {
         return str.IndexOf(substr, comp) >= 0;
+    }
+}
+
+public static class UnityEngineColorExtensions
+{
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static Color AdjustedForGUIOpacity(this Color color)
+    {
+        color.a *= Globals.GUI.opacity;
+
+        return color;
     }
 }

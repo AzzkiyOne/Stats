@@ -7,11 +7,7 @@ public sealed class HoverBackgroundWidgetExtension : WidgetExtension
 {
     private readonly Texture2D Texture;
     private readonly UnityEngine.Color Color;
-    internal HoverBackgroundWidgetExtension(
-        Widget widget,
-        Texture2D texture,
-        UnityEngine.Color color
-    ) : base(widget)
+    internal HoverBackgroundWidgetExtension(Widget widget, Texture2D texture, UnityEngine.Color color) : base(widget)
     {
         Texture = texture;
         Color = color;
@@ -21,14 +17,7 @@ public sealed class HoverBackgroundWidgetExtension : WidgetExtension
         if (Event.current.type == EventType.Repaint && Mouse.IsOver(rect))
         {
             GUI.DrawTexture(
-                rect,
-                Texture,
-                ScaleMode.StretchToFill,
-                true,
-                0f,
-                Color with { a = Color.a * Globals.GUI.opacity },
-                0f,
-                0f
+                rect, Texture, ScaleMode.StretchToFill, true, 0f, Color.AdjustedForGUIOpacity(), 0f, 0f
             );
         }
 

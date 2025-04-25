@@ -39,11 +39,7 @@ public sealed class ThingIcon : WidgetBase
         {
             Proportions = thingDef.graphicData.drawSize.RotatedBy(thingDef.defaultPlacingRot);
 
-            if (
-                thingDef.uiIconPath.NullOrEmpty()
-                &&
-                thingDef.graphicData.linkFlags != 0
-            )
+            if (thingDef.uiIconPath.NullOrEmpty() && thingDef.graphicData.linkFlags != 0)
             {
                 Coords = new Rect(0f, 0.5f, 0.25f, 0.25f);// Verse.Widgets.LinkedTexCoords
             }
@@ -71,16 +67,12 @@ public sealed class ThingIcon : WidgetBase
         }
 
         rect.position += Offset * rect.size;
+
         var origGUIColor = GUI.color;
-        GUI.color = Color with { a = Color.a * Globals.GUI.opacity };
-        Verse.Widgets.DrawTextureFitted(
-            rect,
-            Texture,
-            Scale,
-            Proportions,
-            Coords,
-            Angle
-        );
+        GUI.color = Color.AdjustedForGUIOpacity();
+
+        Verse.Widgets.DrawTextureFitted(rect, Texture, Scale, Proportions, Coords, Angle);
+
         GUI.color = origGUIColor;
     }
 }

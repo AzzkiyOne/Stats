@@ -9,20 +9,20 @@ using Verse.Sound;
 
 namespace Stats.Widgets.FilterWidgets;
 
-public sealed class EnumerableFilter<T> : FilterWidget<IEnumerable<T>, ICollection<T>>
+public sealed class EnumerableFilter<T> : FilterWidget<IEnumerable<T>, HashSet<T>>
 {
-    private static readonly RelationalOperator<IEnumerable<T>, ICollection<T>>[] DefaultOperators =
+    private static readonly RelationalOperator<IEnumerable<T>, HashSet<T>>[] DefaultOperators =
         [
-            ContainsAnyElementOf<IEnumerable<T>, ICollection<T>, T>.Instance,
-            ContainsAllElementsOf<IEnumerable<T>, ICollection<T>, T>.Instance,
+            ContainsAnyElementOf<IEnumerable<T>, HashSet<T>, T>.Instance,
+            ContainsAllElementsOf<IEnumerable<T>, HashSet<T>, T>.Instance,
         ];
     private readonly IEnumerable<T> Options;
     private readonly Func<T, Widget> MakeOptionWidget;
     private readonly OptionsWindowWidget OptionsWindow;
     private string SelectedItemsCountString;
     public EnumerableFilter(
-        FilterExpression<IEnumerable<T>, ICollection<T>> value,
-        IEnumerable<RelationalOperator<IEnumerable<T>, ICollection<T>>> operators,
+        FilterExpression<IEnumerable<T>, HashSet<T>> value,
+        IEnumerable<RelationalOperator<IEnumerable<T>, HashSet<T>>> operators,
         IEnumerable<T> options,
         Func<T, Widget> makeOptionWidget
     ) : base(value, operators)
@@ -37,7 +37,7 @@ public sealed class EnumerableFilter<T> : FilterWidget<IEnumerable<T>, ICollecti
         IEnumerable<T> options,
         Func<T, Widget> makeOptionWidget
     ) : this(
-        new FilterExpression<IEnumerable<T>, ICollection<T>>(lhs, []),
+        new FilterExpression<IEnumerable<T>, HashSet<T>>(lhs, []),
         DefaultOperators,
         options,
         makeOptionWidget
@@ -74,93 +74,101 @@ public sealed class EnumerableFilter<T> : FilterWidget<IEnumerable<T>, ICollecti
         protected override float Margin => 0f;
         public override Vector2 InitialSize => OptionsList.GetSize();
         private readonly Widget OptionsList;
-        private static readonly Color BorderColor = Verse.Widgets.SeparatorLineColor;
         public OptionsWindowWidget(
             IEnumerable<T> options,
             Func<T, Widget> makeOptionWidget,
-            FilterExpression<IEnumerable<T>, ICollection<T>> value
+            FilterExpression<IEnumerable<T>, HashSet<T>> value
         )
         {
             doWindowBackground = false;
             drawShadow = false;
             closeOnClickedOutside = true;
 
-            var optionWidgets = new List<Widget>(options.Count());
+            // TODO: Not ideal.
+            var optionsList = options.ToList();
+            var optionWidgets = new List<Widget>(optionsList.Count);
+            var borderColor = Verse.Widgets.SeparatorLineColor;
 
-            foreach (var option in options)
+            for (int i = 0; i < optionsList.Count; i++)
             {
-                var optionWidget = makeOptionWidget(option)
-                    .PaddingAbs(Globals.GUI.PadSm, Globals.GUI.PadXs)
-                    .WidthRel(1f)
-                    .BorderBottom(1f, BorderColor)
-                    .Background(rect =>
+                var option = optionsList[i];
+                void drawOptionBackground(Rect rect)
+                {
+                    if (Event.current.type == EventType.Repaint && value.Rhs.Contains(option))
                     {
-                        if (Event.current.type == EventType.Repaint)
-                        {
-                            if (value.Rhs.Contains(option))
-                            {
-                                Verse.Widgets.DrawHighlightSelected(rect);
-                            }
-                        }
-                    })
-                    .HoverBackground(FloatMenuOption.ColorBGActiveMouseover)
-                    .OnClick(() =>
+                        Verse.Widgets.DrawHighlightSelected(rect);
+                    }
+                }
+                void handleOptionClick()
+                {
+                    if (value.Rhs.Contains(option))
                     {
-                        if (value.Rhs.Contains(option))
-                        {
-                            value.Rhs.Remove(option);
-                        }
-                        else
-                        {
-                            value.Rhs.Add(option);
-                        }
+                        value.Rhs.Remove(option);
+                    }
+                    else
+                    {
+                        value.Rhs.Add(option);
+                    }
 
-                        value.NotifyChanged();
-                    });
+                    value.NotifyChanged();
+                }
+
+                Widget optionWidget = makeOptionWidget(option)
+                    .PaddingAbs(Globals.GUI.PadSm, Globals.GUI.PadXs)
+                    .WidthRel(1f);
+                if (i < optionsList.Count - 1)
+                {
+                    optionWidget = optionWidget
+                        .BorderBottom(borderColor);
+                }
+                optionWidget = optionWidget
+                    .Background(drawOptionBackground)
+                    .HoverBackground(FloatMenuOption.ColorBGActiveMouseover)
+                    .OnClick(handleOptionClick);
 
                 optionWidgets.Add(optionWidget);
             }
 
-            OptionsList = new VerticalContainer(optionWidgets);
+            OptionsList = new VerticalContainer(optionWidgets)
+                .PaddingAbs(1f)// TODO: Make borders affect widget's size.
+                .Border(borderColor)
+                .Background(Verse.Widgets.WindowBGFillColor);
         }
         public override void DoWindowContents(Rect rect)
         {
             var origGUIOpacity = Globals.GUI.opacity;
             var origGUIColor = GUI.color;
-            var fadeRect = rect.ContractedBy(-5f);
 
-            if (fadeRect.Contains(Event.current.mousePosition) == false)
-            {
-                var mouseDistanceFromFadeRect = GenUI.DistFromRect(
-                    fadeRect,
-                    Event.current.mousePosition
-                );
-
-                Globals.GUI.opacity = 1f - mouseDistanceFromFadeRect / 95f;
-                GUI.color = GUI.color with { a = GUI.color.a * Globals.GUI.opacity };
-
-                if (mouseDistanceFromFadeRect > 95f)
-                {
-                    Close(doCloseSound: false);
-                    SoundDefOf.FloatMenu_Cancel.PlayOneShotOnCamera();
-                    Find.WindowStack.TryRemove(this);
-                }
-            }
-
-            var backgroundColor = Verse.Widgets.WindowBGFillColor;
-            backgroundColor.a *= Globals.GUI.opacity;
-            Verse.Widgets.DrawBoxSolid(rect, backgroundColor);
+            DoFadeEffect(rect);
 
             OptionsList.Draw(rect, rect.size);
 
-            var borderColor = BorderColor;
-            borderColor.a *= Globals.GUI.opacity;
-            Verse.Widgets.DrawLineHorizontal(rect.x, rect.y, rect.width, borderColor);
-            VerticalLine.Draw(rect.x, rect.y, rect.height, borderColor);
-            VerticalLine.Draw(rect.xMax - 1f, rect.y, rect.height, borderColor);
-
             Globals.GUI.opacity = origGUIOpacity;
             GUI.color = origGUIColor;
+        }
+        private void DoFadeEffect(Rect rect)
+        {
+            rect = rect.ContractedBy(-5f);
+
+            const float maxAllovedMouseDistFromRect = 95f;
+
+            if (rect.Contains(Event.current.mousePosition) == false)
+            {
+                var mouseDistFromRect = GenUI.DistFromRect(rect, Event.current.mousePosition);
+
+                Globals.GUI.opacity = 1f - mouseDistFromRect / maxAllovedMouseDistFromRect;
+                GUI.color = GUI.color.AdjustedForGUIOpacity();
+
+                if (mouseDistFromRect > maxAllovedMouseDistFromRect)
+                {
+                    Close();
+                }
+            }
+        }
+        public override void Close(bool doCloseSound = false)
+        {
+            SoundDefOf.FloatMenu_Cancel.PlayOneShotOnCamera();
+            base.Close(doCloseSound);
         }
         protected override void SetInitialSizeAndPosition()
         {

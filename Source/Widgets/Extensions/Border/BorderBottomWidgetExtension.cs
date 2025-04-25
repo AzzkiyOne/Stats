@@ -6,11 +6,7 @@ public sealed class BorderBottomWidgetExtension : WidgetExtension
 {
     private readonly float Thickness;
     private readonly UnityEngine.Color Color;
-    internal BorderBottomWidgetExtension(
-        Widget widget,
-        float thickness,
-        UnityEngine.Color color
-    ) : base(widget)
+    internal BorderBottomWidgetExtension(Widget widget, float thickness, UnityEngine.Color color) : base(widget)
     {
         Thickness = thickness;
         Color = color;
@@ -21,7 +17,7 @@ public sealed class BorderBottomWidgetExtension : WidgetExtension
         {
             Verse.Widgets.DrawBoxSolid(
                 rect with { y = rect.yMax - Thickness, height = Thickness },
-                Color with { a = Color.a * Globals.GUI.opacity }
+                Color.AdjustedForGUIOpacity()
             );
         }
 
