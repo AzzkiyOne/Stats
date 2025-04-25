@@ -179,6 +179,10 @@ public static class WidgetAPI
         OnClick(this Widget widget, Action action) =>
         new(widget, action);
 
+    public static HoverShiftHorWidgetExtension
+        HoverShiftHor(this Widget widget, float amount) =>
+        new(widget, amount);
+
     // --- Transformers ---
 
     public static Widget
@@ -195,15 +199,6 @@ public static class WidgetAPI
     public static Vector2 GetFixedSize(this Widget widget)
     {
         return widget.GetSize(Vector2.zero);
-    }
-    public static void DrawIn(this Widget widget, Rect rect)
-    {
-        var rectSize = rect.size;
-        var size = widget.GetSize(rectSize);
-
-        rect.size = size;
-
-        widget.Draw(rect, rectSize);
     }
     public static T Get<T>(this Widget widget) where T : Widget
     {

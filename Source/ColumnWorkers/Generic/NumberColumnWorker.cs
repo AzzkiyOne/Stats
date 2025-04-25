@@ -5,6 +5,7 @@ using Stats.Widgets.FilterWidgets;
 
 namespace Stats.ColumnWorkers.Generic;
 
+// TODO: Maybe we don't need to go too generic here.
 public abstract class NumberColumnWorker<T> : ColumnWorker<T>
     where T : struct, IEquatable<T>, IComparable<T>, IFormattable
 {

@@ -75,6 +75,7 @@ public sealed class FilterExpression<TLhs, TRhs> : FilterExpression where TRhs :
     }
     public override bool Eval(ThingAlike thing)
     {
+        // TODO: This may be redundant.
         try
         {
             return Operator.Eval(Lhs(thing), _Rhs);
@@ -102,7 +103,7 @@ public sealed class FilterExpression<TLhs, TRhs> : FilterExpression where TRhs :
 
     // This operator exists only because i don't want to define Operator property as
     // nullable, because it will slow down the whole thing a bit. The table doesn't
-    // evaluate empty expressions.
+    // evaluate empty expressions anyway.
     public sealed class EmptyOperator : RelationalOperator<TLhs, TRhs>
     {
         private EmptyOperator() { }

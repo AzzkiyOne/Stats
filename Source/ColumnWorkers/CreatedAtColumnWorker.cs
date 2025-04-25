@@ -31,18 +31,18 @@ public sealed class CreatedAtColumnWorker : ColumnWorker<IEnumerable<ThingDef>>
 
         return things;
     }
-    protected override bool ShouldShowValue(IEnumerable<ThingDef> things)
+    protected override bool ShouldShowValue(IEnumerable<ThingDef> thingDefs)
     {
-        return things.Count() > 0;
+        return thingDefs.Count() > 0;
     }
     protected override Widget GetTableCellContent(
-        IEnumerable<ThingDef> things,
+        IEnumerable<ThingDef> thingDefs,
         ThingAlike thing
     )
     {
         var icons = new List<Widget>();
 
-        foreach (var thingDef in things.OrderBy(def => def.label))
+        foreach (var thingDef in thingDefs.OrderBy(thingDef => thingDef.label))
         {
             void openDefInfoDialog()
             {
@@ -62,19 +62,19 @@ public sealed class CreatedAtColumnWorker : ColumnWorker<IEnumerable<ThingDef>>
     }
     public override FilterWidget GetFilterWidget()
     {
-        var craftingBenches = DefDatabase<ThingDef>.AllDefsListForReading.Where(def => def.IsWorkTable);
+        var craftingBenches = DefDatabase<ThingDef>.AllDefsListForReading.Where(thingDef => thingDef.IsWorkTable);
 
         return new EnumerableFilter<ThingDef>(
             GetValueCached,
             craftingBenches,
-            MakeFilterOptionWidget
+            ThingDefToFilterOptionWidget
         );
     }
     public override int Compare(ThingAlike thing1, ThingAlike thing2)
     {
         return GetValueCached(thing1).Count().CompareTo(GetValueCached(thing2).Count());
     }
-    private static Widget MakeFilterOptionWidget(ThingDef thingDef)
+    private static Widget ThingDefToFilterOptionWidget(ThingDef thingDef)
     {
         return new HorizontalContainer(
             [

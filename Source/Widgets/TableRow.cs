@@ -85,7 +85,7 @@ internal class TableRow
             rect.width = column.Width + cellExtraWidth;
             if (rect.xMax > 0f)
             {
-                Cells[i].DrawIn(rect);
+                Cells[i].Draw(rect);
             }
 
             rect.x = rect.xMax;

@@ -9,6 +9,9 @@ using Verse.Sound;
 
 namespace Stats.Widgets.FilterWidgets;
 
+// TODO: I have a strong suspicion that enumerables returned by lhs function will be accessed through
+// IEnumerable<T> interface, which is not ideal. Instead we could change generic parameters to something
+// like this: <TLhs, TElement>. Although, this may have a negative impact on ergonomics.
 public sealed class EnumerableFilter<T> : FilterWidget<IEnumerable<T>, HashSet<T>>
 {
     private static readonly RelationalOperator<IEnumerable<T>, HashSet<T>>[] DefaultOperators =
@@ -44,6 +47,29 @@ public sealed class EnumerableFilter<T> : FilterWidget<IEnumerable<T>, HashSet<T
     )
     {
     }
+    public EnumerableFilter(
+        Func<ThingAlike, T> lhs,
+        IEnumerable<T> options,
+        Func<T, Widget> makeOptionWidget
+    ) : this(
+        new FilterExpression<IEnumerable<T>, HashSet<T>>(TEMP_MakeLhs(lhs), []),
+        DefaultOperators,
+        options,
+        makeOptionWidget
+    )
+    {
+    }
+    // TODO: Maybe this is not that quick and dirty.
+    private static Func<ThingAlike, IEnumerable<T>> TEMP_MakeLhs(Func<ThingAlike, T> lhs)
+    {
+        return (ThingAlike thing) =>
+        {
+            TEMP_LhsEnum.SetValue(lhs(thing), 0);
+
+            return TEMP_LhsEnum;
+        };
+    }
+    private static readonly T[] TEMP_LhsEnum = new T[1];
     protected override Vector2 CalcInputFieldSize()
     {
         var size = Text.CalcSize(SelectedItemsCountString);
@@ -115,7 +141,8 @@ public sealed class EnumerableFilter<T> : FilterWidget<IEnumerable<T>, HashSet<T
 
                 Widget optionWidget = makeOptionWidget(option)
                     .PaddingAbs(Globals.GUI.PadSm, Globals.GUI.PadXs)
-                    .WidthRel(1f);
+                    .WidthRel(1f)
+                    .HoverShiftHor(4f);
                 if (i < optionsList.Count - 1)
                 {
                     optionWidget = optionWidget
@@ -130,7 +157,7 @@ public sealed class EnumerableFilter<T> : FilterWidget<IEnumerable<T>, HashSet<T
             }
 
             OptionsList = new VerticalContainer(optionWidgets)
-                .PaddingAbs(1f)// TODO: Make borders affect widget's size.
+                .PaddingAbs(1f)// TODO: Make borders affect widget's size?
                 .Border(borderColor)
                 .Background(Verse.Widgets.WindowBGFillColor);
         }
