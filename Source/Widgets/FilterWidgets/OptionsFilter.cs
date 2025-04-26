@@ -17,21 +17,11 @@ public sealed class ManyToManyOptionsFilter<TOption> : OptionsFilter<IEnumerable
 {
     private static readonly RelationalOperator<IEnumerable<TOption>, HashSet<TOption>>[] DefaultOperators =
         [
-            IntersectsWith<
-                IEnumerable<TOption>,
-                HashSet<TOption>,
-                TOption
-            >.Instance,
-            IsSupersetOf<
-                IEnumerable<TOption>,
-                HashSet<TOption>,
-                TOption
-            >.Instance,
-            IsSubsetOf<
-                IEnumerable<TOption>,
-                HashSet<TOption>,
-                TOption
-            >.Instance,
+            IntersectsWith<IEnumerable<TOption>, HashSet<TOption>, TOption>.Instance,
+            IsSubsetOf<IEnumerable<TOption>, HashSet<TOption>, TOption>.Instance,
+            IsNotSubsetOf<IEnumerable<TOption>, HashSet<TOption>, TOption>.Instance,
+            IsSupersetOf<IEnumerable<TOption>, HashSet<TOption>, TOption>.Instance,
+            IsNotSupersetOf<IEnumerable<TOption>, HashSet<TOption>, TOption>.Instance,
         ];
     public ManyToManyOptionsFilter(
         Func<ThingAlike, IEnumerable<TOption>> lhs,
@@ -48,7 +38,7 @@ public sealed class ManyToManyOptionsFilter<TOption> : OptionsFilter<IEnumerable
     )
     {
     }
-    public ManyToManyOptionsFilter(
+    private ManyToManyOptionsFilter(
         FilterExpression<
             IEnumerable<TOption>,
             HashSet<TOption>
@@ -74,7 +64,8 @@ public sealed class OneToManyOptionsFilter<TOption> : OptionsFilter<TOption, TOp
 {
     private static readonly RelationalOperator<TOption, HashSet<TOption>>[] DefaultOperators =
         [
-            IsIn<TOption, HashSet<TOption>>.Instance
+            IsIn<TOption, HashSet<TOption>>.Instance,
+            IsNotIn<TOption, HashSet<TOption>>.Instance,
         ];
     public OneToManyOptionsFilter(
         Func<ThingAlike, TOption> lhs,
@@ -88,7 +79,7 @@ public sealed class OneToManyOptionsFilter<TOption> : OptionsFilter<TOption, TOp
     )
     {
     }
-    public OneToManyOptionsFilter(
+    private OneToManyOptionsFilter(
         FilterExpression<TOption, HashSet<TOption>> value,
         IEnumerable<RelationalOperator<TOption, HashSet<TOption>>> operators,
         IEnumerable<TOption> options,
@@ -108,7 +99,7 @@ public abstract class OptionsFilter<TLhs, TOption> : FilterWidget<TLhs, HashSet<
     protected Func<TOption, Widget> MakeOptionWidget { get; }
     private readonly OptionsWindowWidget OptionsWindow;
     private string SelectedItemsCountString;
-    public OptionsFilter(
+    protected OptionsFilter(
         FilterExpression<TLhs, HashSet<TOption>> value,
         IEnumerable<RelationalOperator<TLhs, HashSet<TOption>>> operators,
         IEnumerable<TOption> options,

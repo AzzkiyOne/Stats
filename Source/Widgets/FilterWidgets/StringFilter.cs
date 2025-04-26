@@ -14,7 +14,7 @@ public sealed class StringFilter : FilterWidget<string, string>
             NotContainsAnyOf.Instance,
         ];
     private const string Description = "Use \",\" to search by multiple terms.";
-    public StringFilter(
+    private StringFilter(
         FilterExpression<string, string> value,
         IEnumerable<RelationalOperator<string, string>> operators
     ) : base(value, operators)

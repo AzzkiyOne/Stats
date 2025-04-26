@@ -18,7 +18,7 @@ public sealed class NumberFilter<T> : FilterWidget<T, T>
             LesserThanOrEqualTo<T, T>.Instance,
         ];
     private string TextFieldStringBuffer = "";
-    public NumberFilter(
+    private NumberFilter(
         FilterExpression<T, T> value,
         IEnumerable<RelationalOperator<T, T>> operators
     ) : base(value, operators)

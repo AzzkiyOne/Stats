@@ -13,6 +13,16 @@ public sealed class IsIn<TLhs, TRhs> : RelationalOperator<TLhs, TRhs>
         new IsIn<TLhs, TRhs>();
 }
 
+public sealed class IsNotIn<TLhs, TRhs> : RelationalOperator<TLhs, TRhs>
+    where TRhs : IEnumerable<TLhs>
+{
+    private IsNotIn() { }
+    public override bool Eval(TLhs lhs, TRhs rhs) => rhs.Contains(lhs) == false;
+    public override string ToString() => "∉";
+    public static RelationalOperator<TLhs, TRhs> Instance { get; } =
+        new IsNotIn<TLhs, TRhs>();
+}
+
 public sealed class IntersectsWith<TLhs, TRhs, TElement> : RelationalOperator<TLhs, TRhs>
     where TLhs : IEnumerable<TElement>
     where TRhs : IEnumerable<TElement>
@@ -35,6 +45,17 @@ public sealed class IsSupersetOf<TLhs, TRhs, TElement> : RelationalOperator<TLhs
         new IsSupersetOf<TLhs, TRhs, TElement>();
 }
 
+public sealed class IsNotSupersetOf<TLhs, TRhs, TElement> : RelationalOperator<TLhs, TRhs>
+    where TLhs : IEnumerable<TElement>
+    where TRhs : IEnumerable<TElement>
+{
+    private IsNotSupersetOf() { }
+    public override bool Eval(TLhs lhs, TRhs rhs) => rhs.All(lhs.Contains) == false;
+    public override string ToString() => "⊅";
+    public static RelationalOperator<TLhs, TRhs> Instance { get; } =
+        new IsNotSupersetOf<TLhs, TRhs, TElement>();
+}
+
 public sealed class IsSubsetOf<TLhs, TRhs, TElement> : RelationalOperator<TLhs, TRhs>
     where TLhs : IEnumerable<TElement>
     where TRhs : IEnumerable<TElement>
@@ -44,4 +65,15 @@ public sealed class IsSubsetOf<TLhs, TRhs, TElement> : RelationalOperator<TLhs, 
     public override string ToString() => "⊆";
     public static RelationalOperator<TLhs, TRhs> Instance { get; } =
         new IsSubsetOf<TLhs, TRhs, TElement>();
+}
+
+public sealed class IsNotSubsetOf<TLhs, TRhs, TElement> : RelationalOperator<TLhs, TRhs>
+    where TLhs : IEnumerable<TElement>
+    where TRhs : IEnumerable<TElement>
+{
+    private IsNotSubsetOf() { }
+    public override bool Eval(TLhs lhs, TRhs rhs) => lhs.All(rhs.Contains) == false;
+    public override string ToString() => "⊄";
+    public static RelationalOperator<TLhs, TRhs> Instance { get; } =
+        new IsNotSubsetOf<TLhs, TRhs, TElement>();
 }

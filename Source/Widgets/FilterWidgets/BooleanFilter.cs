@@ -10,7 +10,7 @@ public sealed class BooleanFilter : FilterWidget
     private readonly FilterExpression<bool, bool> _Value;
     public override FilterExpression Value => _Value;
     private Action<Rect> DrawValue;
-    public BooleanFilter(FilterExpression<bool, bool> value)
+    private BooleanFilter(FilterExpression<bool, bool> value)
     {
         _Value = value;
         DrawValue = DrawEmpty;

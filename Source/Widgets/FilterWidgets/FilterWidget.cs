@@ -22,7 +22,7 @@ public abstract class FilterWidget<TLhs, TRhs> : FilterWidget
     public override FilterExpression Value => _Value;
     protected FloatMenu OperatorsMenu { get; }
     private const float OperatorButtonPadding = Globals.GUI.Pad;
-    public FilterWidget(
+    protected FilterWidget(
         FilterExpression<TLhs, TRhs> value,
         IEnumerable<RelationalOperator<TLhs, TRhs>> operators
     )
