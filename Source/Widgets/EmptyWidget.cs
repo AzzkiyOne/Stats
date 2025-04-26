@@ -2,18 +2,18 @@
 
 namespace Stats.Widgets;
 
-public sealed class EmptyWidget : WidgetBase
+public sealed class EmptyWidget : Widget
 {
-    protected override Vector2 Size { get; set; }
     public EmptyWidget()
     {
-        Size = GetSize();
+        Resize();
     }
-    public override Vector2 GetSize()
+    protected override Vector2 CalcSize()
     {
         return Vector2.zero;
     }
-    protected override void DrawContent(Rect rect)
+    public override void Draw(Rect rect, Vector2 _)
     {
+        GUIDebugger.DebugRect(this, rect);
     }
 }

@@ -6,6 +6,7 @@ public sealed class HideOverflowWidgetExtension : WidgetExtension
 {
     internal HideOverflowWidgetExtension(Widget widget) : base(widget)
     {
+        Resize();
     }
     public override void Draw(Rect rect, Vector2 containerSize)
     {

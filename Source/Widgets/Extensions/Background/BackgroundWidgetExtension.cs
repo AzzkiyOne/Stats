@@ -10,6 +10,8 @@ public sealed class BackgroundWidgetExtension : WidgetExtension
     {
         Texture = texture;
         Color = color;
+
+        Resize();
     }
     public override void Draw(Rect rect, Vector2 containerSize)
     {

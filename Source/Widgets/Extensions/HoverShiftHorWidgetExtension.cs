@@ -9,6 +9,8 @@ public sealed class HoverShiftHorWidgetExtension : WidgetExtension
     internal HoverShiftHorWidgetExtension(Widget widget, float amount) : base(widget)
     {
         Amount = amount;
+
+        Resize();
     }
     public override void Draw(Rect rect, Vector2 containerSize)
     {

@@ -20,8 +20,10 @@ public sealed class RelPaddingWidgetExtension : WidgetExtension
         Top = top;
         Horizontal = left + right;
         Vertical = top + bottom;
+
+        Resize();
     }
-    public override Vector2 GetSize(Vector2 containerSize)
+    protected override Vector2 CalcSize(Vector2 containerSize)
     {
         Vector2 size = Widget.GetSize(containerSize);
         size.x += Horizontal * containerSize.x;

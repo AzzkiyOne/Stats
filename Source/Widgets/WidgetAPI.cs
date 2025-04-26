@@ -185,18 +185,26 @@ public static class WidgetAPI
 
     // --- Transformers ---
 
-    public static Widget
+    internal static Widget
         ToButtonSubtle(this Widget widget, Action clickEventHandler) =>
         widget.HoverBackground(TexUI.HighlightTex).OnClick(clickEventHandler);
 
-    public static Widget
+    internal static Widget
         ToButtonSubtle(this Widget widget, Action clickEventHandler, string tooltip) =>
         widget.ToButtonSubtle(clickEventHandler).Tooltip(tooltip);
 
     // --- Utils ---
 
+    public static void DrawIn(this Widget widget, Rect rect)
+    {
+        var rectSize = rect.size;
+
+        rect.size = widget.GetSize(rectSize);
+
+        widget.Draw(rect, rectSize);
+    }
     // Doesn't include widget's "own" size.
-    public static Vector2 GetFixedSize(this Widget widget)
+    internal static Vector2 GetFixedSize(this Widget widget)
     {
         return widget.GetSize(Vector2.zero);
     }

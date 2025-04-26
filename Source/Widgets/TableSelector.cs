@@ -13,6 +13,11 @@ internal sealed class TableSelector : WidgetWrapper
         get => _CurTableDef;
         private set
         {
+            if (_CurTableDef == value)
+            {
+                return;
+            }
+
             _CurTableDef = value;
             IconWidget.Texture = value.Icon;
             IconColorExtension.Color = value.IconColor;
@@ -41,6 +46,7 @@ internal sealed class TableSelector : WidgetWrapper
         .PaddingAbs(Globals.GUI.Pad, 0f)
         .Background(Verse.Widgets.LightHighlight, TexUI.HighlightTex)
         .OnClick(ShowMenu);
+        Widget.Parent = this;
 
         var menuOptions =
             DefDatabase<TableDef>
@@ -54,6 +60,8 @@ internal sealed class TableSelector : WidgetWrapper
             .OrderBy(opt => opt.Label)
             .ToList();
         Menu = new(menuOptions);
+
+        Resize();
     }
     private void ShowMenu()
     {

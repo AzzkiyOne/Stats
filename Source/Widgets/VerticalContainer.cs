@@ -3,9 +3,8 @@ using UnityEngine;
 
 namespace Stats.Widgets;
 
-public sealed class VerticalContainer : WidgetBase
+public sealed class VerticalContainer : Widget
 {
-    protected override Vector2 Size { get; set; }
     private readonly float Gap;
     private readonly List<Widget> Children;
     private readonly bool ShareFreeSpace;
@@ -25,9 +24,9 @@ public sealed class VerticalContainer : WidgetBase
             child.Parent = this;
         }
 
-        Size = GetSize();
+        Resize();
     }
-    public override Vector2 GetSize()
+    protected override Vector2 CalcSize()
     {
         var totalGapAmount = (Children.Count - 1) * Gap;
         // Total gap amount is not reserved in normal mode, because overflow may
@@ -53,8 +52,10 @@ public sealed class VerticalContainer : WidgetBase
 
         return size;
     }
-    protected override void DrawContent(Rect rect)
+    public override void Draw(Rect rect, Vector2 _)
     {
+        GUIDebugger.DebugRect(this, rect);
+
         var yMax = rect.yMax;
         var size = rect.size;
         size.y = Mathf.Max(size.y - OccupiedSpaceAmount, 0f);

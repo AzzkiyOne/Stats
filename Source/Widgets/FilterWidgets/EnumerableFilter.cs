@@ -12,6 +12,8 @@ namespace Stats.Widgets.FilterWidgets;
 // TODO: I have a strong suspicion that enumerables returned by lhs function will be accessed through
 // IEnumerable<T> interface, which is not ideal. Instead we could change generic parameters to something
 // like this: <TLhs, TElement>. Although, this may have a negative impact on ergonomics.
+//
+// TODO: The name "EnumerableFilter" is not very descriptive.
 public sealed class EnumerableFilter<T> : FilterWidget<IEnumerable<T>, HashSet<T>>
 {
     private static readonly RelationalOperator<IEnumerable<T>, HashSet<T>>[] DefaultOperators =
@@ -95,6 +97,7 @@ public sealed class EnumerableFilter<T> : FilterWidget<IEnumerable<T>, HashSet<T
         return new EnumerableFilter<T>(_Value, DefaultOperators, Options, MakeOptionWidget);
     }
 
+    // TODO: Implement scroll.
     private sealed class OptionsWindowWidget : Window
     {
         protected override float Margin => 0f;
@@ -199,7 +202,7 @@ public sealed class EnumerableFilter<T> : FilterWidget<IEnumerable<T>, HashSet<T
         }
         protected override void SetInitialSizeAndPosition()
         {
-            Vector2 position = UI.MousePositionOnUIInverted;
+            var position = UI.MousePositionOnUIInverted;
 
             if (position.x + InitialSize.x > UI.screenWidth)
             {

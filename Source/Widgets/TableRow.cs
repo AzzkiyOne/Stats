@@ -7,7 +7,7 @@ namespace Stats.Widgets;
 internal class TableRow
 {
     public Table? Parent { private get; set; }
-    public List<Widget> Cells { get; } = [];
+    private readonly List<Widget> Cells;
     public float Height = 0f;
     private bool _IsHidden = false;
     public bool IsHidden
@@ -30,8 +30,9 @@ internal class TableRow
         }
     }
     public bool IsVisible => !_IsHidden || _IsSelected;
-    public TableRow(OnDraw onDraw)
+    public TableRow(List<Widget> cells, OnDraw onDraw)
     {
+        Cells = cells;
         DrawBG = onDraw;
     }
     public void Draw(
@@ -85,7 +86,7 @@ internal class TableRow
             rect.width = column.Width + cellExtraWidth;
             if (rect.xMax > 0f)
             {
-                Cells[i].Draw(rect);
+                Cells[i].DrawIn(rect);
             }
 
             rect.x = rect.xMax;
@@ -123,8 +124,8 @@ internal sealed class TableRow<TId>
         : TableRow
 {
     public TId Id { get; }
-    public TableRow(OnDraw onDraw, TId id)
-        : base(onDraw)
+    public TableRow(List<Widget> cells, OnDraw onDraw, TId id)
+        : base(cells, onDraw)
     {
         Id = id;
     }

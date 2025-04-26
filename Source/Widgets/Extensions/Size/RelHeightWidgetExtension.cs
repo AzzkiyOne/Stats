@@ -11,8 +11,10 @@ public sealed class RelHeightWidgetExtension : WidgetExtension
     ) : base(widget)
     {
         ParentHeightMultiplier = parentHeightMultiplier;
+
+        Resize();
     }
-    public override Vector2 GetSize(Vector2 containerSize)
+    protected override Vector2 CalcSize(Vector2 containerSize)
     {
         return Widget.GetSize(containerSize) with
         {

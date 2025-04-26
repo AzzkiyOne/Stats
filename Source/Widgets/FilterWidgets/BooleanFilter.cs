@@ -7,15 +7,15 @@ namespace Stats.Widgets.FilterWidgets;
 
 public sealed class BooleanFilter : FilterWidget
 {
-    protected override Vector2 Size { get; set; }
     private readonly FilterExpression<bool, bool> _Value;
     public override FilterExpression Value => _Value;
     private Action<Rect> DrawValue;
     public BooleanFilter(FilterExpression<bool, bool> value)
     {
         _Value = value;
-        Size = GetSize();
         DrawValue = DrawEmpty;
+
+        Resize();
 
         value.OnChange += HandleValueChange;
     }
@@ -32,9 +32,9 @@ public sealed class BooleanFilter : FilterWidget
             { Rhs: false } => DrawFalse,
         };
 
-        UpdateSize();
+        Resize();
     }
-    public override Vector2 GetSize()
+    protected override Vector2 CalcSize()
     {
         if (_Value.IsEmpty)
         {
@@ -43,7 +43,12 @@ public sealed class BooleanFilter : FilterWidget
 
         return new Vector2(Text.LineHeight, Text.LineHeight);
     }
-    protected override void DrawContent(Rect rect) => DrawValue(rect);
+    public override void Draw(Rect rect, Vector2 _)
+    {
+        GUIDebugger.DebugRect(this, rect);
+
+        DrawValue(rect);
+    }
     private void DrawEmpty(Rect rect)
     {
         if (Verse.Widgets.ButtonTextSubtle(rect, _Value.Operator.ToString()))

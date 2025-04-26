@@ -4,9 +4,8 @@ using UnityEngine;
 namespace Stats.Widgets;
 
 // See vertical variant for comments.
-public sealed class HorizontalContainer : WidgetBase
+public sealed class HorizontalContainer : Widget
 {
-    protected override Vector2 Size { get; set; }
     private readonly float Gap;
     private readonly List<Widget> Children;
     private readonly bool ShareFreeSpace;
@@ -26,9 +25,9 @@ public sealed class HorizontalContainer : WidgetBase
             child.Parent = this;
         }
 
-        Size = GetSize();
+        Resize();
     }
-    public override Vector2 GetSize()
+    protected override Vector2 CalcSize()
     {
         var totalGapAmount = (Children.Count - 1) * Gap;
 
@@ -53,8 +52,10 @@ public sealed class HorizontalContainer : WidgetBase
 
         return size;
     }
-    protected override void DrawContent(Rect rect)
+    public override void Draw(Rect rect, Vector2 _)
     {
+        GUIDebugger.DebugRect(this, rect);
+
         var xMax = rect.xMax;
         var size = rect.size;
         size.x = Mathf.Max(size.x - OccupiedSpaceAmount, 0f);

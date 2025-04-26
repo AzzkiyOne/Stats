@@ -21,10 +21,10 @@ internal sealed class ThingTable
         List<ColumnDef> columnDefs = [ColumnDefOf.Name, .. tableDef.columns];
 
         // Header rows and columns
-        var columns = new List<Table.Column>();
+        var columns = new List<Table.Column>(columnDefs.Count);
         var headerRows = new List<TableRow>();
-        var headerRow = new TableRow(DrawHeaderRowBG);
-        var filtersRow = new TableRow(DrawFiltersRowBG);
+        var labelsRowCells = new List<Widget>(columnDefs.Count);
+        var filtersRowCells = new List<Widget>(columnDefs.Count);
         ActiveFilters = new(columnDefs.Count);
 
         foreach (var columnDef in columnDefs)
@@ -32,13 +32,16 @@ internal sealed class ThingTable
             var column = new Table.Column(columnDef == ColumnDefOf.Name);
             columns.Add(column);
 
-            headerRow.Cells.Add(CreateHeaderCell(columnDef, column));
-            filtersRow.Cells.Add(CreateFilterCell(columnDef, out var filter));
+            labelsRowCells.Add(CreateHeaderCell(columnDef, column));
+            filtersRowCells.Add(CreateFilterCell(columnDef, out var filter));
 
             filter.OnChange += HandleFilterChange;
         }
 
-        headerRows.Add(headerRow);
+        var labelsRow = new TableRow(labelsRowCells, DrawHeaderRowBG);
+        var filtersRow = new TableRow(filtersRowCells, DrawFiltersRowBG);
+
+        headerRows.Add(labelsRow);
         headerRows.Add(filtersRow);
 
         // Body rows
@@ -46,15 +49,17 @@ internal sealed class ThingTable
 
         foreach (var thing in tableDef.Worker.GetRecords())
         {
-            var row = new TableRow<ThingAlike>(DrawBodyRowBG, thing);
+            var rowCells = new List<Widget>(columnDefs.Count);
 
             for (int i = 0; i < columnDefs.Count; i++)
             {
                 var columnDef = columnDefs[i];
                 var column = columns[i];
 
-                row.Cells.Add(CreateBodyCell(columnDef, thing));
+                rowCells.Add(CreateBodyCell(columnDef, thing));
             }
+
+            var row = new TableRow<ThingAlike>(rowCells, DrawBodyRowBG, thing);
 
             bodyRows.Add(row);
         }

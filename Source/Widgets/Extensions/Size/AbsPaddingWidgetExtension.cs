@@ -21,8 +21,10 @@ public sealed class AbsPaddingWidgetExtension
         Top = top;
         Horizontal = left + right;
         Vertical = top + bottom;
+
+        Resize();
     }
-    public override Vector2 GetSize(Vector2 containerSize)
+    protected override Vector2 CalcSize(Vector2 containerSize)
     {
         Vector2 size = Widget.GetSize(containerSize);
         size.x += Horizontal;
@@ -30,7 +32,7 @@ public sealed class AbsPaddingWidgetExtension
 
         return size;
     }
-    public override Vector2 GetSize()
+    protected override Vector2 CalcSize()
     {
         Vector2 size = Widget.GetSize();
         size.x += Horizontal;

@@ -2,9 +2,8 @@
 
 namespace Stats.Widgets;
 
-public sealed class SingleElementContainer : WidgetBase
+public sealed class SingleElementContainer : Widget
 {
-    protected override Vector2 Size { get; set; }
     private readonly Widget Widget;
     private readonly float OccupiedWidth = 0f;
     private readonly float OccupiedHeight = 0f;
@@ -17,14 +16,17 @@ public sealed class SingleElementContainer : WidgetBase
 
         OccupiedWidth = widgetSize.x;
         OccupiedHeight = widgetSize.y;
-        Size = GetSize();
+
+        Resize();
     }
-    public override Vector2 GetSize()
+    protected override Vector2 CalcSize()
     {
         return Widget.GetSize();
     }
-    protected override void DrawContent(Rect rect)
+    public override void Draw(Rect rect, Vector2 _)
     {
+        GUIDebugger.DebugRect(this, rect);
+
         var size = rect.size;
         size.x = Mathf.Max(size.x - OccupiedWidth, 0f);
         size.y = Mathf.Max(size.y - OccupiedHeight, 0f);

@@ -8,12 +8,14 @@ public sealed class AbsHeightWidgetExtension : WidgetExtension
     internal AbsHeightWidgetExtension(Widget widget, float height) : base(widget)
     {
         Height = height;
+
+        Resize();
     }
-    public override Vector2 GetSize(Vector2 containerSize)
+    protected override Vector2 CalcSize(Vector2 containerSize)
     {
         return Widget.GetSize(containerSize) with { y = Height };
     }
-    public override Vector2 GetSize()
+    protected override Vector2 CalcSize()
     {
         return Widget.GetSize() with { y = Height };
     }

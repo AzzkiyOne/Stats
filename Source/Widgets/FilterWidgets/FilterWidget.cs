@@ -6,16 +6,16 @@ using Verse;
 
 namespace Stats.Widgets.FilterWidgets;
 
-public abstract class FilterWidget : WidgetBase
+public abstract class FilterWidget : Widget
 {
     public abstract FilterExpression Value { get; }
     public abstract FilterWidget Clone();
 }
 
+// TODO: TLhs and TRhs are not very descriptive names here. I even think they leak abstraction.
 public abstract class FilterWidget<TLhs, TRhs> : FilterWidget
     where TRhs : notnull
 {
-    protected override Vector2 Size { get; set; }
     private Vector2 OperatorButtonSize;
     private Vector2 InputFieldSize;
     protected readonly FilterExpression<TLhs, TRhs> _Value;
@@ -30,11 +30,12 @@ public abstract class FilterWidget<TLhs, TRhs> : FilterWidget
         OperatorsMenu = MakeOperatorsMenu(value, operators);
         OperatorButtonSize = CalcOperatorButtonSize();
         InputFieldSize = CalcInputFieldSize();
-        Size = GetSize();
+
+        Resize();
 
         value.OnChange += HandleValueChange;
     }
-    public override Vector2 GetSize()
+    protected override Vector2 CalcSize()
     {
         if (_Value.IsEmpty)
         {
@@ -61,8 +62,10 @@ public abstract class FilterWidget<TLhs, TRhs> : FilterWidget
 
         return size;
     }
-    protected override void DrawContent(Rect rect)
+    public override void Draw(Rect rect, Vector2 _)
     {
+        GUIDebugger.DebugRect(this, rect);
+
         if
         (
             Verse.Widgets.ButtonTextSubtle(
@@ -85,7 +88,7 @@ public abstract class FilterWidget<TLhs, TRhs> : FilterWidget
         OperatorButtonSize = CalcOperatorButtonSize();
         InputFieldSize = CalcInputFieldSize();
 
-        UpdateSize();
+        Resize();
     }
     private static FloatMenu MakeOperatorsMenu(
         FilterExpression<TLhs, TRhs> value,

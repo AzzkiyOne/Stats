@@ -9,6 +9,8 @@ public sealed class HoverColorWidgetExtension : WidgetExtension
     internal HoverColorWidgetExtension(Widget widget, UnityEngine.Color color) : base(widget)
     {
         Color = color;
+
+        Resize();
     }
     public override void Draw(Rect rect, Vector2 containerSize)
     {

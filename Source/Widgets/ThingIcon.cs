@@ -4,9 +4,8 @@ using Verse;
 
 namespace Stats.Widgets;
 
-public sealed class ThingIcon : WidgetBase
+public sealed class ThingIcon : Widget
 {
-    protected override Vector2 Size { get; set; }
     private readonly Texture2D Texture;
     private readonly Color Color;
     private readonly Vector2 Proportions;
@@ -53,14 +52,16 @@ public sealed class ThingIcon : WidgetBase
             Proportions = new Vector2(Texture.width, Texture.height);
         }
 
-        Size = GetSize();
+        Resize();
     }
-    public override Vector2 GetSize()
+    protected override Vector2 CalcSize()
     {
         return new Vector2(Text.LineHeight, Text.LineHeight);
     }
-    protected override void DrawContent(Rect rect)
+    public override void Draw(Rect rect, Vector2 _)
     {
+        GUIDebugger.DebugRect(this, rect);
+
         if (Event.current.type != EventType.Repaint)
         {
             return;

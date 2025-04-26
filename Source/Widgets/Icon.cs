@@ -4,25 +4,27 @@ using Verse;
 namespace Stats.Widgets;
 
 // Instead of scale, use padding.
-public sealed class Icon : WidgetBase
+public sealed class Icon : Widget
 {
-    protected override Vector2 Size { get; set; }
     public Texture2D Texture { get; set; }
     public Icon(Texture2D texture)
     {
         Texture = texture;
-        Size = GetSize();
+
+        Resize();
     }
     public Icon(Texture2D texture, out Icon iconWidget) : this(texture)
     {
         iconWidget = this;
     }
-    public override Vector2 GetSize()
+    protected override Vector2 CalcSize()
     {
         return new Vector2(Text.LineHeight, Text.LineHeight);
     }
-    protected override void DrawContent(Rect rect)
+    public override void Draw(Rect rect, Vector2 _)
     {
+        GUIDebugger.DebugRect(this, rect);
+
         if (Event.current.type != EventType.Repaint)
         {
             return;
