@@ -64,7 +64,7 @@ public sealed class CreatedAtColumnWorker : ColumnWorker<IEnumerable<ThingDef>>
     {
         var craftingBenches = DefDatabase<ThingDef>.AllDefsListForReading.Where(thingDef => thingDef.IsWorkTable);
 
-        return new EnumerableFilter<ThingDef>(
+        return new ManyToManyOptionsFilter<ThingDef>(
             GetValueCached,
             craftingBenches,
             ThingDefToFilterOptionWidget

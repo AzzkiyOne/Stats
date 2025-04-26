@@ -18,7 +18,7 @@ public sealed class ContentSourceColumnWorker : ColumnWorker<ModContentPack>
     }
     public override FilterWidget GetFilterWidget()
     {
-        return new EnumerableFilter<ModContentPack>(
+        return new OneToManyOptionsFilter<ModContentPack>(
             GetValueCached,
             LoadedModManager.RunningMods.OrderBy(mod => mod.Name),
             ModContentPackToWidget

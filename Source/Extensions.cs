@@ -57,7 +57,7 @@ public static class UnityEngineColorExtensions
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static Color AdjustedForGUIOpacity(this Color color)
     {
-        color.a *= Globals.GUI.opacity;
+        color.a *= Globals.GUI.Opacity;
 
         return color;
     }

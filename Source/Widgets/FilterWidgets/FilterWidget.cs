@@ -21,6 +21,7 @@ public abstract class FilterWidget<TLhs, TRhs> : FilterWidget
     protected readonly FilterExpression<TLhs, TRhs> _Value;
     public override FilterExpression Value => _Value;
     protected FloatMenu OperatorsMenu { get; }
+    private const float OperatorButtonPadding = Globals.GUI.Pad;
     public FilterWidget(
         FilterExpression<TLhs, TRhs> value,
         IEnumerable<RelationalOperator<TLhs, TRhs>> operators
@@ -51,7 +52,7 @@ public abstract class FilterWidget<TLhs, TRhs> : FilterWidget
     private Vector2 CalcOperatorButtonSize()
     {
         var size = Text.CalcSize(_Value.Operator.ToString());
-        size.x *= 1.3f;
+        size.x += OperatorButtonPadding * 2f;
 
         return size;
     }
@@ -70,7 +71,8 @@ public abstract class FilterWidget<TLhs, TRhs> : FilterWidget
         (
             Verse.Widgets.ButtonTextSubtle(
                 _Value.IsEmpty ? rect : rect.CutByX(OperatorButtonSize.x),
-                _Value.Operator.ToString()
+                _Value.Operator.ToString(),
+                textLeftMargin: OperatorButtonPadding
             )
         )
         {

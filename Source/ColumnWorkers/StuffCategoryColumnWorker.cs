@@ -19,7 +19,7 @@ public sealed class StuffCategoryColumnWorker : ColumnWorker<StuffCategoryDef>
     }
     public override FilterWidget GetFilterWidget()
     {
-        return new EnumerableFilter<StuffCategoryDef>(
+        return new OneToManyOptionsFilter<StuffCategoryDef>(
             GetValueCached,
             DefDatabase<StuffCategoryDef>.AllDefsListForReading.OrderBy(stuffCatDef => stuffCatDef.label),
             StuffCatDefToWidget

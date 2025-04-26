@@ -23,7 +23,7 @@ public sealed class LayersColumnWorker : ColumnWorker<IEnumerable<ApparelLayerDe
     }
     public override FilterWidget GetFilterWidget()
     {
-        return new EnumerableFilter<ApparelLayerDef>(
+        return new ManyToManyOptionsFilter<ApparelLayerDef>(
             GetValueCached,
             DefDatabase<ApparelLayerDef>.AllDefsListForReading.OrderBy(layerDef => layerDef.label),
             layerDef => new Label(layerDef.LabelCap)

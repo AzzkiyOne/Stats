@@ -12,24 +12,107 @@ namespace Stats.Widgets.FilterWidgets;
 // TODO: I have a strong suspicion that enumerables returned by lhs function will be accessed through
 // IEnumerable<T> interface, which is not ideal. Instead we could change generic parameters to something
 // like this: <TLhs, TElement>. Although, this may have a negative impact on ergonomics.
-//
-// TODO: The name "EnumerableFilter" is not very descriptive.
-public sealed class EnumerableFilter<T> : FilterWidget<IEnumerable<T>, HashSet<T>>
+
+public sealed class ManyToManyOptionsFilter<TOption> : OptionsFilter<IEnumerable<TOption>, TOption>
 {
-    private static readonly RelationalOperator<IEnumerable<T>, HashSet<T>>[] DefaultOperators =
+    private static readonly RelationalOperator<IEnumerable<TOption>, HashSet<TOption>>[] DefaultOperators =
         [
-            ContainsAnyElementOf<IEnumerable<T>, HashSet<T>, T>.Instance,
-            ContainsAllElementsOf<IEnumerable<T>, HashSet<T>, T>.Instance,
+            IntersectsWith<
+                IEnumerable<TOption>,
+                HashSet<TOption>,
+                TOption
+            >.Instance,
+            IsSupersetOf<
+                IEnumerable<TOption>,
+                HashSet<TOption>,
+                TOption
+            >.Instance,
+            IsSubsetOf<
+                IEnumerable<TOption>,
+                HashSet<TOption>,
+                TOption
+            >.Instance,
         ];
-    private readonly IEnumerable<T> Options;
-    private readonly Func<T, Widget> MakeOptionWidget;
+    public ManyToManyOptionsFilter(
+        Func<ThingAlike, IEnumerable<TOption>> lhs,
+        IEnumerable<TOption> options,
+        Func<TOption, Widget> makeOptionWidget
+    ) : this(
+        new FilterExpression<
+            IEnumerable<TOption>,
+            HashSet<TOption>
+        >(lhs, []),
+        DefaultOperators,
+        options,
+        makeOptionWidget
+    )
+    {
+    }
+    public ManyToManyOptionsFilter(
+        FilterExpression<
+            IEnumerable<TOption>,
+            HashSet<TOption>
+        > value,
+        IEnumerable<
+            RelationalOperator<
+                IEnumerable<TOption>,
+                HashSet<TOption>
+            >
+        > operators,
+        IEnumerable<TOption> options,
+        Func<TOption, Widget> makeOptionWidget
+    ) : base(value, operators, options, makeOptionWidget)
+    {
+    }
+    public override FilterWidget Clone()
+    {
+        return new ManyToManyOptionsFilter<TOption>(_Value, DefaultOperators, Options, MakeOptionWidget);
+    }
+}
+
+public sealed class OneToManyOptionsFilter<TOption> : OptionsFilter<TOption, TOption>
+{
+    private static readonly RelationalOperator<TOption, HashSet<TOption>>[] DefaultOperators =
+        [
+            IsIn<TOption, HashSet<TOption>>.Instance
+        ];
+    public OneToManyOptionsFilter(
+        Func<ThingAlike, TOption> lhs,
+        IEnumerable<TOption> options,
+        Func<TOption, Widget> makeOptionWidget
+    ) : this(
+        new FilterExpression<TOption, HashSet<TOption>>(lhs, []),
+        DefaultOperators,
+        options,
+        makeOptionWidget
+    )
+    {
+    }
+    public OneToManyOptionsFilter(
+        FilterExpression<TOption, HashSet<TOption>> value,
+        IEnumerable<RelationalOperator<TOption, HashSet<TOption>>> operators,
+        IEnumerable<TOption> options,
+        Func<TOption, Widget> makeOptionWidget
+    ) : base(value, operators, options, makeOptionWidget)
+    {
+    }
+    public override FilterWidget Clone()
+    {
+        return new OneToManyOptionsFilter<TOption>(_Value, DefaultOperators, Options, MakeOptionWidget);
+    }
+}
+
+public abstract class OptionsFilter<TLhs, TOption> : FilterWidget<TLhs, HashSet<TOption>>
+{
+    protected IEnumerable<TOption> Options { get; }
+    protected Func<TOption, Widget> MakeOptionWidget { get; }
     private readonly OptionsWindowWidget OptionsWindow;
     private string SelectedItemsCountString;
-    public EnumerableFilter(
-        FilterExpression<IEnumerable<T>, HashSet<T>> value,
-        IEnumerable<RelationalOperator<IEnumerable<T>, HashSet<T>>> operators,
-        IEnumerable<T> options,
-        Func<T, Widget> makeOptionWidget
+    public OptionsFilter(
+        FilterExpression<TLhs, HashSet<TOption>> value,
+        IEnumerable<RelationalOperator<TLhs, HashSet<TOption>>> operators,
+        IEnumerable<TOption> options,
+        Func<TOption, Widget> makeOptionWidget
     ) : base(value, operators)
     {
         Options = options;
@@ -37,41 +120,6 @@ public sealed class EnumerableFilter<T> : FilterWidget<IEnumerable<T>, HashSet<T
         OptionsWindow = new OptionsWindowWidget(options, makeOptionWidget, value);
         SelectedItemsCountString = value.Rhs.Count.ToString();
     }
-    public EnumerableFilter(
-        Func<ThingAlike, IEnumerable<T>> lhs,
-        IEnumerable<T> options,
-        Func<T, Widget> makeOptionWidget
-    ) : this(
-        new FilterExpression<IEnumerable<T>, HashSet<T>>(lhs, []),
-        DefaultOperators,
-        options,
-        makeOptionWidget
-    )
-    {
-    }
-    public EnumerableFilter(
-        Func<ThingAlike, T> lhs,
-        IEnumerable<T> options,
-        Func<T, Widget> makeOptionWidget
-    ) : this(
-        new FilterExpression<IEnumerable<T>, HashSet<T>>(TEMP_MakeLhs(lhs), []),
-        DefaultOperators,
-        options,
-        makeOptionWidget
-    )
-    {
-    }
-    // TODO: Maybe this is not that quick and dirty.
-    private static Func<ThingAlike, IEnumerable<T>> TEMP_MakeLhs(Func<ThingAlike, T> lhs)
-    {
-        return (ThingAlike thing) =>
-        {
-            TEMP_LhsEnum.SetValue(lhs(thing), 0);
-
-            return TEMP_LhsEnum;
-        };
-    }
-    private static readonly T[] TEMP_LhsEnum = new T[1];
     protected override Vector2 CalcInputFieldSize()
     {
         var size = Text.CalcSize(SelectedItemsCountString);
@@ -92,10 +140,6 @@ public sealed class EnumerableFilter<T> : FilterWidget<IEnumerable<T>, HashSet<T
 
         base.HandleValueChange(value);
     }
-    public override FilterWidget Clone()
-    {
-        return new EnumerableFilter<T>(_Value, DefaultOperators, Options, MakeOptionWidget);
-    }
 
     // TODO: Implement scroll.
     private sealed class OptionsWindowWidget : Window
@@ -104,9 +148,9 @@ public sealed class EnumerableFilter<T> : FilterWidget<IEnumerable<T>, HashSet<T
         public override Vector2 InitialSize => OptionsList.GetSize();
         private readonly Widget OptionsList;
         public OptionsWindowWidget(
-            IEnumerable<T> options,
-            Func<T, Widget> makeOptionWidget,
-            FilterExpression<IEnumerable<T>, HashSet<T>> value
+            IEnumerable<TOption> options,
+            Func<TOption, Widget> makeOptionWidget,
+            FilterExpression<TLhs, HashSet<TOption>> value
         )
         {
             doWindowBackground = false;
@@ -166,14 +210,14 @@ public sealed class EnumerableFilter<T> : FilterWidget<IEnumerable<T>, HashSet<T
         }
         public override void DoWindowContents(Rect rect)
         {
-            var origGUIOpacity = Globals.GUI.opacity;
+            var origGUIOpacity = Globals.GUI.Opacity;
             var origGUIColor = GUI.color;
 
             DoFadeEffect(rect);
 
             OptionsList.Draw(rect, rect.size);
 
-            Globals.GUI.opacity = origGUIOpacity;
+            Globals.GUI.Opacity = origGUIOpacity;
             GUI.color = origGUIColor;
         }
         private void DoFadeEffect(Rect rect)
@@ -186,7 +230,7 @@ public sealed class EnumerableFilter<T> : FilterWidget<IEnumerable<T>, HashSet<T
             {
                 var mouseDistFromRect = GenUI.DistFromRect(rect, Event.current.mousePosition);
 
-                Globals.GUI.opacity = 1f - mouseDistFromRect / maxAllovedMouseDistFromRect;
+                Globals.GUI.Opacity = 1f - mouseDistFromRect / maxAllovedMouseDistFromRect;
                 GUI.color = GUI.color.AdjustedForGUIOpacity();
 
                 if (mouseDistFromRect > maxAllovedMouseDistFromRect)

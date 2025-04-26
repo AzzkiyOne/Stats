@@ -31,7 +31,7 @@ public sealed class CoverageColumnWorker : ColumnWorker<IEnumerable<BodyPartGrou
     }
     public override FilterWidget GetFilterWidget()
     {
-        return new EnumerableFilter<BodyPartGroupDef>(
+        return new ManyToManyOptionsFilter<BodyPartGroupDef>(
             GetValueCached,
             DefDatabase<BodyPartGroupDef>.AllDefsListForReading.OrderBy(bodyPartGroupDef => bodyPartGroupDef.label),
             bodyPartGroupDef => new Label(bodyPartGroupDef.LabelCap)
