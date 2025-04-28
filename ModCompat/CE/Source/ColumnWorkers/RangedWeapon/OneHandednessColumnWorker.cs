@@ -1,4 +1,6 @@
-﻿using RimWorld;
+﻿using System;
+using CombatExtended;
+using RimWorld;
 using Stats.ColumnWorkers;
 using Stats.Widgets;
 using Stats.Widgets.FilterWidgets;
@@ -8,17 +10,19 @@ namespace Stats.ModCompat.CE.ColumnWorkers.RangedWeapon;
 public sealed class OneHandednessColumnWorker : ColumnWorker
 {
     public override TableColumnCellStyle CellStyle => TableColumnCellStyle.Boolean;
-    private bool IsOneHandedWeapon(ThingAlike thing)
-    {
-        var statReq = StatRequest.For(thing.Def, thing.StuffDef);
-
-        if (ColumnDef.stat!.Worker.ShouldShowFor(statReq))
+    public static readonly Func<ThingAlike, bool> IsOneHandedWeapon = FunctionExtensions.Memoized(
+        (ThingAlike thing) =>
         {
-            return ColumnDef.stat!.Worker.GetValue(statReq) > 0f;
-        }
+            var statReq = StatRequest.For(thing.Def, thing.StuffDef);
 
-        return false;
-    }
+            if (CE_StatDefOf.OneHandedness.Worker.ShouldShowFor(statReq))
+            {
+                return CE_StatDefOf.OneHandedness.Worker.GetValue(statReq) > 0f;
+            }
+
+            return false;
+        }
+    );
     public override Widget? GetTableCellWidget(ThingAlike thing)
     {
         var value = IsOneHandedWeapon(thing);

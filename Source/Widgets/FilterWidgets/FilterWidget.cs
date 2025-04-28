@@ -13,8 +13,7 @@ public abstract class FilterWidget : Widget
 }
 
 // TODO: TLhs and TRhs are not very descriptive names here. I even think they leak abstraction.
-public abstract class FilterWidget<TLhs, TRhs> : FilterWidget
-    where TRhs : notnull
+public abstract class FilterWidget<TLhs, TRhs> : FilterWidget where TRhs : notnull
 {
     private Vector2 OperatorButtonSize;
     private Vector2 InputFieldSize;

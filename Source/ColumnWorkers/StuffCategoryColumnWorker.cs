@@ -11,34 +11,47 @@ namespace Stats.ColumnWorkers;
 public sealed class StuffCategoryColumnWorker : ColumnWorker
 {
     public override TableColumnCellStyle CellStyle => TableColumnCellStyle.String;
-    // TODO: "categorieS" is for a reason.
-    private static readonly Func<ThingAlike, StuffCategoryDef?> GetStuffCatDef = FunctionExtensions.Memoized(
-        (ThingAlike thing) => thing.Def.stuffProps?.categories.FirstOrDefault()
+    private static readonly Func<ThingAlike, List<StuffCategoryDef>> GetStuffCatDefs = FunctionExtensions.Memoized(
+        (ThingAlike thing) => thing.Def.stuffProps?.categories ?? []
+    );
+    private static readonly Func<ThingAlike, string> GetStuffCatLabels = FunctionExtensions.Memoized(
+        (ThingAlike thing) =>
+        {
+            var stuffCatDefs = GetStuffCatDefs(thing);
+
+            if (stuffCatDefs.Count == 0)
+            {
+                return "";
+            }
+
+            var labels = stuffCatDefs
+                .OrderBy(stuffCatDef => stuffCatDef.label)
+                .Select(stuffCatDef => stuffCatDef.LabelCap);
+
+            return string.Join("\n", labels);
+        }
     );
     public override Widget? GetTableCellWidget(ThingAlike thing)
     {
-        var stuffCatDef = GetStuffCatDef(thing);
+        var stuffCatLabels = GetStuffCatLabels(thing);
 
-        if (stuffCatDef == null)
+        if (stuffCatLabels.Length == 0)
         {
             return null;
         }
 
-        return new Label(stuffCatDef.LabelCap);
+        return new Label(stuffCatLabels);
     }
     public override FilterWidget GetFilterWidget()
     {
-        return new OneToManyOptionsFilter<StuffCategoryDef?>(
-            GetStuffCatDef,
+        return new ManyToManyOptionsFilter<StuffCategoryDef>(
+            GetStuffCatDefs,
             DefDatabase<StuffCategoryDef>.AllDefsListForReading.OrderBy(stuffCatDef => stuffCatDef.label),
             stuffCatDef => new Label(stuffCatDef.LabelCap)
         );
     }
     public override int Compare(ThingAlike thing1, ThingAlike thing2)
     {
-        var label1 = GetStuffCatDef(thing1)?.label;
-        var label2 = GetStuffCatDef(thing2)?.label;
-
-        return Comparer<string?>.Default.Compare(label1, label2);
+        return GetStuffCatLabels(thing1).CompareTo(GetStuffCatLabels(thing2));
     }
 }

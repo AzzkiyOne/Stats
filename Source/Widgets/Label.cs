@@ -4,7 +4,7 @@ namespace Stats.Widgets;
 
 public sealed class Label : Widget
 {
-    private string _Text;
+    private string _Text = "";
     public string Text
     {
         get => _Text;

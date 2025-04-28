@@ -1,26 +1,23 @@
 ﻿using System;
-using System.Linq;
 
 namespace Stats.RelationalOperators;
 
-public sealed class ContainsAnyOf : RelationalOperator<string, string>
+public sealed class Contains : RelationalOperator<string, string>
 {
-    private ContainsAnyOf() { }
+    private Contains() { }
     public override bool Eval(string lhs, string rhs) =>
-        rhs
-        .Split(',')
-        .Any(s => lhs.Contains(s, StringComparison.CurrentCultureIgnoreCase));
+        lhs.Contains(rhs, StringComparison.CurrentCultureIgnoreCase);
     public override string ToString() => "~=";
     public static RelationalOperator<string, string> Instance { get; } =
-        new ContainsAnyOf();
+        new Contains();
 }
 
-public sealed class NotContainsAnyOf : RelationalOperator<string, string>
+public sealed class NotContains : RelationalOperator<string, string>
 {
-    private NotContainsAnyOf() { }
+    private NotContains() { }
     public override bool Eval(string lhs, string rhs) =>
-        ContainsAnyOf.Instance.Eval(lhs, rhs) == false;
+        lhs.Contains(rhs, StringComparison.CurrentCultureIgnoreCase) == false;
     public override string ToString() => "!~=";
     public static RelationalOperator<string, string> Instance { get; } =
-        new NotContainsAnyOf();
+        new NotContains();
 }

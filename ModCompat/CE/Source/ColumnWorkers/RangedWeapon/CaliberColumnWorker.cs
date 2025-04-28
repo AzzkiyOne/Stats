@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using RimWorld;
 using Stats.ColumnWorkers;
 using Stats.Widgets;
@@ -12,7 +11,7 @@ public sealed class CaliberColumnWorker : ColumnWorker
 {
     public override TableColumnCellStyle CellStyle => TableColumnCellStyle.String;
     private static readonly StatDef CaliberStatDef = DefDatabase<StatDef>.GetNamed("Caliber");
-    private static readonly Func<ThingAlike, string?> GetCaliberName = FunctionExtensions.Memoized(
+    private static readonly Func<ThingAlike, string> GetCaliberName = FunctionExtensions.Memoized(
         (ThingAlike thing) =>
         {
             var statReq = StatRequest.For(thing.Def, thing.StuffDef);
@@ -22,14 +21,14 @@ public sealed class CaliberColumnWorker : ColumnWorker
                 CaliberStatDef.Worker.GetValue(statReq),
                 ToStringNumberSense.Absolute,
                 statReq
-            );
+            ) ?? "";
         }
     );
     public override Widget? GetTableCellWidget(ThingAlike thing)
     {
         var caliberName = GetCaliberName(thing);
 
-        if (caliberName is null or { Length: 0 })
+        if (caliberName.Length == 0)
         {
             return null;
         }
@@ -49,9 +48,6 @@ public sealed class CaliberColumnWorker : ColumnWorker
     }
     public override int Compare(ThingAlike thing1, ThingAlike thing2)
     {
-        var caliberName1 = GetCaliberName(thing1);
-        var caliberName2 = GetCaliberName(thing2);
-
-        return Comparer<string?>.Default.Compare(caliberName1, caliberName2);
+        return GetCaliberName(thing1).CompareTo(GetCaliberName(thing2));
     }
 }

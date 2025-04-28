@@ -17,37 +17,49 @@ namespace Stats.ColumnWorkers.Apparel;
 public sealed class CoverageColumnWorker : ColumnWorker
 {
     public override TableColumnCellStyle CellStyle => TableColumnCellStyle.String;
-    private static readonly Func<ThingAlike, IEnumerable<BodyPartGroupDef>> GetBodyPartGroups = FunctionExtensions.Memoized(
-        (ThingAlike thing) => thing.Def.apparel?.bodyPartGroups.Distinct() ?? []
+    private static readonly Func<ThingAlike, List<BodyPartGroupDef>> GetBodyPartGroupDefs = FunctionExtensions.Memoized(
+        (ThingAlike thing) => thing.Def.apparel?.bodyPartGroups.Distinct().ToList() ?? []
+    );
+    private static readonly Func<ThingAlike, string> GetBodyPartGroupLabels = FunctionExtensions.Memoized(
+        (ThingAlike thing) =>
+        {
+            var bodyPartGroupDefs = GetBodyPartGroupDefs(thing);
+
+            if (bodyPartGroupDefs.Count == 0)
+            {
+                return "";
+            }
+
+            var bodyPartGroupLabels = bodyPartGroupDefs
+                .OrderBy(bodyPartGroupDef => bodyPartGroupDef.label)
+                .Select(bodyPartGroupDef => bodyPartGroupDef.LabelCap);
+
+            return string.Join("\n", bodyPartGroupLabels);
+        }
     );
     public override Widget? GetTableCellWidget(ThingAlike thing)
     {
-        var bodyPartGroupDefs = GetBodyPartGroups(thing);
+        var bodyPartGroupLabels = GetBodyPartGroupLabels(thing);
 
-        if (bodyPartGroupDefs.Count() == 0)
+        if (bodyPartGroupLabels.Length == 0)
         {
             return null;
         }
 
-        var bodyPartGroupLabels = bodyPartGroupDefs
-            .OrderBy(bodyPartGroupDef => bodyPartGroupDef.label)
-            .Select(bodyPartGroupDef => bodyPartGroupDef.LabelCap);
-
-        return new Label(string.Join("\n", bodyPartGroupLabels));
+        return new Label(bodyPartGroupLabels);
     }
     public override FilterWidget GetFilterWidget()
     {
         return new ManyToManyOptionsFilter<BodyPartGroupDef>(
-            GetBodyPartGroups,
-            DefDatabase<BodyPartGroupDef>.AllDefsListForReading.OrderBy(bodyPartGroupDef => bodyPartGroupDef.label),
+            GetBodyPartGroupDefs,
+            DefDatabase<BodyPartGroupDef>
+                .AllDefsListForReading
+                .OrderBy(bodyPartGroupDef => bodyPartGroupDef.label),
             bodyPartGroupDef => new Label(bodyPartGroupDef.LabelCap)
         );
     }
     public override int Compare(ThingAlike thing1, ThingAlike thing2)
     {
-        var bodyPartGroupsCount1 = GetBodyPartGroups(thing1).Count();
-        var bodyPartGroupsCount2 = GetBodyPartGroups(thing2).Count();
-
-        return bodyPartGroupsCount1.CompareTo(bodyPartGroupsCount2);
+        return GetBodyPartGroupLabels(thing1).CompareTo(GetBodyPartGroupLabels(thing2));
     }
 }

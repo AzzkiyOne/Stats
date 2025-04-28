@@ -1,4 +1,5 @@
-﻿using Stats.Widgets;
+﻿using System;
+using Stats.Widgets;
 using Stats.Widgets.FilterWidgets;
 
 namespace Stats.ColumnWorkers;
@@ -6,6 +7,11 @@ namespace Stats.ColumnWorkers;
 public sealed class NameColumnWorker : ColumnWorker
 {
     public override TableColumnCellStyle CellStyle => TableColumnCellStyle.String;
+    private static readonly Func<ThingAlike, string> GetThingLabel = FunctionExtensions.Memoized(
+        (ThingAlike thing) => thing.StuffDef == null
+            ? thing.Def.LabelCap.RawText
+            : $"{thing.StuffDef.LabelCap} {thing.Def.label}"
+    );
     public override Widget? GetTableCellWidget(ThingAlike thing)
     {
         void openDefInfoDialog()
@@ -16,7 +22,7 @@ public sealed class NameColumnWorker : ColumnWorker
         return new HorizontalContainer(
             [
                 new ThingIcon(thing).ToButtonSubtle(openDefInfoDialog),
-                new Label(thing.Def.LabelCap),
+                new Label(GetThingLabel(thing)),
             ],
             Globals.GUI.Pad
         )
@@ -24,10 +30,10 @@ public sealed class NameColumnWorker : ColumnWorker
     }
     public override FilterWidget GetFilterWidget()
     {
-        return new StringFilter(thing => thing.Def.label);
+        return new StringFilter(GetThingLabel);
     }
     public override int Compare(ThingAlike thing1, ThingAlike thing2)
     {
-        return thing1.Def.label.CompareTo(thing2.Def.label);
+        return GetThingLabel(thing1).CompareTo(GetThingLabel(thing2));
     }
 }
