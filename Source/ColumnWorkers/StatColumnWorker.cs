@@ -1,29 +1,30 @@
-﻿using RimWorld;
+﻿using System;
+using RimWorld;
 using Stats.Widgets;
 using Stats.Widgets.FilterWidgets;
 using Verse;
 
-namespace Stats.ColumnWorkers.Generic;
+namespace Stats.ColumnWorkers;
 
-public class StatColumnWorker : ColumnWorker<float>
+public sealed class StatColumnWorker : ColumnWorker
 {
     public override TableColumnCellStyle CellStyle => TableColumnCellStyle.Number;
-    protected override float GetValue(ThingAlike thing)
+    private readonly Func<ThingAlike, float> GetStatValue;
+    public StatColumnWorker()
     {
-        var statReq = StatRequest.For(thing.Def, thing.StuffDef);
-
-        if (ColumnDef.stat!.Worker.ShouldShowFor(statReq) == false)
+        GetStatValue = FunctionExtensions.Memoized((ThingAlike thing) =>
         {
-            return 0f;
-        }
+            var statReq = StatRequest.For(thing.Def, thing.StuffDef);
 
-        return ColumnDef.stat!.Worker.GetValue(statReq);
+            if (ColumnDef.stat!.Worker.ShouldShowFor(statReq) == false)
+            {
+                return default;
+            }
+
+            return ColumnDef.stat!.Worker.GetValue(statReq);
+        });
     }
-    protected override bool ShouldShowValue(float value)
-    {
-        return value != 0f && float.IsNaN(value) == false;
-    }
-    protected virtual string FormatValue(float value, ThingAlike thing)
+    private string FormatStatValue(float value, ThingAlike thing)
     {
         if (ColumnDef.formatString != null)
         {
@@ -39,7 +40,7 @@ public class StatColumnWorker : ColumnWorker<float>
             statReq
         );
     }
-    protected virtual string? GetValueExplanation(float value, ThingAlike thing)
+    private string? GetStatValueExplanation(float value, ThingAlike thing)
     {
         var statReq = StatRequest.For(thing.Def, thing.StuffDef);
 
@@ -65,10 +66,17 @@ public class StatColumnWorker : ColumnWorker<float>
             _ => null,
         };
     }
-    protected override Widget GetTableCellContent(float value, ThingAlike thing)
+    public override Widget? GetTableCellWidget(ThingAlike thing)
     {
-        var valueStr = FormatValue(value, thing);
-        var tooltip = GetValueExplanation(value, thing);
+        var value = GetStatValue(thing);
+
+        if (value == default || float.IsNaN(value))
+        {
+            return null;
+        }
+
+        var valueStr = FormatStatValue(value, thing);
+        var tooltip = GetStatValueExplanation(value, thing);
         var widget = new Label(valueStr);
 
         if (tooltip?.Length > 0)
@@ -80,10 +88,10 @@ public class StatColumnWorker : ColumnWorker<float>
     }
     public override FilterWidget GetFilterWidget()
     {
-        return new NumberFilter<float>(GetValueCached);
+        return new NumberFilter<float>(GetStatValue);
     }
     public override int Compare(ThingAlike thing1, ThingAlike thing2)
     {
-        return GetValueCached(thing1).CompareTo(GetValueCached(thing2));
+        return GetStatValue(thing1).CompareTo(GetStatValue(thing2));
     }
 }

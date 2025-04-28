@@ -1,5 +1,6 @@
 ﻿using System;
 using Stats.RelationalOperators;
+using Verse;
 
 namespace Stats;
 
@@ -75,13 +76,14 @@ public sealed class FilterExpression<TLhs, TRhs> : FilterExpression where TRhs :
     }
     public override bool Eval(ThingAlike thing)
     {
-        // TODO: This may be redundant.
         try
         {
             return Operator.Eval(Lhs(thing), _Rhs);
         }
-        catch
+        catch (Exception e)
         {
+            Log.Error(e.Message);
+
             return false;
         }
     }

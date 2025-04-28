@@ -1,4 +1,6 @@
-﻿using System.Linq;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using RimWorld;
 using Stats.Widgets;
 using Stats.Widgets.FilterWidgets;
@@ -6,31 +8,37 @@ using Verse;
 
 namespace Stats.ColumnWorkers;
 
-public sealed class StuffCategoryColumnWorker : ColumnWorker<StuffCategoryDef>
+public sealed class StuffCategoryColumnWorker : ColumnWorker
 {
     public override TableColumnCellStyle CellStyle => TableColumnCellStyle.String;
-    protected override StuffCategoryDef GetValue(ThingAlike thing)
+    // TODO: "categorieS" is for a reason.
+    private static readonly Func<ThingAlike, StuffCategoryDef?> GetStuffCatDef = FunctionExtensions.Memoized(
+        (ThingAlike thing) => thing.Def.stuffProps?.categories.FirstOrDefault()
+    );
+    public override Widget? GetTableCellWidget(ThingAlike thing)
     {
-        return thing.Def.stuffProps?.categories.FirstOrDefault();
-    }
-    protected override Widget GetTableCellContent(StuffCategoryDef stuffCatDef, ThingAlike thing)
-    {
-        return StuffCatDefToWidget(stuffCatDef);
+        var stuffCatDef = GetStuffCatDef(thing);
+
+        if (stuffCatDef == null)
+        {
+            return null;
+        }
+
+        return new Label(stuffCatDef.LabelCap);
     }
     public override FilterWidget GetFilterWidget()
     {
-        return new OneToManyOptionsFilter<StuffCategoryDef>(
-            GetValueCached,
+        return new OneToManyOptionsFilter<StuffCategoryDef?>(
+            GetStuffCatDef,
             DefDatabase<StuffCategoryDef>.AllDefsListForReading.OrderBy(stuffCatDef => stuffCatDef.label),
-            StuffCatDefToWidget
+            stuffCatDef => new Label(stuffCatDef.LabelCap)
         );
-    }
-    private static Widget StuffCatDefToWidget(StuffCategoryDef stuffCatDef)
-    {
-        return new Label(stuffCatDef.LabelCap);
     }
     public override int Compare(ThingAlike thing1, ThingAlike thing2)
     {
-        return GetValueCached(thing1).label.CompareTo(GetValueCached(thing2).label);
+        var label1 = GetStuffCatDef(thing1)?.label;
+        var label2 = GetStuffCatDef(thing2)?.label;
+
+        return Comparer<string?>.Default.Compare(label1, label2);
     }
 }

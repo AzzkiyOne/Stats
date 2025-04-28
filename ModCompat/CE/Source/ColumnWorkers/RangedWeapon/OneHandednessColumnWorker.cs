@@ -1,19 +1,44 @@
 ﻿using RimWorld;
-using Stats.ColumnWorkers.Generic;
+using Stats.ColumnWorkers;
+using Stats.Widgets;
+using Stats.Widgets.FilterWidgets;
 
 namespace Stats.ModCompat.CE.ColumnWorkers.RangedWeapon;
 
-public sealed class OneHandednessColumnWorker : BooleanColumnWorker
+public sealed class OneHandednessColumnWorker : ColumnWorker
 {
-    protected override bool GetValue(ThingAlike thing)
+    public override TableColumnCellStyle CellStyle => TableColumnCellStyle.Boolean;
+    private bool IsOneHandedWeapon(ThingAlike thing)
     {
         var statReq = StatRequest.For(thing.Def, thing.StuffDef);
 
-        if (ColumnDef.stat!.Worker.ShouldShowFor(statReq) == false)
+        if (ColumnDef.stat!.Worker.ShouldShowFor(statReq))
         {
-            return false;
+            return ColumnDef.stat!.Worker.GetValue(statReq) > 0f;
         }
 
-        return ColumnDef.stat!.Worker.GetValue(statReq) > 0f;
+        return false;
+    }
+    public override Widget? GetTableCellWidget(ThingAlike thing)
+    {
+        var value = IsOneHandedWeapon(thing);
+
+        if (value == false)
+        {
+            return null;
+        }
+
+        return new SingleElementContainer(
+            new Icon(Verse.Widgets.CheckboxOnTex)
+                .PaddingRel(0.5f, 0f)
+        );
+    }
+    public override FilterWidget GetFilterWidget()
+    {
+        return new BooleanFilter(IsOneHandedWeapon);
+    }
+    public override int Compare(ThingAlike thing1, ThingAlike thing2)
+    {
+        return IsOneHandedWeapon(thing1).CompareTo(IsOneHandedWeapon(thing2));
     }
 }

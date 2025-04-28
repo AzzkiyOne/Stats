@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Stats.Widgets;
 using Stats.Widgets.FilterWidgets;
@@ -13,16 +14,21 @@ namespace Stats.ColumnWorkers.Apparel;
 // Luckily, it looks like in a definition it is allowed to only list the whole
 // groups of body parts. The resulting list is of course significantly smaller
 // and can be safely displayed in a single row/column.
-public sealed class CoverageColumnWorker : ColumnWorker<IEnumerable<BodyPartGroupDef>>
+public sealed class CoverageColumnWorker : ColumnWorker
 {
     public override TableColumnCellStyle CellStyle => TableColumnCellStyle.String;
+    private static readonly Func<ThingAlike, IEnumerable<BodyPartGroupDef>> GetBodyPartGroups = FunctionExtensions.Memoized(
+        (ThingAlike thing) => thing.Def.apparel?.bodyPartGroups.Distinct() ?? []
+    );
+    public override Widget? GetTableCellWidget(ThingAlike thing)
+    {
+        var bodyPartGroupDefs = GetBodyPartGroups(thing);
 
-    protected override IEnumerable<BodyPartGroupDef> GetValue(ThingAlike thing)
-    {
-        return thing.Def.apparel?.bodyPartGroups.Distinct() ?? [];
-    }
-    protected override Widget GetTableCellContent(IEnumerable<BodyPartGroupDef> bodyPartGroupDefs, ThingAlike thing)
-    {
+        if (bodyPartGroupDefs.Count() == 0)
+        {
+            return null;
+        }
+
         var bodyPartGroupLabels = bodyPartGroupDefs
             .OrderBy(bodyPartGroupDef => bodyPartGroupDef.label)
             .Select(bodyPartGroupDef => bodyPartGroupDef.LabelCap);
@@ -32,13 +38,16 @@ public sealed class CoverageColumnWorker : ColumnWorker<IEnumerable<BodyPartGrou
     public override FilterWidget GetFilterWidget()
     {
         return new ManyToManyOptionsFilter<BodyPartGroupDef>(
-            GetValueCached,
+            GetBodyPartGroups,
             DefDatabase<BodyPartGroupDef>.AllDefsListForReading.OrderBy(bodyPartGroupDef => bodyPartGroupDef.label),
             bodyPartGroupDef => new Label(bodyPartGroupDef.LabelCap)
         );
     }
     public override int Compare(ThingAlike thing1, ThingAlike thing2)
     {
-        return GetValueCached(thing1).Count().CompareTo(GetValueCached(thing2).Count());
+        var bodyPartGroupsCount1 = GetBodyPartGroups(thing1).Count();
+        var bodyPartGroupsCount2 = GetBodyPartGroups(thing2).Count();
+
+        return bodyPartGroupsCount1.CompareTo(bodyPartGroupsCount2);
     }
 }

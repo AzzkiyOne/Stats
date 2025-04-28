@@ -17,7 +17,6 @@
         <descriptionKey>StoppingPowerExplanation</descriptionKey>
         <iconPath>UI/Icons/Trainables/Obedience</iconPath>
         <workerClass>Stats.ColumnWorkers.RangedWeapon.StoppingPowerColumnWorker</workerClass>
-        <formatString>F1</formatString>
     </Stats.ColumnDef>
 
     <Stats.ColumnDef>
@@ -26,7 +25,6 @@
         <labelShort>AP</labelShort>
         <descriptionKey>ArmorPenetrationExplanation</descriptionKey>
         <workerClass>Stats.ColumnWorkers.RangedWeapon.ArmorPenetrationColumnWorker</workerClass>
-        <formatString>0%</formatString>
     </Stats.ColumnDef>
 
     <Stats.ColumnDef>
@@ -34,7 +32,6 @@
         <labelKey>BurstShotFireRate</labelKey>
         <descriptionKey>Stat_Thing_Weapon_BurstShotFireRate_Desc</descriptionKey>
         <workerClass>Stats.ColumnWorkers.RangedWeapon.RPMColumnWorker</workerClass>
-        <formatString>0 rpm</formatString>
     </Stats.ColumnDef>
 
     <Stats.ColumnDef>
@@ -43,7 +40,6 @@
         <labelShort>BSC</labelShort>
         <descriptionKey>Stat_Thing_Weapon_BurstShotCount_Desc</descriptionKey>
         <workerClass>Stats.ColumnWorkers.RangedWeapon.BurstShotCountColumnWorker</workerClass>
-        <formatString>0</formatString>
     </Stats.ColumnDef>
 
     <Stats.ColumnDef>
@@ -51,35 +47,34 @@
         <labelKey>Range</labelKey>
         <descriptionKey>Stat_Thing_Weapon_Range_Desc</descriptionKey>
         <workerClass>Stats.ColumnWorkers.RangedWeapon.RangeColumnWorker</workerClass>
-        <formatString>F0</formatString>
     </Stats.ColumnDef>
 
     <Stats.ColumnDef>
         <defName>WeaponRanged_AccuracyTouch</defName>
         <labelShort>Acc. (3)</labelShort>
         <stat>AccuracyTouch</stat>
-        <workerClass>Stats.ColumnWorkers.Generic.StatColumnWorker</workerClass>
+        <workerClass>Stats.ColumnWorkers.StatColumnWorker</workerClass>
     </Stats.ColumnDef>
 
     <Stats.ColumnDef>
         <defName>WeaponRanged_AccuracyShort</defName>
         <labelShort>Acc. (12)</labelShort>
         <stat>AccuracyShort</stat>
-        <workerClass>Stats.ColumnWorkers.Generic.StatColumnWorker</workerClass>
+        <workerClass>Stats.ColumnWorkers.StatColumnWorker</workerClass>
     </Stats.ColumnDef>
 
     <Stats.ColumnDef>
         <defName>WeaponRanged_AccuracyMedium</defName>
         <labelShort>Acc. (25)</labelShort>
         <stat>AccuracyMedium</stat>
-        <workerClass>Stats.ColumnWorkers.Generic.StatColumnWorker</workerClass>
+        <workerClass>Stats.ColumnWorkers.StatColumnWorker</workerClass>
     </Stats.ColumnDef>
 
     <Stats.ColumnDef>
         <defName>WeaponRanged_AccuracyLong</defName>
         <labelShort>Acc. (40)</labelShort>
         <stat>AccuracyLong</stat>
-        <workerClass>Stats.ColumnWorkers.Generic.StatColumnWorker</workerClass>
+        <workerClass>Stats.ColumnWorkers.StatColumnWorker</workerClass>
     </Stats.ColumnDef>
 
     <Stats.ColumnDef>
@@ -87,7 +82,7 @@
         <labelShort>RCD</labelShort>
         <stat>RangedWeapon_Cooldown</stat>
         <isNegative>true</isNegative>
-        <workerClass>Stats.ColumnWorkers.Generic.StatColumnWorker</workerClass>
+        <workerClass>Stats.ColumnWorkers.StatColumnWorker</workerClass>
     </Stats.ColumnDef>
 
     <Stats.ColumnDef>
@@ -97,7 +92,6 @@
         <descriptionKey>Stat_Thing_Weapon_RangedWarmupTime_Desc</descriptionKey>
         <isNegative>true</isNegative>
         <workerClass>Stats.ColumnWorkers.RangedWeapon.AimingTimeColumnWorker</workerClass>
-        <formatString>0.00 s</formatString>
     </Stats.ColumnDef>
 
     <Stats.ColumnDef>
@@ -106,7 +100,6 @@
         <labelShort>BDF (P)</labelShort>
         <descriptionKey>BuildingDamageFactorPassableExplanation</descriptionKey>
         <workerClass>Stats.ColumnWorkers.RangedWeapon.BuildingDamageFactorPassableColumnWorker</workerClass>
-        <formatString>0%</formatString>
     </Stats.ColumnDef>
 
     <Stats.ColumnDef>
@@ -115,7 +108,6 @@
         <labelShort>BDF (I)</labelShort>
         <descriptionKey>BuildingDamageFactorImpassableExplanation</descriptionKey>
         <workerClass>Stats.ColumnWorkers.RangedWeapon.BuildingDamageFactorImpassableColumnWorker</workerClass>
-        <formatString>0%</formatString>
     </Stats.ColumnDef>
 
     <Stats.ColumnDef>
@@ -124,7 +116,6 @@
         <labelShort>DH %</labelShort>
         <descriptionKey>Stat_Thing_Weapon_DirectHitChance_Desc</descriptionKey>
         <workerClass>Stats.ColumnWorkers.RangedWeapon.DirectHitChanceColumnWorker</workerClass>
-        <formatString>0.0%</formatString>
     </Stats.ColumnDef>
 
     <Stats.ColumnDef>
@@ -134,7 +125,6 @@
         <descriptionKey>Stat_Thing_Weapon_MissRadius_Desc</descriptionKey>
         <isNegative>true</isNegative>
         <workerClass>Stats.ColumnWorkers.RangedWeapon.MissRadiusColumnWorker</workerClass>
-        <formatString>0.0</formatString>
     </Stats.ColumnDef>
 
 </Defs>

@@ -1,19 +1,43 @@
-﻿using Stats.ColumnWorkers.Generic;
+﻿using System;
+using Stats.Widgets;
+using Stats.Widgets.FilterWidgets;
 using Verse;
 
 namespace Stats.ColumnWorkers.RangedWeapon;
 
-public sealed class DirectHitChanceColumnWorker : NumberColumnWorker<float>
+public sealed class DirectHitChanceColumnWorker : ColumnWorker
 {
-    protected override float GetValue(ThingAlike thing)
-    {
-        var verb = thing.Def.Verbs.Primary();
-
-        if (verb?.ForcedMissRadius == null)
+    public override TableColumnCellStyle CellStyle => TableColumnCellStyle.Number;
+    private static readonly Func<ThingAlike, float> GetValue = FunctionExtensions.Memoized(
+        (ThingAlike thing) =>
         {
-            return 0f;
+            var verb = thing.Def.Verbs.Primary();
+
+            if (verb?.ForcedMissRadius == null)
+            {
+                return default;
+            }
+
+            return 1f / GenRadial.NumCellsInRadius(verb.ForcedMissRadius);
+        }
+    );
+    public override Widget? GetTableCellWidget(ThingAlike thing)
+    {
+        var value = GetValue(thing);
+
+        if (value == default)
+        {
+            return null;
         }
 
-        return 1f / GenRadial.NumCellsInRadius(verb.ForcedMissRadius);
+        return new Label(value.ToString("0.0%"));
+    }
+    public override FilterWidget GetFilterWidget()
+    {
+        return new NumberFilter<float>(GetValue);
+    }
+    public override int Compare(ThingAlike thing1, ThingAlike thing2)
+    {
+        return GetValue(thing1).CompareTo(GetValue(thing2));
     }
 }

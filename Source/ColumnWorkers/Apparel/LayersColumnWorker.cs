@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Stats.Widgets;
 using Stats.Widgets.FilterWidgets;
@@ -6,15 +7,21 @@ using Verse;
 
 namespace Stats.ColumnWorkers.Apparel;
 
-public sealed class LayersColumnWorker : ColumnWorker<IEnumerable<ApparelLayerDef>>
+public sealed class LayersColumnWorker : ColumnWorker
 {
     public override TableColumnCellStyle CellStyle => TableColumnCellStyle.String;
-    protected override IEnumerable<ApparelLayerDef> GetValue(ThingAlike thing)
+    private static readonly Func<ThingAlike, List<ApparelLayerDef>> GetApparelLayers = FunctionExtensions.Memoized(
+        (ThingAlike thing) => thing.Def.apparel?.layers ?? []
+    );
+    public override Widget? GetTableCellWidget(ThingAlike thing)
     {
-        return thing.Def.apparel?.layers ?? [];
-    }
-    protected override Widget GetTableCellContent(IEnumerable<ApparelLayerDef> layerDefs, ThingAlike thing)
-    {
+        var layerDefs = GetApparelLayers(thing);
+
+        if (layerDefs.Count == 0)
+        {
+            return null;
+        }
+
         var layerLabels = layerDefs
             .OrderBy(layerDef => layerDef.label)
             .Select(layerDef => layerDef.LabelCap);
@@ -24,13 +31,16 @@ public sealed class LayersColumnWorker : ColumnWorker<IEnumerable<ApparelLayerDe
     public override FilterWidget GetFilterWidget()
     {
         return new ManyToManyOptionsFilter<ApparelLayerDef>(
-            GetValueCached,
+            GetApparelLayers,
             DefDatabase<ApparelLayerDef>.AllDefsListForReading.OrderBy(layerDef => layerDef.label),
             layerDef => new Label(layerDef.LabelCap)
         );
     }
     public override int Compare(ThingAlike thing1, ThingAlike thing2)
     {
-        return GetValueCached(thing1).Count().CompareTo(GetValueCached(thing2).Count());
+        var layersCount1 = GetApparelLayers(thing1).Count;
+        var layersCount2 = GetApparelLayers(thing2).Count;
+
+        return layersCount1.CompareTo(layersCount2);
     }
 }

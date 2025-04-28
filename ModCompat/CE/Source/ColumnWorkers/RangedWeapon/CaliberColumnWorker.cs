@@ -1,25 +1,39 @@
-﻿using RimWorld;
-using Stats.ColumnWorkers.Generic;
+﻿using System;
+using System.Collections.Generic;
+using RimWorld;
+using Stats.ColumnWorkers;
 using Stats.Widgets;
+using Stats.Widgets.FilterWidgets;
 using Verse;
 
 namespace Stats.ModCompat.CE.ColumnWorkers.RangedWeapon;
 
-public sealed class CaliberColumnWorker : StringColumnWorker
+public sealed class CaliberColumnWorker : ColumnWorker
 {
-    protected override string GetValue(ThingAlike thing)
-    {
-        var statReq = StatRequest.For(thing.Def, thing.StuffDef);
+    public override TableColumnCellStyle CellStyle => TableColumnCellStyle.String;
+    private static readonly StatDef CaliberStatDef = DefDatabase<StatDef>.GetNamed("Caliber");
+    private static readonly Func<ThingAlike, string?> GetCaliberName = FunctionExtensions.Memoized(
+        (ThingAlike thing) =>
+        {
+            var statReq = StatRequest.For(thing.Def, thing.StuffDef);
 
-        return ColumnDef.stat!.Worker.GetStatDrawEntryLabel(
-            ColumnDef.stat!,
-            ColumnDef.stat!.Worker.GetValue(statReq),
-            ToStringNumberSense.Absolute,
-            statReq
-        );
-    }
-    protected override Widget GetTableCellContent(string? value, ThingAlike thing)
+            return CaliberStatDef.Worker.GetStatDrawEntryLabel(
+                CaliberStatDef,
+                CaliberStatDef.Worker.GetValue(statReq),
+                ToStringNumberSense.Absolute,
+                statReq
+            );
+        }
+    );
+    public override Widget? GetTableCellWidget(ThingAlike thing)
     {
+        var caliberName = GetCaliberName(thing);
+
+        if (caliberName is null or { Length: 0 })
+        {
+            return null;
+        }
+
         var statReq = StatRequest.For(thing.Def, thing.StuffDef);
         var tooltip = ColumnDef.stat!.Worker.GetExplanationFull(
             statReq,
@@ -27,6 +41,17 @@ public sealed class CaliberColumnWorker : StringColumnWorker
             ColumnDef.stat!.Worker.GetValue(statReq)
         );
 
-        return new Label(value).Tooltip(tooltip);
+        return new Label(caliberName).Tooltip(tooltip);
+    }
+    public override FilterWidget GetFilterWidget()
+    {
+        return new StringFilter(GetCaliberName);
+    }
+    public override int Compare(ThingAlike thing1, ThingAlike thing2)
+    {
+        var caliberName1 = GetCaliberName(thing1);
+        var caliberName2 = GetCaliberName(thing2);
+
+        return Comparer<string?>.Default.Compare(caliberName1, caliberName2);
     }
 }

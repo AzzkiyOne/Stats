@@ -86,7 +86,24 @@ internal class TableRow
             rect.width = column.Width + cellExtraWidth;
             if (rect.xMax > 0f)
             {
-                Cells[i].DrawIn(rect);
+                try
+                {
+                    var origTextAnchor = Text.Anchor;
+                    Text.Anchor = column.TextAnchor;
+
+                    // Basically, relative size extensions are not allowed on table cell widgets.
+                    // Saves us some CPU cycles and is pointless to do anyway.
+                    var cellSize = Cells[i].GetSize();
+                    rect.height = cellSize.y;
+
+                    Cells[i].Draw(rect, cellSize);
+
+                    Text.Anchor = origTextAnchor;
+                }
+                catch
+                {
+                    // TODO: ?
+                }
             }
 
             rect.x = rect.xMax;

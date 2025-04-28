@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Stats.Widgets;
 using Stats.Widgets.FilterWidgets;
@@ -6,40 +7,42 @@ using Verse;
 
 namespace Stats.ColumnWorkers;
 
-public sealed class CreatedAtColumnWorker : ColumnWorker<IEnumerable<ThingDef>>
+public sealed class CreatedAtColumnWorker : ColumnWorker
 {
     public override TableColumnCellStyle CellStyle => TableColumnCellStyle.String;
-    protected override IEnumerable<ThingDef> GetValue(ThingAlike thing)
-    {
-        var things = new HashSet<ThingDef>();
-
-        foreach (var recipe in DefDatabase<RecipeDef>.AllDefs)
+    private static readonly Func<ThingAlike, HashSet<ThingDef>> GetThingCraftBenches = FunctionExtensions.Memoized(
+        (ThingAlike thing) =>
         {
-            if
-            (
-                recipe is { products.Count: 1, IsSurgery: false }
-                &&
-                recipe.products.First().thingDef == thing.Def
-            )
+            var craftBenchesDefs = new HashSet<ThingDef>();
+
+            foreach (var recipe in DefDatabase<RecipeDef>.AllDefs)
             {
-                foreach (var recipeUser in recipe.AllRecipeUsers)
+                if
+                (
+                    recipe is { products.Count: 1, IsSurgery: false }
+                    &&
+                    recipe.products.First().thingDef == thing.Def
+                )
                 {
-                    things.Add(recipeUser);
+                    foreach (var recipeUser in recipe.AllRecipeUsers)
+                    {
+                        craftBenchesDefs.Add(recipeUser);
+                    }
                 }
             }
+
+            return craftBenchesDefs;
+        }
+    );
+    public override Widget? GetTableCellWidget(ThingAlike thing)
+    {
+        var thingDefs = GetThingCraftBenches(thing);
+
+        if (thingDefs.Count == 0)
+        {
+            return null;
         }
 
-        return things;
-    }
-    protected override bool ShouldShowValue(IEnumerable<ThingDef> thingDefs)
-    {
-        return thingDefs.Count() > 0;
-    }
-    protected override Widget GetTableCellContent(
-        IEnumerable<ThingDef> thingDefs,
-        ThingAlike thing
-    )
-    {
         var icons = new List<Widget>();
 
         foreach (var thingDef in thingDefs.OrderBy(thingDef => thingDef.label))
@@ -62,17 +65,15 @@ public sealed class CreatedAtColumnWorker : ColumnWorker<IEnumerable<ThingDef>>
     }
     public override FilterWidget GetFilterWidget()
     {
-        var craftingBenches = DefDatabase<ThingDef>.AllDefsListForReading.Where(thingDef => thingDef.IsWorkTable);
+        var craftingBenches = DefDatabase<ThingDef>.AllDefsListForReading.Where(
+            thingDef => thingDef.IsWorkTable
+        );
 
         return new ManyToManyOptionsFilter<ThingDef>(
-            GetValueCached,
+            GetThingCraftBenches,
             craftingBenches,
             ThingDefToFilterOptionWidget
         );
-    }
-    public override int Compare(ThingAlike thing1, ThingAlike thing2)
-    {
-        return GetValueCached(thing1).Count().CompareTo(GetValueCached(thing2).Count());
     }
     private static Widget ThingDefToFilterOptionWidget(ThingDef thingDef)
     {
@@ -84,5 +85,12 @@ public sealed class CreatedAtColumnWorker : ColumnWorker<IEnumerable<ThingDef>>
             Globals.GUI.PadSm,
             true
         );
+    }
+    public override int Compare(ThingAlike thing1, ThingAlike thing2)
+    {
+        var craftBechesCount1 = GetThingCraftBenches(thing1).Count;
+        var craftBechesCount2 = GetThingCraftBenches(thing2).Count;
+
+        return craftBechesCount1.CompareTo(craftBechesCount2);
     }
 }

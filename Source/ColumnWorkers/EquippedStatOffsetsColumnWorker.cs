@@ -1,20 +1,27 @@
 ﻿using System.Text;
-using Stats.ColumnWorkers.Generic;
 using Stats.Widgets;
+using Stats.Widgets.FilterWidgets;
 using UnityEngine;
 using Verse;
 
 namespace Stats.ColumnWorkers;
 
-public sealed class EquippedStatOffsetsColumnWorker : NumberColumnWorker<float>
+public sealed class EquippedStatOffsetsColumnWorker : ColumnWorker
 {
     public override TableColumnCellStyle CellStyle => TableColumnCellStyle.String;
-    protected override float GetValue(ThingAlike thing)
+    private static int GetOffsetsCount(ThingAlike thing)
     {
-        return thing.Def.equippedStatOffsets?.Count ?? 0f;
+        return thing.Def.equippedStatOffsets?.Count ?? default;
     }
-    protected override Widget GetTableCellContent(float value, ThingAlike thing)
+    public override Widget? GetTableCellWidget(ThingAlike thing)
     {
+        var statOffsetsCount = GetOffsetsCount(thing);
+
+        if (statOffsetsCount == default)
+        {
+            return null;
+        }
+
         var labels = new StringBuilder();
         var values = new StringBuilder();
 
@@ -42,5 +49,13 @@ public sealed class EquippedStatOffsetsColumnWorker : NumberColumnWorker<float>
             Globals.GUI.Pad,
             true
         );
+    }
+    public override FilterWidget GetFilterWidget()
+    {
+        return new NumberFilter<int>(GetOffsetsCount);
+    }
+    public override int Compare(ThingAlike thing1, ThingAlike thing2)
+    {
+        return GetOffsetsCount(thing1).CompareTo(GetOffsetsCount(thing2));
     }
 }

@@ -40,7 +40,7 @@ public sealed class IsSupersetOf<TLhs, TRhs, TElement> : RelationalOperator<TLhs
 {
     private IsSupersetOf() { }
     public override bool Eval(TLhs lhs, TRhs rhs) => rhs.All(lhs.Contains);
-    public override string ToString() => "⊃";
+    public override string ToString() => "⊇";
     public static RelationalOperator<TLhs, TRhs> Instance { get; } =
         new IsSupersetOf<TLhs, TRhs, TElement>();
 }

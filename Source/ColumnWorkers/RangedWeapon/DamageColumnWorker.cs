@@ -1,19 +1,43 @@
-﻿using Stats.ColumnWorkers.Generic;
+﻿using System;
+using Stats.Widgets;
+using Stats.Widgets.FilterWidgets;
 
 namespace Stats.ColumnWorkers.RangedWeapon;
 
-public sealed class DamageColumnWorker : NumberColumnWorker<float>
+public sealed class DamageColumnWorker : ColumnWorker
 {
-    protected override float GetValue(ThingAlike thing)
-    {
-        var verb = thing.Def.Verbs.Primary();
-        var defaultProj = verb?.defaultProjectile?.projectile;
-
-        if (defaultProj?.damageDef?.harmsHealth is null or false)
+    public override TableColumnCellStyle CellStyle => TableColumnCellStyle.Number;
+    private static readonly Func<ThingAlike, int> GetValue = FunctionExtensions.Memoized(
+        (ThingAlike thing) =>
         {
-            return 0f;
+            var verb = thing.Def.Verbs.Primary();
+            var defaultProj = verb?.defaultProjectile?.projectile;
+
+            if (defaultProj?.damageDef?.harmsHealth == true)
+            {
+                return defaultProj.GetDamageAmount(thing.Def, thing.StuffDef);
+            }
+
+            return default;
+        }
+    );
+    public override Widget? GetTableCellWidget(ThingAlike thing)
+    {
+        var value = GetValue(thing);
+
+        if (value == default)
+        {
+            return null;
         }
 
-        return defaultProj.GetDamageAmount(thing.Def, thing.StuffDef);
+        return new Label(value.ToString());
+    }
+    public override FilterWidget GetFilterWidget()
+    {
+        return new NumberFilter<int>(GetValue);
+    }
+    public override int Compare(ThingAlike thing1, ThingAlike thing2)
+    {
+        return GetValue(thing1).CompareTo(GetValue(thing2));
     }
 }

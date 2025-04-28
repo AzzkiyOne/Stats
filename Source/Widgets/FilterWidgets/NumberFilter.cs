@@ -5,6 +5,7 @@ using UnityEngine;
 
 namespace Stats.Widgets.FilterWidgets;
 
+// TODO: Maybe we don't need to go too generic here.
 public sealed class NumberFilter<T> : FilterWidget<T, T>
     where T : struct, IEquatable<T>, IComparable<T>
 {

@@ -5,21 +5,17 @@ using Verse;
 
 namespace Stats.ColumnWorkers;
 
-public sealed class ContentSourceColumnWorker : ColumnWorker<ModContentPack>
+public sealed class ContentSourceColumnWorker : ColumnWorker
 {
     public override TableColumnCellStyle CellStyle => TableColumnCellStyle.String;
-    protected override ModContentPack GetValue(ThingAlike thing)
+    public override Widget? GetTableCellWidget(ThingAlike thing)
     {
-        return thing.Def.modContentPack;
-    }
-    protected override Widget GetTableCellContent(ModContentPack mod, ThingAlike thing)
-    {
-        return ModContentPackToWidget(mod);
+        return ModContentPackToWidget(thing.Def.modContentPack);
     }
     public override FilterWidget GetFilterWidget()
     {
         return new OneToManyOptionsFilter<ModContentPack>(
-            GetValueCached,
+            thing => thing.Def.modContentPack,
             LoadedModManager.RunningMods.OrderBy(mod => mod.Name),
             ModContentPackToWidget
         );
@@ -30,6 +26,9 @@ public sealed class ContentSourceColumnWorker : ColumnWorker<ModContentPack>
     }
     public override int Compare(ThingAlike thing1, ThingAlike thing2)
     {
-        return GetValueCached(thing1).Name.CompareTo(GetValueCached(thing2).Name);
+        var modName1 = thing1.Def.modContentPack.Name;
+        var modName2 = thing2.Def.modContentPack.Name;
+
+        return modName1.CompareTo(modName2);
     }
 }

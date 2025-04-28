@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 using Verse;
 
@@ -29,7 +30,10 @@ internal sealed class ThingTable
 
         foreach (var columnDef in columnDefs)
         {
-            var column = new Table.Column(columnDef == ColumnDefOf.Name);
+            var column = new Table.Column(
+                columnDef == ColumnDefOf.Name,
+                (TextAnchor)columnDef.Worker.CellStyle
+            );
             columns.Add(column);
 
             labelsRowCells.Add(CreateHeaderCell(columnDef, column));
@@ -132,9 +136,7 @@ internal sealed class ThingTable
         }
 
         return cell
-            .TextAnchor((TextAnchor)columnDef.Worker.CellStyle)
             .PaddingAbs(cellPadHor, cellPadVer)
-            .WidthRel(1f)
             .Background(drawSortIndicator)
             .ToButtonSubtle(
                 handleCellClick,
@@ -146,9 +148,7 @@ internal sealed class ThingTable
         var filterWidget = columnDef.Worker.GetFilterWidget();
 
         filter = filterWidget.Value;
-        return filterWidget
-            .TextAnchor((TextAnchor)columnDef.Worker.CellStyle)
-            .WidthRel(1f);
+        return filterWidget;
     }
     private static Widget CreateBodyCell(ColumnDef columnDef, ThingAlike thing)
     {
@@ -156,19 +156,21 @@ internal sealed class ThingTable
         {
             var cell = columnDef.Worker.GetTableCellWidget(thing);
 
-            if (cell != null)
+            if (cell == null)
             {
-                return cell
-                    .TextAnchor((TextAnchor)columnDef.Worker.CellStyle)
-                    .PaddingAbs(cellPadHor, cellPadVer)
-                    .WidthRel(1f);
+                return new EmptyWidget();
             }
-        }
-        catch
-        {
-        }
 
-        return new EmptyWidget();
+            return cell.PaddingAbs(cellPadHor, cellPadVer);
+        }
+        catch (Exception e)
+        {
+            return new Label("!!!")
+                .Color(Color.red.ToTransparent(0.5f))
+                .TextAnchor(TextAnchor.LowerCenter)
+                .PaddingAbs(cellPadHor, cellPadVer)
+                .Tooltip(e.Message);
+        }
     }
     private static void DrawHeaderRowBG(Rect rect, bool _, int __)
     {
@@ -199,6 +201,7 @@ internal sealed class ThingTable
             SortColumn = columnDef;
         }
 
+        // TODO: Handle exception.
         Table.BodyRows.Sort((r1, r2) =>
             SortColumn.Worker.Compare(
                 ((TableRow<ThingAlike>)r1).Id,

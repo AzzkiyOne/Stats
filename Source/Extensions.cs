@@ -30,7 +30,7 @@ public static class VerseVerbPropertiesListExtensions
 {
     public static VerbProperties? Primary(this List<VerbProperties> verbs)
     {
-        return verbs.FirstOrFallback(static v => v?.isPrimary == true);
+        return verbs.FirstOrFallback(static verb => verb?.isPrimary == true);
     }
 }
 
@@ -60,5 +60,26 @@ public static class UnityEngineColorExtensions
         color.a *= Globals.GUI.Opacity;
 
         return color;
+    }
+}
+
+public static class FunctionExtensions
+{
+    // Memoize every function call.
+    public static Func<TArg, TRes> Memoized<TArg, TRes>(this Func<TArg, TRes> function)
+    {
+        var cache = new Dictionary<TArg, TRes>();
+
+        return (TArg arg) =>
+        {
+            var resultIsCached = cache.TryGetValue(arg, out var result);
+
+            if (resultIsCached)
+            {
+                return result;
+            }
+
+            return cache[arg] = function(arg);
+        };
     }
 }

@@ -255,11 +255,13 @@ internal sealed class Table
 
     public class Column
     {
-        public bool IsPinned = false;
-        public float Width = 0f;
-        public Column(bool isPinned)
+        public bool IsPinned;
+        public float Width;
+        public readonly TextAnchor TextAnchor;
+        public Column(bool isPinned, TextAnchor textAnchor)
         {
             IsPinned = isPinned;
+            TextAnchor = textAnchor;
         }
     }
 }

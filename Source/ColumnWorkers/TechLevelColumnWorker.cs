@@ -6,32 +6,23 @@ using Stats.Widgets.FilterWidgets;
 
 namespace Stats.ColumnWorkers;
 
-public sealed class TechLevelColumnWorker : ColumnWorker<TechLevel>
+public sealed class TechLevelColumnWorker : ColumnWorker
 {
     public override TableColumnCellStyle CellStyle => TableColumnCellStyle.String;
-
-    protected override TechLevel GetValue(ThingAlike thing)
+    public override Widget? GetTableCellWidget(ThingAlike thing)
     {
-        return thing.Def.techLevel;
-    }
-    protected override Widget GetTableCellContent(TechLevel techLevel, ThingAlike thing)
-    {
-        return TechLevelToWidget(techLevel);
+        return new Label(thing.Def.techLevel.ToString());
     }
     public override FilterWidget GetFilterWidget()
     {
         return new OneToManyOptionsFilter<TechLevel>(
-            GetValueCached,
+            thing => thing.Def.techLevel,
             Enum.GetValues(typeof(TechLevel)).Cast<TechLevel>().OrderBy(techLevel => techLevel),
-            TechLevelToWidget
+            techLevel => new Label(techLevel.ToString())
         );
-    }
-    private static Widget TechLevelToWidget(TechLevel techLevel)
-    {
-        return new Label(techLevel.ToString());
     }
     public override int Compare(ThingAlike thing1, ThingAlike thing2)
     {
-        return GetValueCached(thing1).CompareTo(GetValueCached(thing2));
+        return thing1.Def.techLevel.CompareTo(thing2.Def.techLevel);
     }
 }

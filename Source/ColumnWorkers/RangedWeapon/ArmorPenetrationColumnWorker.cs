@@ -1,23 +1,47 @@
-﻿using Stats.ColumnWorkers.Generic;
+﻿using System;
+using Stats.Widgets;
+using Stats.Widgets.FilterWidgets;
 
 namespace Stats.ColumnWorkers.RangedWeapon;
 
-public sealed class ArmorPenetrationColumnWorker : NumberColumnWorker<float>
+public sealed class ArmorPenetrationColumnWorker : ColumnWorker
 {
-    protected override float GetValue(ThingAlike thing)
+    public override TableColumnCellStyle CellStyle => TableColumnCellStyle.Number;
+    private static readonly Func<ThingAlike, float> GetValue = FunctionExtensions.Memoized(
+        (ThingAlike thing) =>
+        {
+            var verb = thing.Def.Verbs.Primary();
+            var defaultProj = verb?.defaultProjectile?.projectile;
+
+            if (defaultProj?.damageDef is { harmsHealth: true, armorCategory: not null })
+            {
+                return defaultProj.GetArmorPenetration(null);
+            }
+            else if (defaultProj == null && verb?.beamDamageDef != null)
+            {
+                return verb.beamDamageDef.defaultArmorPenetration;
+            }
+
+            return default;
+        }
+    );
+    public override Widget? GetTableCellWidget(ThingAlike thing)
     {
-        var verb = thing.Def.Verbs.Primary();
-        var defaultProj = verb?.defaultProjectile?.projectile;
+        var value = GetValue(thing);
 
-        if (defaultProj?.damageDef is { harmsHealth: true, armorCategory: not null })
+        if (value == default)
         {
-            return defaultProj.GetArmorPenetration(null);
-        }
-        else if (defaultProj == null && verb?.beamDamageDef != null)
-        {
-            return verb.beamDamageDef.defaultArmorPenetration;
+            return null;
         }
 
-        return 0f;
+        return new Label(value.ToString("0%"));
+    }
+    public override FilterWidget GetFilterWidget()
+    {
+        return new NumberFilter<float>(GetValue);
+    }
+    public override int Compare(ThingAlike thing1, ThingAlike thing2)
+    {
+        return GetValue(thing1).CompareTo(GetValue(thing2));
     }
 }
