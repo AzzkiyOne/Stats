@@ -15,8 +15,6 @@ public sealed class AlternatingBackgroundWidgetExtension : WidgetExtension
     {
         IdleTexture = idleTexture;
         HoverTexture = hoverTexture;
-
-        Resize();
     }
     public override void Draw(Rect rect, Vector2 containerSize)
     {

@@ -1,38 +1,15 @@
-﻿using System;
-using Stats.Widgets;
-using Stats.Widgets.FilterWidgets;
+﻿namespace Stats.ColumnWorkers.RangedWeapon;
 
-namespace Stats.ColumnWorkers.RangedWeapon;
-
-public sealed class StoppingPowerColumnWorker : ColumnWorker
+public sealed class StoppingPowerColumnWorker : NumberColumnWorker
 {
-    public override TableColumnCellStyle CellStyle => TableColumnCellStyle.Number;
-    private static readonly Func<ThingAlike, float> GetValue = FunctionExtensions.Memoized(
-        (ThingAlike thing) =>
-        {
-            var verb = thing.Def.Verbs.Primary();
-            var defaultProj = verb?.defaultProjectile?.projectile;
-
-            return defaultProj?.stoppingPower ?? default;
-        }
-    );
-    public override Widget? GetTableCellWidget(ThingAlike thing)
+    public StoppingPowerColumnWorker() : base(GetValue)
     {
-        var value = GetValue(thing);
-
-        if (value == default)
-        {
-            return null;
-        }
-
-        return new Label(value.ToString("F1"));
     }
-    public override FilterWidget GetFilterWidget()
+    private static decimal GetValue(ThingAlike thing)
     {
-        return new NumberFilter<float>(GetValue);
-    }
-    public override int Compare(ThingAlike thing1, ThingAlike thing2)
-    {
-        return GetValue(thing1).CompareTo(GetValue(thing2));
+        var verb = thing.Def.Verbs.Primary();
+        var defaultProj = verb?.defaultProjectile?.projectile;
+
+        return defaultProj?.stoppingPower.ToDecimal("F1") ?? 0m;
     }
 }

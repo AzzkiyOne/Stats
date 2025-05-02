@@ -7,25 +7,22 @@ namespace Stats.Widgets.FilterWidgets;
 
 public sealed class BooleanFilter : FilterWidget
 {
-    private readonly FilterExpression<bool, bool> _Value;
-    public override FilterExpression Value => _Value;
+    private readonly BooleanFilterState SharedState;
+    public override FilterExpression State => State;
     private Action<Rect> DrawValue;
-    private BooleanFilter(FilterExpression<bool, bool> value)
+    private BooleanFilter(BooleanFilterState state)
     {
-        _Value = value;
+        SharedState = state;
         DrawValue = DrawEmpty;
 
-        Resize();
-
-        value.OnChange += HandleValueChange;
+        state.OnChange += HandleStateChange;
     }
-    public BooleanFilter(Func<ThingAlike, bool> lhs)
-        : this(new FilterExpression<bool, bool>(lhs, true))
+    public BooleanFilter(Func<ThingAlike, bool> lhs) : this(new BooleanFilterState(lhs))
     {
     }
-    private void HandleValueChange(FilterExpression _)
+    private void HandleStateChange(FilterExpression _)
     {
-        DrawValue = _Value switch
+        DrawValue = SharedState switch
         {
             { IsEmpty: true } => DrawEmpty,
             { Rhs: true } => DrawTrue,
@@ -36,9 +33,9 @@ public sealed class BooleanFilter : FilterWidget
     }
     protected override Vector2 CalcSize()
     {
-        if (_Value.IsEmpty)
+        if (State.IsEmpty)
         {
-            return Text.CalcSize(_Value.Operator.ToString());
+            return Text.CalcSize(SharedState.Operator.ToString());
         }
 
         return new Vector2(Text.LineHeight, Text.LineHeight);
@@ -51,27 +48,52 @@ public sealed class BooleanFilter : FilterWidget
     }
     private void DrawEmpty(Rect rect)
     {
-        if (Verse.Widgets.ButtonTextSubtle(rect, _Value.Operator.ToString()))
+        if (Widgets.Draw.ButtonTextSubtle(rect, SharedState.Operator.ToString()))
         {
-            _Value.Set(true, EqualTo<bool, bool>.Instance);
+            SharedState.Operator = BooleanFilterState.Operators.EqualTo;
         }
     }
     private void DrawTrue(Rect rect)
     {
-        if (Verse.Widgets.ButtonImageFitted(rect, Verse.Widgets.CheckboxOnTex))
+        if (Widgets.Draw.ButtonImageSubtle(rect, Verse.Widgets.CheckboxOnTex))
         {
-            _Value.Rhs = false;
+            SharedState.Rhs = false;
         }
     }
     private void DrawFalse(Rect rect)
     {
-        if (Verse.Widgets.ButtonImageFitted(rect, Verse.Widgets.CheckboxOffTex))
+        if (Widgets.Draw.ButtonImageSubtle(rect, Verse.Widgets.CheckboxOffTex))
         {
-            _Value.Clear();
+            State.Clear();
         }
     }
     public override FilterWidget Clone()
     {
-        return new BooleanFilter(_Value);
+        return new BooleanFilter(SharedState);
+    }
+
+    private sealed class BooleanFilterState : FilterExpression<bool, bool>
+    {
+        public BooleanFilterState(Func<ThingAlike, bool> lhs) : base(lhs, true)
+        {
+        }
+        public override void Clear()
+        {
+            base.Clear();
+
+            Rhs = true;
+        }
+
+        public static class Operators
+        {
+            public sealed class EqualToOperator : RelationalOperator<bool, bool>
+            {
+                private EqualToOperator() { }
+                public override bool Eval(bool lhs, bool rhs) => lhs == rhs;
+                public override string ToString() => "==";
+                public static EqualToOperator Instance { get; } = new();
+            }
+            public static EqualToOperator EqualTo = EqualToOperator.Instance;
+        }
     }
 }

@@ -1,7 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 
-namespace Stats.RelationalOperators;
+namespace Stats.RelationalOperators.Set;
+
+// TODO: Use actual sets?
 
 public sealed class IsIn<TLhs, TRhs> : RelationalOperator<TLhs, TRhs>
     where TRhs : IEnumerable<TLhs>
@@ -9,8 +11,7 @@ public sealed class IsIn<TLhs, TRhs> : RelationalOperator<TLhs, TRhs>
     private IsIn() { }
     public override bool Eval(TLhs lhs, TRhs rhs) => rhs.Contains(lhs);
     public override string ToString() => "∈";
-    public static RelationalOperator<TLhs, TRhs> Instance { get; } =
-        new IsIn<TLhs, TRhs>();
+    public static IsIn<TLhs, TRhs> Instance { get; } = new();
 }
 
 public sealed class IsNotIn<TLhs, TRhs> : RelationalOperator<TLhs, TRhs>
@@ -19,8 +20,7 @@ public sealed class IsNotIn<TLhs, TRhs> : RelationalOperator<TLhs, TRhs>
     private IsNotIn() { }
     public override bool Eval(TLhs lhs, TRhs rhs) => rhs.Contains(lhs) == false;
     public override string ToString() => "∉";
-    public static RelationalOperator<TLhs, TRhs> Instance { get; } =
-        new IsNotIn<TLhs, TRhs>();
+    public static IsNotIn<TLhs, TRhs> Instance { get; } = new();
 }
 
 public sealed class IntersectsWith<TLhs, TRhs, TElement> : RelationalOperator<TLhs, TRhs>
@@ -30,8 +30,7 @@ public sealed class IntersectsWith<TLhs, TRhs, TElement> : RelationalOperator<TL
     private IntersectsWith() { }
     public override bool Eval(TLhs lhs, TRhs rhs) => rhs.Any(lhs.Contains);
     public override string ToString() => "∩";
-    public static RelationalOperator<TLhs, TRhs> Instance { get; } =
-        new IntersectsWith<TLhs, TRhs, TElement>();
+    public static IntersectsWith<TLhs, TRhs, TElement> Instance { get; } = new();
 }
 
 public sealed class IsSupersetOf<TLhs, TRhs, TElement> : RelationalOperator<TLhs, TRhs>
@@ -41,8 +40,7 @@ public sealed class IsSupersetOf<TLhs, TRhs, TElement> : RelationalOperator<TLhs
     private IsSupersetOf() { }
     public override bool Eval(TLhs lhs, TRhs rhs) => rhs.All(lhs.Contains);
     public override string ToString() => "⊇";
-    public static RelationalOperator<TLhs, TRhs> Instance { get; } =
-        new IsSupersetOf<TLhs, TRhs, TElement>();
+    public static IsSupersetOf<TLhs, TRhs, TElement> Instance { get; } = new();
 }
 
 public sealed class IsNotSupersetOf<TLhs, TRhs, TElement> : RelationalOperator<TLhs, TRhs>
@@ -52,8 +50,7 @@ public sealed class IsNotSupersetOf<TLhs, TRhs, TElement> : RelationalOperator<T
     private IsNotSupersetOf() { }
     public override bool Eval(TLhs lhs, TRhs rhs) => rhs.All(lhs.Contains) == false;
     public override string ToString() => "⊅";
-    public static RelationalOperator<TLhs, TRhs> Instance { get; } =
-        new IsNotSupersetOf<TLhs, TRhs, TElement>();
+    public static IsNotSupersetOf<TLhs, TRhs, TElement> Instance { get; } = new();
 }
 
 public sealed class IsSubsetOf<TLhs, TRhs, TElement> : RelationalOperator<TLhs, TRhs>
@@ -63,8 +60,7 @@ public sealed class IsSubsetOf<TLhs, TRhs, TElement> : RelationalOperator<TLhs, 
     private IsSubsetOf() { }
     public override bool Eval(TLhs lhs, TRhs rhs) => lhs.All(rhs.Contains);
     public override string ToString() => "⊆";
-    public static RelationalOperator<TLhs, TRhs> Instance { get; } =
-        new IsSubsetOf<TLhs, TRhs, TElement>();
+    public static IsSubsetOf<TLhs, TRhs, TElement> Instance { get; } = new();
 }
 
 public sealed class IsNotSubsetOf<TLhs, TRhs, TElement> : RelationalOperator<TLhs, TRhs>
@@ -74,6 +70,5 @@ public sealed class IsNotSubsetOf<TLhs, TRhs, TElement> : RelationalOperator<TLh
     private IsNotSubsetOf() { }
     public override bool Eval(TLhs lhs, TRhs rhs) => lhs.All(rhs.Contains) == false;
     public override string ToString() => "⊄";
-    public static RelationalOperator<TLhs, TRhs> Instance { get; } =
-        new IsNotSubsetOf<TLhs, TRhs, TElement>();
+    public static IsNotSubsetOf<TLhs, TRhs, TElement> Instance { get; } = new();
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text.RegularExpressions;
 using RimWorld;
 using Stats.Widgets;
 using Stats.Widgets.FilterWidgets;
@@ -9,20 +10,48 @@ namespace Stats.ColumnWorkers;
 public sealed class StatColumnWorker : ColumnWorker
 {
     public override TableColumnCellStyle CellStyle => TableColumnCellStyle.Number;
-    private readonly Func<ThingAlike, float> GetStatValue;
+    private static readonly Regex NumRegex = new(@"[0-9]+\.?[0-9]+", RegexOptions.Compiled);
+    private static readonly Regex NonZeroNumRegex = new(@"[1-9]+", RegexOptions.Compiled);
+    private readonly Func<ThingAlike, decimal> GetDisplayedStatValue;
     public StatColumnWorker()
     {
-        GetStatValue = FunctionExtensions.Memoized((ThingAlike thing) =>
+        GetDisplayedStatValue = new Func<ThingAlike, decimal>((ThingAlike thing) =>
         {
-            var statReq = StatRequest.For(thing.Def, thing.StuffDef);
+            var statValue = GetStatValue(thing);
 
-            if (ColumnDef.stat!.Worker.ShouldShowFor(statReq) == false)
+            if (statValue == 0f)
             {
-                return default;
+                return 0m;
             }
 
-            return ColumnDef.stat!.Worker.GetValue(statReq);
-        });
+            var formattedStatValue = FormatStatValue(statValue, thing);
+            var match = NumRegex.Match(formattedStatValue);
+
+            if (match.Success)
+            {
+                var numWasParsed = decimal.TryParse(match.Value, out var num);
+
+                if (numWasParsed)
+                {
+                    return num;
+                }
+            }
+
+            // TODO: Maybe just throw an exception here.
+            return (decimal)statValue;
+        })
+        .Memoized();
+    }
+    private float GetStatValue(ThingAlike thing)
+    {
+        var statReq = StatRequest.For(thing.Def, thing.StuffDef);
+
+        if (ColumnDef.stat!.Worker.ShouldShowFor(statReq) == false)
+        {
+            return 0f;
+        }
+
+        return ColumnDef.stat!.Worker.GetValue(statReq);
     }
     private string FormatStatValue(float value, ThingAlike thing)
     {
@@ -40,7 +69,7 @@ public sealed class StatColumnWorker : ColumnWorker
             statReq
         );
     }
-    private string? GetStatValueExplanation(float value, ThingAlike thing)
+    private string GetStatValueExplanation(float value, ThingAlike thing)
     {
         var statReq = StatRequest.For(thing.Def, thing.StuffDef);
 
@@ -63,35 +92,45 @@ public sealed class StatColumnWorker : ColumnWorker
                     ToStringNumberSense.Absolute,
                     value
                 ),
-            _ => null,
+            _ => "",
         };
+    }
+    private static bool IsZeroString(string value)
+    {
+        return NonZeroNumRegex.IsMatch(value) == false;
     }
     public override Widget? GetTableCellWidget(ThingAlike thing)
     {
         var value = GetStatValue(thing);
 
-        if (value == default || float.IsNaN(value))
+        if (float.IsNaN(value))
         {
             return null;
         }
 
-        var valueStr = FormatStatValue(value, thing);
-        var tooltip = GetStatValueExplanation(value, thing);
-        var widget = new Label(valueStr);
+        var valueFormatted = FormatStatValue(value, thing);
 
-        if (tooltip?.Length > 0)
+        if (IsZeroString(valueFormatted))
         {
-            return widget.Tooltip(tooltip);
+            return null;
+        }
+
+        Widget widget = new Label(valueFormatted);
+
+        var tooltip = GetStatValueExplanation(value, thing);
+        if (tooltip.Length > 0)
+        {
+            widget = widget.Tooltip(tooltip);
         }
 
         return widget;
     }
     public override FilterWidget GetFilterWidget()
     {
-        return new NumberFilter<float>(GetStatValue);
+        return new NumberFilter(GetDisplayedStatValue);
     }
     public override int Compare(ThingAlike thing1, ThingAlike thing2)
     {
-        return GetStatValue(thing1).CompareTo(GetStatValue(thing2));
+        return GetDisplayedStatValue(thing1).CompareTo(GetDisplayedStatValue(thing2));
     }
 }

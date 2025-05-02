@@ -16,7 +16,7 @@ public sealed class NameColumnWorker : ColumnWorker
     {
         void openDefInfoDialog()
         {
-            DefInfoDialog.Draw(thing.Def, thing.StuffDef);
+            Draw.DefInfoDialog(thing.Def, thing.StuffDef);
         }
 
         return new HorizontalContainer(

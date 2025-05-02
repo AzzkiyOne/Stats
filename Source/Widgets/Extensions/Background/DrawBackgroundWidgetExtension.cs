@@ -13,8 +13,6 @@ public sealed class DrawBackgroundWidgetExtension : WidgetExtension
     ) : base(widget)
     {
         _DrawBackground = drawBackground;
-
-        Resize();
     }
     public override void Draw(Rect rect, Vector2 containerSize)
     {

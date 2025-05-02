@@ -11,8 +11,6 @@ public sealed class CalcWidthWidgetExtension : WidgetExtension
     ) : base(widget)
     {
         WidthFunction = widthFunction;
-
-        Resize();
     }
     protected override Vector2 CalcSize(Vector2 containerSize)
     {

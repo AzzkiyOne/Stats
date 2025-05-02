@@ -1,43 +1,21 @@
-﻿using System;
-using Stats.Widgets;
-using Stats.Widgets.FilterWidgets;
-using Verse;
+﻿using Verse;
 
 namespace Stats.ColumnWorkers.RangedWeapon;
 
-public sealed class RPMColumnWorker : ColumnWorker
+public sealed class RPMColumnWorker : NumberColumnWorker
 {
-    public override TableColumnCellStyle CellStyle => TableColumnCellStyle.Number;
-    private static readonly Func<ThingAlike, float> GetValue = FunctionExtensions.Memoized(
-        (ThingAlike thing) =>
-        {
-            var verb = thing.Def.Verbs.Primary();
-
-            if (verb is { Ranged: true, showBurstShotStats: true, burstShotCount: > 1 })
-            {
-                return 60f / verb.ticksBetweenBurstShots.TicksToSeconds();
-            }
-
-            return default;
-        }
-    );
-    public override Widget? GetTableCellWidget(ThingAlike thing)
+    public RPMColumnWorker() : base(GetValue, " rpm")
     {
-        var value = GetValue(thing);
+    }
+    private static decimal GetValue(ThingAlike thing)
+    {
+        var verb = thing.Def.Verbs.Primary();
 
-        if (value == default)
+        if (verb is { Ranged: true, showBurstShotStats: true, burstShotCount: > 1 })
         {
-            return null;
+            return (60f / verb.ticksBetweenBurstShots.TicksToSeconds()).ToDecimal();
         }
 
-        return new Label(value.ToString("0 rpm"));
-    }
-    public override FilterWidget GetFilterWidget()
-    {
-        return new NumberFilter<float>(GetValue);
-    }
-    public override int Compare(ThingAlike thing1, ThingAlike thing2)
-    {
-        return GetValue(thing1).CompareTo(GetValue(thing2));
+        return 0m;
     }
 }

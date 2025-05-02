@@ -8,6 +8,7 @@ public abstract class Widget
     private Vector2 RelSizeCache;
     private Vector2 ContainerSizeCache = Vector2.positiveInfinity;
     private Vector2 AbsSizeCache;
+    private bool IsAbsSizeCacheValid = false;
     /*
     
     This method is used to calculate widget's size relative to its container size.
@@ -44,7 +45,14 @@ public abstract class Widget
     protected abstract Vector2 CalcSize();
     public Vector2 GetSize()
     {
-        return AbsSizeCache;
+        if (IsAbsSizeCacheValid)
+        {
+            return AbsSizeCache;
+        }
+
+        IsAbsSizeCacheValid = true;
+
+        return AbsSizeCache = CalcSize();
     }
     public abstract void Draw(Rect rect, Vector2 containerSize);
     public void Resize()

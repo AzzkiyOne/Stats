@@ -9,8 +9,6 @@ public sealed class TooltipWidgetExtension : WidgetExtension
     internal TooltipWidgetExtension(Widget widget, string text) : base(widget)
     {
         Text = text;
-
-        Resize();
     }
     public override void Draw(Rect rect, Vector2 containerSize)
     {

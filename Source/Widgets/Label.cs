@@ -4,7 +4,7 @@ namespace Stats.Widgets;
 
 public sealed class Label : Widget
 {
-    private string _Text = "";
+    private string _Text;
     public string Text
     {
         get => _Text;
@@ -22,7 +22,7 @@ public sealed class Label : Widget
     }
     public Label(string text)
     {
-        Text = text;
+        _Text = text;
     }
     public Label(string text, out Label labelWidget) : this(text)
     {

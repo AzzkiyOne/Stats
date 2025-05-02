@@ -5,16 +5,19 @@ using Verse;
 namespace Stats;
 
 // RelationalExpression? It is only used in table filters, but is it that specific?
+// Update: At this point it's more like FilterWidgetState.
 public abstract class FilterExpression
 {
+    public abstract string OperatorString { get; }
+    public abstract string RhsString { get; }
     public abstract bool IsEmpty { get; }
     public abstract event Action<FilterExpression> OnChange;
     public abstract bool Eval(ThingAlike thing);
-    public abstract void Clear(bool silent = false);
+    public abstract void Clear();
     public abstract void NotifyChanged();
 }
 
-public sealed class FilterExpression<TLhs, TRhs> : FilterExpression where TRhs : notnull
+public abstract class FilterExpression<TLhs, TRhs> : FilterExpression where TRhs : notnull
 {
     private readonly Func<ThingAlike, TLhs> Lhs;
     private TRhs _Rhs;
@@ -32,7 +35,8 @@ public sealed class FilterExpression<TLhs, TRhs> : FilterExpression where TRhs :
             OnChange?.Invoke(this);
         }
     }
-    private RelationalOperator<TLhs, TRhs> _Operator;
+    public override string RhsString => _Rhs.ToString();
+    private RelationalOperator<TLhs, TRhs> _Operator = EmptyOperator.Instance;
     public RelationalOperator<TLhs, TRhs> Operator
     {
         get => _Operator;
@@ -47,38 +51,19 @@ public sealed class FilterExpression<TLhs, TRhs> : FilterExpression where TRhs :
             OnChange?.Invoke(this);
         }
     }
-    public override event Action<FilterExpression>? OnChange;
-    public override bool IsEmpty => _Operator == EmptyOperator.Instance;
-    public FilterExpression(
-        Func<ThingAlike, TLhs> lhs,
-        TRhs rhs,
-        RelationalOperator<TLhs, TRhs> @operator
-    )
+    public sealed override string OperatorString => _Operator.ToString();
+    public sealed override event Action<FilterExpression>? OnChange;
+    public sealed override bool IsEmpty => _Operator == EmptyOperator.Instance;
+    public FilterExpression(Func<ThingAlike, TLhs> lhs, TRhs rhs)
     {
         Lhs = lhs;
         _Rhs = rhs;
-        _Operator = @operator;
     }
-    public FilterExpression(Func<ThingAlike, TLhs> lhs, TRhs rhs)
-        : this(lhs, rhs, EmptyOperator.Instance)
-    {
-    }
-    // Use this to avoid emitting 2 events when setting both props.
-    public void Set(TRhs rhs, RelationalOperator<TLhs, TRhs> @operator)
-    {
-        if (_Rhs.Equals(rhs) == false || _Operator != @operator)
-        {
-            _Rhs = rhs;
-            _Operator = @operator;
-
-            OnChange?.Invoke(this);
-        }
-    }
-    public override bool Eval(ThingAlike thing)
+    public sealed override bool Eval(ThingAlike thing)
     {
         try
         {
-            return Operator.Eval(Lhs(thing), _Rhs);
+            return _Operator.Eval(Lhs(thing), _Rhs);
         }
         catch (Exception e)
         {
@@ -87,18 +72,11 @@ public sealed class FilterExpression<TLhs, TRhs> : FilterExpression where TRhs :
             return false;
         }
     }
-    public override void Clear(bool silent = false)
+    public override void Clear()
     {
-        if (silent)
-        {
-            _Operator = EmptyOperator.Instance;
-        }
-        else
-        {
-            Operator = EmptyOperator.Instance;
-        }
+        Operator = EmptyOperator.Instance;
     }
-    public override void NotifyChanged()
+    public sealed override void NotifyChanged()
     {
         OnChange?.Invoke(this);
     }
@@ -106,12 +84,11 @@ public sealed class FilterExpression<TLhs, TRhs> : FilterExpression where TRhs :
     // This operator exists only because i don't want to define Operator property as
     // nullable, because it will slow down the whole thing a bit. The table doesn't
     // evaluate empty expressions anyway.
-    public sealed class EmptyOperator : RelationalOperator<TLhs, TRhs>
+    private sealed class EmptyOperator : RelationalOperator<TLhs, TRhs>
     {
         private EmptyOperator() { }
         public override bool Eval(TLhs lhs, TRhs rhs) => true;
         public override string ToString() => "...";
-        public static RelationalOperator<TLhs, TRhs> Instance { get; } =
-            new EmptyOperator();
+        public static EmptyOperator Instance { get; } = new();
     }
 }

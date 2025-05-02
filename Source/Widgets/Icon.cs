@@ -10,8 +10,6 @@ public sealed class Icon : Widget
     public Icon(Texture2D texture)
     {
         Texture = texture;
-
-        Resize();
     }
     public Icon(Texture2D texture, out Icon iconWidget) : this(texture)
     {

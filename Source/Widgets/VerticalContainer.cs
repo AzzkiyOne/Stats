@@ -7,8 +7,8 @@ public sealed class VerticalContainer : Widget
 {
     private readonly float Gap;
     private readonly List<Widget> Children;
-    private readonly bool ShareFreeSpace;
-    private float OccupiedSpaceAmount = 0f;
+    private readonly float OccupiedSpaceAmount;
+    private readonly float TotalGapAmount;
     public VerticalContainer(
         List<Widget> children,
         float gap = 0f,
@@ -17,25 +17,30 @@ public sealed class VerticalContainer : Widget
     {
         Children = children;
         Gap = gap;
-        ShareFreeSpace = shareFreeSpace;
+        TotalGapAmount = (Children.Count - 1) * Gap;
+
+        // Total gap amount is not reserved in normal mode, because overflow may
+        // not happen when it should.
+        if (shareFreeSpace)
+        {
+            OccupiedSpaceAmount = TotalGapAmount;
+        }
 
         foreach (var child in children)
         {
             child.Parent = this;
-        }
 
-        Resize();
+            if (shareFreeSpace)
+            {
+                OccupiedSpaceAmount += child.GetFixedSize().y;
+            }
+        }
     }
     protected override Vector2 CalcSize()
     {
-        var totalGapAmount = (Children.Count - 1) * Gap;
-        // Total gap amount is not reserved in normal mode, because overflow may
-        // not happen when it should.
-        OccupiedSpaceAmount = ShareFreeSpace ? totalGapAmount : 0f;
-
         Vector2 size;
         size.x = 0f;
-        size.y = totalGapAmount;
+        size.y = TotalGapAmount;
 
         foreach (var child in Children)
         {
@@ -43,11 +48,6 @@ public sealed class VerticalContainer : Widget
 
             size.x = Mathf.Max(size.x, childSize.x);
             size.y += childSize.y;
-
-            if (ShareFreeSpace)
-            {
-                OccupiedSpaceAmount += child.GetFixedSize().y;
-            }
         }
 
         return size;

@@ -16,8 +16,6 @@ public sealed class SingleElementContainer : Widget
 
         OccupiedWidth = widgetSize.x;
         OccupiedHeight = widgetSize.y;
-
-        Resize();
     }
     protected override Vector2 CalcSize()
     {

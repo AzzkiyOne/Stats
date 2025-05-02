@@ -60,8 +60,6 @@ internal sealed class TableSelector : WidgetWrapper
             .OrderBy(opt => opt.Label)
             .ToList();
         Menu = new(menuOptions);
-
-        Resize();
     }
     private void ShowMenu()
     {

@@ -8,8 +8,6 @@ public sealed class AbsHeightWidgetExtension : WidgetExtension
     internal AbsHeightWidgetExtension(Widget widget, float height) : base(widget)
     {
         Height = height;
-
-        Resize();
     }
     protected override Vector2 CalcSize(Vector2 containerSize)
     {

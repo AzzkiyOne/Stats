@@ -16,8 +16,6 @@ public sealed class ClickEventWidgetExtension : WidgetExtension
     {
         Action = action;
         PlaySound = playSound;
-
-        Resize();
     }
     public override void Draw(Rect rect, Vector2 containerSize)
     {

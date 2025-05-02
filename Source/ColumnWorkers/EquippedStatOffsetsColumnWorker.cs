@@ -9,15 +9,15 @@ namespace Stats.ColumnWorkers;
 public sealed class EquippedStatOffsetsColumnWorker : ColumnWorker
 {
     public override TableColumnCellStyle CellStyle => TableColumnCellStyle.String;
-    private static int GetOffsetsCount(ThingAlike thing)
+    private static decimal GetOffsetsCount(ThingAlike thing)
     {
-        return thing.Def.equippedStatOffsets?.Count ?? default;
+        return thing.Def.equippedStatOffsets?.Count ?? 0m;
     }
     public override Widget? GetTableCellWidget(ThingAlike thing)
     {
         var statOffsetsCount = GetOffsetsCount(thing);
 
-        if (statOffsetsCount == default)
+        if (statOffsetsCount == 0m)
         {
             return null;
         }
@@ -52,7 +52,7 @@ public sealed class EquippedStatOffsetsColumnWorker : ColumnWorker
     }
     public override FilterWidget GetFilterWidget()
     {
-        return new NumberFilter<int>(GetOffsetsCount);
+        return new NumberFilter(GetOffsetsCount);
     }
     public override int Compare(ThingAlike thing1, ThingAlike thing2)
     {

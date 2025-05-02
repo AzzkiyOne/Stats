@@ -20,8 +20,6 @@ public sealed class RelPaddingWidgetExtension : WidgetExtension
         Top = top;
         Horizontal = left + right;
         Vertical = top + bottom;
-
-        Resize();
     }
     protected override Vector2 CalcSize(Vector2 containerSize)
     {

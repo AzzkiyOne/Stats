@@ -11,6 +11,11 @@ public sealed class TechLevelColumnWorker : ColumnWorker
     public override TableColumnCellStyle CellStyle => TableColumnCellStyle.String;
     public override Widget? GetTableCellWidget(ThingAlike thing)
     {
+        if (thing.Def.techLevel == TechLevel.Undefined)
+        {
+            return null;
+        }
+
         return new Label(thing.Def.techLevel.ToString());
     }
     public override FilterWidget GetFilterWidget()

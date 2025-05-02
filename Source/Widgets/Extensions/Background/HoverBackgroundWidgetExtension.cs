@@ -11,8 +11,6 @@ public sealed class HoverBackgroundWidgetExtension : WidgetExtension
     {
         Texture = texture;
         Color = color;
-
-        Resize();
     }
     public override void Draw(Rect rect, Vector2 containerSize)
     {

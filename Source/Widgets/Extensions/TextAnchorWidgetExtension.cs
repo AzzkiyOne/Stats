@@ -9,8 +9,6 @@ public sealed class TextAnchorWidgetExtension : WidgetExtension
     internal TextAnchorWidgetExtension(Widget widget, TextAnchor value) : base(widget)
     {
         Value = value;
-
-        Resize();
     }
     public override void Draw(Rect rect, Vector2 containerSize)
     {

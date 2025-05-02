@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using RimWorld;
 using Stats.RelationalOperators;
+using Stats.RelationalOperators.Set;
 using UnityEngine;
 using Verse;
 using Verse.Sound;
@@ -15,7 +16,7 @@ namespace Stats.Widgets.FilterWidgets;
 
 public sealed class ManyToManyOptionsFilter<TOption> : OptionsFilter<IEnumerable<TOption>, TOption>
 {
-    private static readonly RelationalOperator<IEnumerable<TOption>, HashSet<TOption>>[] DefaultOperators =
+    private static readonly RelationalOperator<IEnumerable<TOption>, HashSet<TOption>>[] Operators =
         [
             IntersectsWith<IEnumerable<TOption>, HashSet<TOption>, TOption>.Instance,
             IsSubsetOf<IEnumerable<TOption>, HashSet<TOption>, TOption>.Instance,
@@ -26,43 +27,27 @@ public sealed class ManyToManyOptionsFilter<TOption> : OptionsFilter<IEnumerable
     public ManyToManyOptionsFilter(
         Func<ThingAlike, IEnumerable<TOption>> lhs,
         IEnumerable<TOption> options,
-        Func<TOption, Widget> makeOptionWidget
-    ) : this(
-        new FilterExpression<
-            IEnumerable<TOption>,
-            HashSet<TOption>
-        >(lhs, []),
-        DefaultOperators,
-        options,
-        makeOptionWidget
-    )
+        OptionWidgetFactory<TOption> makeOptionWidget
+    ) : this(new(lhs, []), Operators, options, makeOptionWidget)
     {
     }
     private ManyToManyOptionsFilter(
-        FilterExpression<
-            IEnumerable<TOption>,
-            HashSet<TOption>
-        > value,
-        IEnumerable<
-            RelationalOperator<
-                IEnumerable<TOption>,
-                HashSet<TOption>
-            >
-        > operators,
+        FilterExpression<IEnumerable<TOption>, HashSet<TOption>> state,
+        IEnumerable<RelationalOperator<IEnumerable<TOption>, HashSet<TOption>>> operators,
         IEnumerable<TOption> options,
-        Func<TOption, Widget> makeOptionWidget
-    ) : base(value, operators, options, makeOptionWidget)
+        OptionWidgetFactory<TOption> makeOptionWidget
+    ) : base(state, operators, options, makeOptionWidget)
     {
     }
     public override FilterWidget Clone()
     {
-        return new ManyToManyOptionsFilter<TOption>(_Value, DefaultOperators, Options, MakeOptionWidget);
+        return new ManyToManyOptionsFilter<TOption>(State, Operators, Options, MakeOptionWidget);
     }
 }
 
 public sealed class OneToManyOptionsFilter<TOption> : OptionsFilter<TOption, TOption>
 {
-    private static readonly RelationalOperator<TOption, HashSet<TOption>>[] DefaultOperators =
+    private static readonly RelationalOperator<TOption, HashSet<TOption>>[] Operators =
         [
             IsIn<TOption, HashSet<TOption>>.Instance,
             IsNotIn<TOption, HashSet<TOption>>.Instance,
@@ -70,66 +55,61 @@ public sealed class OneToManyOptionsFilter<TOption> : OptionsFilter<TOption, TOp
     public OneToManyOptionsFilter(
         Func<ThingAlike, TOption> lhs,
         IEnumerable<TOption> options,
-        Func<TOption, Widget> makeOptionWidget
-    ) : this(
-        new FilterExpression<TOption, HashSet<TOption>>(lhs, []),
-        DefaultOperators,
-        options,
-        makeOptionWidget
-    )
+        OptionWidgetFactory<TOption> makeOptionWidget
+    ) : this(new(lhs, []), Operators, options, makeOptionWidget)
     {
     }
     private OneToManyOptionsFilter(
-        FilterExpression<TOption, HashSet<TOption>> value,
+        FilterExpression<TOption, HashSet<TOption>> state,
         IEnumerable<RelationalOperator<TOption, HashSet<TOption>>> operators,
         IEnumerable<TOption> options,
-        Func<TOption, Widget> makeOptionWidget
-    ) : base(value, operators, options, makeOptionWidget)
+        OptionWidgetFactory<TOption> makeOptionWidget
+    ) : base(state, operators, options, makeOptionWidget)
     {
     }
     public override FilterWidget Clone()
     {
-        return new OneToManyOptionsFilter<TOption>(_Value, DefaultOperators, Options, MakeOptionWidget);
+        return new OneToManyOptionsFilter<TOption>(State, Operators, Options, MakeOptionWidget);
     }
 }
 
 public abstract class OptionsFilter<TLhs, TOption> : FilterWidget<TLhs, HashSet<TOption>>
 {
     protected IEnumerable<TOption> Options { get; }
-    protected Func<TOption, Widget> MakeOptionWidget { get; }
+    protected OptionWidgetFactory<TOption> MakeOptionWidget { get; }
     private readonly OptionsWindowWidget OptionsWindow;
     private string SelectedItemsCountString;
     protected OptionsFilter(
-        FilterExpression<TLhs, HashSet<TOption>> value,
+        FilterExpression<TLhs, HashSet<TOption>> state,
         IEnumerable<RelationalOperator<TLhs, HashSet<TOption>>> operators,
         IEnumerable<TOption> options,
-        Func<TOption, Widget> makeOptionWidget
-    ) : base(value, operators)
+        OptionWidgetFactory<TOption> makeOptionWidget
+    ) : base(state, operators)
     {
         Options = options;
         MakeOptionWidget = makeOptionWidget;
-        OptionsWindow = new OptionsWindowWidget(options, makeOptionWidget, value);
-        SelectedItemsCountString = value.Rhs.Count.ToString();
+        OptionsWindow = new(options, makeOptionWidget, state);
+        SelectedItemsCountString = state.Rhs.Count.ToString();
     }
     protected override Vector2 CalcInputFieldSize()
     {
         var size = Text.CalcSize(SelectedItemsCountString);
-        size.x *= 1.3f;
+        size.x += Globals.GUI.EstimatedInputFieldInnerPadding * 2f;
 
         return size;
     }
     protected override void DrawInputField(Rect rect)
     {
-        if (Verse.Widgets.ButtonTextSubtle(rect, SelectedItemsCountString))
+        if (Widgets.Draw.ButtonTextSubtle(rect, SelectedItemsCountString, Globals.GUI.EstimatedInputFieldInnerPadding))
         {
             Find.WindowStack.Add(OptionsWindow);
         }
     }
-    protected override void HandleValueChange(FilterExpression value)
+    protected override void HandleStateChange(FilterExpression state)
     {
-        SelectedItemsCountString = _Value.Rhs.Count.ToString();
+        SelectedItemsCountString = State.Rhs.Count.ToString();
 
-        base.HandleValueChange(value);
+        base.HandleStateChange(state);
     }
 
     // TODO: Implement scroll.
@@ -140,8 +120,8 @@ public abstract class OptionsFilter<TLhs, TOption> : FilterWidget<TLhs, HashSet<
         private readonly Widget OptionsList;
         public OptionsWindowWidget(
             IEnumerable<TOption> options,
-            Func<TOption, Widget> makeOptionWidget,
-            FilterExpression<TLhs, HashSet<TOption>> value
+            OptionWidgetFactory<TOption> makeOptionWidget,
+            FilterExpression<TLhs, HashSet<TOption>> state
         )
         {
             doWindowBackground = false;
@@ -158,23 +138,23 @@ public abstract class OptionsFilter<TLhs, TOption> : FilterWidget<TLhs, HashSet<
                 var option = optionsList[i];
                 void drawOptionBackground(Rect rect)
                 {
-                    if (Event.current.type == EventType.Repaint && value.Rhs.Contains(option))
+                    if (Event.current.type == EventType.Repaint && state.Rhs.Contains(option))
                     {
                         Verse.Widgets.DrawHighlightSelected(rect);
                     }
                 }
                 void handleOptionClick()
                 {
-                    if (value.Rhs.Contains(option))
+                    if (state.Rhs.Contains(option))
                     {
-                        value.Rhs.Remove(option);
+                        state.Rhs.Remove(option);
                     }
                     else
                     {
-                        value.Rhs.Add(option);
+                        state.Rhs.Add(option);
                     }
 
-                    value.NotifyChanged();
+                    state.NotifyChanged();
                 }
 
                 Widget optionWidget = makeOptionWidget(option)
@@ -253,3 +233,5 @@ public abstract class OptionsFilter<TLhs, TOption> : FilterWidget<TLhs, HashSet<
         }
     }
 }
+
+public delegate Widget OptionWidgetFactory<T>(T option);

@@ -1,42 +1,19 @@
-﻿using System;
-using Stats.Widgets;
-using Stats.Widgets.FilterWidgets;
+﻿namespace Stats.ColumnWorkers.RangedWeapon;
 
-namespace Stats.ColumnWorkers.RangedWeapon;
-
-public sealed class AimingTimeColumnWorker : ColumnWorker
+public sealed class AimingTimeColumnWorker : NumberColumnWorker
 {
-    public override TableColumnCellStyle CellStyle => TableColumnCellStyle.Number;
-    private static readonly Func<ThingAlike, float> GetValue = FunctionExtensions.Memoized(
-        (ThingAlike thing) =>
-        {
-            var verb = thing.Def.Verbs.Primary();
-
-            if (verb?.warmupTime == null)
-            {
-                return default;
-            }
-
-            return verb.warmupTime;
-        }
-    );
-    public override Widget? GetTableCellWidget(ThingAlike thing)
+    public AimingTimeColumnWorker() : base(GetValue, " s")
     {
-        var value = GetValue(thing);
+    }
+    private static decimal GetValue(ThingAlike thing)
+    {
+        var verb = thing.Def.Verbs.Primary();
 
-        if (value == default)
+        if (verb?.warmupTime == null)
         {
-            return null;
+            return 0m;
         }
 
-        return new Label(value.ToString("0.00 s"));
-    }
-    public override FilterWidget GetFilterWidget()
-    {
-        return new NumberFilter<float>(GetValue);
-    }
-    public override int Compare(ThingAlike thing1, ThingAlike thing2)
-    {
-        return GetValue(thing1).CompareTo(GetValue(thing2));
+        return verb.warmupTime.ToDecimal("F2");
     }
 }

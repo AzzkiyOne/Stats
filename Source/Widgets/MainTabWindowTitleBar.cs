@@ -66,8 +66,6 @@ internal sealed class MainTabWindowTitleBar : WidgetWrapper
         .BorderBottom(1f, MainTabWindow.BorderLineColor)
         .Background(Verse.Widgets.LightHighlight);
         Widget.Parent = this;
-
-        Resize();
     }
     private static Widget ToToolbarIcon(
         Widget widget,

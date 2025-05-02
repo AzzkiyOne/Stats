@@ -1,45 +1,23 @@
-﻿using System;
-using CombatExtended;
+﻿using CombatExtended;
 using RimWorld;
 using Stats.ColumnWorkers;
-using Stats.Widgets;
-using Stats.Widgets.FilterWidgets;
 
 namespace Stats.ModCompat.CE.ColumnWorkers.RangedWeapon;
 
-public sealed class ReloadTimeColumnWorker : ColumnWorker
+public sealed class ReloadTimeColumnWorker : NumberColumnWorker
 {
-    public override TableColumnCellStyle CellStyle => TableColumnCellStyle.Number;
-    private static readonly Func<ThingAlike, float> GetValue = FunctionExtensions.Memoized(
-        (ThingAlike thing) =>
-        {
-            var statReq = StatRequest.For(thing.Def, thing.StuffDef);
-
-            if (CE_StatDefOf.MagazineCapacity.Worker.ShouldShowFor(statReq))
-            {
-                return CE_StatDefOf.ReloadTime.Worker.GetValue(statReq);
-            }
-
-            return default;
-        }
-    );
-    public override Widget? GetTableCellWidget(ThingAlike thing)
+    public ReloadTimeColumnWorker() : base(GetValue, " s")
     {
-        var value = GetValue(thing);
+    }
+    private static decimal GetValue(ThingAlike thing)
+    {
+        var statReq = StatRequest.For(thing.Def, thing.StuffDef);
 
-        if (value == default)
+        if (CE_StatDefOf.MagazineCapacity.Worker.ShouldShowFor(statReq))
         {
-            return null;
+            return CE_StatDefOf.ReloadTime.Worker.GetValue(statReq).ToDecimal("F2");
         }
 
-        return new Label(value.ToString("0.00 s"));
-    }
-    public override FilterWidget GetFilterWidget()
-    {
-        return new NumberFilter<float>(GetValue);
-    }
-    public override int Compare(ThingAlike thing1, ThingAlike thing2)
-    {
-        return GetValue(thing1).CompareTo(GetValue(thing2));
+        return 0m;
     }
 }

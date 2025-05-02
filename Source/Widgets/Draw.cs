@@ -1,0 +1,86 @@
+﻿using System.Reflection;
+using UnityEngine;
+using Verse;
+
+namespace Stats.Widgets;
+
+internal static class Draw
+{
+    private const float ButtonSubtleHoverOffset = 2f;
+    private static readonly FieldInfo DialogInfoCardStuffField =
+        typeof(Dialog_InfoCard)
+        .GetField("stuff", BindingFlags.Instance | BindingFlags.NonPublic);
+    public static void DefInfoDialog(Def def, ThingDef? stuff = null)
+    {
+        var dialog = new Dialog_InfoCard(def);
+
+        if (stuff != null)
+        {
+            DialogInfoCardStuffField.SetValue(dialog, stuff);
+        }
+
+        Find.WindowStack.Add(dialog);
+    }
+    public static void VerticalLine(float x, float y, float length, Color color)
+    {
+        if (Event.current.type != EventType.Repaint)
+        {
+            return;
+        }
+
+        var origGUIColor = GUI.color;
+        GUI.color = color;
+        Verse.Widgets.DrawLineVertical(x, y, length);
+        GUI.color = origGUIColor;
+    }
+    public static bool ButtonTextSubtle(Rect rect, string text, float padHor = 0f)
+    {
+        var mouseIsOverRect = Mouse.IsOver(rect);
+        var origGUIColor = GUI.color;
+
+        if (mouseIsOverRect)
+        {
+            GUI.color = GenUI.MouseoverColor;
+        }
+
+        Verse.Widgets.DrawAtlas(rect, Verse.Widgets.ButtonSubtleAtlas);
+
+        rect.x += padHor;
+        rect.width -= padHor * 2f;
+        if (mouseIsOverRect)
+        {
+            rect.x += ButtonSubtleHoverOffset;
+            rect.y -= ButtonSubtleHoverOffset;
+        }
+
+        Verse.Widgets.Label(rect, text);
+
+        GUI.color = origGUIColor;
+
+        return Verse.Widgets.ButtonInvisible(rect);
+    }
+    public static bool ButtonImageSubtle(Rect rect, Texture2D texture)
+    {
+        var mouseIsOverRect = Mouse.IsOver(rect);
+        var origGUIColor = GUI.color;
+
+        if (mouseIsOverRect)
+        {
+            GUI.color = GenUI.MouseoverColor;
+        }
+
+        Verse.Widgets.DrawAtlas(rect, Verse.Widgets.ButtonSubtleAtlas);
+
+        if (mouseIsOverRect)
+        {
+            rect.x += ButtonSubtleHoverOffset;
+            rect.y -= ButtonSubtleHoverOffset;
+        }
+
+        Verse.Widgets.DrawTextureFitted(rect, texture, 0.7f);
+
+        GUI.color = origGUIColor;
+
+        return Verse.Widgets.ButtonInvisible(rect);
+    }
+}

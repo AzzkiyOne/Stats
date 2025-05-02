@@ -9,8 +9,6 @@ public sealed class AbsSizeWidgetExtension : WidgetExtension
     {
         Size.x = width;
         Size.y = height;
-
-        Resize();
     }
     protected override Vector2 CalcSize(Vector2 _)
     {

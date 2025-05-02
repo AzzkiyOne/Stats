@@ -1,43 +1,20 @@
-﻿using System;
-using Stats.Widgets;
-using Stats.Widgets.FilterWidgets;
+﻿namespace Stats.ColumnWorkers.RangedWeapon;
 
-namespace Stats.ColumnWorkers.RangedWeapon;
-
-public sealed class BuildingDamageFactorImpassableColumnWorker : ColumnWorker
+public sealed class BuildingDamageFactorImpassableColumnWorker : NumberColumnWorker
 {
-    public override TableColumnCellStyle CellStyle => TableColumnCellStyle.Number;
-    private static readonly Func<ThingAlike, float> GetValue = FunctionExtensions.Memoized(
-        (ThingAlike thing) =>
-        {
-            var verb = thing.Def.Verbs.Primary();
-            var defaultProj = verb?.defaultProjectile?.projectile;
-
-            if (defaultProj?.damageDef?.harmsHealth == true)
-            {
-                return defaultProj.damageDef.buildingDamageFactorImpassable;
-            }
-
-            return default;
-        }
-    );
-    public override Widget? GetTableCellWidget(ThingAlike thing)
+    public BuildingDamageFactorImpassableColumnWorker() : base(GetValue, "%")
     {
-        var value = GetValue(thing);
+    }
+    private static decimal GetValue(ThingAlike thing)
+    {
+        var verb = thing.Def.Verbs.Primary();
+        var defaultProj = verb?.defaultProjectile?.projectile;
 
-        if (value == default)
+        if (defaultProj?.damageDef?.harmsHealth == true)
         {
-            return null;
+            return (defaultProj.damageDef.buildingDamageFactorImpassable * 100f).ToDecimal("F0");
         }
 
-        return new Label(value.ToString("0%"));
-    }
-    public override FilterWidget GetFilterWidget()
-    {
-        return new NumberFilter<float>(GetValue);
-    }
-    public override int Compare(ThingAlike thing1, ThingAlike thing2)
-    {
-        return GetValue(thing1).CompareTo(GetValue(thing2));
+        return 0m;
     }
 }

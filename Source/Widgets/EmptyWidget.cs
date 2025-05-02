@@ -6,7 +6,6 @@ public sealed class EmptyWidget : Widget
 {
     public EmptyWidget()
     {
-        Resize();
     }
     protected override Vector2 CalcSize()
     {

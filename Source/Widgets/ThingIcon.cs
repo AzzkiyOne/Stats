@@ -51,8 +51,6 @@ public sealed class ThingIcon : Widget
         {
             Proportions = new Vector2(Texture.width, Texture.height);
         }
-
-        Resize();
     }
     protected override Vector2 CalcSize()
     {

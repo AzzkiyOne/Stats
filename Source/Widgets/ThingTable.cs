@@ -147,7 +147,7 @@ internal sealed class ThingTable
     {
         var filterWidget = columnDef.Worker.GetFilterWidget();
 
-        filter = filterWidget.Value;
+        filter = filterWidget.State;
         return filterWidget;
     }
     private static Widget CreateBodyCell(ColumnDef columnDef, ThingAlike thing)
@@ -254,10 +254,7 @@ internal sealed class ThingTable
 
         foreach (var filter in ActiveFilters)
         {
-            filter.Clear(true);
+            filter.Clear();
         }
-
-        ActiveFilters.Clear();
-        ShouldApplyFilters = true;
     }
 }

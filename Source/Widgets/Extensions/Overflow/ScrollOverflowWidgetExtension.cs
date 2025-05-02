@@ -8,7 +8,6 @@ public sealed class ScrollOverflowWidgetExtension : WidgetExtension
     private IScrollable WidgetScrollable => (IScrollable)Widget;
     internal ScrollOverflowWidgetExtension(Widget widget) : base(widget)
     {
-        Resize();
     }
     public override void Draw(Rect rect, Vector2 containerSize)
     {

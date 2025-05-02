@@ -1,47 +1,24 @@
-﻿using System;
-using Stats.Widgets;
-using Stats.Widgets.FilterWidgets;
+﻿namespace Stats.ColumnWorkers.RangedWeapon;
 
-namespace Stats.ColumnWorkers.RangedWeapon;
-
-public sealed class ArmorPenetrationColumnWorker : ColumnWorker
+public sealed class ArmorPenetrationColumnWorker : NumberColumnWorker
 {
-    public override TableColumnCellStyle CellStyle => TableColumnCellStyle.Number;
-    private static readonly Func<ThingAlike, float> GetValue = FunctionExtensions.Memoized(
-        (ThingAlike thing) =>
-        {
-            var verb = thing.Def.Verbs.Primary();
-            var defaultProj = verb?.defaultProjectile?.projectile;
-
-            if (defaultProj?.damageDef is { harmsHealth: true, armorCategory: not null })
-            {
-                return defaultProj.GetArmorPenetration(null);
-            }
-            else if (defaultProj == null && verb?.beamDamageDef != null)
-            {
-                return verb.beamDamageDef.defaultArmorPenetration;
-            }
-
-            return default;
-        }
-    );
-    public override Widget? GetTableCellWidget(ThingAlike thing)
+    public ArmorPenetrationColumnWorker() : base(GetValue, "%")
     {
-        var value = GetValue(thing);
+    }
+    private static decimal GetValue(ThingAlike thing)
+    {
+        var verb = thing.Def.Verbs.Primary();
+        var defaultProj = verb?.defaultProjectile?.projectile;
 
-        if (value == default)
+        if (defaultProj?.damageDef is { harmsHealth: true, armorCategory: not null })
         {
-            return null;
+            return (defaultProj.GetArmorPenetration(null) * 100f).ToDecimal("F0");
+        }
+        else if (defaultProj == null && verb?.beamDamageDef != null)
+        {
+            return (verb.beamDamageDef.defaultArmorPenetration * 100f).ToDecimal("F0");
         }
 
-        return new Label(value.ToString("0%"));
-    }
-    public override FilterWidget GetFilterWidget()
-    {
-        return new NumberFilter<float>(GetValue);
-    }
-    public override int Compare(ThingAlike thing1, ThingAlike thing2)
-    {
-        return GetValue(thing1).CompareTo(GetValue(thing2));
+        return 0m;
     }
 }

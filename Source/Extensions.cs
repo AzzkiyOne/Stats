@@ -83,3 +83,14 @@ public static class FunctionExtensions
         };
     }
 }
+
+public static class SystemSingleExtensions
+{
+    public static decimal ToDecimal(this float value, string format = "F0")
+    {
+        // Why not (decimal)Math.Round(value, digits)?
+        // - This can cause double rounding.
+        // - float -> decimal might result in data loss or even throw an exception.
+        return decimal.Parse(value.ToString(format));
+    }
+}

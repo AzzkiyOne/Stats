@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Stats.RelationalOperators;
+namespace Stats.RelationalOperators.String;
 
 public sealed class Contains : RelationalOperator<string, string>
 {
@@ -8,8 +8,7 @@ public sealed class Contains : RelationalOperator<string, string>
     public override bool Eval(string lhs, string rhs) =>
         lhs.Contains(rhs, StringComparison.CurrentCultureIgnoreCase);
     public override string ToString() => "~=";
-    public static RelationalOperator<string, string> Instance { get; } =
-        new Contains();
+    public static Contains Instance { get; } = new();
 }
 
 public sealed class NotContains : RelationalOperator<string, string>
@@ -18,6 +17,5 @@ public sealed class NotContains : RelationalOperator<string, string>
     public override bool Eval(string lhs, string rhs) =>
         lhs.Contains(rhs, StringComparison.CurrentCultureIgnoreCase) == false;
     public override string ToString() => "!~=";
-    public static RelationalOperator<string, string> Instance { get; } =
-        new NotContains();
+    public static NotContains Instance { get; } = new();
 }

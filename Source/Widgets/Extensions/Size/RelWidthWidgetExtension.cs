@@ -11,8 +11,6 @@ public sealed class RelWidthWidgetExtension : WidgetExtension
     ) : base(widget)
     {
         ParentWidthMultiplier = parentWidthMultiplier;
-
-        Resize();
     }
     protected override Vector2 CalcSize(Vector2 containerSize)
     {

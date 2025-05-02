@@ -49,7 +49,7 @@ public sealed class CreatedAtColumnWorker : ColumnWorker
         {
             void openDefInfoDialog()
             {
-                DefInfoDialog.Draw(thingDef);
+                Draw.DefInfoDialog(thingDef);
             }
 
             Widget icon = new ThingIcon(thingDef)

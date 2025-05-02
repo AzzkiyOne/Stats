@@ -14,8 +14,6 @@ public sealed class RelSizeWidgetExtension : WidgetExtension
     {
         ParentWidthMultiplier = parentWidthMultiplier;
         ParentHeightMultiplier = parentHeightMultiplier;
-
-        Resize();
     }
     protected override Vector2 CalcSize(Vector2 containerSize)
     {
