@@ -8,22 +8,20 @@ namespace Stats;
 
 public sealed class ColumnDef : Def
 {
-    public StatDef? stat;
     public string? labelKey;
-    public string labelShort = "";
     public string? descriptionKey;
+    public string labelShort = "";
     public string? iconPath;
-    public string? formatString;
-    public StatValueExplanationType? statValueExplanationType;
-#pragma warning disable CS8618
-    public Type workerClass;
-#pragma warning restore CS8618
+    public Texture2D? Icon { get; private set; }
+    public StatDef? stat;
+    public string? statValueFormatString;
+    public StatValueExplanationType statValueExplanationType;
     // Indicates whether a value is "good" or "bad" in general.
     // Isn't used anywhere.
     public bool isNegative = false;
-    internal Texture2D? Icon { get; private set; }
 #pragma warning disable CS8618
-    internal ColumnWorker Worker { get; private set; }
+    public Func<ColumnDef, ColumnWorker> workerFactory;
+    public ColumnWorker Worker { get; private set; }
 #pragma warning restore CS8618
     public override void PostLoad()
     {
@@ -63,8 +61,7 @@ public sealed class ColumnDef : Def
             labelShort = LabelCap;
         }
 
-        Worker = (ColumnWorker)Activator.CreateInstance(workerClass);
-        Worker.ColumnDef = this;
+        Worker = workerFactory(this);
     }
     private void ResolveIcon()
     {

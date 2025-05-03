@@ -1,10 +1,8 @@
 ﻿namespace Stats.ColumnWorkers.RangedWeapon;
 
-public sealed class MissRadiusColumnWorker : NumberColumnWorker
+public static class MissRadiusColumnWorker
 {
-    public MissRadiusColumnWorker() : base(GetValue)
-    {
-    }
+    public static NumberColumnWorker Make(ColumnDef _) => new(GetValue);
     private static decimal GetValue(ThingAlike thing)
     {
         var verb = thing.Def.Verbs.Primary();

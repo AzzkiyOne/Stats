@@ -13,17 +13,16 @@ public sealed class TableDef : Def
 #pragma warning disable CS8618
     public List<ColumnDef> columns;
 #pragma warning restore CS8618
-#pragma warning disable CS8618
-    public Type workerClass;
-#pragma warning restore CS8618
     public string? iconPath;
     public ThingDef? iconThingDef;
+    public Texture2D Icon { get; private set; } = BaseContent.BadTex;
+    public Color IconColor { get; private set; } = Color.white;
 #pragma warning disable CS8618
-    internal TableWorker Worker { get; private set; }
+    public Func<TableDef, TableWorker> workerFactory;
+    public TableWorker Worker { get; private set; }
 #pragma warning restore CS8618
-    internal Texture2D Icon { get; private set; } = BaseContent.BadTex;
-    internal Color IconColor { get; private set; } = Color.white;
     private ThingTable? _widget;
+    // TODO: See if we can get rid of null check.
     internal ThingTable Widget => _widget ??= new(this);
     public override void PostLoad()
     {
@@ -35,8 +34,7 @@ public sealed class TableDef : Def
     {
         base.ResolveReferences();
 
-        Worker = (TableWorker)Activator.CreateInstance(workerClass);
-        Worker.TableDef = this;
+        Worker = workerFactory(this);
     }
     private void ResolveIcon()
     {

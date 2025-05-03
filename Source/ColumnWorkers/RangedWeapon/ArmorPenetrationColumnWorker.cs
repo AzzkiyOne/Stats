@@ -1,10 +1,8 @@
 ﻿namespace Stats.ColumnWorkers.RangedWeapon;
 
-public sealed class ArmorPenetrationColumnWorker : NumberColumnWorker
+public static class ArmorPenetrationColumnWorker
 {
-    public ArmorPenetrationColumnWorker() : base(GetValue, "%")
-    {
-    }
+    public static NumberColumnWorker Make(ColumnDef _) => new(GetValue, "%");
     private static decimal GetValue(ThingAlike thing)
     {
         var verb = thing.Def.Verbs.Primary();

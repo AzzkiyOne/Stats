@@ -4,11 +4,9 @@ using Stats.ColumnWorkers;
 
 namespace Stats.ModCompat.CE.ColumnWorkers.RangedWeapon;
 
-public sealed class ReloadTimeColumnWorker : NumberColumnWorker
+public static class ReloadTimeColumnWorker
 {
-    public ReloadTimeColumnWorker() : base(GetValue, " s")
-    {
-    }
+    public static NumberColumnWorker Make(ColumnDef _) => new(GetValue, " s");
     private static decimal GetValue(ThingAlike thing)
     {
         var statReq = StatRequest.For(thing.Def, thing.StuffDef);

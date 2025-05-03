@@ -8,7 +8,10 @@ namespace Stats.ColumnWorkers;
 
 public sealed class EquippedStatOffsetsColumnWorker : ColumnWorker
 {
-    public override TableColumnCellStyle CellStyle => TableColumnCellStyle.String;
+    private EquippedStatOffsetsColumnWorker() : base(TableColumnCellStyle.String)
+    {
+    }
+    public static EquippedStatOffsetsColumnWorker Make(ColumnDef _) => new();
     private static decimal GetOffsetsCount(ThingAlike thing)
     {
         return thing.Def.equippedStatOffsets?.Count ?? 0m;

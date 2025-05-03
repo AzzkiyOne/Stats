@@ -1,10 +1,8 @@
 ﻿namespace Stats.ColumnWorkers.RangedWeapon;
 
-public sealed class StoppingPowerColumnWorker : NumberColumnWorker
+public static class StoppingPowerColumnWorker
 {
-    public StoppingPowerColumnWorker() : base(GetValue)
-    {
-    }
+    public static NumberColumnWorker Make(ColumnDef _) => new(GetValue);
     private static decimal GetValue(ThingAlike thing)
     {
         var verb = thing.Def.Verbs.Primary();

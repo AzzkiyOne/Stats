@@ -7,7 +7,10 @@ namespace Stats.ColumnWorkers;
 
 public sealed class ContentSourceColumnWorker : ColumnWorker
 {
-    public override TableColumnCellStyle CellStyle => TableColumnCellStyle.String;
+    private ContentSourceColumnWorker() : base(TableColumnCellStyle.String)
+    {
+    }
+    public static ContentSourceColumnWorker Make(ColumnDef _) => new();
     public override Widget? GetTableCellWidget(ThingAlike thing)
     {
         return ModContentPackToWidget(thing.Def.modContentPack);

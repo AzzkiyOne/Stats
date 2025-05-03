@@ -2,11 +2,9 @@
 
 namespace Stats.ColumnWorkers.RangedWeapon;
 
-public sealed class DirectHitChanceColumnWorker : NumberColumnWorker
+public static class DirectHitChanceColumnWorker
 {
-    public DirectHitChanceColumnWorker() : base(GetValue, "%")
-    {
-    }
+    public static NumberColumnWorker Make(ColumnDef _) => new(GetValue, "%");
     private static decimal GetValue(ThingAlike thing)
     {
         var verb = thing.Def.Verbs.Primary();

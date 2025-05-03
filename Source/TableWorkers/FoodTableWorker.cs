@@ -5,6 +5,7 @@ namespace Stats.TableWorkers;
 
 public sealed class FoodTableWorker : TableWorker
 {
+    public static FoodTableWorker Make(TableDef _) => new();
     protected override bool IsValidThingDef(ThingDef thingDef)
     {
         return thingDef.statBases?.Any(statBase =>

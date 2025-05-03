@@ -6,9 +6,6 @@ namespace Stats.TableWorkers;
 
 public abstract class TableWorker
 {
-#pragma warning disable CS8618
-    public TableDef TableDef { get; set; }
-#pragma warning restore CS8618
     public IEnumerable<ThingAlike> GetRecords()
     {
         foreach (var thingDef in DefDatabase<ThingDef>.AllDefs)

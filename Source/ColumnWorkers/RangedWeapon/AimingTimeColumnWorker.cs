@@ -1,10 +1,8 @@
 ﻿namespace Stats.ColumnWorkers.RangedWeapon;
 
-public sealed class AimingTimeColumnWorker : NumberColumnWorker
+public static class AimingTimeColumnWorker
 {
-    public AimingTimeColumnWorker() : base(GetValue, " s")
-    {
-    }
+    public static NumberColumnWorker Make(ColumnDef _) => new(GetValue, " s");
     private static decimal GetValue(ThingAlike thing)
     {
         var verb = thing.Def.Verbs.Primary();

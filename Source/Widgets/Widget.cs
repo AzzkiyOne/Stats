@@ -8,7 +8,7 @@ public abstract class Widget
     private Vector2 RelSizeCache;
     private Vector2 ContainerSizeCache = Vector2.positiveInfinity;
     private Vector2 AbsSizeCache;
-    private bool IsAbsSizeCacheValid = false;
+    private bool AbsSizeCacheIsValid = false;
     /*
     
     This method is used to calculate widget's size relative to its container size.
@@ -25,10 +25,12 @@ public abstract class Widget
     */
     protected virtual Vector2 CalcSize(Vector2 containerSize)
     {
-        return AbsSizeCache;
+        return GetSize();
     }
     public Vector2 GetSize(Vector2 containerSize)
     {
+        // I don't think we have to use Mathf.Approximately() here. Once everything settles down and
+        // GUI becomes static, the same math should give the same results.
         if (ContainerSizeCache.x == containerSize.x && ContainerSizeCache.y == containerSize.y)
         {
             return RelSizeCache;
@@ -45,12 +47,12 @@ public abstract class Widget
     protected abstract Vector2 CalcSize();
     public Vector2 GetSize()
     {
-        if (IsAbsSizeCacheValid)
+        if (AbsSizeCacheIsValid)
         {
             return AbsSizeCache;
         }
 
-        IsAbsSizeCacheValid = true;
+        AbsSizeCacheIsValid = true;
 
         return AbsSizeCache = CalcSize();
     }
@@ -59,6 +61,7 @@ public abstract class Widget
     {
         ContainerSizeCache = Vector2.positiveInfinity;
         AbsSizeCache = CalcSize();
+        AbsSizeCacheIsValid = true;// Just in case.
 
         Parent?.Resize();
     }

@@ -9,10 +9,9 @@ namespace Stats.ModCompat.CE.ColumnWorkers.RangedWeapon;
 
 public sealed class CaliberColumnWorker : ColumnWorker
 {
-    public override TableColumnCellStyle CellStyle => TableColumnCellStyle.String;
     private static readonly StatDef CaliberStatDef = DefDatabase<StatDef>.GetNamed("Caliber");
-    private static readonly Func<ThingAlike, string> GetCaliberName = FunctionExtensions.Memoized(
-        (ThingAlike thing) =>
+    private static readonly Func<ThingAlike, string> GetCaliberName =
+        FunctionExtensions.Memoized((ThingAlike thing) =>
         {
             var statReq = StatRequest.For(thing.Def, thing.StuffDef);
 
@@ -22,8 +21,11 @@ public sealed class CaliberColumnWorker : ColumnWorker
                 ToStringNumberSense.Absolute,
                 statReq
             ) ?? "";
-        }
-    );
+        });
+    private CaliberColumnWorker() : base(TableColumnCellStyle.String)
+    {
+    }
+    public static CaliberColumnWorker Make(ColumnDef _) => new();
     public override Widget? GetTableCellWidget(ThingAlike thing)
     {
         var caliberName = GetCaliberName(thing);
@@ -34,10 +36,10 @@ public sealed class CaliberColumnWorker : ColumnWorker
         }
 
         var statReq = StatRequest.For(thing.Def, thing.StuffDef);
-        var tooltip = ColumnDef.stat!.Worker.GetExplanationFull(
+        var tooltip = CaliberStatDef.Worker.GetExplanationFull(
             statReq,
             ToStringNumberSense.Absolute,
-            ColumnDef.stat!.Worker.GetValue(statReq)
+            CaliberStatDef.Worker.GetValue(statReq)
         );
 
         return new Label(caliberName).Tooltip(tooltip);

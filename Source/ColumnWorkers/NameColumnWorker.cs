@@ -6,12 +6,17 @@ namespace Stats.ColumnWorkers;
 
 public sealed class NameColumnWorker : ColumnWorker
 {
-    public override TableColumnCellStyle CellStyle => TableColumnCellStyle.String;
-    private static readonly Func<ThingAlike, string> GetThingLabel = FunctionExtensions.Memoized(
-        (ThingAlike thing) => thing.StuffDef == null
-            ? thing.Def.LabelCap.RawText
-            : $"{thing.StuffDef.LabelCap} {thing.Def.label}"
-    );
+    private static readonly Func<ThingAlike, string> GetThingLabel =
+        FunctionExtensions.Memoized((ThingAlike thing) =>
+        {
+            return thing.StuffDef == null
+                ? thing.Def.LabelCap.RawText
+                : $"{thing.StuffDef.LabelCap} {thing.Def.label}";
+        });
+    private NameColumnWorker() : base(TableColumnCellStyle.String)
+    {
+    }
+    public static NameColumnWorker Make(ColumnDef _) => new();
     public override Widget? GetTableCellWidget(ThingAlike thing)
     {
         void openDefInfoDialog()

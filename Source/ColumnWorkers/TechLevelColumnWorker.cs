@@ -8,7 +8,10 @@ namespace Stats.ColumnWorkers;
 
 public sealed class TechLevelColumnWorker : ColumnWorker
 {
-    public override TableColumnCellStyle CellStyle => TableColumnCellStyle.String;
+    private TechLevelColumnWorker() : base(TableColumnCellStyle.String)
+    {
+    }
+    public static TechLevelColumnWorker Make(ColumnDef _) => new();
     public override Widget? GetTableCellWidget(ThingAlike thing)
     {
         if (thing.Def.techLevel == TechLevel.Undefined)

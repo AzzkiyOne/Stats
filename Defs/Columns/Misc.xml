@@ -5,14 +5,14 @@
     <Stats.ColumnDef>
         <defName>Name</defName>
         <label>name</label>
-        <workerClass>Stats.ColumnWorkers.NameColumnWorker</workerClass>
+        <workerFactory>Stats.ColumnWorkers.NameColumnWorker.Make</workerFactory>
     </Stats.ColumnDef>
 
     <Stats.ColumnDef>
         <defName>EquippedStatOffsets</defName>
         <label>Offsets when equipped</label>
         <labelShort>Offsets</labelShort>
-        <workerClass>Stats.ColumnWorkers.EquippedStatOffsetsColumnWorker</workerClass>
+        <workerFactory>Stats.ColumnWorkers.EquippedStatOffsetsColumnWorker.Make</workerFactory>
     </Stats.ColumnDef>
 
 </Defs>

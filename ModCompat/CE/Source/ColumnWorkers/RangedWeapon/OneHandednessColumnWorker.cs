@@ -7,11 +7,11 @@ using Stats.Widgets.FilterWidgets;
 
 namespace Stats.ModCompat.CE.ColumnWorkers.RangedWeapon;
 
+// TODO: Make a BooleanColumnWorker, just as NumberColumnWorker?
 public sealed class OneHandednessColumnWorker : ColumnWorker
 {
-    public override TableColumnCellStyle CellStyle => TableColumnCellStyle.Boolean;
-    public static readonly Func<ThingAlike, bool> IsOneHandedWeapon = FunctionExtensions.Memoized(
-        (ThingAlike thing) =>
+    public static readonly Func<ThingAlike, bool> IsOneHandedWeapon =
+        FunctionExtensions.Memoized((ThingAlike thing) =>
         {
             var statReq = StatRequest.For(thing.Def, thing.StuffDef);
 
@@ -21,8 +21,11 @@ public sealed class OneHandednessColumnWorker : ColumnWorker
             }
 
             return false;
-        }
-    );
+        });
+    private OneHandednessColumnWorker() : base(TableColumnCellStyle.Boolean)
+    {
+    }
+    public static OneHandednessColumnWorker Make(ColumnDef _) => new();
     public override Widget? GetTableCellWidget(ThingAlike thing)
     {
         var value = IsOneHandedWeapon(thing);

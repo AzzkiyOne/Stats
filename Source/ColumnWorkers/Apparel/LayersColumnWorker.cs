@@ -9,12 +9,12 @@ namespace Stats.ColumnWorkers.Apparel;
 
 public sealed class LayersColumnWorker : ColumnWorker
 {
-    public override TableColumnCellStyle CellStyle => TableColumnCellStyle.String;
-    private static readonly Func<ThingAlike, HashSet<ApparelLayerDef>> GetLayerDefs = FunctionExtensions.Memoized(
-        (ThingAlike thing) => thing.Def.apparel?.layers.ToHashSet() ?? []
-    );
-    private static readonly Func<ThingAlike, string> GetLayersLabels = FunctionExtensions.Memoized(
-        (ThingAlike thing) =>
+    private static readonly Func<ThingAlike, HashSet<ApparelLayerDef>> GetLayerDefs = FunctionExtensions.Memoized((ThingAlike thing) =>
+        {
+            return thing.Def.apparel?.layers.ToHashSet() ?? [];
+        });
+    private static readonly Func<ThingAlike, string> GetLayersLabels =
+        FunctionExtensions.Memoized((ThingAlike thing) =>
         {
             var layerDefs = GetLayerDefs(thing);
 
@@ -28,8 +28,11 @@ public sealed class LayersColumnWorker : ColumnWorker
                 .Select(layerDef => layerDef.LabelCap);
 
             return string.Join("\n", layerLabels);
-        }
-    );
+        });
+    private LayersColumnWorker() : base(TableColumnCellStyle.String)
+    {
+    }
+    public static LayersColumnWorker Make(ColumnDef _) => new();
     public override Widget? GetTableCellWidget(ThingAlike thing)
     {
         var layerLabels = GetLayersLabels(thing);

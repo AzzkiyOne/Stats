@@ -16,12 +16,12 @@ namespace Stats.ColumnWorkers.Apparel;
 // and can be safely displayed in a single row/column.
 public sealed class CoverageColumnWorker : ColumnWorker
 {
-    public override TableColumnCellStyle CellStyle => TableColumnCellStyle.String;
-    private static readonly Func<ThingAlike, HashSet<BodyPartGroupDef>> GetBodyPartGroupDefs = FunctionExtensions.Memoized(
-        (ThingAlike thing) => thing.Def.apparel?.bodyPartGroups.ToHashSet() ?? []
-    );
-    private static readonly Func<ThingAlike, string> GetBodyPartGroupLabels = FunctionExtensions.Memoized(
-        (ThingAlike thing) =>
+    private static readonly Func<ThingAlike, HashSet<BodyPartGroupDef>> GetBodyPartGroupDefs = FunctionExtensions.Memoized((ThingAlike thing) =>
+        {
+            return thing.Def.apparel?.bodyPartGroups.ToHashSet() ?? [];
+        });
+    private static readonly Func<ThingAlike, string> GetBodyPartGroupLabels =
+        FunctionExtensions.Memoized((ThingAlike thing) =>
         {
             var bodyPartGroupDefs = GetBodyPartGroupDefs(thing);
 
@@ -35,8 +35,11 @@ public sealed class CoverageColumnWorker : ColumnWorker
                 .Select(bodyPartGroupDef => bodyPartGroupDef.LabelCap);
 
             return string.Join("\n", bodyPartGroupLabels);
-        }
-    );
+        });
+    private CoverageColumnWorker() : base(TableColumnCellStyle.String)
+    {
+    }
+    public static CoverageColumnWorker Make(ColumnDef _) => new();
     public override Widget? GetTableCellWidget(ThingAlike thing)
     {
         var bodyPartGroupLabels = GetBodyPartGroupLabels(thing);

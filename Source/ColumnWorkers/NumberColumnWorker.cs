@@ -4,18 +4,15 @@ using Stats.Widgets.FilterWidgets;
 
 namespace Stats.ColumnWorkers;
 
-public abstract class NumberColumnWorker : ColumnWorker
+public sealed class NumberColumnWorker : ColumnWorker
 {
-    public sealed override TableColumnCellStyle CellStyle => TableColumnCellStyle.Number;
     private readonly string UnitOfMeasure;
     private readonly Func<ThingAlike, decimal> GetValue;
-    protected NumberColumnWorker(
-        Func<ThingAlike, decimal> valueFunction,
-        string unitOfMeasure = ""
-    )
+    public NumberColumnWorker(Func<ThingAlike, decimal> valueFunction, string unitOfMeasure = "")
+        : base(TableColumnCellStyle.Number)
     {
-        UnitOfMeasure = unitOfMeasure;
         GetValue = valueFunction.Memoized();
+        UnitOfMeasure = unitOfMeasure;
     }
     public sealed override Widget? GetTableCellWidget(ThingAlike thing)
     {

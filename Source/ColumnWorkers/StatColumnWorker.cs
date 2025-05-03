@@ -9,12 +9,17 @@ namespace Stats.ColumnWorkers;
 
 public sealed class StatColumnWorker : ColumnWorker
 {
-    public override TableColumnCellStyle CellStyle => TableColumnCellStyle.Number;
+    private readonly StatDef Stat;
+    private readonly string? FormatString;
+    private readonly StatValueExplanationType ExplanationType;
     private static readonly Regex NumRegex = new(@"[0-9]+\.?[0-9]+", RegexOptions.Compiled);
     private static readonly Regex NonZeroNumRegex = new(@"[1-9]+", RegexOptions.Compiled);
     private readonly Func<ThingAlike, decimal> GetDisplayedStatValue;
-    public StatColumnWorker()
+    private StatColumnWorker(ColumnDef columnDef) : base(TableColumnCellStyle.Number)
     {
+        Stat = columnDef.stat!;
+        FormatString = columnDef.statValueFormatString;
+        ExplanationType = columnDef.statValueExplanationType;
         GetDisplayedStatValue = new Func<ThingAlike, decimal>((ThingAlike thing) =>
         {
             var statValue = GetStatValue(thing);
@@ -42,56 +47,41 @@ public sealed class StatColumnWorker : ColumnWorker
         })
         .Memoized();
     }
+    public static StatColumnWorker Make(ColumnDef columnDef) => new(columnDef);
     private float GetStatValue(ThingAlike thing)
     {
         var statReq = StatRequest.For(thing.Def, thing.StuffDef);
 
-        if (ColumnDef.stat!.Worker.ShouldShowFor(statReq) == false)
+        if (Stat.Worker.ShouldShowFor(statReq) == false)
         {
             return 0f;
         }
 
-        return ColumnDef.stat!.Worker.GetValue(statReq);
+        return Stat.Worker.GetValue(statReq);
     }
     private string FormatStatValue(float value, ThingAlike thing)
     {
-        if (ColumnDef.formatString != null)
+        if (FormatString != null)
         {
-            return value.ToString(ColumnDef.formatString);
+            return value.ToString(FormatString);
         }
 
         var statReq = StatRequest.For(thing.Def, thing.StuffDef);
 
-        return ColumnDef.stat!.Worker.GetStatDrawEntryLabel(
-            ColumnDef.stat!,
-            value,
-            ToStringNumberSense.Absolute,
-            statReq
-        );
+        return Stat.Worker.GetStatDrawEntryLabel(Stat, value, ToStringNumberSense.Absolute, statReq);
     }
     private string GetStatValueExplanation(float value, ThingAlike thing)
     {
         var statReq = StatRequest.For(thing.Def, thing.StuffDef);
 
-        return ColumnDef.statValueExplanationType switch
+        return ExplanationType switch
         {
             StatValueExplanationType.Full =>
-                ColumnDef.stat!.Worker.GetExplanationFull(
-                    statReq,
-                    ToStringNumberSense.Absolute,
-                    value
-                ),
+                Stat.Worker.GetExplanationFull(statReq, ToStringNumberSense.Absolute, value),
             StatValueExplanationType.Unfinalized =>
-                ColumnDef.stat!.Worker.GetExplanationUnfinalized(
-                    statReq,
-                    ToStringNumberSense.Absolute
-                ),
+                Stat.Worker.GetExplanationUnfinalized(statReq, ToStringNumberSense.Absolute),
             StatValueExplanationType.FinalizePart =>
-                ColumnDef.stat!.Worker.GetExplanationFinalizePart(
-                    statReq,
-                    ToStringNumberSense.Absolute,
-                    value
-                ),
+                Stat.Worker.GetExplanationFinalizePart(statReq, ToStringNumberSense.Absolute, value),
             _ => "",
         };
     }

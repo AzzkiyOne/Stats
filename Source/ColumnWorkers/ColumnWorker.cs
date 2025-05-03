@@ -5,10 +5,11 @@ namespace Stats.ColumnWorkers;
 
 public abstract class ColumnWorker
 {
-#pragma warning disable CS8618
-    public ColumnDef ColumnDef { get; set; }
-#pragma warning restore CS8618
-    public abstract TableColumnCellStyle CellStyle { get; }
+    public TableColumnCellStyle CellStyle { get; }
+    protected ColumnWorker(TableColumnCellStyle cellStyle)
+    {
+        CellStyle = cellStyle;
+    }
     // "Widget?" is so the table can decide itself how to store/draw empty cells.
     public abstract Widget? GetTableCellWidget(ThingAlike thing);
     public abstract FilterWidget GetFilterWidget();

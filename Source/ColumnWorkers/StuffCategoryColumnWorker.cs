@@ -10,12 +10,13 @@ namespace Stats.ColumnWorkers;
 
 public sealed class StuffCategoryColumnWorker : ColumnWorker
 {
-    public override TableColumnCellStyle CellStyle => TableColumnCellStyle.String;
-    private static readonly Func<ThingAlike, HashSet<StuffCategoryDef>> GetStuffCatDefs = FunctionExtensions.Memoized(
-        (ThingAlike thing) => thing.Def.stuffProps?.categories.ToHashSet() ?? []
-    );
-    private static readonly Func<ThingAlike, string> GetStuffCatLabels = FunctionExtensions.Memoized(
-        (ThingAlike thing) =>
+    private static readonly Func<ThingAlike, HashSet<StuffCategoryDef>> GetStuffCatDefs =
+        FunctionExtensions.Memoized((ThingAlike thing) =>
+        {
+            return thing.Def.stuffProps?.categories.ToHashSet() ?? [];
+        });
+    private static readonly Func<ThingAlike, string> GetStuffCatLabels =
+        FunctionExtensions.Memoized((ThingAlike thing) =>
         {
             var stuffCatDefs = GetStuffCatDefs(thing);
 
@@ -29,8 +30,11 @@ public sealed class StuffCategoryColumnWorker : ColumnWorker
                 .Select(stuffCatDef => stuffCatDef.LabelCap);
 
             return string.Join("\n", labels);
-        }
-    );
+        });
+    private StuffCategoryColumnWorker() : base(TableColumnCellStyle.String)
+    {
+    }
+    public static StuffCategoryColumnWorker Make(ColumnDef _) => new();
     public override Widget? GetTableCellWidget(ThingAlike thing)
     {
         var stuffCatLabels = GetStuffCatLabels(thing);

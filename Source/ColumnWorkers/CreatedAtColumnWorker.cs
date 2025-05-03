@@ -9,9 +9,8 @@ namespace Stats.ColumnWorkers;
 
 public sealed class CreatedAtColumnWorker : ColumnWorker
 {
-    public override TableColumnCellStyle CellStyle => TableColumnCellStyle.String;
-    private static readonly Func<ThingAlike, HashSet<ThingDef>> GetThingCraftBenches = FunctionExtensions.Memoized(
-        (ThingAlike thing) =>
+    private static readonly Func<ThingAlike, HashSet<ThingDef>> GetThingCraftingBenches =
+        FunctionExtensions.Memoized((ThingAlike thing) =>
         {
             var craftBenchesDefs = new HashSet<ThingDef>();
 
@@ -32,11 +31,14 @@ public sealed class CreatedAtColumnWorker : ColumnWorker
             }
 
             return craftBenchesDefs;
-        }
-    );
+        });
+    private CreatedAtColumnWorker() : base(TableColumnCellStyle.String)
+    {
+    }
+    public static CreatedAtColumnWorker Make(ColumnDef _) => new();
     public override Widget? GetTableCellWidget(ThingAlike thing)
     {
-        var thingDefs = GetThingCraftBenches(thing);
+        var thingDefs = GetThingCraftingBenches(thing);
 
         if (thingDefs.Count == 0)
         {
@@ -70,7 +72,7 @@ public sealed class CreatedAtColumnWorker : ColumnWorker
         );
 
         return new ManyToManyFilter<ThingDef>(
-            GetThingCraftBenches,
+            GetThingCraftingBenches,
             craftingBenches,
             ThingDefToFilterOptionWidget
         );
@@ -88,9 +90,9 @@ public sealed class CreatedAtColumnWorker : ColumnWorker
     }
     public override int Compare(ThingAlike thing1, ThingAlike thing2)
     {
-        var craftBechesCount1 = GetThingCraftBenches(thing1).Count;
-        var craftBechesCount2 = GetThingCraftBenches(thing2).Count;
+        var craftingBechesCount1 = GetThingCraftingBenches(thing1).Count;
+        var craftingBechesCount2 = GetThingCraftingBenches(thing2).Count;
 
-        return craftBechesCount1.CompareTo(craftBechesCount2);
+        return craftingBechesCount1.CompareTo(craftingBechesCount2);
     }
 }

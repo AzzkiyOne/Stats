@@ -6,7 +6,7 @@
         <defName>CE_Bulk</defName>
         <stat>Bulk</stat>
         <isNegative>true</isNegative>
-        <workerClass>Stats.ColumnWorkers.StatColumnWorker</workerClass>
+        <workerFactory>Stats.ColumnWorkers.StatColumnWorker.Make</workerFactory>
     </Stats.ColumnDef>
 
 </Defs>
