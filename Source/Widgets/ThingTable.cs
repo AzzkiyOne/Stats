@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Stats.Widgets.FilterWidgets;
 using UnityEngine;
 using Verse;
 
@@ -14,7 +15,7 @@ internal sealed class ThingTable
     private static readonly Color SortIndicatorColor = Color.yellow.ToTransparent(0.3f);
     private const float cellPadHor = 15f;
     private const float cellPadVer = 5f;
-    private readonly HashSet<FilterExpression> ActiveFilters;
+    private readonly HashSet<FilterWidget.AbsExpression> ActiveFilters;
     private readonly Table Table;
     private bool ShouldApplyFilters = false;
     public ThingTable(TableDef tableDef)
@@ -143,11 +144,11 @@ internal sealed class ThingTable
                 $"<i>{columnDef.LabelCap}</i>\n\n{columnDef.description}"
             );
     }
-    private static Widget CreateFilterCell(ColumnDef columnDef, out FilterExpression filter)
+    private static Widget CreateFilterCell(ColumnDef columnDef, out FilterWidget.AbsExpression filter)
     {
         var filterWidget = columnDef.Worker.GetFilterWidget();
 
-        filter = filterWidget.State;
+        filter = filterWidget.Expression;
         return filterWidget;
     }
     private static Widget CreateBodyCell(ColumnDef columnDef, ThingAlike thing)
@@ -209,7 +210,7 @@ internal sealed class ThingTable
             ) * SortDirection
         );
     }
-    private void HandleFilterChange(FilterExpression filter)
+    private void HandleFilterChange(FilterWidget.AbsExpression filter)
     {
         if (filter.IsEmpty)
         {
@@ -233,7 +234,7 @@ internal sealed class ThingTable
 
         ShouldApplyFilters = false;
     }
-    private static bool RowPassesFilters(TableRow<ThingAlike> row, HashSet<FilterExpression> filters)
+    private static bool RowPassesFilters(TableRow<ThingAlike> row, HashSet<FilterWidget.AbsExpression> filters)
     {
         foreach (var filter in filters)
         {

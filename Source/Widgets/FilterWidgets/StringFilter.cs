@@ -1,63 +1,63 @@
 ﻿using System;
 using System.Collections.Generic;
-using Stats.RelationalOperators;
-using Stats.RelationalOperators.String;
 using UnityEngine;
-using Verse;
 
 namespace Stats.Widgets.FilterWidgets;
 
-public sealed class StringFilter : FilterWidget<StringFilterState>
+public sealed class StringFilter : FilterWidgetWithInputField<string, string>
 {
-    private readonly StringFilterState SharedState;
-    public override FilterExpression State => SharedState;
-    protected override FloatMenu OperatorsMenu { get; }
-    private StringFilter(StringFilterState state) : base(state)
+    new private readonly StringExpression Expression;
+    public StringFilter(Func<ThingAlike, string> lhs) : this(new StringExpression(lhs))
     {
-        SharedState = state;
-
-        RelationalOperator<string, string>[] operators =
-        [
-            Contains.Instance,
-            NotContains.Instance,
-        ];
-
-        var operatorsMenuOptions = new List<FloatMenuOption>(operators.Length + 1)
-        {
-            MakeClearStateOperatorsMenuOption(state),
-        };
-
-        foreach (var @operator in operators)
-        {
-            var option = new FloatMenuOption(@operator.ToString(), () => state.Operator = @operator);
-
-            operatorsMenuOptions.Add(option);
-        }
-
-        OperatorsMenu = new FloatMenu(operatorsMenuOptions);
     }
-    public StringFilter(Func<ThingAlike, string> lhs) : this(new StringFilterState(lhs))
+    private StringFilter(StringExpression expression) : base(expression)
     {
+        Expression = expression;
     }
     protected override void DrawInputField(Rect rect)
     {
-        SharedState.Rhs = Verse.Widgets.TextField(rect, SharedState.Rhs);
+        Expression.Rhs = Verse.Widgets.TextField(rect, Expression.Rhs);
     }
     public override FilterWidget Clone()
     {
-        return new StringFilter(SharedState);
+        return new StringFilter(Expression);
     }
-}
 
-public sealed class StringFilterState : FilterExpression<string, string>
-{
-    public StringFilterState(Func<ThingAlike, string> lhs) : base(lhs, "")
+    private sealed class StringExpression : GenExpression
     {
-    }
-    public override void Clear()
-    {
-        base.Clear();
+        public override IEnumerable<GenOperator> SupportedOperators => [
+            Operators.Contains.Instance,
+            Operators.NotContains.Instance,
+        ];
+        public StringExpression(Func<ThingAlike, string> lhs) : base(lhs, "")
+        {
+        }
+        public override void Clear()
+        {
+            base.Clear();
 
-        Rhs = "";
+            Rhs = "";
+        }
+
+        private static class Operators
+        {
+            public sealed class Contains : GenOperator
+            {
+                public Contains() { }
+                public override bool Eval(string lhs, string rhs) =>
+                    lhs.Contains(rhs, StringComparison.CurrentCultureIgnoreCase);
+                public override string ToString() => "~=";
+                public static Contains Instance { get; } = new();
+            }
+
+            public sealed class NotContains : GenOperator
+            {
+                public NotContains() { }
+                public override bool Eval(string lhs, string rhs) =>
+                    lhs.Contains(rhs, StringComparison.CurrentCultureIgnoreCase) == false;
+                public override string ToString() => "!~=";
+                public static NotContains Instance { get; } = new();
+            }
+        }
     }
 }

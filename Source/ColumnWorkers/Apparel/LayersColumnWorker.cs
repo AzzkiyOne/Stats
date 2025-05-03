@@ -10,8 +10,8 @@ namespace Stats.ColumnWorkers.Apparel;
 public sealed class LayersColumnWorker : ColumnWorker
 {
     public override TableColumnCellStyle CellStyle => TableColumnCellStyle.String;
-    private static readonly Func<ThingAlike, List<ApparelLayerDef>> GetLayerDefs = FunctionExtensions.Memoized(
-        (ThingAlike thing) => thing.Def.apparel?.layers ?? []
+    private static readonly Func<ThingAlike, HashSet<ApparelLayerDef>> GetLayerDefs = FunctionExtensions.Memoized(
+        (ThingAlike thing) => thing.Def.apparel?.layers.ToHashSet() ?? []
     );
     private static readonly Func<ThingAlike, string> GetLayersLabels = FunctionExtensions.Memoized(
         (ThingAlike thing) =>
@@ -43,7 +43,7 @@ public sealed class LayersColumnWorker : ColumnWorker
     }
     public override FilterWidget GetFilterWidget()
     {
-        return new ManyToManyOptionsFilter<ApparelLayerDef>(
+        return new ManyToManyFilter<ApparelLayerDef>(
             GetLayerDefs,
             DefDatabase<ApparelLayerDef>
                 .AllDefsListForReading

@@ -17,8 +17,8 @@ namespace Stats.ColumnWorkers.Apparel;
 public sealed class CoverageColumnWorker : ColumnWorker
 {
     public override TableColumnCellStyle CellStyle => TableColumnCellStyle.String;
-    private static readonly Func<ThingAlike, List<BodyPartGroupDef>> GetBodyPartGroupDefs = FunctionExtensions.Memoized(
-        (ThingAlike thing) => thing.Def.apparel?.bodyPartGroups.Distinct().ToList() ?? []
+    private static readonly Func<ThingAlike, HashSet<BodyPartGroupDef>> GetBodyPartGroupDefs = FunctionExtensions.Memoized(
+        (ThingAlike thing) => thing.Def.apparel?.bodyPartGroups.ToHashSet() ?? []
     );
     private static readonly Func<ThingAlike, string> GetBodyPartGroupLabels = FunctionExtensions.Memoized(
         (ThingAlike thing) =>
@@ -50,7 +50,7 @@ public sealed class CoverageColumnWorker : ColumnWorker
     }
     public override FilterWidget GetFilterWidget()
     {
-        return new ManyToManyOptionsFilter<BodyPartGroupDef>(
+        return new ManyToManyFilter<BodyPartGroupDef>(
             GetBodyPartGroupDefs,
             DefDatabase<BodyPartGroupDef>
                 .AllDefsListForReading

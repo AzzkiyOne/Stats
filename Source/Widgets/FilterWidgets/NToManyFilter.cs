@@ -2,114 +2,52 @@
 using System.Collections.Generic;
 using System.Linq;
 using RimWorld;
-using Stats.RelationalOperators;
-using Stats.RelationalOperators.Set;
 using UnityEngine;
 using Verse;
 using Verse.Sound;
 
 namespace Stats.Widgets.FilterWidgets;
 
-// TODO: I have a strong suspicion that enumerables returned by lhs function will be accessed through
-// IEnumerable<T> interface, which is not ideal. Instead we could change generic parameters to something
-// like this: <TLhs, TElement>. Although, this may have a negative impact on ergonomics.
-
-public sealed class ManyToManyOptionsFilter<TOption> : OptionsFilter<IEnumerable<TOption>, TOption>
+public abstract class NToManyFilter<TExprLhs, TOption> : FilterWidgetWithInputField<TExprLhs, HashSet<TOption>>
 {
-    private static readonly RelationalOperator<IEnumerable<TOption>, HashSet<TOption>>[] Operators =
-        [
-            IntersectsWith<IEnumerable<TOption>, HashSet<TOption>, TOption>.Instance,
-            IsSubsetOf<IEnumerable<TOption>, HashSet<TOption>, TOption>.Instance,
-            IsNotSubsetOf<IEnumerable<TOption>, HashSet<TOption>, TOption>.Instance,
-            IsSupersetOf<IEnumerable<TOption>, HashSet<TOption>, TOption>.Instance,
-            IsNotSupersetOf<IEnumerable<TOption>, HashSet<TOption>, TOption>.Instance,
-        ];
-    public ManyToManyOptionsFilter(
-        Func<ThingAlike, IEnumerable<TOption>> lhs,
-        IEnumerable<TOption> options,
-        OptionWidgetFactory<TOption> makeOptionWidget
-    ) : this(new(lhs, []), Operators, options, makeOptionWidget)
-    {
-    }
-    private ManyToManyOptionsFilter(
-        FilterExpression<IEnumerable<TOption>, HashSet<TOption>> state,
-        IEnumerable<RelationalOperator<IEnumerable<TOption>, HashSet<TOption>>> operators,
-        IEnumerable<TOption> options,
-        OptionWidgetFactory<TOption> makeOptionWidget
-    ) : base(state, operators, options, makeOptionWidget)
-    {
-    }
-    public override FilterWidget Clone()
-    {
-        return new ManyToManyOptionsFilter<TOption>(State, Operators, Options, MakeOptionWidget);
-    }
-}
-
-public sealed class OneToManyOptionsFilter<TOption> : OptionsFilter<TOption, TOption>
-{
-    private static readonly RelationalOperator<TOption, HashSet<TOption>>[] Operators =
-        [
-            IsIn<TOption, HashSet<TOption>>.Instance,
-            IsNotIn<TOption, HashSet<TOption>>.Instance,
-        ];
-    public OneToManyOptionsFilter(
-        Func<ThingAlike, TOption> lhs,
-        IEnumerable<TOption> options,
-        OptionWidgetFactory<TOption> makeOptionWidget
-    ) : this(new(lhs, []), Operators, options, makeOptionWidget)
-    {
-    }
-    private OneToManyOptionsFilter(
-        FilterExpression<TOption, HashSet<TOption>> state,
-        IEnumerable<RelationalOperator<TOption, HashSet<TOption>>> operators,
-        IEnumerable<TOption> options,
-        OptionWidgetFactory<TOption> makeOptionWidget
-    ) : base(state, operators, options, makeOptionWidget)
-    {
-    }
-    public override FilterWidget Clone()
-    {
-        return new OneToManyOptionsFilter<TOption>(State, Operators, Options, MakeOptionWidget);
-    }
-}
-
-public abstract class OptionsFilter<TLhs, TOption> : FilterWidget<TLhs, HashSet<TOption>>
-{
+    new protected NtMExpression Expression { get; }
     protected IEnumerable<TOption> Options { get; }
     protected OptionWidgetFactory<TOption> MakeOptionWidget { get; }
     private readonly OptionsWindowWidget OptionsWindow;
-    private string SelectedItemsCountString;
-    protected OptionsFilter(
-        FilterExpression<TLhs, HashSet<TOption>> state,
-        IEnumerable<RelationalOperator<TLhs, HashSet<TOption>>> operators,
+    protected NToManyFilter(
+        NtMExpression expression,
         IEnumerable<TOption> options,
         OptionWidgetFactory<TOption> makeOptionWidget
-    ) : base(state, operators)
+    ) : base(expression)
     {
+        Expression = expression;
         Options = options;
         MakeOptionWidget = makeOptionWidget;
-        OptionsWindow = new(options, makeOptionWidget, state);
-        SelectedItemsCountString = state.Rhs.Count.ToString();
+        OptionsWindow = new(options, makeOptionWidget, expression);
     }
-    protected override Vector2 CalcInputFieldSize()
+    protected sealed override void DrawInputField(Rect rect)
     {
-        var size = Text.CalcSize(SelectedItemsCountString);
-        size.x += Globals.GUI.EstimatedInputFieldInnerPadding * 2f;
+        const float horPad = Globals.GUI.EstimatedInputFieldInnerPadding;
 
-        return size;
-    }
-    protected override void DrawInputField(Rect rect)
-    {
-        if (Widgets.Draw.ButtonTextSubtle(rect, SelectedItemsCountString, Globals.GUI.EstimatedInputFieldInnerPadding))
+        if (Widgets.Draw.ButtonTextSubtle(rect, base.Expression.RhsString, horPad))
         {
             Find.WindowStack.Add(OptionsWindow);
         }
     }
-    protected override void HandleStateChange(FilterExpression state)
-    {
-        SelectedItemsCountString = State.Rhs.Count.ToString();
 
-        base.HandleStateChange(state);
+    protected abstract class NtMExpression : GenExpression
+    {
+        public sealed override string RhsString => Rhs.Count.ToString();
+        public NtMExpression(Func<ThingAlike, TExprLhs> lhs) : base(lhs, [])
+        {
+        }
+        public sealed override void Clear()
+        {
+            base.Clear();
+
+            Rhs.Clear();
+            // TODO: NotifyChanged()?
+        }
     }
 
     // TODO: Implement scroll.
@@ -121,7 +59,7 @@ public abstract class OptionsFilter<TLhs, TOption> : FilterWidget<TLhs, HashSet<
         public OptionsWindowWidget(
             IEnumerable<TOption> options,
             OptionWidgetFactory<TOption> makeOptionWidget,
-            FilterExpression<TLhs, HashSet<TOption>> state
+            NtMExpression expression
         )
         {
             doWindowBackground = false;
@@ -138,23 +76,23 @@ public abstract class OptionsFilter<TLhs, TOption> : FilterWidget<TLhs, HashSet<
                 var option = optionsList[i];
                 void drawOptionBackground(Rect rect)
                 {
-                    if (Event.current.type == EventType.Repaint && state.Rhs.Contains(option))
+                    if (Event.current.type == EventType.Repaint && expression.Rhs.Contains(option))
                     {
                         Verse.Widgets.DrawHighlightSelected(rect);
                     }
                 }
                 void handleOptionClick()
                 {
-                    if (state.Rhs.Contains(option))
+                    if (expression.Rhs.Contains(option))
                     {
-                        state.Rhs.Remove(option);
+                        expression.Rhs.Remove(option);
                     }
                     else
                     {
-                        state.Rhs.Add(option);
+                        expression.Rhs.Add(option);
                     }
 
-                    state.NotifyChanged();
+                    expression.NotifyChanged();
                 }
 
                 Widget optionWidget = makeOptionWidget(option)
@@ -232,6 +170,6 @@ public abstract class OptionsFilter<TLhs, TOption> : FilterWidget<TLhs, HashSet<
             windowRect = new Rect(position, InitialSize);
         }
     }
-}
 
-public delegate Widget OptionWidgetFactory<T>(T option);
+    public delegate Widget OptionWidgetFactory<T>(T option);
+}

@@ -69,7 +69,7 @@ public sealed class CreatedAtColumnWorker : ColumnWorker
             thingDef => thingDef.IsWorkTable
         );
 
-        return new ManyToManyOptionsFilter<ThingDef>(
+        return new ManyToManyFilter<ThingDef>(
             GetThingCraftBenches,
             craftingBenches,
             ThingDefToFilterOptionWidget

@@ -1,85 +1,118 @@
-﻿using UnityEngine;
+﻿using System;
+using System.Collections.Generic;
 using Verse;
 
 namespace Stats.Widgets.FilterWidgets;
 
 public abstract class FilterWidget : Widget
 {
-    public abstract FilterExpression State { get; }
+
+    public virtual AbsExpression Expression { get; }
+    public FilterWidget(AbsExpression expression)
+    {
+        Expression = expression;
+    }
     public abstract FilterWidget Clone();
+
+    public abstract class AbsExpression
+    {
+        public abstract string OperatorString { get; }
+        public abstract string RhsString { get; }
+        public abstract bool IsEmpty { get; }
+        public abstract event Action<AbsExpression> OnChange;
+        public abstract bool Eval(ThingAlike thing);
+        public abstract void Clear();
+        public abstract void NotifyChanged();
+    }
 }
 
-public abstract class FilterWidget<TState> : FilterWidget where TState : FilterExpression
+public abstract class FilterWidget<TExprLhs, TExprRhs> : FilterWidget where TExprRhs : notnull
 {
-    private Vector2 OperatorButtonSize;
-    private Vector2 InputFieldSize;
-    protected abstract FloatMenu OperatorsMenu { get; }
-    private const float OperatorButtonPadding = Globals.GUI.Pad;
-    protected FilterWidget(FilterExpression state)
+    new protected GenExpression Expression { get; }
+    protected FilterWidget(GenExpression expression) : base(expression)
     {
-        OperatorButtonSize = CalcOperatorButtonSize(state);
-        InputFieldSize = CalcInputFieldSize(state);
-
-        state.OnChange += HandleStateChange;
+        Expression = expression;
     }
-    protected override Vector2 CalcSize()
-    {
-        var size = OperatorButtonSize;
 
-        if (State.IsEmpty)
+    protected abstract class GenExpression : AbsExpression
+    {
+        private readonly Func<ThingAlike, TExprLhs> Lhs;
+        private TExprRhs _Rhs;
+        public TExprRhs Rhs
         {
-            return size;
+            get => _Rhs;
+            set
+            {
+                if (_Rhs.Equals(value))
+                {
+                    return;
+                }
+
+                _Rhs = value;
+                OnChange?.Invoke(this);
+            }
+        }
+        public override string RhsString => _Rhs.ToString();
+        private GenOperator _Operator = EmptyOperator.Instance;
+        public GenOperator Operator
+        {
+            get => _Operator;
+            set
+            {
+                if (_Operator == value)
+                {
+                    return;
+                }
+
+                _Operator = value;
+                OnChange?.Invoke(this);
+            }
+        }
+        public sealed override string OperatorString => _Operator.ToString();
+        public abstract IEnumerable<GenOperator> SupportedOperators { get; }
+        public sealed override event Action<AbsExpression>? OnChange;
+        public sealed override bool IsEmpty => _Operator == EmptyOperator.Instance;
+        public GenExpression(Func<ThingAlike, TExprLhs> lhs, TExprRhs rhs)
+        {
+            Lhs = lhs;
+            _Rhs = rhs;
+        }
+        public sealed override bool Eval(ThingAlike thing)
+        {
+            try
+            {
+                return _Operator.Eval(Lhs(thing), _Rhs);
+            }
+            catch (Exception e)
+            {
+                Log.Error(e.Message);
+
+                return false;
+            }
+        }
+        public override void Clear()
+        {
+            Operator = EmptyOperator.Instance;
+        }
+        public sealed override void NotifyChanged()
+        {
+            OnChange?.Invoke(this);
         }
 
-        size.x += InputFieldSize.x;
-        size.y = Mathf.Max(size.y, InputFieldSize.y);
-
-        return size;
-    }
-    public sealed override void Draw(Rect rect, Vector2 _)
-    {
-        GUIDebugger.DebugRect(this, rect);
-
-        var operatorButtonRect = State.IsEmpty ? rect : rect.CutByX(OperatorButtonSize.x);
-
-        if (DrawOperatorButton(operatorButtonRect, State))
+        public abstract class GenOperator
         {
-            Find.WindowStack.Add(OperatorsMenu);
+            public abstract bool Eval(TExprLhs lhs, TExprRhs rhs);
         }
 
-        if (State.IsEmpty == false)
+        // This operator exists only because i don't want to define Operator property as
+        // nullable, because it will slow down the whole thing a bit. The table doesn't
+        // evaluate empty expressions anyway.
+        private sealed class EmptyOperator : GenOperator
         {
-            DrawInputField(rect);
+            private EmptyOperator() { }
+            public override bool Eval(TExprLhs lhs, TExprRhs rhs) => true;
+            public override string ToString() => "...";
+            public static EmptyOperator Instance { get; } = new();
         }
-    }
-    private static Vector2 CalcOperatorButtonSize(FilterExpression state)
-    {
-        var size = Text.CalcSize(state.OperatorString);
-        size.x += OperatorButtonPadding * 2f;
-
-        return size;
-    }
-    private static bool DrawOperatorButton(Rect rect, FilterExpression state)
-    {
-        return Widgets.Draw.ButtonTextSubtle(rect, state.OperatorString, OperatorButtonPadding);
-    }
-    private static Vector2 CalcInputFieldSize(FilterExpression state)
-    {
-        var size = Text.CalcSize(state.RhsString);
-        size.x += Globals.GUI.EstimatedInputFieldInnerPadding * 2f;
-
-        return size;
-    }
-    protected abstract void DrawInputField(Rect rect);
-    private void HandleStateChange(FilterExpression state)
-    {
-        OperatorButtonSize = CalcOperatorButtonSize(state);
-        InputFieldSize = CalcInputFieldSize(state);
-
-        Resize();
-    }
-    protected static FloatMenuOption MakeClearStateOperatorsMenuOption(FilterExpression state)
-    {
-        return new FloatMenuOption("Clear", state.Clear);
     }
 }

@@ -20,7 +20,7 @@ public sealed class TechLevelColumnWorker : ColumnWorker
     }
     public override FilterWidget GetFilterWidget()
     {
-        return new OneToManyOptionsFilter<TechLevel>(
+        return new OneToManyFilter<TechLevel>(
             thing => thing.Def.techLevel,
             Enum.GetValues(typeof(TechLevel)).Cast<TechLevel>().OrderBy(techLevel => techLevel),
             techLevel => new Label(techLevel.ToString())

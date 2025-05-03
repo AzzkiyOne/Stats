@@ -1,28 +1,28 @@
 ﻿using System;
-using Stats.RelationalOperators;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using Verse;
 
 namespace Stats.Widgets.FilterWidgets;
 
-public sealed class BooleanFilter : FilterWidget
+public sealed class BooleanFilter : FilterWidget<bool, bool>
 {
-    private readonly BooleanFilterState SharedState;
-    public override FilterExpression State => State;
+    new private readonly BooleanExpression Expression;
     private Action<Rect> DrawValue;
-    private BooleanFilter(BooleanFilterState state)
+    public BooleanFilter(Func<ThingAlike, bool> lhs) : this(new BooleanExpression(lhs))
     {
-        SharedState = state;
+    }
+    private BooleanFilter(BooleanExpression expression) : base(expression)
+    {
+        Expression = expression;
         DrawValue = DrawEmpty;
 
-        state.OnChange += HandleStateChange;
+        expression.OnChange += HandleStateChange;
     }
-    public BooleanFilter(Func<ThingAlike, bool> lhs) : this(new BooleanFilterState(lhs))
+    private void HandleStateChange(AbsExpression _)
     {
-    }
-    private void HandleStateChange(FilterExpression _)
-    {
-        DrawValue = SharedState switch
+        DrawValue = Expression switch
         {
             { IsEmpty: true } => DrawEmpty,
             { Rhs: true } => DrawTrue,
@@ -33,9 +33,9 @@ public sealed class BooleanFilter : FilterWidget
     }
     protected override Vector2 CalcSize()
     {
-        if (State.IsEmpty)
+        if (base.Expression.IsEmpty)
         {
-            return Text.CalcSize(SharedState.Operator.ToString());
+            return Text.CalcSize(Expression.Operator.ToString());
         }
 
         return new Vector2(Text.LineHeight, Text.LineHeight);
@@ -48,33 +48,34 @@ public sealed class BooleanFilter : FilterWidget
     }
     private void DrawEmpty(Rect rect)
     {
-        if (Widgets.Draw.ButtonTextSubtle(rect, SharedState.Operator.ToString()))
+        if (Widgets.Draw.ButtonTextSubtle(rect, Expression.Operator.ToString()))
         {
-            SharedState.Operator = BooleanFilterState.Operators.EqualTo;
+            Expression.Operator = Expression.SupportedOperators.First();
         }
     }
     private void DrawTrue(Rect rect)
     {
         if (Widgets.Draw.ButtonImageSubtle(rect, Verse.Widgets.CheckboxOnTex))
         {
-            SharedState.Rhs = false;
+            Expression.Rhs = false;
         }
     }
     private void DrawFalse(Rect rect)
     {
         if (Widgets.Draw.ButtonImageSubtle(rect, Verse.Widgets.CheckboxOffTex))
         {
-            State.Clear();
+            Expression.Clear();
         }
     }
     public override FilterWidget Clone()
     {
-        return new BooleanFilter(SharedState);
+        return new BooleanFilter(Expression);
     }
 
-    private sealed class BooleanFilterState : FilterExpression<bool, bool>
+    private sealed class BooleanExpression : GenExpression
     {
-        public BooleanFilterState(Func<ThingAlike, bool> lhs) : base(lhs, true)
+        public override IEnumerable<GenOperator> SupportedOperators => [Operators.EqualTo.Instance];
+        public BooleanExpression(Func<ThingAlike, bool> lhs) : base(lhs, true)
         {
         }
         public override void Clear()
@@ -84,16 +85,15 @@ public sealed class BooleanFilter : FilterWidget
             Rhs = true;
         }
 
-        public static class Operators
+        private static class Operators
         {
-            public sealed class EqualToOperator : RelationalOperator<bool, bool>
+            public sealed class EqualTo : GenOperator
             {
-                private EqualToOperator() { }
+                private EqualTo() { }
                 public override bool Eval(bool lhs, bool rhs) => lhs == rhs;
                 public override string ToString() => "==";
-                public static EqualToOperator Instance { get; } = new();
+                public static EqualTo Instance { get; } = new();
             }
-            public static EqualToOperator EqualTo = EqualToOperator.Instance;
         }
     }
 }

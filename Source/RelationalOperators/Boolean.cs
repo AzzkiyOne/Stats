@@ -1,3 +1,0 @@
-﻿namespace Stats.RelationalOperators.Boolean;
-
-
