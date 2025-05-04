@@ -2,17 +2,17 @@
 
 <Defs>
 
-    <Stats.ColumnDef>
+    <Stats.ThingTable.Defs.ColumnDef>
         <defName>Name</defName>
         <label>name</label>
-        <workerFactory>Stats.ColumnWorkers.NameColumnWorker.Make</workerFactory>
-    </Stats.ColumnDef>
+        <workerFactory>Stats.ThingTable.ColumnWorkers.NameColumnWorker.Make</workerFactory>
+    </Stats.ThingTable.Defs.ColumnDef>
 
-    <Stats.ColumnDef>
+    <Stats.ThingTable.Defs.ColumnDef>
         <defName>EquippedStatOffsets</defName>
         <label>Offsets when equipped</label>
         <labelShort>Offsets</labelShort>
-        <workerFactory>Stats.ColumnWorkers.EquippedStatOffsetsColumnWorker.Make</workerFactory>
-    </Stats.ColumnDef>
+        <workerFactory>Stats.ThingTable.ColumnWorkers.EquippedStatOffsetsColumnWorker.Make</workerFactory>
+    </Stats.ThingTable.Defs.ColumnDef>
 
 </Defs>

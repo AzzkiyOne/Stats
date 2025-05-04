@@ -4,10 +4,10 @@ using UnityEngine;
 
 namespace Stats.Widgets.FilterWidgets;
 
-public sealed class StringFilter : FilterWidgetWithInputField<string, string>
+public sealed class StringFilter<T> : FilterWidgetWithInputField<T, string, string>
 {
     new private readonly StringExpression Expression;
-    public StringFilter(Func<ThingAlike, string> lhs) : this(new StringExpression(lhs))
+    public StringFilter(Func<T, string> lhs) : this(new StringExpression(lhs))
     {
     }
     private StringFilter(StringExpression expression) : base(expression)
@@ -18,9 +18,9 @@ public sealed class StringFilter : FilterWidgetWithInputField<string, string>
     {
         Expression.Rhs = Verse.Widgets.TextField(rect, Expression.Rhs);
     }
-    public override FilterWidget Clone()
+    public override FilterWidget<T> Clone()
     {
-        return new StringFilter(Expression);
+        return new StringFilter<T>(Expression);
     }
 
     private sealed class StringExpression : GenExpression
@@ -29,7 +29,7 @@ public sealed class StringFilter : FilterWidgetWithInputField<string, string>
             Operators.Contains.Instance,
             Operators.NotContains.Instance,
         ];
-        public StringExpression(Func<ThingAlike, string> lhs) : base(lhs, "")
+        public StringExpression(Func<T, string> lhs) : base(lhs, "")
         {
         }
         public override void Clear()

@@ -3,7 +3,7 @@ using Stats.Widgets.FilterWidgets;
 
 namespace Stats.ColumnWorkers;
 
-public abstract class ColumnWorker
+public abstract class ColumnWorker<T>
 {
     public TableColumnCellStyle CellStyle { get; }
     protected ColumnWorker(TableColumnCellStyle cellStyle)
@@ -11,7 +11,7 @@ public abstract class ColumnWorker
         CellStyle = cellStyle;
     }
     // "Widget?" is so the table can decide itself how to store/draw empty cells.
-    public abstract Widget? GetTableCellWidget(ThingAlike thing);
-    public abstract FilterWidget GetFilterWidget();
-    public abstract int Compare(ThingAlike thing1, ThingAlike thing2);
+    public abstract Widget? GetTableCellWidget(T thing);
+    public abstract FilterWidget<T> GetFilterWidget();
+    public abstract int Compare(T thing1, T thing2);
 }

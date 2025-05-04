@@ -1,4 +1,5 @@
 ﻿using RimWorld;
+using Stats.ThingTable;
 using UnityEngine;
 using Verse;
 

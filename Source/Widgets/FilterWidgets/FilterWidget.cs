@@ -4,15 +4,14 @@ using Verse;
 
 namespace Stats.Widgets.FilterWidgets;
 
-public abstract class FilterWidget : Widget
+public abstract class FilterWidget<T> : Widget
 {
-
     public virtual AbsExpression Expression { get; }
     public FilterWidget(AbsExpression expression)
     {
         Expression = expression;
     }
-    public abstract FilterWidget Clone();
+    public abstract FilterWidget<T> Clone();
 
     public abstract class AbsExpression
     {
@@ -20,13 +19,13 @@ public abstract class FilterWidget : Widget
         public abstract string RhsString { get; }
         public abstract bool IsEmpty { get; }
         public abstract event Action<AbsExpression> OnChange;
-        public abstract bool Eval(ThingAlike thing);
+        public abstract bool Eval(T thing);
         public abstract void Clear();
         public abstract void NotifyChanged();
     }
 }
 
-public abstract class FilterWidget<TExprLhs, TExprRhs> : FilterWidget where TExprRhs : notnull
+public abstract class FilterWidget<T, TExprLhs, TExprRhs> : FilterWidget<T> where TExprRhs : notnull
 {
     new protected GenExpression Expression { get; }
     protected FilterWidget(GenExpression expression) : base(expression)
@@ -36,7 +35,7 @@ public abstract class FilterWidget<TExprLhs, TExprRhs> : FilterWidget where TExp
 
     protected abstract class GenExpression : AbsExpression
     {
-        private readonly Func<ThingAlike, TExprLhs> Lhs;
+        private readonly Func<T, TExprLhs> Lhs;
         private TExprRhs _Rhs;
         public TExprRhs Rhs
         {
@@ -72,12 +71,12 @@ public abstract class FilterWidget<TExprLhs, TExprRhs> : FilterWidget where TExp
         public abstract IEnumerable<GenOperator> SupportedOperators { get; }
         public sealed override event Action<AbsExpression>? OnChange;
         public sealed override bool IsEmpty => _Operator == EmptyOperator.Instance;
-        public GenExpression(Func<ThingAlike, TExprLhs> lhs, TExprRhs rhs)
+        public GenExpression(Func<T, TExprLhs> lhs, TExprRhs rhs)
         {
             Lhs = lhs;
             _Rhs = rhs;
         }
-        public sealed override bool Eval(ThingAlike thing)
+        public sealed override bool Eval(T thing)
         {
             try
             {

@@ -2,10 +2,10 @@
 
 <Defs>
 
-    <Stats.ColumnDef>
+    <Stats.ThingTable.Defs.ColumnDef>
         <defName>Stuff_Category</defName>
         <label>category</label>
-        <workerFactory>Stats.ColumnWorkers.StuffCategoryColumnWorker.Make</workerFactory>
-    </Stats.ColumnDef>
+        <workerFactory>Stats.ThingTable.ColumnWorkers.StuffCategoryColumnWorker.Make</workerFactory>
+    </Stats.ThingTable.Defs.ColumnDef>
 
 </Defs>

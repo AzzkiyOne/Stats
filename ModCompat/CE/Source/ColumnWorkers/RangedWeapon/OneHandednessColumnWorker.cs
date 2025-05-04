@@ -2,13 +2,15 @@
 using CombatExtended;
 using RimWorld;
 using Stats.ColumnWorkers;
+using Stats.ThingTable;
+using Stats.ThingTable.Defs;
 using Stats.Widgets;
 using Stats.Widgets.FilterWidgets;
 
 namespace Stats.ModCompat.CE.ColumnWorkers.RangedWeapon;
 
 // TODO: Make a BooleanColumnWorker, just as NumberColumnWorker?
-public sealed class OneHandednessColumnWorker : ColumnWorker
+public sealed class OneHandednessColumnWorker : ColumnWorker<ThingAlike>
 {
     public static readonly Func<ThingAlike, bool> IsOneHandedWeapon =
         FunctionExtensions.Memoized((ThingAlike thing) =>
@@ -40,9 +42,9 @@ public sealed class OneHandednessColumnWorker : ColumnWorker
                 .PaddingRel(0.5f, 0f)
         );
     }
-    public override FilterWidget GetFilterWidget()
+    public override FilterWidget<ThingAlike> GetFilterWidget()
     {
-        return new BooleanFilter(IsOneHandedWeapon);
+        return new BooleanFilter<ThingAlike>(IsOneHandedWeapon);
     }
     public override int Compare(ThingAlike thing1, ThingAlike thing2)
     {

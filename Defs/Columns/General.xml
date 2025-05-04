@@ -2,91 +2,91 @@
 
 <Defs>
 
-    <Stats.ColumnDef>
+    <Stats.ThingTable.Defs.ColumnDef>
         <defName>MarketValue</defName>
         <labelShort>$$$</labelShort>
         <stat>MarketValue</stat>
-        <workerFactory>Stats.ColumnWorkers.StatColumnWorker.Make</workerFactory>
-    </Stats.ColumnDef>
+        <workerFactory>Stats.ThingTable.ColumnWorkers.StatColumnWorker.Make</workerFactory>
+    </Stats.ThingTable.Defs.ColumnDef>
 
-    <Stats.ColumnDef>
+    <Stats.ThingTable.Defs.ColumnDef>
         <defName>MaxHitPoints</defName>
         <labelShort>Max HP</labelShort>
         <stat>MaxHitPoints</stat>
-        <workerFactory>Stats.ColumnWorkers.StatColumnWorker.Make</workerFactory>
-    </Stats.ColumnDef>
+        <workerFactory>Stats.ThingTable.ColumnWorkers.StatColumnWorker.Make</workerFactory>
+    </Stats.ThingTable.Defs.ColumnDef>
 
-    <Stats.ColumnDef>
+    <Stats.ThingTable.Defs.ColumnDef>
         <defName>Flammability</defName>
         <iconPath>UI/Icons/ColonistBar/Burning</iconPath>
         <stat>Flammability</stat>
         <isNegative>true</isNegative>
-        <workerFactory>Stats.ColumnWorkers.StatColumnWorker.Make</workerFactory>
-    </Stats.ColumnDef>
+        <workerFactory>Stats.ThingTable.ColumnWorkers.StatColumnWorker.Make</workerFactory>
+    </Stats.ThingTable.Defs.ColumnDef>
 
-    <Stats.ColumnDef>
+    <Stats.ThingTable.Defs.ColumnDef>
         <defName>Mass</defName>
         <stat>Mass</stat>
         <isNegative>true</isNegative>
-        <workerFactory>Stats.ColumnWorkers.StatColumnWorker.Make</workerFactory>
-    </Stats.ColumnDef>
+        <workerFactory>Stats.ThingTable.ColumnWorkers.StatColumnWorker.Make</workerFactory>
+    </Stats.ThingTable.Defs.ColumnDef>
 
-    <Stats.ColumnDef>
+    <Stats.ThingTable.Defs.ColumnDef>
         <defName>CreatedAt</defName>
         <labelKey>CreatedAt</labelKey>
         <descriptionKey>Stat_Thing_CreatedAt_Desc</descriptionKey>
-        <workerFactory>Stats.ColumnWorkers.CreatedAtColumnWorker.Make</workerFactory>
-    </Stats.ColumnDef>
+        <workerFactory>Stats.ThingTable.ColumnWorkers.CreatedAtColumnWorker.Make</workerFactory>
+    </Stats.ThingTable.Defs.ColumnDef>
 
     <!-- Ingredients? -->
 
-    <Stats.ColumnDef>
+    <Stats.ThingTable.Defs.ColumnDef>
         <defName>WorkToMake</defName>
         <labelShort>Work</labelShort>
         <stat>WorkToMake</stat>
         <isNegative>true</isNegative>
-        <workerFactory>Stats.ColumnWorkers.StatColumnWorker.Make</workerFactory>
-    </Stats.ColumnDef>
+        <workerFactory>Stats.ThingTable.ColumnWorkers.StatColumnWorker.Make</workerFactory>
+    </Stats.ThingTable.Defs.ColumnDef>
 
-    <Stats.ColumnDef>
+    <Stats.ThingTable.Defs.ColumnDef>
         <defName>Beauty</defName>
         <stat>Beauty</stat>
-        <workerFactory>Stats.ColumnWorkers.StatColumnWorker.Make</workerFactory>
-    </Stats.ColumnDef>
+        <workerFactory>Stats.ThingTable.ColumnWorkers.StatColumnWorker.Make</workerFactory>
+    </Stats.ThingTable.Defs.ColumnDef>
 
-    <Stats.ColumnDef>
+    <Stats.ThingTable.Defs.ColumnDef>
         <defName>SellPriceFactor</defName>
         <labelShort>$$$ %</labelShort>
         <stat>SellPriceFactor</stat>
         <isNegative>true</isNegative>
-        <workerFactory>Stats.ColumnWorkers.StatColumnWorker.Make</workerFactory>
-    </Stats.ColumnDef>
+        <workerFactory>Stats.ThingTable.ColumnWorkers.StatColumnWorker.Make</workerFactory>
+    </Stats.ThingTable.Defs.ColumnDef>
 
-    <Stats.ColumnDef>
+    <Stats.ThingTable.Defs.ColumnDef>
         <defName>DeteriorationRate</defName>
         <labelShort>-HP / d</labelShort>
         <stat>DeteriorationRate</stat>
         <isNegative>true</isNegative>
-        <workerFactory>Stats.ColumnWorkers.StatColumnWorker.Make</workerFactory>
+        <workerFactory>Stats.ThingTable.ColumnWorkers.StatColumnWorker.Make</workerFactory>
         <statValueFormatString>0.00 / d</statValueFormatString>
-    </Stats.ColumnDef>
+    </Stats.ThingTable.Defs.ColumnDef>
 
-    <Stats.ColumnDef>
+    <Stats.ThingTable.Defs.ColumnDef>
         <defName>ContentSource</defName>
         <labelKey>Stat_Source_Label</labelKey>
-        <workerFactory>Stats.ColumnWorkers.ContentSourceColumnWorker.Make</workerFactory>
-    </Stats.ColumnDef>
+        <workerFactory>Stats.ThingTable.ColumnWorkers.ContentSourceColumnWorker.Make</workerFactory>
+    </Stats.ThingTable.Defs.ColumnDef>
 
-    <Stats.ColumnDef>
+    <Stats.ThingTable.Defs.ColumnDef>
         <defName>Food_Nutrition</defName>
         <stat>Nutrition</stat>
-        <workerFactory>Stats.ColumnWorkers.StatColumnWorker.Make</workerFactory>
-    </Stats.ColumnDef>
+        <workerFactory>Stats.ThingTable.ColumnWorkers.StatColumnWorker.Make</workerFactory>
+    </Stats.ThingTable.Defs.ColumnDef>
 
-    <Stats.ColumnDef>
+    <Stats.ThingTable.Defs.ColumnDef>
         <defName>TechLevel</defName>
         <label>tech level</label>
-        <workerFactory>Stats.ColumnWorkers.TechLevelColumnWorker.Make</workerFactory>
-    </Stats.ColumnDef>
+        <workerFactory>Stats.ThingTable.ColumnWorkers.TechLevelColumnWorker.Make</workerFactory>
+    </Stats.ThingTable.Defs.ColumnDef>
 
 </Defs>

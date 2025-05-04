@@ -2,11 +2,11 @@
 
 <Defs>
 
-    <Stats.TableDef>
+    <Stats.ThingTable.Defs.TableDef>
         <defName>RangedWeapons</defName>
         <label>ranged weapons</label>
         <iconThingDef>Gun_Revolver</iconThingDef>
-        <workerFactory>Stats.TableWorkers.RangedWeaponsTableWorker.Make</workerFactory>
+        <workerFactory>Stats.ThingTable.TableWorkers.RangedWeaponsTableWorker.Make</workerFactory>
         <columns>
             <li>WeaponRanged_Damage</li>
             <li>WeaponRanged_StoppingPower</li>
@@ -34,13 +34,13 @@
             <li>TechLevel</li>
             <li>ContentSource</li>
         </columns>
-    </Stats.TableDef>
+    </Stats.ThingTable.Defs.TableDef>
 
-    <Stats.TableDef>
+    <Stats.ThingTable.Defs.TableDef>
         <defName>MeleeWeapons</defName>
         <label>melee weapons</label>
         <iconThingDef>MeleeWeapon_Club</iconThingDef>
-        <workerFactory>Stats.TableWorkers.MeleeWeaponsTableWorker.Make</workerFactory>
+        <workerFactory>Stats.ThingTable.TableWorkers.MeleeWeaponsTableWorker.Make</workerFactory>
         <columns>
             <li>WeaponMelee_DPS</li>
             <li>WeaponMelee_ArmorPenetration</li>
@@ -53,13 +53,13 @@
             <li>TechLevel</li>
             <li>ContentSource</li>
         </columns>
-    </Stats.TableDef>
+    </Stats.ThingTable.Defs.TableDef>
 
-    <Stats.TableDef>
+    <Stats.ThingTable.Defs.TableDef>
         <defName>Clothing</defName>
         <label>clothing</label>
         <iconThingDef>Apparel_Duster</iconThingDef>
-        <workerFactory>Stats.TableWorkers.ClothingTableWorker.Make</workerFactory>
+        <workerFactory>Stats.ThingTable.TableWorkers.ClothingTableWorker.Make</workerFactory>
         <columns>
             <li>Apparel_Insulation_Cold</li>
             <li>Apparel_Insulation_Heat</li>
@@ -78,13 +78,13 @@
             <li>TechLevel</li>
             <li>ContentSource</li>
         </columns>
-    </Stats.TableDef>
+    </Stats.ThingTable.Defs.TableDef>
 
-    <Stats.TableDef>
+    <Stats.ThingTable.Defs.TableDef>
         <defName>Armor</defName>
         <label>armor</label>
         <iconThingDef>Apparel_PowerArmor</iconThingDef>
-        <workerFactory>Stats.TableWorkers.ArmorTableWorker.Make</workerFactory>
+        <workerFactory>Stats.ThingTable.TableWorkers.ArmorTableWorker.Make</workerFactory>
         <columns>
             <li>Apparel_ArmorRating_Sharp</li>
             <li>Apparel_ArmorRating_Blunt</li>
@@ -105,13 +105,13 @@
             <li>TechLevel</li>
             <li>ContentSource</li>
         </columns>
-    </Stats.TableDef>
+    </Stats.ThingTable.Defs.TableDef>
 
-    <Stats.TableDef>
+    <Stats.ThingTable.Defs.TableDef>
         <defName>UtilityApparel</defName>
         <label>utility apparel</label>
         <iconThingDef>Apparel_FirefoampopPack</iconThingDef>
-        <workerFactory>Stats.TableWorkers.UtilityApparelTableWorker.Make</workerFactory>
+        <workerFactory>Stats.ThingTable.TableWorkers.UtilityApparelTableWorker.Make</workerFactory>
         <columns>
             <li>Apparel_Shield_EnergyMax</li>
             <li>Apparel_Shield_RechargeRate</li>
@@ -125,24 +125,24 @@
             <li>TechLevel</li>
             <li>ContentSource</li>
         </columns>
-    </Stats.TableDef>
+    </Stats.ThingTable.Defs.TableDef>
 
-    <Stats.TableDef>
+    <Stats.ThingTable.Defs.TableDef>
         <defName>Animals</defName>
         <label>animals</label>
         <iconThingDef>Cow</iconThingDef>
-        <workerFactory>Stats.TableWorkers.AnimalsTableWorker.Make</workerFactory>
+        <workerFactory>Stats.ThingTable.TableWorkers.AnimalsTableWorker.Make</workerFactory>
         <columns>
             <li>MarketValue</li>
             <li>ContentSource</li>
         </columns>
-    </Stats.TableDef>
+    </Stats.ThingTable.Defs.TableDef>
 
-    <Stats.TableDef>
+    <Stats.ThingTable.Defs.TableDef>
         <defName>Stuff</defName>
         <label>stuff</label>
         <iconThingDef>Cloth</iconThingDef>
-        <workerFactory>Stats.TableWorkers.StuffTableWorker.Make</workerFactory>
+        <workerFactory>Stats.ThingTable.TableWorkers.StuffTableWorker.Make</workerFactory>
         <columns>
             <li>Stuff_Category</li>
             <li>MarketValue</li>
@@ -151,26 +151,26 @@
             <li>CreatedAt</li>
             <li>ContentSource</li>
         </columns>
-    </Stats.TableDef>
+    </Stats.ThingTable.Defs.TableDef>
 
-    <Stats.TableDef>
+    <Stats.ThingTable.Defs.TableDef>
         <defName>Plants</defName>
         <label>plants</label>
         <iconThingDef>Plant_TreeOak</iconThingDef>
-        <workerFactory>Stats.TableWorkers.PlantsTableWorker.Make</workerFactory>
+        <workerFactory>Stats.ThingTable.TableWorkers.PlantsTableWorker.Make</workerFactory>
         <columns>
             <li>MaxHitPoints</li>
             <li>Flammability</li>
             <li>Beauty</li>
             <li>ContentSource</li>
         </columns>
-    </Stats.TableDef>
+    </Stats.ThingTable.Defs.TableDef>
 
-    <Stats.TableDef>
+    <Stats.ThingTable.Defs.TableDef>
         <defName>Food</defName>
         <label>food</label>
         <iconThingDef>MealLavish</iconThingDef>
-        <workerFactory>Stats.TableWorkers.FoodTableWorker.Make</workerFactory>
+        <workerFactory>Stats.ThingTable.TableWorkers.FoodTableWorker.Make</workerFactory>
         <columns>
             <li>Food_Nutrition</li>
             <li>Mass</li>
@@ -179,13 +179,13 @@
             <li>MarketValue</li>
             <li>ContentSource</li>
         </columns>
-    </Stats.TableDef>
+    </Stats.ThingTable.Defs.TableDef>
 
-    <Stats.TableDef>
+    <Stats.ThingTable.Defs.TableDef>
         <defName>Drugs</defName>
         <label>drugs</label>
         <iconThingDef>Yayo</iconThingDef>
-        <workerFactory>Stats.TableWorkers.DrugsTableWorker.Make</workerFactory>
+        <workerFactory>Stats.ThingTable.TableWorkers.DrugsTableWorker.Make</workerFactory>
         <columns>
             <li>Food_Nutrition</li>
             <li>Mass</li>
@@ -194,6 +194,6 @@
             <li>MarketValue</li>
             <li>ContentSource</li>
         </columns>
-    </Stats.TableDef>
+    </Stats.ThingTable.Defs.TableDef>
 
 </Defs>

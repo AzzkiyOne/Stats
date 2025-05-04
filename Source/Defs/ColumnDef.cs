@@ -1,28 +1,19 @@
-﻿using System;
-using RimWorld;
+﻿using RimWorld;
 using Stats.ColumnWorkers;
 using UnityEngine;
 using Verse;
 
-namespace Stats;
+namespace Stats.Defs;
 
-public sealed class ColumnDef : Def
+public abstract class ColumnDef : Def, IColumnDef
 {
     public string? labelKey;
     public string? descriptionKey;
     public string labelShort = "";
+    public string LabelShort => labelShort;
+    public string Description => description;
     public string? iconPath;
     public Texture2D? Icon { get; private set; }
-    public StatDef? stat;
-    public string? statValueFormatString;
-    public StatValueExplanationType statValueExplanationType;
-    // Indicates whether a value is "good" or "bad" in general.
-    // Isn't used anywhere.
-    public bool isNegative = false;
-#pragma warning disable CS8618
-    public Func<ColumnDef, ColumnWorker> workerFactory;
-    public ColumnWorker Worker { get; private set; }
-#pragma warning restore CS8618
     public override void PostLoad()
     {
         base.PostLoad();
@@ -43,25 +34,10 @@ public sealed class ColumnDef : Def
             description = descriptionKey.Translate();
         }
 
-        if (stat != null)
-        {
-            if (string.IsNullOrEmpty(label))
-            {
-                label = stat.label;
-            }
-
-            if (string.IsNullOrEmpty(description))
-            {
-                description = stat.description;
-            }
-        }
-
         if (string.IsNullOrEmpty(labelShort))
         {
             labelShort = LabelCap;
         }
-
-        Worker = workerFactory(this);
     }
     private void ResolveIcon()
     {
@@ -70,4 +46,17 @@ public sealed class ColumnDef : Def
             Icon = ContentFinder<Texture2D>.Get(iconPath);
         }
     }
+}
+
+public interface IColumnDef
+{
+    string LabelShort { get; }
+    TaggedString LabelCap { get; }
+    string Description { get; }
+    public Texture2D? Icon { get; }
+}
+
+public interface IColumnDef<T> : IColumnDef
+{
+    ColumnWorker<T> Worker { get; }
 }

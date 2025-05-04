@@ -5,7 +5,7 @@ using Verse;
 
 namespace Stats.Widgets.FilterWidgets;
 
-public abstract class FilterWidgetWithInputField<TExprLhs, TExprRhs> : FilterWidget<TExprLhs, TExprRhs>
+public abstract class FilterWidgetWithInputField<T, TExprLhs, TExprRhs> : FilterWidget<T, TExprLhs, TExprRhs>
     where TExprRhs : notnull
 {
     private Vector2 OperatorButtonSize;

@@ -4,17 +4,17 @@ using Stats.Widgets.FilterWidgets;
 
 namespace Stats.ColumnWorkers;
 
-public sealed class NumberColumnWorker : ColumnWorker
+public sealed class NumberColumnWorker<T> : ColumnWorker<T>
 {
     private readonly string UnitOfMeasure;
-    private readonly Func<ThingAlike, decimal> GetValue;
-    public NumberColumnWorker(Func<ThingAlike, decimal> valueFunction, string unitOfMeasure = "")
+    private readonly Func<T, decimal> GetValue;
+    public NumberColumnWorker(Func<T, decimal> valueFunction, string unitOfMeasure = "")
         : base(TableColumnCellStyle.Number)
     {
         GetValue = valueFunction.Memoized();
         UnitOfMeasure = unitOfMeasure;
     }
-    public sealed override Widget? GetTableCellWidget(ThingAlike thing)
+    public sealed override Widget? GetTableCellWidget(T thing)
     {
         var value = GetValue(thing);
 
@@ -25,11 +25,11 @@ public sealed class NumberColumnWorker : ColumnWorker
 
         return new Label(value.ToString() + UnitOfMeasure);
     }
-    public sealed override FilterWidget GetFilterWidget()
+    public sealed override FilterWidget<T> GetFilterWidget()
     {
-        return new NumberFilter(GetValue);
+        return new NumberFilter<T>(GetValue);
     }
-    public sealed override int Compare(ThingAlike thing1, ThingAlike thing2)
+    public sealed override int Compare(T thing1, T thing2)
     {
         return GetValue(thing1).CompareTo(GetValue(thing2));
     }

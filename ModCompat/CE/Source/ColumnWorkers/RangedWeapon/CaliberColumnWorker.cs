@@ -1,13 +1,15 @@
 ﻿using System;
 using RimWorld;
 using Stats.ColumnWorkers;
+using Stats.ThingTable;
+using Stats.ThingTable.Defs;
 using Stats.Widgets;
 using Stats.Widgets.FilterWidgets;
 using Verse;
 
 namespace Stats.ModCompat.CE.ColumnWorkers.RangedWeapon;
 
-public sealed class CaliberColumnWorker : ColumnWorker
+public sealed class CaliberColumnWorker : ColumnWorker<ThingAlike>
 {
     private static readonly StatDef CaliberStatDef = DefDatabase<StatDef>.GetNamed("Caliber");
     private static readonly Func<ThingAlike, string> GetCaliberName =
@@ -44,9 +46,9 @@ public sealed class CaliberColumnWorker : ColumnWorker
 
         return new Label(caliberName).Tooltip(tooltip);
     }
-    public override FilterWidget GetFilterWidget()
+    public override FilterWidget<ThingAlike> GetFilterWidget()
     {
-        return new StringFilter(GetCaliberName);
+        return new StringFilter<ThingAlike>(GetCaliberName);
     }
     public override int Compare(ThingAlike thing1, ThingAlike thing2)
     {

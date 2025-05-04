@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using Stats.Defs;
 using Stats.Widgets.Extensions.Color;
 using UnityEngine;
 using Verse;
@@ -7,7 +8,7 @@ namespace Stats.Widgets;
 
 internal sealed class TableSelector : WidgetWrapper
 {
-    private TableDef _CurTableDef = TableDefOf.RangedWeapons;
+    private TableDef _CurTableDef = ThingTable.DefOfs.TableDefOf.RangedWeapons;
     public TableDef CurTableDef
     {
         get => _CurTableDef;

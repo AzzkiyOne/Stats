@@ -8,16 +8,16 @@ using Verse.Sound;
 
 namespace Stats.Widgets.FilterWidgets;
 
-public abstract class NToManyFilter<TExprLhs, TOption> : FilterWidgetWithInputField<TExprLhs, HashSet<TOption>>
+public abstract class NToManyFilter<T, TExprLhs, TOption> : FilterWidgetWithInputField<T, TExprLhs, HashSet<TOption>>
 {
     new protected NtMExpression Expression { get; }
     protected IEnumerable<TOption> Options { get; }
-    protected OptionWidgetFactory<TOption> MakeOptionWidget { get; }
+    protected OptionWidgetFactory MakeOptionWidget { get; }
     private readonly OptionsWindowWidget OptionsWindow;
     protected NToManyFilter(
         NtMExpression expression,
         IEnumerable<TOption> options,
-        OptionWidgetFactory<TOption> makeOptionWidget
+        OptionWidgetFactory makeOptionWidget
     ) : base(expression)
     {
         Expression = expression;
@@ -38,7 +38,7 @@ public abstract class NToManyFilter<TExprLhs, TOption> : FilterWidgetWithInputFi
     protected abstract class NtMExpression : GenExpression
     {
         public sealed override string RhsString => Rhs.Count.ToString();
-        public NtMExpression(Func<ThingAlike, TExprLhs> lhs) : base(lhs, [])
+        public NtMExpression(Func<T, TExprLhs> lhs) : base(lhs, [])
         {
         }
         public sealed override void Clear()
@@ -58,7 +58,7 @@ public abstract class NToManyFilter<TExprLhs, TOption> : FilterWidgetWithInputFi
         private readonly Widget OptionsList;
         public OptionsWindowWidget(
             IEnumerable<TOption> options,
-            OptionWidgetFactory<TOption> makeOptionWidget,
+            OptionWidgetFactory makeOptionWidget,
             NtMExpression expression
         )
         {
@@ -171,5 +171,5 @@ public abstract class NToManyFilter<TExprLhs, TOption> : FilterWidgetWithInputFi
         }
     }
 
-    public delegate Widget OptionWidgetFactory<T>(T option);
+    public delegate Widget OptionWidgetFactory(TOption option);
 }
