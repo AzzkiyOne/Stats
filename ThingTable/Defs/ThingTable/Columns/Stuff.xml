@@ -3,7 +3,7 @@
 <Defs>
 
     <Stats.ThingTable.Defs.ColumnDef>
-        <defName>Stuff_Category</defName>
+        <defName>StuffCategory_ThingTableColumn</defName>
         <label>category</label>
         <workerFactory>Stats.ThingTable.ColumnWorkers.StuffCategoryColumnWorker.Make</workerFactory>
     </Stats.ThingTable.Defs.ColumnDef>

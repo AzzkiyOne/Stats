@@ -5,11 +5,11 @@ using Verse;
 
 namespace Stats.Widgets.FilterWidgets;
 
-public sealed class ManyToManyFilter<T, TOption> : NToManyFilter<T, HashSet<TOption>, TOption>
+public sealed class ManyToManyFilter<TObject, TOption> : NToManyFilter<TObject, HashSet<TOption>, TOption>
 {
     new private readonly ManyToManyExpression Expression;
     public ManyToManyFilter(
-        Func<T, HashSet<TOption>> lhs,
+        Func<TObject, HashSet<TOption>> lhs,
         IEnumerable<TOption> options,
         OptionWidgetFactory makeOptionWidget
     ) : this(new ManyToManyExpression(lhs), options, makeOptionWidget)
@@ -23,9 +23,9 @@ public sealed class ManyToManyFilter<T, TOption> : NToManyFilter<T, HashSet<TOpt
     {
         Expression = expression;
     }
-    public override FilterWidget<T> Clone()
+    public override FilterWidget<TObject> Clone()
     {
-        return new ManyToManyFilter<T, TOption>(Expression, Options, MakeOptionWidget);
+        return new ManyToManyFilter<TObject, TOption>(Expression, Options, MakeOptionWidget);
     }
 
     private sealed class ManyToManyExpression : NtMExpression
@@ -37,7 +37,7 @@ public sealed class ManyToManyFilter<T, TOption> : NToManyFilter<T, HashSet<TOpt
             Operators.IsSupersetOf.Instance,
             Operators.IsNotSupersetOf.Instance,
         ];
-        public ManyToManyExpression(Func<T, HashSet<TOption>> lhs) : base(lhs)
+        public ManyToManyExpression(Func<TObject, HashSet<TOption>> lhs) : base(lhs)
         {
         }
 

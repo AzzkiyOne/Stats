@@ -3,7 +3,7 @@
 <Defs>
 
     <Stats.ThingTable.Defs.ColumnDef>
-        <defName>WeaponMelee_DPS</defName>
+        <defName>MeleeDPS_ThingTableColumn</defName>
         <labelShort>DPS (M)</labelShort>
         <iconPath>UI/Commands/AttackMelee</iconPath>
         <stat>MeleeWeapon_AverageDPS</stat>
@@ -11,7 +11,7 @@
     </Stats.ThingTable.Defs.ColumnDef>
 
     <Stats.ThingTable.Defs.ColumnDef>
-        <defName>WeaponMelee_ArmorPenetration</defName>
+        <defName>MeleeArmorPenetration_ThingTableColumn</defName>
         <labelShort>AP (M)</labelShort>
         <stat>MeleeWeapon_AverageArmorPenetration</stat>
         <workerFactory>Stats.ThingTable.ColumnWorkers.StatColumnWorker.Make</workerFactory>

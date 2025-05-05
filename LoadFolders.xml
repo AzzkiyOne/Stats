@@ -4,5 +4,6 @@
         <li>/</li>
         <li>ThingTable</li>
         <li IfModActive="CETeam.CombatExtended">ThingTable/Compat/CE</li>
+        <li IfModActive="ludeon.rimworld.biotech">GeneTable</li>
     </v1.5>
 </loadFolders>

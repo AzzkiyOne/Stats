@@ -3,63 +3,63 @@
 <Defs>
 
     <Stats.ThingTable.Defs.ColumnDef>
-        <defName>Apparel_Insulation_Cold</defName>
+        <defName>ColdInsulation_ThingTableColumn</defName>
         <labelShort>Ins. (C)</labelShort>
         <stat>Insulation_Cold</stat>
         <workerFactory>Stats.ThingTable.ColumnWorkers.StatColumnWorker.Make</workerFactory>
     </Stats.ThingTable.Defs.ColumnDef>
 
     <Stats.ThingTable.Defs.ColumnDef>
-        <defName>Apparel_Insulation_Heat</defName>
+        <defName>HeatInsulation_ThingTableColumn</defName>
         <labelShort>Ins. (H)</labelShort>
         <stat>Insulation_Heat</stat>
         <workerFactory>Stats.ThingTable.ColumnWorkers.StatColumnWorker.Make</workerFactory>
     </Stats.ThingTable.Defs.ColumnDef>
 
     <Stats.ThingTable.Defs.ColumnDef>
-        <defName>Apparel_ArmorRating_Sharp</defName>
+        <defName>SharpArmorRating_ThingTableColumn</defName>
         <labelShort>Armor (S)</labelShort>
         <stat>ArmorRating_Sharp</stat>
         <workerFactory>Stats.ThingTable.ColumnWorkers.StatColumnWorker.Make</workerFactory>
     </Stats.ThingTable.Defs.ColumnDef>
 
     <Stats.ThingTable.Defs.ColumnDef>
-        <defName>Apparel_ArmorRating_Blunt</defName>
+        <defName>BluntArmorRating_ThingTableColumn</defName>
         <labelShort>Armor (B)</labelShort>
         <stat>ArmorRating_Blunt</stat>
         <workerFactory>Stats.ThingTable.ColumnWorkers.StatColumnWorker.Make</workerFactory>
     </Stats.ThingTable.Defs.ColumnDef>
 
     <Stats.ThingTable.Defs.ColumnDef>
-        <defName>Apparel_ArmorRating_Heat</defName>
+        <defName>HeatArmorRating_ThingTableColumn</defName>
         <labelShort>Armor (H)</labelShort>
         <stat>ArmorRating_Heat</stat>
         <workerFactory>Stats.ThingTable.ColumnWorkers.StatColumnWorker.Make</workerFactory>
     </Stats.ThingTable.Defs.ColumnDef>
 
     <Stats.ThingTable.Defs.ColumnDef>
-        <defName>Apparel_Shield_EnergyMax</defName>
-        <labelShort>Shiled (En)</labelShort>
+        <defName>EnergyShieldCapacity_ThingTableColumn</defName>
+        <labelShort>Shiled %</labelShort>
         <stat>EnergyShieldEnergyMax</stat>
         <workerFactory>Stats.ThingTable.ColumnWorkers.StatColumnWorker.Make</workerFactory>
     </Stats.ThingTable.Defs.ColumnDef>
 
     <Stats.ThingTable.Defs.ColumnDef>
-        <defName>Apparel_Shield_RechargeRate</defName>
-        <labelShort>Shiled (R)</labelShort>
+        <defName>EnergyShieldRechargeRate_ThingTableColumn</defName>
+        <labelShort>Shiled %/s</labelShort>
         <stat>EnergyShieldRechargeRate</stat>
         <workerFactory>Stats.ThingTable.ColumnWorkers.StatColumnWorker.Make</workerFactory>
     </Stats.ThingTable.Defs.ColumnDef>
 
     <Stats.ThingTable.Defs.ColumnDef>
-        <defName>Apparel_Layers</defName>
+        <defName>Layers_ThingTableColumn</defName>
         <labelKey>Layer</labelKey>
         <descriptionKey>Stat_Thing_Apparel_Layer_Desc</descriptionKey>
         <workerFactory>Stats.ThingTable.ColumnWorkers.Apparel.LayersColumnWorker.Make</workerFactory>
     </Stats.ThingTable.Defs.ColumnDef>
 
     <Stats.ThingTable.Defs.ColumnDef>
-        <defName>Apparel_Coverage</defName>
+        <defName>Coverage_ThingTableColumn</defName>
         <labelKey>Covers</labelKey>
         <descriptionKey>Stat_Thing_Apparel_Covers_Desc</descriptionKey>
         <workerFactory>Stats.ThingTable.ColumnWorkers.Apparel.CoverageColumnWorker.Make</workerFactory>

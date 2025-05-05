@@ -4,19 +4,19 @@ using Stats.Widgets.FilterWidgets;
 
 namespace Stats.ColumnWorkers;
 
-public sealed class NumberColumnWorker<T> : ColumnWorker<T>
+public sealed class NumberColumnWorker<TObject> : ColumnWorker<TObject>
 {
     private readonly string UnitOfMeasure;
-    private readonly Func<T, decimal> GetValue;
-    public NumberColumnWorker(Func<T, decimal> valueFunction, string unitOfMeasure = "")
+    private readonly Func<TObject, decimal> GetValue;
+    public NumberColumnWorker(Func<TObject, decimal> valueFunction, string unitOfMeasure = "")
         : base(TableColumnCellStyle.Number)
     {
         GetValue = valueFunction.Memoized();
         UnitOfMeasure = unitOfMeasure;
     }
-    public sealed override Widget? GetTableCellWidget(T thing)
+    public sealed override Widget? GetTableCellWidget(TObject @object)
     {
-        var value = GetValue(thing);
+        var value = GetValue(@object);
 
         if (value == 0m)
         {
@@ -25,12 +25,12 @@ public sealed class NumberColumnWorker<T> : ColumnWorker<T>
 
         return new Label(value.ToString() + UnitOfMeasure);
     }
-    public sealed override FilterWidget<T> GetFilterWidget()
+    public sealed override FilterWidget<TObject> GetFilterWidget()
     {
-        return new NumberFilter<T>(GetValue);
+        return new NumberFilter<TObject>(GetValue);
     }
-    public sealed override int Compare(T thing1, T thing2)
+    public sealed override int Compare(TObject object1, TObject object2)
     {
-        return GetValue(thing1).CompareTo(GetValue(thing2));
+        return GetValue(object1).CompareTo(GetValue(object2));
     }
 }

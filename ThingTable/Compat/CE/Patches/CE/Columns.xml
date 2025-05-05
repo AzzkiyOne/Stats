@@ -3,7 +3,7 @@
 <Patch>
 
     <Operation Class="PatchOperationAdd">
-        <xpath>Defs/Stats.ThingTable.Defs.ColumnDef[defName="Apparel_ArmorRating_Sharp" or defName="Apparel_ArmorRating_Blunt"]</xpath>
+        <xpath>Defs/Stats.ThingTable.Defs.ColumnDef[defName="SharpArmorRating_ThingTableColumn" or defName="BluntArmorRating_ThingTableColumn"]</xpath>
         <value>
             <statValueExplanationType>FinalizePart</statValueExplanationType>
         </value>

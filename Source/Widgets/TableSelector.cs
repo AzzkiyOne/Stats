@@ -8,7 +8,7 @@ namespace Stats.Widgets;
 
 internal sealed class TableSelector : WidgetWrapper
 {
-    private TableDef _CurTableDef = DefDatabase<TableDef>.GetNamed("RangedWeapons");
+    private TableDef _CurTableDef;
     public TableDef CurTableDef
     {
         get => _CurTableDef;
@@ -32,13 +32,14 @@ internal sealed class TableSelector : WidgetWrapper
     protected override Widget Widget { get; }
     public TableSelector()
     {
+        _CurTableDef = DefDatabase<TableDef>.GetNamed("RangedWeapons_ThingTable");
         Widget = new HorizontalContainer(
             [
-                new Icon(CurTableDef.Icon, out IconWidget)
+                new Icon(_CurTableDef.Icon, out IconWidget)
                     .PaddingAbs(Globals.GUI.PadXs)
                     .SizeAbs(MainTabWindow.TitleBarHeight)
-                    .Color(CurTableDef.IconColor, out IconColorExtension),
-                new Label(CurTableDef.LabelCap, out LabelWidget)
+                    .Color(_CurTableDef.IconColor, out IconColorExtension),
+                new Label(_CurTableDef.LabelCap, out LabelWidget)
                     .HeightAbs(MainTabWindow.TitleBarHeight)
                     .TextAnchor(TextAnchor.MiddleLeft),
             ],
@@ -58,7 +59,7 @@ internal sealed class TableSelector : WidgetWrapper
                 tableDef.Icon,
                 tableDef.IconColor
             ))
-            .OrderBy(opt => opt.Label)
+            .OrderBy(menuOption => menuOption.Label)
             .ToList();
         Menu = new(menuOptions);
     }

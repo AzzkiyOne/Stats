@@ -6,7 +6,7 @@ using Stats.Widgets.FilterWidgets;
 
 namespace Stats.ThingTable.ColumnWorkers;
 
-public sealed class NameColumnWorker : ColumnWorker<ThingAlike>
+public sealed class LabelColumnWorker : ColumnWorker<ThingAlike>
 {
     private static readonly Func<ThingAlike, string> GetThingLabel =
         FunctionExtensions.Memoized((ThingAlike thing) =>
@@ -15,10 +15,10 @@ public sealed class NameColumnWorker : ColumnWorker<ThingAlike>
                 ? thing.Def.LabelCap.RawText
                 : $"{thing.StuffDef.LabelCap} {thing.Def.label}";
         });
-    private NameColumnWorker() : base(TableColumnCellStyle.String)
+    private LabelColumnWorker() : base(TableColumnCellStyle.String)
     {
     }
-    public static NameColumnWorker Make(ColumnDef _) => new();
+    public static LabelColumnWorker Make(ColumnDef _) => new();
     public override Widget? GetTableCellWidget(ThingAlike thing)
     {
         void openDefInfoDialog()

@@ -8,19 +8,19 @@ using Verse;
 
 namespace Stats.Widgets;
 
-public sealed class GenericTable<T> : ITableWidget
+public sealed class GenericTable<TObject> : ITableWidget
 {
-    private IColumnDef<T> SortColumn;
+    private IColumnDef<TObject> SortColumn;
     private int SortDirection = SortDirectionDescending;
     private const int SortDirectionAscending = 1;
     private const int SortDirectionDescending = -1;
     private static readonly Color SortIndicatorColor = Color.yellow.ToTransparent(0.3f);
     private const float cellPadHor = 15f;
     private const float cellPadVer = 5f;
-    private readonly HashSet<FilterWidget<T>.AbsExpression> ActiveFilters;
+    private readonly HashSet<FilterWidget<TObject>.AbsExpression> ActiveFilters;
     private readonly Table Table;
     private bool ShouldApplyFilters = false;
-    public GenericTable(ITableDef<T> tableDef)
+    public GenericTable(ITableDef<TObject> tableDef)
     {
         // Header rows and columns
         var columns = new List<Table.Column>(tableDef.Columns.Count);
@@ -65,7 +65,7 @@ public sealed class GenericTable<T> : ITableWidget
                 rowCells.Add(CreateBodyCell(columnDef, thing));
             }
 
-            var row = new TableRow<T>(rowCells, DrawBodyRowBG, thing);
+            var row = new TableRow<TObject>(rowCells, DrawBodyRowBG, thing);
 
             bodyRows.Add(row);
         }
@@ -84,7 +84,7 @@ public sealed class GenericTable<T> : ITableWidget
 
         Table.Draw(rect);
     }
-    private Widget CreateHeaderCell(IColumnDef<T> columnDef, Table.Column column)
+    private Widget CreateHeaderCell(IColumnDef<TObject> columnDef, Table.Column column)
     {
         Widget cell;
 
@@ -145,14 +145,14 @@ public sealed class GenericTable<T> : ITableWidget
                 $"<i>{columnDef.LabelCap}</i>\n\n{columnDef.Description}"
             );
     }
-    private static Widget CreateFilterCell(IColumnDef<T> columnDef, out FilterWidget<T>.AbsExpression filter)
+    private static Widget CreateFilterCell(IColumnDef<TObject> columnDef, out FilterWidget<TObject>.AbsExpression filter)
     {
         var filterWidget = columnDef.Worker.GetFilterWidget();
 
         filter = filterWidget.Expression;
         return filterWidget;
     }
-    private static Widget CreateBodyCell(IColumnDef<T> columnDef, T thing)
+    private static Widget CreateBodyCell(IColumnDef<TObject> columnDef, TObject thing)
     {
         try
         {
@@ -192,7 +192,7 @@ public sealed class GenericTable<T> : ITableWidget
             Verse.Widgets.DrawLightHighlight(rect);
         }
     }
-    private void SortRowsByColumn(IColumnDef<T> columnDef)
+    private void SortRowsByColumn(IColumnDef<TObject> columnDef)
     {
         if (SortColumn == columnDef)
         {
@@ -206,12 +206,12 @@ public sealed class GenericTable<T> : ITableWidget
         // TODO: Handle exception.
         Table.BodyRows.Sort((r1, r2) =>
             SortColumn.Worker.Compare(
-                ((TableRow<T>)r1).Id,
-                ((TableRow<T>)r2).Id
+                ((TableRow<TObject>)r1).Id,
+                ((TableRow<TObject>)r2).Id
             ) * SortDirection
         );
     }
-    private void HandleFilterChange(FilterWidget<T>.AbsExpression filter)
+    private void HandleFilterChange(FilterWidget<TObject>.AbsExpression filter)
     {
         if (filter.IsEmpty)
         {
@@ -228,14 +228,14 @@ public sealed class GenericTable<T> : ITableWidget
     {
         // It is important not to skip selected rows here so we don't have to
         // re-aplly filters when a row is unselected.
-        foreach (TableRow<T> row in Table.BodyRows)
+        foreach (TableRow<TObject> row in Table.BodyRows)
         {
             row.IsHidden = RowPassesFilters(row, ActiveFilters) == false;
         }
 
         ShouldApplyFilters = false;
     }
-    private static bool RowPassesFilters(TableRow<T> row, HashSet<FilterWidget<T>.AbsExpression> filters)
+    private static bool RowPassesFilters(TableRow<TObject> row, HashSet<FilterWidget<TObject>.AbsExpression> filters)
     {
         foreach (var filter in filters)
         {

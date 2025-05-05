@@ -6,10 +6,11 @@ namespace Stats.Widgets;
 // See vertical variant for comments.
 public sealed class HorizontalContainer : Widget
 {
-    private readonly float Gap;
     private readonly List<Widget> Children;
-    private readonly float OccupiedSpaceAmount;
+    private readonly float Gap;
     private readonly float TotalGapAmount;
+    private readonly bool ShareFreeSpace;
+    private float OccupiedSpaceAmount;
     public HorizontalContainer(
         List<Widget> children,
         float gap = 0f,
@@ -19,20 +20,11 @@ public sealed class HorizontalContainer : Widget
         Children = children;
         Gap = gap;
         TotalGapAmount = (Children.Count - 1) * Gap;
-
-        if (shareFreeSpace)
-        {
-            OccupiedSpaceAmount = TotalGapAmount;
-        }
+        ShareFreeSpace = shareFreeSpace;
 
         foreach (var child in children)
         {
             child.Parent = this;
-
-            if (shareFreeSpace)
-            {
-                OccupiedSpaceAmount += child.GetFixedSize().x;
-            }
         }
     }
     protected override Vector2 CalcSize()
@@ -41,12 +33,22 @@ public sealed class HorizontalContainer : Widget
         size.x = TotalGapAmount;
         size.y = 0f;
 
+        if (ShareFreeSpace)
+        {
+            OccupiedSpaceAmount = TotalGapAmount;
+        }
+
         foreach (var child in Children)
         {
             var childSize = child.GetSize();
 
             size.x += childSize.x;
             size.y = Mathf.Max(size.y, childSize.y);
+
+            if (ShareFreeSpace)
+            {
+                OccupiedSpaceAmount += child.GetFixedSize().x;
+            }
         }
 
         return size;

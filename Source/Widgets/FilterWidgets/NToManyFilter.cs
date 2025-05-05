@@ -8,7 +8,7 @@ using Verse.Sound;
 
 namespace Stats.Widgets.FilterWidgets;
 
-public abstract class NToManyFilter<T, TExprLhs, TOption> : FilterWidgetWithInputField<T, TExprLhs, HashSet<TOption>>
+public abstract class NToManyFilter<TObject, TExprLhs, TOption> : FilterWidgetWithInputField<TObject, TExprLhs, HashSet<TOption>>
 {
     new protected NtMExpression Expression { get; }
     protected IEnumerable<TOption> Options { get; }
@@ -38,7 +38,7 @@ public abstract class NToManyFilter<T, TExprLhs, TOption> : FilterWidgetWithInpu
     protected abstract class NtMExpression : GenExpression
     {
         public sealed override string RhsString => Rhs.Count.ToString();
-        public NtMExpression(Func<T, TExprLhs> lhs) : base(lhs, [])
+        public NtMExpression(Func<TObject, TExprLhs> lhs) : base(lhs, [])
         {
         }
         public sealed override void Clear()

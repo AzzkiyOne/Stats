@@ -5,11 +5,11 @@ using Verse;
 
 namespace Stats.Widgets.FilterWidgets;
 
-public sealed class NumberFilter<T> : FilterWidgetWithInputField<T, decimal, decimal>
+public sealed class NumberFilter<TObject> : FilterWidgetWithInputField<TObject, decimal, decimal>
 {
     new private readonly NumberExpression Expression;
     private static readonly Color ErrorColor = Color.red.ToTransparent(0.5f);
-    public NumberFilter(Func<T, decimal> lhs) : this(new NumberExpression(lhs))
+    public NumberFilter(Func<TObject, decimal> lhs) : this(new NumberExpression(lhs))
     {
     }
     private NumberFilter(NumberExpression expression) : base(expression)
@@ -25,9 +25,9 @@ public sealed class NumberFilter<T> : FilterWidgetWithInputField<T, decimal, dec
 
         Expression.TextFieldText = Verse.Widgets.TextField(rect, Expression.TextFieldText);
     }
-    public override FilterWidget<T> Clone()
+    public override FilterWidget<TObject> Clone()
     {
-        return new NumberFilter<T>(Expression);
+        return new NumberFilter<TObject>(Expression);
     }
 
     private sealed class NumberExpression : GenExpression
@@ -83,7 +83,7 @@ public sealed class NumberFilter<T> : FilterWidgetWithInputField<T, decimal, dec
         }
         public override string RhsString => _TextFieldText;
         public bool InputIsValid { get; private set; } = true;
-        public NumberExpression(Func<T, decimal> lhs) : base(lhs, 0m)
+        public NumberExpression(Func<TObject, decimal> lhs) : base(lhs, 0m)
         {
         }
         public override void Clear()

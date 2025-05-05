@@ -39,7 +39,7 @@ public sealed class MainTabWindow : RimWorld.MainTabWindow
     {
         Text.WordWrap = false;
 
-        TitleBar.Draw(rect.TopPartPixels(TitleBarHeight), rect.size);
+        TitleBar.DrawIn(rect.TopPartPixels(TitleBarHeight));
 
         TableSelector.CurTableDef.Widget.Draw(rect.BottomPartPixels(rect.height - TitleBarHeight));
 

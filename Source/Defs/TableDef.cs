@@ -1,13 +1,11 @@
-﻿using System.Collections.Generic;
-using RimWorld;
-using Stats.TableWorkers;
+﻿using RimWorld;
 using Stats.Widgets;
 using UnityEngine;
 using Verse;
 
 namespace Stats.Defs;
 
-public abstract class TableDef : Def
+public abstract class TableDef : Def, ITableDef
 {
     public string? iconPath;
     public ThingDef? iconThingDef;
@@ -42,10 +40,4 @@ public abstract class TableDef : Def
             }
         }
     }
-}
-
-public interface ITableDef<T>
-{
-    List<IColumnDef<T>> Columns { get; }
-    TableWorker<T> Worker { get; }
 }

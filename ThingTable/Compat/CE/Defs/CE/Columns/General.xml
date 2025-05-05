@@ -3,7 +3,7 @@
 <Defs>
 
     <Stats.ThingTable.Defs.ColumnDef>
-        <defName>CE_Bulk</defName>
+        <defName>CE_Bulk_ThingTableColumn</defName>
         <stat>Bulk</stat>
         <isNegative>true</isNegative>
         <workerFactory>Stats.ThingTable.ColumnWorkers.StatColumnWorker.Make</workerFactory>

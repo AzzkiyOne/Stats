@@ -3,64 +3,64 @@
 <Patch>
 
     <Operation Class="PatchOperationInsert">
-        <xpath>Defs/Stats.ThingTable.Defs.TableDef/columns/li[text() = "Mass"]</xpath>
+        <xpath>Defs/Stats.ThingTable.Defs.TableDef/columns/li[text() = "Mass_ThingTableColumn"]</xpath>
         <value>
-            <li>CE_Bulk</li>
+            <li>CE_Bulk_ThingTableColumn</li>
         </value>
     </Operation>
 
     <Operation Class="PatchOperationReplace">
-        <xpath>Defs/Stats.ThingTable.Defs.TableDef[defName="RangedWeapons"]/columns/li[text() = "WeaponRanged_Damage"]</xpath>
+        <xpath>Defs/Stats.ThingTable.Defs.TableDef[defName="RangedWeapons_ThingTable"]/columns/li[text() = "RangedDamage_ThingTableColumn"]</xpath>
         <value>
-            <li>CE_WeaponRanged_Caliber</li>
+            <li>CE_RangedCaliber_ThingTableColumn</li>
         </value>
     </Operation>
 
     <Operation Class="PatchOperationInsert">
-        <xpath>Defs/Stats.ThingTable.Defs.TableDef[defName="RangedWeapons"]/columns/li[text() = "WeaponRanged_Range"]</xpath>
+        <xpath>Defs/Stats.ThingTable.Defs.TableDef[defName="RangedWeapons_ThingTable"]/columns/li[text() = "RangedRange_ThingTableColumn"]</xpath>
         <order>Append</order>
         <value>
-            <li>CE_WeaponRanged_OneHandedness</li>
-            <li>CE_WeaponRanged_ReloadTime</li>
-            <li>CE_WeaponRanged_MagazineCapacity</li>
-            <li>CE_WeaponRanged_SightsEfficiency</li>
-            <li>CE_WeaponRanged_Recoil</li>
-            <li>CE_WeaponRanged_SwayFactor</li>
-            <li>CE_WeaponRanged_ShotSpread</li>
+            <li>CE_RangedOneHandedness_ThingTableColumn</li>
+            <li>CE_RangedReloadTime_ThingTableColumn</li>
+            <li>CE_RangedMagazineCapacity_ThingTableColumn</li>
+            <li>CE_RangedSightsEfficiency_ThingTableColumn</li>
+            <li>CE_RangedRecoil_ThingTableColumn</li>
+            <li>CE_RangedSwayFactor_ThingTableColumn</li>
+            <li>CE_RangedShotSpread_ThingTableColumn</li>
         </value>
     </Operation>
 
     <Operation Class="PatchOperationRemove">
-        <xpath>Defs/Stats.ThingTable.Defs.TableDef[defName="RangedWeapons"]/columns/
-        li[ text()="WeaponRanged_StoppingPower"
-            or text()="WeaponRanged_ArmorPenetration"
-            or text()="WeaponRanged_AccuracyTouch"
-            or text()="WeaponRanged_AccuracyShort"
-            or text()="WeaponRanged_AccuracyMedium"
-            or text()="WeaponRanged_AccuracyLong"
-            or text()="WeaponRanged_DirectHitChance"
-            or text()="WeaponRanged_MissRadius"
-            or text()="WeaponMelee_DPS"
-            or text()="WeaponMelee_ArmorPenetration"
+        <xpath>Defs/Stats.ThingTable.Defs.TableDef[defName="RangedWeapons_ThingTable"]/columns/
+        li[ text()="RangedStoppingPower_ThingTableColumn"
+            or text()="RangedArmorPenetration_ThingTableColumn"
+            or text()="RangedTouchAccuracy_ThingTableColumn"
+            or text()="RangedShortAccuracy_ThingTableColumn"
+            or text()="RangedMediumAccuracy_ThingTableColumn"
+            or text()="RangedLongAccuracy_ThingTableColumn"
+            or text()="RangedDirectHitChance_ThingTableColumn"
+            or text()="RangedMissRadius_ThingTableColumn"
+            or text()="MeleeDPS"
+            or text()="MeleeArmorPenetration"
         ]</xpath>
     </Operation>
 
     <Operation Class="PatchOperationRemove">
-        <xpath>Defs/Stats.ThingTable.Defs.TableDef[defName="MeleeWeapons"]/columns/li[text()="WeaponMelee_ArmorPenetration"]</xpath>
+        <xpath>Defs/Stats.ThingTable.Defs.TableDef[defName="MeleeWeapons_ThingTable"]/columns/li[text()="MeleeArmorPenetration_ThingTableColumn"]</xpath>
     </Operation>
 
     <Operation Class="PatchOperationInsert">
-        <xpath>Defs/Stats.ThingTable.Defs.TableDef/columns/li[text()="Apparel_ArmorRating_Heat"]</xpath>
+        <xpath>Defs/Stats.ThingTable.Defs.TableDef/columns/li[text()="HeatArmorRating_ThingTableColumn"]</xpath>
         <order>Append</order>
         <value>
-            <li>CE_Apparel_ArmorRating_Electric</li>
+            <li>CE_ElectricArmorRating_ThingTableColumn</li>
         </value>
     </Operation>
 
     <Operation Class="PatchOperationInsert">
-        <xpath>Defs/Stats.ThingTable.Defs.TableDef[defName="Clothing" or defName="Armor" or defName="UtilityApparel"]/columns/li[text()="CE_Bulk"]</xpath>
+        <xpath>Defs/Stats.ThingTable.Defs.TableDef[defName="Clothing_ThingTable" or defName="Armor_ThingTable" or defName="UtilityApparel_ThingTable"]/columns/li[text()="CE_Bulk_ThingTableColumn"]</xpath>
         <value>
-            <li>CE_Apparel_Worn_Bulk</li>
+            <li>CE_WornBulk_ThingTableColumn</li>
         </value>
     </Operation>
 

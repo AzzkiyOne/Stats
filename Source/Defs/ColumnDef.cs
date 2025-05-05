@@ -1,5 +1,4 @@
 ﻿using RimWorld;
-using Stats.ColumnWorkers;
 using UnityEngine;
 using Verse;
 
@@ -46,17 +45,4 @@ public abstract class ColumnDef : Def, IColumnDef
             Icon = ContentFinder<Texture2D>.Get(iconPath);
         }
     }
-}
-
-public interface IColumnDef
-{
-    string LabelShort { get; }
-    TaggedString LabelCap { get; }
-    string Description { get; }
-    public Texture2D? Icon { get; }
-}
-
-public interface IColumnDef<T> : IColumnDef
-{
-    ColumnWorker<T> Worker { get; }
 }

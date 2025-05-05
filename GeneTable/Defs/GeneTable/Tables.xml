@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<Defs>
+
+    <Stats.GeneTable.Defs.TableDef>
+        <defName>GeneTable</defName>
+        <label>genes</label>
+        <workerFactory>Stats.GeneTable.TableWorkers.GeneTableWorker.Make</workerFactory>
+        <columns>
+            
+        </columns>
+    </Stats.GeneTable.Defs.TableDef>
+
+</Defs>

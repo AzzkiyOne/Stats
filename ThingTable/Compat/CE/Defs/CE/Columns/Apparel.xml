@@ -3,7 +3,7 @@
 <Defs>
 
     <Stats.ThingTable.Defs.ColumnDef>
-        <defName>CE_Apparel_Worn_Bulk</defName>
+        <defName>CE_WornBulk_ThingTableColumn</defName>
         <labelShort>Bulk (W)</labelShort>
         <stat>WornBulk</stat>
         <isNegative>true</isNegative>
@@ -11,7 +11,7 @@
     </Stats.ThingTable.Defs.ColumnDef>
 
     <Stats.ThingTable.Defs.ColumnDef>
-        <defName>CE_Apparel_ArmorRating_Electric</defName>
+        <defName>CE_ElectricArmorRating_ThingTableColumn</defName>
         <labelShort>Armor (E)</labelShort>
         <stat>ArmorRating_Electric</stat>
         <workerFactory>Stats.ThingTable.ColumnWorkers.StatColumnWorker.Make</workerFactory>

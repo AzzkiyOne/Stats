@@ -3,13 +3,13 @@
 <Defs>
 
     <Stats.ThingTable.Defs.ColumnDef>
-        <defName>Name</defName>
-        <label>name</label>
-        <workerFactory>Stats.ThingTable.ColumnWorkers.NameColumnWorker.Make</workerFactory>
+        <defName>Label_ThingTableColumn</defName>
+        <label>label</label>
+        <workerFactory>Stats.ThingTable.ColumnWorkers.LabelColumnWorker.Make</workerFactory>
     </Stats.ThingTable.Defs.ColumnDef>
 
     <Stats.ThingTable.Defs.ColumnDef>
-        <defName>EquippedStatOffsets</defName>
+        <defName>EquippedStatOffsets_ThingTableColumn</defName>
         <label>Offsets when equipped</label>
         <labelShort>Offsets</labelShort>
         <workerFactory>Stats.ThingTable.ColumnWorkers.EquippedStatOffsetsColumnWorker.Make</workerFactory>

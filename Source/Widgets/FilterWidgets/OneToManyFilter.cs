@@ -3,11 +3,11 @@ using System.Collections.Generic;
 
 namespace Stats.Widgets.FilterWidgets;
 
-public sealed class OneToManyFilter<T, TOption> : NToManyFilter<T, TOption, TOption>
+public sealed class OneToManyFilter<TObject, TOption> : NToManyFilter<TObject, TOption, TOption>
 {
     new private readonly OneToManyExpression Expression;
     public OneToManyFilter(
-        Func<T, TOption> lhs,
+        Func<TObject, TOption> lhs,
         IEnumerable<TOption> options,
         OptionWidgetFactory makeOptionWidget
     ) : this(new OneToManyExpression(lhs), options, makeOptionWidget)
@@ -21,9 +21,9 @@ public sealed class OneToManyFilter<T, TOption> : NToManyFilter<T, TOption, TOpt
     {
         Expression = expression;
     }
-    public override FilterWidget<T> Clone()
+    public override FilterWidget<TObject> Clone()
     {
-        return new OneToManyFilter<T, TOption>(Expression, Options, MakeOptionWidget);
+        return new OneToManyFilter<TObject, TOption>(Expression, Options, MakeOptionWidget);
     }
 
     private sealed class OneToManyExpression : NtMExpression
@@ -32,7 +32,7 @@ public sealed class OneToManyFilter<T, TOption> : NToManyFilter<T, TOption, TOpt
             Operators.IsIn.Instance,
             Operators.IsNotIn.Instance
         ];
-        public OneToManyExpression(Func<T, TOption> lhs) : base(lhs)
+        public OneToManyExpression(Func<TObject, TOption> lhs) : base(lhs)
         {
         }
 

@@ -4,14 +4,14 @@ using Verse;
 
 namespace Stats.Widgets.FilterWidgets;
 
-public abstract class FilterWidget<T> : Widget
+public abstract class FilterWidget<TObject> : Widget
 {
     public virtual AbsExpression Expression { get; }
     public FilterWidget(AbsExpression expression)
     {
         Expression = expression;
     }
-    public abstract FilterWidget<T> Clone();
+    public abstract FilterWidget<TObject> Clone();
 
     public abstract class AbsExpression
     {
@@ -19,7 +19,7 @@ public abstract class FilterWidget<T> : Widget
         public abstract string RhsString { get; }
         public abstract bool IsEmpty { get; }
         public abstract event Action<AbsExpression> OnChange;
-        public abstract bool Eval(T thing);
+        public abstract bool Eval(TObject thing);
         public abstract void Clear();
         public abstract void NotifyChanged();
     }

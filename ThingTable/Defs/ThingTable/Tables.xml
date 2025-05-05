@@ -2,197 +2,197 @@
 
 <Defs>
 
-    <Stats.ThingTable.Defs.TableDef>
-        <defName>RangedWeapons</defName>
-        <label>ranged weapons</label>
-        <iconThingDef>Gun_Revolver</iconThingDef>
-        <workerFactory>Stats.ThingTable.TableWorkers.RangedWeaponsTableWorker.Make</workerFactory>
-        <columns>
-            <li>WeaponRanged_Damage</li>
-            <li>WeaponRanged_StoppingPower</li>
-            <li>WeaponRanged_ArmorPenetration</li>
-            <li>WeaponRanged_RPM</li>
-            <li>WeaponRanged_BurstShotCount</li>
-            <li>WeaponRanged_Cooldown</li>
-            <li>WeaponRanged_AimingTime</li>
-            <li>WeaponRanged_Range</li>
-            <li>WeaponRanged_AccuracyTouch</li>
-            <li>WeaponRanged_AccuracyShort</li>
-            <li>WeaponRanged_AccuracyMedium</li>
-            <li>WeaponRanged_AccuracyLong</li>
-            <li>WeaponRanged_DirectHitChance</li>
-            <li>WeaponRanged_MissRadius</li>
-            <li>EquippedStatOffsets</li>
-            <li>WeaponMelee_DPS</li>
-            <li>WeaponMelee_ArmorPenetration</li>
-            <li>WeaponRanged_BuildingDamageFactor_Passable</li>
-            <li>WeaponRanged_BuildingDamageFactor_Impassable</li>
-            <li>Mass</li>
-            <li>CreatedAt</li>
-            <li>WorkToMake</li>
-            <li>MarketValue</li>
-            <li>TechLevel</li>
-            <li>ContentSource</li>
-        </columns>
-    </Stats.ThingTable.Defs.TableDef>
+<Stats.ThingTable.Defs.TableDef>
+    <defName>RangedWeapons_ThingTable</defName>
+    <label>ranged weapons</label>
+    <iconThingDef>Gun_Revolver</iconThingDef>
+    <workerFactory>Stats.ThingTable.TableWorkers.RangedWeaponsTableWorker.Make</workerFactory>
+    <columns>
+        <li>RangedDamage_ThingTableColumn</li>
+        <li>RangedStoppingPower_ThingTableColumn</li>
+        <li>RangedArmorPenetration_ThingTableColumn</li>
+        <li>RangedRPM_ThingTableColumn</li>
+        <li>RangedBurstShotCount_ThingTableColumn</li>
+        <li>RangedCooldown_ThingTableColumn</li>
+        <li>RangedAimingTime_ThingTableColumn</li>
+        <li>RangedRange_ThingTableColumn</li>
+        <li>RangedTouchAccuracy_ThingTableColumn</li>
+        <li>RangedShortAccuracy_ThingTableColumn</li>
+        <li>RangedMediumAccuracy_ThingTableColumn</li>
+        <li>RangedLongAccuracy_ThingTableColumn</li>
+        <li>RangedDirectHitChance_ThingTableColumn</li>
+        <li>RangedMissRadius_ThingTableColumn</li>
+        <li>EquippedStatOffsets_ThingTableColumn</li>
+        <li>MeleeDPS_ThingTableColumn</li>
+        <li>MeleeArmorPenetration_ThingTableColumn</li>
+        <li>RangedPassableBuildingDamageFactor_ThingTableColumn</li>
+        <li>RangedImpassableBuildingDamageFactor_ThingTableColumn</li>
+        <li>Mass_ThingTableColumn</li>
+        <li>CreatedAt_ThingTableColumn</li>
+        <li>WorkToMake_ThingTableColumn</li>
+        <li>MarketValue_ThingTableColumn</li>
+        <li>TechLevel_ThingTableColumn</li>
+        <li>ContentSource_ThingTableColumn</li>
+    </columns>
+</Stats.ThingTable.Defs.TableDef>
 
     <Stats.ThingTable.Defs.TableDef>
-        <defName>MeleeWeapons</defName>
+        <defName>MeleeWeapons_ThingTable</defName>
         <label>melee weapons</label>
         <iconThingDef>MeleeWeapon_Club</iconThingDef>
         <workerFactory>Stats.ThingTable.TableWorkers.MeleeWeaponsTableWorker.Make</workerFactory>
         <columns>
-            <li>WeaponMelee_DPS</li>
-            <li>WeaponMelee_ArmorPenetration</li>
-            <li>EquippedStatOffsets</li>
-            <li>MaxHitPoints</li>
-            <li>Mass</li>
-            <li>CreatedAt</li>
-            <li>WorkToMake</li>
-            <li>MarketValue</li>
-            <li>TechLevel</li>
-            <li>ContentSource</li>
+            <li>MeleeDPS_ThingTableColumn</li>
+            <li>MeleeArmorPenetration_ThingTableColumn</li>
+            <li>EquippedStatOffsets_ThingTableColumn</li>
+            <li>MaxHitPoints_ThingTableColumn</li>
+            <li>Mass_ThingTableColumn</li>
+            <li>CreatedAt_ThingTableColumn</li>
+            <li>WorkToMake_ThingTableColumn</li>
+            <li>MarketValue_ThingTableColumn</li>
+            <li>TechLevel_ThingTableColumn</li>
+            <li>ContentSource_ThingTableColumn</li>
         </columns>
     </Stats.ThingTable.Defs.TableDef>
 
     <Stats.ThingTable.Defs.TableDef>
-        <defName>Clothing</defName>
+        <defName>Clothing_ThingTable</defName>
         <label>clothing</label>
         <iconThingDef>Apparel_Duster</iconThingDef>
         <workerFactory>Stats.ThingTable.TableWorkers.ClothingTableWorker.Make</workerFactory>
         <columns>
-            <li>Apparel_Insulation_Cold</li>
-            <li>Apparel_Insulation_Heat</li>
-            <li>Apparel_ArmorRating_Sharp</li>
-            <li>Apparel_ArmorRating_Blunt</li>
-            <li>Apparel_ArmorRating_Heat</li>
-            <li>Apparel_Layers</li>
-            <li>Apparel_Coverage</li>
-            <li>EquippedStatOffsets</li>
-            <li>MaxHitPoints</li>
-            <li>Flammability</li>
-            <li>Mass</li>
-            <li>CreatedAt</li>
-            <li>WorkToMake</li>
-            <li>MarketValue</li>
-            <li>TechLevel</li>
-            <li>ContentSource</li>
+            <li>ColdInsulation_ThingTableColumn</li>
+            <li>HeatInsulation_ThingTableColumn</li>
+            <li>SharpArmorRating_ThingTableColumn</li>
+            <li>BluntArmorRating_ThingTableColumn</li>
+            <li>HeatArmorRating_ThingTableColumn</li>
+            <li>Layers_ThingTableColumn</li>
+            <li>Coverage_ThingTableColumn</li>
+            <li>EquippedStatOffsets_ThingTableColumn</li>
+            <li>MaxHitPoints_ThingTableColumn</li>
+            <li>Flammability_ThingTableColumn</li>
+            <li>Mass_ThingTableColumn</li>
+            <li>CreatedAt_ThingTableColumn</li>
+            <li>WorkToMake_ThingTableColumn</li>
+            <li>MarketValue_ThingTableColumn</li>
+            <li>TechLevel_ThingTableColumn</li>
+            <li>ContentSource_ThingTableColumn</li>
         </columns>
     </Stats.ThingTable.Defs.TableDef>
 
     <Stats.ThingTable.Defs.TableDef>
-        <defName>Armor</defName>
+        <defName>Armor_ThingTable</defName>
         <label>armor</label>
         <iconThingDef>Apparel_PowerArmor</iconThingDef>
         <workerFactory>Stats.ThingTable.TableWorkers.ArmorTableWorker.Make</workerFactory>
         <columns>
-            <li>Apparel_ArmorRating_Sharp</li>
-            <li>Apparel_ArmorRating_Blunt</li>
-            <li>Apparel_ArmorRating_Heat</li>
-            <li>Apparel_Insulation_Cold</li>
-            <li>Apparel_Insulation_Heat</li>
-            <li>Apparel_Layers</li>
-            <li>Apparel_Coverage</li>
-            <li>EquippedStatOffsets</li>
-            <li>Apparel_Shield_EnergyMax</li>
-            <li>Apparel_Shield_RechargeRate</li>
-            <li>MaxHitPoints</li>
-            <li>Flammability</li>
-            <li>Mass</li>
-            <li>CreatedAt</li>
-            <li>WorkToMake</li>
-            <li>MarketValue</li>
-            <li>TechLevel</li>
-            <li>ContentSource</li>
+            <li>SharpArmorRating_ThingTableColumn</li>
+            <li>BluntArmorRating_ThingTableColumn</li>
+            <li>HeatArmorRating_ThingTableColumn</li>
+            <li>ColdInsulation_ThingTableColumn</li>
+            <li>HeatInsulation_ThingTableColumn</li>
+            <li>Layers_ThingTableColumn</li>
+            <li>Coverage_ThingTableColumn</li>
+            <li>EquippedStatOffsets_ThingTableColumn</li>
+            <li>EnergyShieldCapacity_ThingTableColumn</li>
+            <li>EnergyShieldRechargeRate_ThingTableColumn</li>
+            <li>MaxHitPoints_ThingTableColumn</li>
+            <li>Flammability_ThingTableColumn</li>
+            <li>Mass_ThingTableColumn</li>
+            <li>CreatedAt_ThingTableColumn</li>
+            <li>WorkToMake_ThingTableColumn</li>
+            <li>MarketValue_ThingTableColumn</li>
+            <li>TechLevel_ThingTableColumn</li>
+            <li>ContentSource_ThingTableColumn</li>
         </columns>
     </Stats.ThingTable.Defs.TableDef>
 
     <Stats.ThingTable.Defs.TableDef>
-        <defName>UtilityApparel</defName>
+        <defName>UtilityApparel_ThingTable</defName>
         <label>utility apparel</label>
         <iconThingDef>Apparel_FirefoampopPack</iconThingDef>
         <workerFactory>Stats.ThingTable.TableWorkers.UtilityApparelTableWorker.Make</workerFactory>
         <columns>
-            <li>Apparel_Shield_EnergyMax</li>
-            <li>Apparel_Shield_RechargeRate</li>
-            <li>EquippedStatOffsets</li>
-            <li>MaxHitPoints</li>
-            <li>Flammability</li>
-            <li>Mass</li>
-            <li>CreatedAt</li>
-            <li>WorkToMake</li>
-            <li>MarketValue</li>
-            <li>TechLevel</li>
-            <li>ContentSource</li>
+            <li>EnergyShieldCapacity_ThingTableColumn</li>
+            <li>EnergyShieldRechargeRate_ThingTableColumn</li>
+            <li>EquippedStatOffsets_ThingTableColumn</li>
+            <li>MaxHitPoints_ThingTableColumn</li>
+            <li>Flammability_ThingTableColumn</li>
+            <li>Mass_ThingTableColumn</li>
+            <li>CreatedAt_ThingTableColumn</li>
+            <li>WorkToMake_ThingTableColumn</li>
+            <li>MarketValue_ThingTableColumn</li>
+            <li>TechLevel_ThingTableColumn</li>
+            <li>ContentSource_ThingTableColumn</li>
         </columns>
     </Stats.ThingTable.Defs.TableDef>
 
     <Stats.ThingTable.Defs.TableDef>
-        <defName>Animals</defName>
+        <defName>Animals_ThingTable</defName>
         <label>animals</label>
         <iconThingDef>Cow</iconThingDef>
         <workerFactory>Stats.ThingTable.TableWorkers.AnimalsTableWorker.Make</workerFactory>
         <columns>
-            <li>MarketValue</li>
-            <li>ContentSource</li>
+            <li>MarketValue_ThingTableColumn</li>
+            <li>ContentSource_ThingTableColumn</li>
         </columns>
     </Stats.ThingTable.Defs.TableDef>
 
     <Stats.ThingTable.Defs.TableDef>
-        <defName>Stuff</defName>
+        <defName>Stuff_ThingTable</defName>
         <label>stuff</label>
         <iconThingDef>Cloth</iconThingDef>
         <workerFactory>Stats.ThingTable.TableWorkers.StuffTableWorker.Make</workerFactory>
         <columns>
-            <li>Stuff_Category</li>
-            <li>MarketValue</li>
-            <li>Flammability</li>
-            <li>Mass</li>
-            <li>CreatedAt</li>
-            <li>ContentSource</li>
+            <li>StuffCategory_ThingTableColumn</li>
+            <li>MarketValue_ThingTableColumn</li>
+            <li>Flammability_ThingTableColumn</li>
+            <li>Mass_ThingTableColumn</li>
+            <li>CreatedAt_ThingTableColumn</li>
+            <li>ContentSource_ThingTableColumn</li>
         </columns>
     </Stats.ThingTable.Defs.TableDef>
 
     <Stats.ThingTable.Defs.TableDef>
-        <defName>Plants</defName>
+        <defName>Plants_ThingTable</defName>
         <label>plants</label>
         <iconThingDef>Plant_TreeOak</iconThingDef>
         <workerFactory>Stats.ThingTable.TableWorkers.PlantsTableWorker.Make</workerFactory>
         <columns>
-            <li>MaxHitPoints</li>
-            <li>Flammability</li>
-            <li>Beauty</li>
-            <li>ContentSource</li>
+            <li>MaxHitPoints_ThingTableColumn</li>
+            <li>Flammability_ThingTableColumn</li>
+            <li>Beauty_ThingTableColumn</li>
+            <li>ContentSource_ThingTableColumn</li>
         </columns>
     </Stats.ThingTable.Defs.TableDef>
 
     <Stats.ThingTable.Defs.TableDef>
-        <defName>Food</defName>
+        <defName>Food_ThingTable</defName>
         <label>food</label>
         <iconThingDef>MealLavish</iconThingDef>
         <workerFactory>Stats.ThingTable.TableWorkers.FoodTableWorker.Make</workerFactory>
         <columns>
-            <li>Food_Nutrition</li>
-            <li>Mass</li>
-            <li>CreatedAt</li>
-            <li>WorkToMake</li>
-            <li>MarketValue</li>
-            <li>ContentSource</li>
+            <li>Nutrition_ThingTableColumn</li>
+            <li>Mass_ThingTableColumn</li>
+            <li>CreatedAt_ThingTableColumn</li>
+            <li>WorkToMake_ThingTableColumn</li>
+            <li>MarketValue_ThingTableColumn</li>
+            <li>ContentSource_ThingTableColumn</li>
         </columns>
     </Stats.ThingTable.Defs.TableDef>
 
     <Stats.ThingTable.Defs.TableDef>
-        <defName>Drugs</defName>
+        <defName>Drugs_ThingTable</defName>
         <label>drugs</label>
         <iconThingDef>Yayo</iconThingDef>
         <workerFactory>Stats.ThingTable.TableWorkers.DrugsTableWorker.Make</workerFactory>
         <columns>
-            <li>Food_Nutrition</li>
-            <li>Mass</li>
-            <li>CreatedAt</li>
-            <li>WorkToMake</li>
-            <li>MarketValue</li>
-            <li>ContentSource</li>
+            <li>Nutrition_ThingTableColumn</li>
+            <li>Mass_ThingTableColumn</li>
+            <li>CreatedAt_ThingTableColumn</li>
+            <li>WorkToMake_ThingTableColumn</li>
+            <li>MarketValue_ThingTableColumn</li>
+            <li>ContentSource_ThingTableColumn</li>
         </columns>
     </Stats.ThingTable.Defs.TableDef>
 

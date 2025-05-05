@@ -6,11 +6,11 @@ using Verse;
 
 namespace Stats.Widgets.FilterWidgets;
 
-public sealed class BooleanFilter<T> : FilterWidget<T, bool, bool>
+public sealed class BooleanFilter<TObject> : FilterWidget<TObject, bool, bool>
 {
     new private readonly BooleanExpression Expression;
     private Action<Rect> DrawValue;
-    public BooleanFilter(Func<T, bool> lhs) : this(new BooleanExpression(lhs))
+    public BooleanFilter(Func<TObject, bool> lhs) : this(new BooleanExpression(lhs))
     {
     }
     private BooleanFilter(BooleanExpression expression) : base(expression)
@@ -67,15 +67,15 @@ public sealed class BooleanFilter<T> : FilterWidget<T, bool, bool>
             Expression.Clear();
         }
     }
-    public override FilterWidget<T> Clone()
+    public override FilterWidget<TObject> Clone()
     {
-        return new BooleanFilter<T>(Expression);
+        return new BooleanFilter<TObject>(Expression);
     }
 
     private sealed class BooleanExpression : GenExpression
     {
         public override IEnumerable<GenOperator> SupportedOperators => [Operators.EqualTo.Instance];
-        public BooleanExpression(Func<T, bool> lhs) : base(lhs, true)
+        public BooleanExpression(Func<TObject, bool> lhs) : base(lhs, true)
         {
         }
         public override void Clear()
