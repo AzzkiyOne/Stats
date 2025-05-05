@@ -4,7 +4,7 @@ using Verse;
 
 namespace Stats.Widgets;
 
-internal static class Draw
+public static class Draw
 {
     private const float ButtonSubtleHoverOffset = 2f;
     private static readonly FieldInfo DialogInfoCardStuffField =
@@ -21,7 +21,7 @@ internal static class Draw
 
         Find.WindowStack.Add(dialog);
     }
-    public static void VerticalLine(float x, float y, float length, Color color)
+    internal static void VerticalLine(float x, float y, float length, Color color)
     {
         if (Event.current.type != EventType.Repaint)
         {
@@ -33,7 +33,7 @@ internal static class Draw
         Verse.Widgets.DrawLineVertical(x, y, length);
         GUI.color = origGUIColor;
     }
-    public static bool ButtonTextSubtle(Rect rect, string text, float padHor = 0f)
+    internal static bool ButtonTextSubtle(Rect rect, string text, float padHor = 0f)
     {
         var mouseIsOverRect = Mouse.IsOver(rect);
         var origGUIColor = GUI.color;
@@ -59,7 +59,7 @@ internal static class Draw
 
         return Verse.Widgets.ButtonInvisible(rect);
     }
-    public static bool ButtonImageSubtle(Rect rect, Texture2D texture)
+    internal static bool ButtonImageSubtle(Rect rect, Texture2D texture)
     {
         var mouseIsOverRect = Mouse.IsOver(rect);
         var origGUIColor = GUI.color;

@@ -2,6 +2,7 @@
 <loadFolders>
     <v1.5>
         <li>/</li>
-        <li IfModActive="CETeam.CombatExtended">ModCompat/CE</li>
+        <li>ThingTable</li>
+        <li IfModActive="CETeam.CombatExtended">ThingTable/Compat/CE</li>
     </v1.5>
 </loadFolders>

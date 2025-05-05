@@ -2,7 +2,7 @@
 
 namespace Stats.Widgets;
 
-internal interface ITableWidget
+public interface ITableWidget
 {
     void Draw(Rect rect);
     void ClearFilters();

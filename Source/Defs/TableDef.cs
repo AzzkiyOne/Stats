@@ -13,7 +13,7 @@ public abstract class TableDef : Def
     public ThingDef? iconThingDef;
     public Texture2D Icon { get; private set; } = BaseContent.BadTex;
     public Color IconColor { get; private set; } = Color.white;
-    internal abstract ITableWidget Widget { get; }
+    public abstract ITableWidget Widget { get; }
     public override void PostLoad()
     {
         base.PostLoad();

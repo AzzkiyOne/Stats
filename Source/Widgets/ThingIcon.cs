@@ -1,5 +1,4 @@
 ﻿using RimWorld;
-using Stats.ThingTable;
 using UnityEngine;
 using Verse;
 
@@ -14,9 +13,6 @@ public sealed class ThingIcon : Widget
     private readonly float Scale;
     private readonly float Angle;
     private readonly Vector2 Offset;
-    public ThingIcon(ThingAlike thing) : this(thing.Def, thing.StuffDef)
-    {
-    }
     public ThingIcon(ThingDef thingDef, ThingDef? stuffDef = null)
     {
         Texture = Verse.Widgets.GetIconFor(thingDef, stuffDef) ?? BaseContent.BadTex;

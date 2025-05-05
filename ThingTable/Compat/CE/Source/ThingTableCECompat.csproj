@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 
 <Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
@@ -10,6 +10,7 @@
         <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
         <Nullable>enable</Nullable>
         <WarningLevel>5</WarningLevel>
+        <RootNamespace>Stats.ThingTable.Compat.CE</RootNamespace>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
         <DebugType>portable</DebugType>
@@ -23,5 +24,21 @@
     </PropertyGroup>
     <ItemGroup>
         <PackageReference Include="Krafs.Rimworld.Ref" Version="1.5.*" />
+    </ItemGroup>
+    <ItemGroup>
+      <ProjectReference Include="..\..\..\..\Source\Stats.csproj">
+        <Private>False</Private>
+        <CopyLocalSatelliteAssemblies>False</CopyLocalSatelliteAssemblies>
+      </ProjectReference>
+      <ProjectReference Include="..\..\..\Source\ThingTable.csproj">
+        <Private>False</Private>
+        <CopyLocalSatelliteAssemblies>False</CopyLocalSatelliteAssemblies>
+      </ProjectReference>
+    </ItemGroup>
+    <ItemGroup>
+      <Reference Include="CombatExtended">
+        <HintPath>..\CombatExtended.dll</HintPath>
+        <Private>False</Private>
+      </Reference>
     </ItemGroup>
 </Project>

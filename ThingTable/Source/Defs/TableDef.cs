@@ -17,7 +17,7 @@ public sealed class TableDef : Stats.Defs.TableDef, ITableDef<ThingAlike>
     public List<IColumnDef<ThingAlike>> Columns { get; private set; }
 #pragma warning restore CS8618
     private ITableWidget? _widget;
-    internal override ITableWidget Widget => _widget ??= new GenericTable<ThingAlike>(this);
+    public override ITableWidget Widget => _widget ??= new GenericTable<ThingAlike>(this);
     public override void ResolveReferences()
     {
         base.ResolveReferences();

@@ -1,10 +1,9 @@
 ﻿using CombatExtended;
 using RimWorld;
 using Stats.ColumnWorkers;
-using Stats.ThingTable;
 using Stats.ThingTable.Defs;
 
-namespace Stats.ModCompat.CE.ColumnWorkers.RangedWeapon;
+namespace Stats.ThingTable.Compat.CE.ColumnWorkers.RangedWeapon;
 
 public static class ReloadTimeColumnWorker
 {

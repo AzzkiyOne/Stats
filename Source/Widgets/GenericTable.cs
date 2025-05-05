@@ -8,7 +8,7 @@ using Verse;
 
 namespace Stats.Widgets;
 
-internal sealed class GenericTable<T> : ITableWidget
+public sealed class GenericTable<T> : ITableWidget
 {
     private IColumnDef<T> SortColumn;
     private int SortDirection = SortDirectionDescending;

@@ -8,7 +8,7 @@ namespace Stats.Widgets;
 
 internal sealed class TableSelector : WidgetWrapper
 {
-    private TableDef _CurTableDef = ThingTable.DefOfs.TableDefOf.RangedWeapons;
+    private TableDef _CurTableDef = DefDatabase<TableDef>.GetNamed("RangedWeapons");
     public TableDef CurTableDef
     {
         get => _CurTableDef;

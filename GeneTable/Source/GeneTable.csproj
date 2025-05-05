@@ -3,13 +3,14 @@
 <Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
         <TargetFramework>net48</TargetFramework>
-        <AssemblyTitle>CECompat</AssemblyTitle>
+        <AssemblyTitle>$(MSBuildProjectName.Replace(" ", "_"))</AssemblyTitle>
         <Copyright>Copyright © Dmitry "Azzkiy" 2024</Copyright>
         <LangVersion>latest</LangVersion>
-        <OutputPath>..\Assemblies\CE\</OutputPath>
+        <OutputPath>..\Assemblies\</OutputPath>
         <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
         <Nullable>enable</Nullable>
         <WarningLevel>5</WarningLevel>
+        <RootNamespace>Stats.$(MSBuildProjectName.Replace(" ", "_"))</RootNamespace>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
         <DebugType>portable</DebugType>
@@ -25,15 +26,9 @@
         <PackageReference Include="Krafs.Rimworld.Ref" Version="1.5.*" />
     </ItemGroup>
     <ItemGroup>
-      <ProjectReference Include="..\..\..\Source\Stats.csproj">
+      <ProjectReference Include="..\..\Source\Stats.csproj">
         <Private>False</Private>
         <CopyLocalSatelliteAssemblies>False</CopyLocalSatelliteAssemblies>
       </ProjectReference>
-    </ItemGroup>
-    <ItemGroup>
-      <Reference Include="CombatExtended">
-        <HintPath>..\CombatExtended.dll</HintPath>
-        <Private>False</Private>
-      </Reference>
     </ItemGroup>
 </Project>

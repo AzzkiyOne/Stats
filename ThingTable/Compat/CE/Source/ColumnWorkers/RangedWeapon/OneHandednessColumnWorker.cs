@@ -2,12 +2,11 @@
 using CombatExtended;
 using RimWorld;
 using Stats.ColumnWorkers;
-using Stats.ThingTable;
 using Stats.ThingTable.Defs;
 using Stats.Widgets;
 using Stats.Widgets.FilterWidgets;
 
-namespace Stats.ModCompat.CE.ColumnWorkers.RangedWeapon;
+namespace Stats.ThingTable.Compat.CE.ColumnWorkers.RangedWeapon;
 
 // TODO: Make a BooleanColumnWorker, just as NumberColumnWorker?
 public sealed class OneHandednessColumnWorker : ColumnWorker<ThingAlike>

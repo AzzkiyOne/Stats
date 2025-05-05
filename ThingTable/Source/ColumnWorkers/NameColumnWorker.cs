@@ -28,7 +28,7 @@ public sealed class NameColumnWorker : ColumnWorker<ThingAlike>
 
         return new HorizontalContainer(
             [
-                new ThingIcon(thing).ToButtonSubtle(openDefInfoDialog),
+                new ThingIcon(thing.Def, thing.StuffDef).ToButtonSubtle(openDefInfoDialog),
                 new Label(GetThingLabel(thing)),
             ],
             Globals.GUI.Pad
