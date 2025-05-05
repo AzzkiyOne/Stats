@@ -1,17 +1,27 @@
 ﻿using System;
 using Stats.Widgets;
+using UnityEngine;
 
 namespace Stats;
 
 public sealed class NumberColumnWorker<TObject> : ColumnWorker<TObject>
 {
-    private readonly string UnitOfMeasure;
+    private readonly string UnitOfMeasureString = "";
+    private readonly Texture2D? UnitOfMeasureIcon = null;
     private readonly Func<TObject, decimal> GetValue;
-    public NumberColumnWorker(Func<TObject, decimal> valueFunction, string unitOfMeasure = "")
-        : base(TableColumnCellStyle.Number)
+    private NumberColumnWorker(Func<TObject, decimal> valueFunction) : base(TableColumnCellStyle.Number)
     {
         GetValue = valueFunction;
-        UnitOfMeasure = unitOfMeasure;
+    }
+    public NumberColumnWorker(Func<TObject, decimal> valueFunction, string unitOfMeasureString = "")
+        : this(valueFunction)
+    {
+        UnitOfMeasureString = unitOfMeasureString;
+    }
+    public NumberColumnWorker(Func<TObject, decimal> valueFunction, Texture2D unitOfMeasureIcon)
+        : this(valueFunction)
+    {
+        UnitOfMeasureIcon = unitOfMeasureIcon;
     }
     public sealed override Widget? GetTableCellWidget(TObject @object)
     {
@@ -22,7 +32,19 @@ public sealed class NumberColumnWorker<TObject> : ColumnWorker<TObject>
             return null;
         }
 
-        return new Label(value.ToString() + UnitOfMeasure);
+        if (UnitOfMeasureIcon != null)
+        {
+            return new HorizontalContainer(
+                [
+                    new Label(value.ToString()).WidthRel(1f),
+                    new Icon(UnitOfMeasureIcon)
+                ],
+                Globals.GUI.PadSm,
+                true
+            );
+        }
+
+        return new Label(value.ToString() + UnitOfMeasureString);
     }
     public sealed override FilterWidget<TObject> GetFilterWidget()
     {

@@ -1,5 +1,6 @@
 ﻿using System;
 using RimWorld;
+using Verse;
 
 namespace Stats.ThingTable;
 
@@ -32,6 +33,6 @@ public sealed class ColumnDef : Stats.ColumnDef, IColumnDef<ThingAlike>
 
         base.ResolveReferences();
 
-        Worker = workerFactory(this);
+        LongEventHandler.ExecuteWhenFinished(() => Worker = workerFactory(this));
     }
 }

@@ -70,11 +70,11 @@
 
     <Stats.ThingTable.ColumnDef>
         <defName>DeteriorationRate_ThingTableColumn</defName>
-        <labelShort>-HP / d</labelShort>
+        <labelShort>-HP/d</labelShort>
         <stat>DeteriorationRate</stat>
         <isNegative>true</isNegative>
         <workerFactory>Stats.ThingTable.StatColumnWorker.Make</workerFactory>
-        <statValueFormatString>0.00 / d</statValueFormatString>
+        <statValueFormatString>0.00/d</statValueFormatString>
     </Stats.ThingTable.ColumnDef>
 
     <Stats.ThingTable.ColumnDef>

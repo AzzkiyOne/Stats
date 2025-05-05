@@ -13,6 +13,6 @@ public sealed class ColumnDef : Stats.ColumnDef, IColumnDef<GeneDef>
     {
         base.ResolveReferences();
 
-        Worker = workerFactory(this);
+        LongEventHandler.ExecuteWhenFinished(() => Worker = workerFactory(this));
     }
 }

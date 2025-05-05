@@ -19,7 +19,8 @@ public sealed class TableDef : Stats.TableDef, ITableDef<GeneDef>
     {
         base.ResolveReferences();
 
-        Worker = workerFactory(this);
         Columns = [ColumnDefOf.Label_GeneTableColumn, .. columns];
+
+        LongEventHandler.ExecuteWhenFinished(() => Worker = workerFactory(this));
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Stats.Widgets;
+using Verse;
 
 namespace Stats.ThingTable;
 
@@ -18,7 +19,8 @@ public sealed class TableDef : Stats.TableDef, ITableDef<ThingAlike>
     {
         base.ResolveReferences();
 
-        Worker = workerFactory(this);
         Columns = [ColumnDefOf.Label_ThingTableColumn, .. columns];
+
+        LongEventHandler.ExecuteWhenFinished(() => Worker = workerFactory(this));
     }
 }
