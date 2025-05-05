@@ -1,7 +1,6 @@
-﻿using Stats.ThingTable.Defs;
-using Verse;
+﻿using Verse;
 
-namespace Stats.ThingTable.TableWorkers;
+namespace Stats.ThingTable;
 
 public sealed class MeleeWeaponsTableWorker : TableWorker
 {

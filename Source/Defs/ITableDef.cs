@@ -1,9 +1,8 @@
 ﻿using System.Collections.Generic;
-using Stats.TableWorkers;
 using Stats.Widgets;
 using UnityEngine;
 
-namespace Stats.Defs;
+namespace Stats;
 
 public interface ITableDef
 {

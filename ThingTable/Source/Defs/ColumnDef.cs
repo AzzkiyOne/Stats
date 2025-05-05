@@ -1,11 +1,9 @@
 ﻿using System;
 using RimWorld;
-using Stats.ColumnWorkers;
-using Stats.Defs;
 
-namespace Stats.ThingTable.Defs;
+namespace Stats.ThingTable;
 
-public sealed class ColumnDef : Stats.Defs.ColumnDef, IColumnDef<ThingAlike>
+public sealed class ColumnDef : Stats.ColumnDef, IColumnDef<ThingAlike>
 {
     public StatDef? stat;
     public string? statValueFormatString;

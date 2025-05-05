@@ -3,21 +3,21 @@
 <Patch>
 
     <Operation Class="PatchOperationInsert">
-        <xpath>Defs/Stats.ThingTable.Defs.TableDef/columns/li[text() = "Mass_ThingTableColumn"]</xpath>
+        <xpath>Defs/Stats.ThingTable.TableDef/columns/li[text() = "Mass_ThingTableColumn"]</xpath>
         <value>
             <li>CE_Bulk_ThingTableColumn</li>
         </value>
     </Operation>
 
     <Operation Class="PatchOperationReplace">
-        <xpath>Defs/Stats.ThingTable.Defs.TableDef[defName="RangedWeapons_ThingTable"]/columns/li[text() = "RangedDamage_ThingTableColumn"]</xpath>
+        <xpath>Defs/Stats.ThingTable.TableDef[defName="RangedWeapons_ThingTable"]/columns/li[text() = "RangedDamage_ThingTableColumn"]</xpath>
         <value>
             <li>CE_RangedCaliber_ThingTableColumn</li>
         </value>
     </Operation>
 
     <Operation Class="PatchOperationInsert">
-        <xpath>Defs/Stats.ThingTable.Defs.TableDef[defName="RangedWeapons_ThingTable"]/columns/li[text() = "RangedRange_ThingTableColumn"]</xpath>
+        <xpath>Defs/Stats.ThingTable.TableDef[defName="RangedWeapons_ThingTable"]/columns/li[text() = "RangedRange_ThingTableColumn"]</xpath>
         <order>Append</order>
         <value>
             <li>CE_RangedOneHandedness_ThingTableColumn</li>
@@ -31,7 +31,7 @@
     </Operation>
 
     <Operation Class="PatchOperationRemove">
-        <xpath>Defs/Stats.ThingTable.Defs.TableDef[defName="RangedWeapons_ThingTable"]/columns/li[
+        <xpath>Defs/Stats.ThingTable.TableDef[defName="RangedWeapons_ThingTable"]/columns/li[
             text()="RangedStoppingPower_ThingTableColumn"
             or text()="RangedArmorPenetration_ThingTableColumn"
             or text()="RangedTouchAccuracy_ThingTableColumn"
@@ -46,11 +46,11 @@
     </Operation>
 
     <Operation Class="PatchOperationRemove">
-        <xpath>Defs/Stats.ThingTable.Defs.TableDef[defName="MeleeWeapons_ThingTable"]/columns/li[text()="MeleeArmorPenetration_ThingTableColumn"]</xpath>
+        <xpath>Defs/Stats.ThingTable.TableDef[defName="MeleeWeapons_ThingTable"]/columns/li[text()="MeleeArmorPenetration_ThingTableColumn"]</xpath>
     </Operation>
 
     <Operation Class="PatchOperationInsert">
-        <xpath>Defs/Stats.ThingTable.Defs.TableDef/columns/li[text()="HeatArmorRating_ThingTableColumn"]</xpath>
+        <xpath>Defs/Stats.ThingTable.TableDef/columns/li[text()="HeatArmorRating_ThingTableColumn"]</xpath>
         <order>Append</order>
         <value>
             <li>CE_ElectricArmorRating_ThingTableColumn</li>
@@ -58,7 +58,7 @@
     </Operation>
 
     <Operation Class="PatchOperationInsert">
-        <xpath>Defs/Stats.ThingTable.Defs.TableDef[
+        <xpath>Defs/Stats.ThingTable.TableDef[
             defName="Clothing_ThingTable" 
             or defName="Armor_ThingTable" 
             or defName="UtilityApparel_ThingTable"

@@ -1,12 +1,12 @@
 ﻿using UnityEngine;
 
-namespace Stats.Widgets.Extensions.Background;
+namespace Stats.Widgets.Extensions;
 
 public sealed class BackgroundWidgetExtension : WidgetExtension
 {
     private readonly Texture2D Texture;
-    private readonly UnityEngine.Color Color;
-    internal BackgroundWidgetExtension(Widget widget, Texture2D texture, UnityEngine.Color color) : base(widget)
+    private readonly Color Color;
+    internal BackgroundWidgetExtension(Widget widget, Texture2D texture, Color color) : base(widget)
     {
         Texture = texture;
         Color = color;

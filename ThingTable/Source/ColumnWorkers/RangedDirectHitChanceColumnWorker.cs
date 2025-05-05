@@ -1,8 +1,6 @@
-﻿using Stats.ColumnWorkers;
-using Stats.ThingTable.Defs;
-using Verse;
+﻿using Verse;
 
-namespace Stats.ThingTable.ColumnWorkers;
+namespace Stats.ThingTable;
 
 public static class RangedDirectHitChanceColumnWorker
 {

@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using Verse;
 
-namespace Stats.Widgets.Extensions.Background;
+namespace Stats.Widgets.Extensions;
 
 public sealed class AlternatingBackgroundWidgetExtension : WidgetExtension
 {

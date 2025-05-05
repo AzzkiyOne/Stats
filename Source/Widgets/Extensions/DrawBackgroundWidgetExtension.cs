@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine;
 
-namespace Stats.Widgets.Extensions.Background;
+namespace Stats.Widgets.Extensions;
 
 public sealed class DrawBackgroundWidgetExtension : WidgetExtension
 {

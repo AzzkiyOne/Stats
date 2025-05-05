@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<Defs>
+
+    <Stats.ThingTable.ColumnDef>
+        <defName>CE_Bulk_ThingTableColumn</defName>
+        <stat>Bulk</stat>
+        <isNegative>true</isNegative>
+        <workerFactory>Stats.ThingTable.StatColumnWorker.Make</workerFactory>
+    </Stats.ThingTable.ColumnDef>
+
+    <Stats.ThingTable.ColumnDef>
+        <defName>CE_WornBulk_ThingTableColumn</defName>
+        <labelShort>Bulk (W)</labelShort>
+        <stat>WornBulk</stat>
+        <isNegative>true</isNegative>
+        <workerFactory>Stats.ThingTable.StatColumnWorker.Make</workerFactory>
+    </Stats.ThingTable.ColumnDef>
+
+    <Stats.ThingTable.ColumnDef>
+        <defName>CE_ElectricArmorRating_ThingTableColumn</defName>
+        <labelShort>Armor (E)</labelShort>
+        <stat>ArmorRating_Electric</stat>
+        <workerFactory>Stats.ThingTable.StatColumnWorker.Make</workerFactory>
+    </Stats.ThingTable.ColumnDef>
+
+    <Stats.ThingTable.ColumnDef>
+        <defName>CE_RangedShotSpread_ThingTableColumn</defName>
+        <stat>ShotSpread</stat>
+        <isNegative>true</isNegative>
+        <workerFactory>Stats.ThingTable.StatColumnWorker.Make</workerFactory>
+    </Stats.ThingTable.ColumnDef>
+
+    <Stats.ThingTable.ColumnDef>
+        <defName>CE_RangedSwayFactor_ThingTableColumn</defName>
+        <labelShort>Sway</labelShort>
+        <stat>SwayFactor</stat>
+        <isNegative>true</isNegative>
+        <workerFactory>Stats.ThingTable.StatColumnWorker.Make</workerFactory>
+    </Stats.ThingTable.ColumnDef>
+
+    <Stats.ThingTable.ColumnDef>
+        <defName>CE_RangedRecoil_ThingTableColumn</defName>
+        <labelShort>Recoil</labelShort>
+        <stat>Recoil</stat>
+        <isNegative>true</isNegative>
+        <workerFactory>Stats.ThingTable.StatColumnWorker.Make</workerFactory>
+    </Stats.ThingTable.ColumnDef>
+
+    <Stats.ThingTable.ColumnDef>
+        <defName>CE_RangedSightsEfficiency_ThingTableColumn</defName>
+        <labelShort>Sights</labelShort>
+        <stat>SightsEfficiency</stat>
+        <workerFactory>Stats.ThingTable.StatColumnWorker.Make</workerFactory>
+    </Stats.ThingTable.ColumnDef>
+
+    <Stats.ThingTable.ColumnDef>
+        <defName>CE_RangedMagazineCapacity_ThingTableColumn</defName>
+        <labelShort>Mag. cap</labelShort>
+        <stat>MagazineCapacity</stat>
+        <workerFactory>Stats.ThingTable.StatColumnWorker.Make</workerFactory>
+        <statValueFormatString></statValueFormatString>
+    </Stats.ThingTable.ColumnDef>
+
+    <Stats.ThingTable.ColumnDef>
+        <defName>CE_RangedReloadTime_ThingTableColumn</defName>
+        <stat>ReloadTime</stat>
+        <isNegative>true</isNegative>
+        <workerFactory>Stats.ThingTable.Compat.CE.RangedReloadTimeColumnWorker.Make</workerFactory>
+    </Stats.ThingTable.ColumnDef>
+
+    <Stats.ThingTable.ColumnDef>
+        <defName>CE_RangedOneHandedness_ThingTableColumn</defName>
+        <labelShort>One-handed</labelShort>
+        <iconPath>Things/Apparel/BallisticShield/CE_BallisticShield</iconPath>
+        <stat>OneHandedness</stat>
+        <workerFactory>Stats.ThingTable.Compat.CE.RangedOneHandednessColumnWorker.Make</workerFactory>
+    </Stats.ThingTable.ColumnDef>
+
+    <Stats.ThingTable.ColumnDef>
+        <defName>CE_RangedCaliber_ThingTableColumn</defName>
+        <stat>Caliber</stat>
+        <workerFactory>Stats.ThingTable.Compat.CE.RangedCaliberColumnWorker.Make</workerFactory>
+    </Stats.ThingTable.ColumnDef>
+
+</Defs>

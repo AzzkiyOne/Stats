@@ -6,7 +6,7 @@ using UnityEngine;
 using Verse;
 using Verse.Sound;
 
-namespace Stats.Widgets.FilterWidgets;
+namespace Stats.Widgets;
 
 public abstract class NToManyFilter<TObject, TExprLhs, TOption> : FilterWidgetWithInputField<TObject, TExprLhs, HashSet<TOption>>
 {

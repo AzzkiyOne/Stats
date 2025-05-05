@@ -1,7 +1,6 @@
 ﻿using RimWorld;
-using Stats.ThingTable.Defs;
 
-namespace Stats.ThingTable.DefOfs;
+namespace Stats.ThingTable;
 
 [DefOf]
 public static class ColumnDefOf

@@ -1,8 +1,7 @@
-﻿using Stats.ColumnWorkers;
-using UnityEngine;
+﻿using UnityEngine;
 using Verse;
 
-namespace Stats.Defs;
+namespace Stats;
 
 public interface IColumnDef
 {

@@ -29,12 +29,18 @@ internal sealed class MainTabWindowTitleBar : WidgetWrapper
     {
         Widget = new HorizontalContainer(
             [
-                tableSelector.PaddingRel(0f, 1f, 0f, 0f),
-                ToToolbarIcon(
-                    new Icon(TexUI.RotRightTex),
-                    clearTableFilters,
-                    "Clear filters"
-                ),
+                new HorizontalContainer(
+                    [
+                        tableSelector,
+                        ToToolbarIcon(
+                            new Icon(TexUI.RotRightTex),
+                            clearTableFilters,
+                            "Clear filters"
+                        ),
+                    ],
+                    Globals.GUI.Pad,
+                    true
+                ).WidthRel(1f),
                 ToToolbarIcon(
                     new Icon(HoldToDragTex),
                     "Hold to drag the window (if there's nothing else to hold on to)"

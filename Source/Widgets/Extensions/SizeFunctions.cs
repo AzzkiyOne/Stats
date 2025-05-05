@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Stats.Widgets.Extensions.Size;
+namespace Stats.Widgets.Extensions;
 
 public delegate float SingleAxisSizeFunc(Vector2 containerSize);
 

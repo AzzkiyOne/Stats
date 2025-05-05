@@ -1,13 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Stats.ColumnWorkers;
-using Stats.ThingTable.Defs;
 using Stats.Widgets;
-using Stats.Widgets.FilterWidgets;
 using Verse;
 
-namespace Stats.ThingTable.ColumnWorkers;
+namespace Stats.ThingTable;
 
 public sealed class OccupiedApparelLayersColumnWorker : ColumnWorker<ThingAlike>
 {

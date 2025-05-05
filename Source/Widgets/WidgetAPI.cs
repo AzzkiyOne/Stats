@@ -1,9 +1,5 @@
 ﻿using System;
 using Stats.Widgets.Extensions;
-using Stats.Widgets.Extensions.Background;
-using Stats.Widgets.Extensions.Border;
-using Stats.Widgets.Extensions.Color;
-using Stats.Widgets.Extensions.Size;
 using UnityEngine;
 using Verse;
 

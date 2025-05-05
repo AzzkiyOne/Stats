@@ -1,8 +1,7 @@
 ﻿using System;
 using Stats.Widgets;
-using Stats.Widgets.FilterWidgets;
 
-namespace Stats.ColumnWorkers;
+namespace Stats;
 
 public sealed class NumberColumnWorker<TObject> : ColumnWorker<TObject>
 {

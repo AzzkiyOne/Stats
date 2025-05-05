@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using Verse;
 
-namespace Stats.Widgets.FilterWidgets;
+namespace Stats.Widgets;
 
 public abstract class FilterWidget<TObject> : Widget
 {

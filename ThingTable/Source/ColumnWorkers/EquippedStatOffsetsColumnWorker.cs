@@ -1,12 +1,9 @@
 ﻿using System.Text;
-using Stats.ColumnWorkers;
-using Stats.ThingTable.Defs;
 using Stats.Widgets;
-using Stats.Widgets.FilterWidgets;
 using UnityEngine;
 using Verse;
 
-namespace Stats.ThingTable.ColumnWorkers;
+namespace Stats.ThingTable;
 
 public sealed class EquippedStatOffsetsColumnWorker : ColumnWorker<ThingAlike>
 {

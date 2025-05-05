@@ -1,12 +1,12 @@
 ﻿using UnityEngine;
 
-namespace Stats.Widgets.Extensions.Border;
+namespace Stats.Widgets.Extensions;
 
 public sealed class BorderBottomWidgetExtension : WidgetExtension
 {
     private readonly float Thickness;
-    private readonly UnityEngine.Color Color;
-    internal BorderBottomWidgetExtension(Widget widget, float thickness, UnityEngine.Color color) : base(widget)
+    private readonly Color Color;
+    internal BorderBottomWidgetExtension(Widget widget, float thickness, Color color) : base(widget)
     {
         Thickness = thickness;
         Color = color;

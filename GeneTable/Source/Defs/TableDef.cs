@@ -1,14 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using Stats.Defs;
-using Stats.GeneTable.DefOfs;
-using Stats.TableWorkers;
 using Stats.Widgets;
 using Verse;
 
-namespace Stats.GeneTable.Defs;
+namespace Stats.GeneTable;
 
-public sealed class TableDef : Stats.Defs.TableDef, ITableDef<GeneDef>
+public sealed class TableDef : Stats.TableDef, ITableDef<GeneDef>
 {
 #pragma warning disable CS8618
     public Func<TableDef, TableWorker<GeneDef>> workerFactory;

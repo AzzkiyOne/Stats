@@ -2,10 +2,10 @@
 
 <Defs>
 
-    <Stats.GeneTable.Defs.ColumnDef>
+    <Stats.GeneTable.ColumnDef>
         <defName>Label_GeneTableColumn</defName>
         <label>label</label>
-        <workerFactory>Stats.GeneTable.ColumnWorkers.LabelColumnWorker.Make</workerFactory>
-    </Stats.GeneTable.Defs.ColumnDef>
+        <workerFactory>Stats.GeneTable.LabelColumnWorker.Make</workerFactory>
+    </Stats.GeneTable.ColumnDef>
 
 </Defs>

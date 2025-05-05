@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Stats.Widgets.FilterWidgets;
+namespace Stats.Widgets;
 
 public sealed class OneToManyFilter<TObject, TOption> : NToManyFilter<TObject, TOption, TOption>
 {

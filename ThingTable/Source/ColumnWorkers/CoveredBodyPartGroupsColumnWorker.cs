@@ -1,13 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Stats.ColumnWorkers;
-using Stats.ThingTable.Defs;
 using Stats.Widgets;
-using Stats.Widgets.FilterWidgets;
 using Verse;
 
-namespace Stats.ThingTable.ColumnWorkers;
+namespace Stats.ThingTable;
 
 // In the game, this property is actually displayed as a list of all of the
 // individual body parts that an apprel is covering. The resulting list may be

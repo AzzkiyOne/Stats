@@ -1,12 +1,9 @@
 ﻿using System;
 using System.Linq;
 using RimWorld;
-using Stats.ColumnWorkers;
-using Stats.ThingTable.Defs;
 using Stats.Widgets;
-using Stats.Widgets.FilterWidgets;
 
-namespace Stats.ThingTable.ColumnWorkers;
+namespace Stats.ThingTable;
 
 public sealed class TechLevelColumnWorker : ColumnWorker<ThingAlike>
 {

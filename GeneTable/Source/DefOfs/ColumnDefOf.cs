@@ -1,7 +1,6 @@
 ﻿using RimWorld;
-using Stats.GeneTable.Defs;
 
-namespace Stats.GeneTable.DefOfs;
+namespace Stats.GeneTable;
 
 [DefOf]
 public static class ColumnDefOf

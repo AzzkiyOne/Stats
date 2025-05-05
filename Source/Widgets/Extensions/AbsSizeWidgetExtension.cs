@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Stats.Widgets.Extensions.Size;
+namespace Stats.Widgets.Extensions;
 
 public sealed class AbsSizeWidgetExtension : WidgetExtension
 {

@@ -1,7 +1,4 @@
-﻿using Stats.ColumnWorkers;
-using Stats.ThingTable.Defs;
-
-namespace Stats.ThingTable.ColumnWorkers;
+﻿namespace Stats.ThingTable;
 
 public static class RangedDamageColumnWorker
 {

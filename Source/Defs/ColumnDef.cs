@@ -2,7 +2,7 @@
 using UnityEngine;
 using Verse;
 
-namespace Stats.Defs;
+namespace Stats;
 
 public abstract class ColumnDef : Def, IColumnDef
 {

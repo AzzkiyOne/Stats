@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Verse;
 
-namespace Stats.Widgets.FilterWidgets;
+namespace Stats.Widgets;
 
 public sealed class NumberFilter<TObject> : FilterWidgetWithInputField<TObject, decimal, decimal>
 {

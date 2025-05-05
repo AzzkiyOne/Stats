@@ -2,45 +2,45 @@
 
 <Defs>
 
-<Stats.ThingTable.Defs.TableDef>
-    <defName>RangedWeapons_ThingTable</defName>
-    <label>ranged weapons</label>
-    <iconThingDef>Gun_Revolver</iconThingDef>
-    <workerFactory>Stats.ThingTable.TableWorkers.RangedWeaponsTableWorker.Make</workerFactory>
-    <columns>
-        <li>RangedDamage_ThingTableColumn</li>
-        <li>RangedStoppingPower_ThingTableColumn</li>
-        <li>RangedArmorPenetration_ThingTableColumn</li>
-        <li>RangedRPM_ThingTableColumn</li>
-        <li>RangedBurstShotCount_ThingTableColumn</li>
-        <li>RangedCooldown_ThingTableColumn</li>
-        <li>RangedAimingTime_ThingTableColumn</li>
-        <li>RangedRange_ThingTableColumn</li>
-        <li>RangedTouchAccuracy_ThingTableColumn</li>
-        <li>RangedShortAccuracy_ThingTableColumn</li>
-        <li>RangedMediumAccuracy_ThingTableColumn</li>
-        <li>RangedLongAccuracy_ThingTableColumn</li>
-        <li>RangedDirectHitChance_ThingTableColumn</li>
-        <li>RangedMissRadius_ThingTableColumn</li>
-        <li>EquippedStatOffsets_ThingTableColumn</li>
-        <li>MeleeDPS_ThingTableColumn</li>
-        <li>MeleeArmorPenetration_ThingTableColumn</li>
-        <li>RangedPassableBuildingDamageFactor_ThingTableColumn</li>
-        <li>RangedImpassableBuildingDamageFactor_ThingTableColumn</li>
-        <li>Mass_ThingTableColumn</li>
-        <li>CreatedAt_ThingTableColumn</li>
-        <li>WorkToMake_ThingTableColumn</li>
-        <li>MarketValue_ThingTableColumn</li>
-        <li>TechLevel_ThingTableColumn</li>
-        <li>ContentSource_ThingTableColumn</li>
-    </columns>
-</Stats.ThingTable.Defs.TableDef>
+    <Stats.ThingTable.TableDef>
+        <defName>RangedWeapons_ThingTable</defName>
+        <label>ranged weapons</label>
+        <iconThingDef>Gun_Revolver</iconThingDef>
+        <workerFactory>Stats.ThingTable.RangedWeaponsTableWorker.Make</workerFactory>
+        <columns>
+            <li>RangedDamage_ThingTableColumn</li>
+            <li>RangedStoppingPower_ThingTableColumn</li>
+            <li>RangedArmorPenetration_ThingTableColumn</li>
+            <li>RangedRPM_ThingTableColumn</li>
+            <li>RangedBurstShotCount_ThingTableColumn</li>
+            <li>RangedCooldown_ThingTableColumn</li>
+            <li>RangedAimingTime_ThingTableColumn</li>
+            <li>RangedRange_ThingTableColumn</li>
+            <li>RangedTouchAccuracy_ThingTableColumn</li>
+            <li>RangedShortAccuracy_ThingTableColumn</li>
+            <li>RangedMediumAccuracy_ThingTableColumn</li>
+            <li>RangedLongAccuracy_ThingTableColumn</li>
+            <li>RangedDirectHitChance_ThingTableColumn</li>
+            <li>RangedMissRadius_ThingTableColumn</li>
+            <li>EquippedStatOffsets_ThingTableColumn</li>
+            <li>MeleeDPS_ThingTableColumn</li>
+            <li>MeleeArmorPenetration_ThingTableColumn</li>
+            <li>RangedPassableBuildingDamageFactor_ThingTableColumn</li>
+            <li>RangedImpassableBuildingDamageFactor_ThingTableColumn</li>
+            <li>Mass_ThingTableColumn</li>
+            <li>CreatedAt_ThingTableColumn</li>
+            <li>WorkToMake_ThingTableColumn</li>
+            <li>MarketValue_ThingTableColumn</li>
+            <li>TechLevel_ThingTableColumn</li>
+            <li>ContentSource_ThingTableColumn</li>
+        </columns>
+    </Stats.ThingTable.TableDef>
 
-    <Stats.ThingTable.Defs.TableDef>
+    <Stats.ThingTable.TableDef>
         <defName>MeleeWeapons_ThingTable</defName>
         <label>melee weapons</label>
         <iconThingDef>MeleeWeapon_Club</iconThingDef>
-        <workerFactory>Stats.ThingTable.TableWorkers.MeleeWeaponsTableWorker.Make</workerFactory>
+        <workerFactory>Stats.ThingTable.MeleeWeaponsTableWorker.Make</workerFactory>
         <columns>
             <li>MeleeDPS_ThingTableColumn</li>
             <li>MeleeArmorPenetration_ThingTableColumn</li>
@@ -53,13 +53,13 @@
             <li>TechLevel_ThingTableColumn</li>
             <li>ContentSource_ThingTableColumn</li>
         </columns>
-    </Stats.ThingTable.Defs.TableDef>
+    </Stats.ThingTable.TableDef>
 
-    <Stats.ThingTable.Defs.TableDef>
+    <Stats.ThingTable.TableDef>
         <defName>Clothing_ThingTable</defName>
         <label>clothing</label>
         <iconThingDef>Apparel_Duster</iconThingDef>
-        <workerFactory>Stats.ThingTable.TableWorkers.ClothingTableWorker.Make</workerFactory>
+        <workerFactory>Stats.ThingTable.ClothingTableWorker.Make</workerFactory>
         <columns>
             <li>ColdInsulation_ThingTableColumn</li>
             <li>HeatInsulation_ThingTableColumn</li>
@@ -78,13 +78,13 @@
             <li>TechLevel_ThingTableColumn</li>
             <li>ContentSource_ThingTableColumn</li>
         </columns>
-    </Stats.ThingTable.Defs.TableDef>
+    </Stats.ThingTable.TableDef>
 
-    <Stats.ThingTable.Defs.TableDef>
+    <Stats.ThingTable.TableDef>
         <defName>Armor_ThingTable</defName>
         <label>armor</label>
         <iconThingDef>Apparel_PowerArmor</iconThingDef>
-        <workerFactory>Stats.ThingTable.TableWorkers.ArmorTableWorker.Make</workerFactory>
+        <workerFactory>Stats.ThingTable.ArmorTableWorker.Make</workerFactory>
         <columns>
             <li>SharpArmorRating_ThingTableColumn</li>
             <li>BluntArmorRating_ThingTableColumn</li>
@@ -105,13 +105,13 @@
             <li>TechLevel_ThingTableColumn</li>
             <li>ContentSource_ThingTableColumn</li>
         </columns>
-    </Stats.ThingTable.Defs.TableDef>
+    </Stats.ThingTable.TableDef>
 
-    <Stats.ThingTable.Defs.TableDef>
+    <Stats.ThingTable.TableDef>
         <defName>UtilityApparel_ThingTable</defName>
         <label>utility apparel</label>
         <iconThingDef>Apparel_FirefoampopPack</iconThingDef>
-        <workerFactory>Stats.ThingTable.TableWorkers.UtilityApparelTableWorker.Make</workerFactory>
+        <workerFactory>Stats.ThingTable.UtilityApparelTableWorker.Make</workerFactory>
         <columns>
             <li>EnergyShieldCapacity_ThingTableColumn</li>
             <li>EnergyShieldRechargeRate_ThingTableColumn</li>
@@ -125,24 +125,24 @@
             <li>TechLevel_ThingTableColumn</li>
             <li>ContentSource_ThingTableColumn</li>
         </columns>
-    </Stats.ThingTable.Defs.TableDef>
+    </Stats.ThingTable.TableDef>
 
-    <Stats.ThingTable.Defs.TableDef>
+    <Stats.ThingTable.TableDef>
         <defName>Animals_ThingTable</defName>
         <label>animals</label>
         <iconThingDef>Cow</iconThingDef>
-        <workerFactory>Stats.ThingTable.TableWorkers.AnimalsTableWorker.Make</workerFactory>
+        <workerFactory>Stats.ThingTable.AnimalsTableWorker.Make</workerFactory>
         <columns>
             <li>MarketValue_ThingTableColumn</li>
             <li>ContentSource_ThingTableColumn</li>
         </columns>
-    </Stats.ThingTable.Defs.TableDef>
+    </Stats.ThingTable.TableDef>
 
-    <Stats.ThingTable.Defs.TableDef>
+    <Stats.ThingTable.TableDef>
         <defName>Stuff_ThingTable</defName>
         <label>stuff</label>
         <iconThingDef>Cloth</iconThingDef>
-        <workerFactory>Stats.ThingTable.TableWorkers.StuffTableWorker.Make</workerFactory>
+        <workerFactory>Stats.ThingTable.StuffTableWorker.Make</workerFactory>
         <columns>
             <li>StuffCategory_ThingTableColumn</li>
             <li>MarketValue_ThingTableColumn</li>
@@ -151,26 +151,26 @@
             <li>CreatedAt_ThingTableColumn</li>
             <li>ContentSource_ThingTableColumn</li>
         </columns>
-    </Stats.ThingTable.Defs.TableDef>
+    </Stats.ThingTable.TableDef>
 
-    <Stats.ThingTable.Defs.TableDef>
+    <Stats.ThingTable.TableDef>
         <defName>Plants_ThingTable</defName>
         <label>plants</label>
         <iconThingDef>Plant_TreeOak</iconThingDef>
-        <workerFactory>Stats.ThingTable.TableWorkers.PlantsTableWorker.Make</workerFactory>
+        <workerFactory>Stats.ThingTable.PlantsTableWorker.Make</workerFactory>
         <columns>
             <li>MaxHitPoints_ThingTableColumn</li>
             <li>Flammability_ThingTableColumn</li>
             <li>Beauty_ThingTableColumn</li>
             <li>ContentSource_ThingTableColumn</li>
         </columns>
-    </Stats.ThingTable.Defs.TableDef>
+    </Stats.ThingTable.TableDef>
 
-    <Stats.ThingTable.Defs.TableDef>
+    <Stats.ThingTable.TableDef>
         <defName>Food_ThingTable</defName>
         <label>food</label>
         <iconThingDef>MealLavish</iconThingDef>
-        <workerFactory>Stats.ThingTable.TableWorkers.FoodTableWorker.Make</workerFactory>
+        <workerFactory>Stats.ThingTable.FoodTableWorker.Make</workerFactory>
         <columns>
             <li>Nutrition_ThingTableColumn</li>
             <li>Mass_ThingTableColumn</li>
@@ -179,13 +179,13 @@
             <li>MarketValue_ThingTableColumn</li>
             <li>ContentSource_ThingTableColumn</li>
         </columns>
-    </Stats.ThingTable.Defs.TableDef>
+    </Stats.ThingTable.TableDef>
 
-    <Stats.ThingTable.Defs.TableDef>
+    <Stats.ThingTable.TableDef>
         <defName>Drugs_ThingTable</defName>
         <label>drugs</label>
         <iconThingDef>Yayo</iconThingDef>
-        <workerFactory>Stats.ThingTable.TableWorkers.DrugsTableWorker.Make</workerFactory>
+        <workerFactory>Stats.ThingTable.DrugsTableWorker.Make</workerFactory>
         <columns>
             <li>Nutrition_ThingTableColumn</li>
             <li>Mass_ThingTableColumn</li>
@@ -194,6 +194,6 @@
             <li>MarketValue_ThingTableColumn</li>
             <li>ContentSource_ThingTableColumn</li>
         </columns>
-    </Stats.ThingTable.Defs.TableDef>
+    </Stats.ThingTable.TableDef>
 
 </Defs>

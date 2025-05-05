@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Stats.TableWorkers;
+namespace Stats;
 
 public abstract class TableWorker<T>
 {

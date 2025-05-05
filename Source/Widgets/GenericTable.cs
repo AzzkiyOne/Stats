@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Stats.Defs;
-using Stats.Widgets.FilterWidgets;
 using UnityEngine;
 using Verse;
 
@@ -256,7 +254,18 @@ public sealed class GenericTable<TObject> : ITableWidget
 
         foreach (var filter in ActiveFilters)
         {
+            // If we handle OnChange event while iterating over active filters, the collection
+            // will change because an incative filter will be removed on clear. This will cause an
+            // exception.
+            //
+            // One solution here is to have separate OnClear event, that we just don't subscribe to.
+            // The issue is, clear also causes change, so it would be confusing to have OnChange
+            // event that is not emitted on clear.
+            //
+            // TODO: !!! This ofc is a hack, but i don't have a better solution currently.
+            filter.OnChange -= HandleFilterChange;
             filter.Clear();
+            filter.OnChange += HandleFilterChange;
         }
     }
 }

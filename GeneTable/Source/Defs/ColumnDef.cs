@@ -1,11 +1,9 @@
 ﻿using System;
-using Stats.ColumnWorkers;
-using Stats.Defs;
 using Verse;
 
-namespace Stats.GeneTable.Defs;
+namespace Stats.GeneTable;
 
-public sealed class ColumnDef : Stats.Defs.ColumnDef, IColumnDef<GeneDef>
+public sealed class ColumnDef : Stats.ColumnDef, IColumnDef<GeneDef>
 {
 #pragma warning disable CS8618
     public Func<ColumnDef, ColumnWorker<GeneDef>> workerFactory;

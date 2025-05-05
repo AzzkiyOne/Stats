@@ -2,13 +2,13 @@
 
 <Defs>
 
-    <Stats.GeneTable.Defs.TableDef>
+    <Stats.GeneTable.TableDef>
         <defName>GeneTable</defName>
         <label>genes</label>
-        <workerFactory>Stats.GeneTable.TableWorkers.GeneTableWorker.Make</workerFactory>
+        <workerFactory>Stats.GeneTable.GeneTableWorker.Make</workerFactory>
         <columns>
             
         </columns>
-    </Stats.GeneTable.Defs.TableDef>
+    </Stats.GeneTable.TableDef>
 
 </Defs>

@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Stats.Widgets.Extensions.Overflow;
+namespace Stats.Widgets.Extensions;
 
 public sealed class HideOverflowWidgetExtension : WidgetExtension
 {

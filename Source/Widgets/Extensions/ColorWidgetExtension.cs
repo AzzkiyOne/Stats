@@ -1,11 +1,11 @@
 ﻿using UnityEngine;
 
-namespace Stats.Widgets.Extensions.Color;
+namespace Stats.Widgets.Extensions;
 
 public sealed class ColorWidgetExtension : WidgetExtension
 {
-    public UnityEngine.Color Color { get; set; }
-    internal ColorWidgetExtension(Widget widget, UnityEngine.Color color) : base(widget)
+    public Color Color { get; set; }
+    internal ColorWidgetExtension(Widget widget, Color color) : base(widget)
     {
         Color = color;
     }

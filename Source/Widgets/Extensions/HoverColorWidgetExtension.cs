@@ -1,12 +1,12 @@
 ﻿using UnityEngine;
 using Verse;
 
-namespace Stats.Widgets.Extensions.Color;
+namespace Stats.Widgets.Extensions;
 
 public sealed class HoverColorWidgetExtension : WidgetExtension
 {
-    private readonly UnityEngine.Color Color;
-    internal HoverColorWidgetExtension(Widget widget, UnityEngine.Color color) : base(widget)
+    private readonly Color Color;
+    internal HoverColorWidgetExtension(Widget widget, Color color) : base(widget)
     {
         Color = color;
     }

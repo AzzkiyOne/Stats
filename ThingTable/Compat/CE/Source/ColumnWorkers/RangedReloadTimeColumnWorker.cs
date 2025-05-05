@@ -1,9 +1,7 @@
 ﻿using CombatExtended;
 using RimWorld;
-using Stats.ColumnWorkers;
-using Stats.ThingTable.Defs;
 
-namespace Stats.ThingTable.Compat.CE.ColumnWorkers;
+namespace Stats.ThingTable.Compat.CE;
 
 public static class RangedReloadTimeColumnWorker
 {

@@ -1,14 +1,15 @@
 ﻿using UnityEngine;
 
-namespace Stats.Widgets.Extensions.Size;
+namespace Stats.Widgets.Extensions;
 
-public sealed class RelPaddingWidgetExtension : WidgetExtension
+public sealed class AbsPaddingWidgetExtension
+    : WidgetExtension
 {
     private readonly float Left;
     private readonly float Top;
     private readonly float Horizontal;
     private readonly float Vertical;
-    internal RelPaddingWidgetExtension(
+    internal AbsPaddingWidgetExtension(
         Widget widget,
         float left,
         float right,
@@ -24,8 +25,16 @@ public sealed class RelPaddingWidgetExtension : WidgetExtension
     protected override Vector2 CalcSize(Vector2 containerSize)
     {
         Vector2 size = Widget.GetSize(containerSize);
-        size.x += Horizontal * containerSize.x;
-        size.y += Vertical * containerSize.y;
+        size.x += Horizontal;
+        size.y += Vertical;
+
+        return size;
+    }
+    protected override Vector2 CalcSize()
+    {
+        Vector2 size = Widget.GetSize();
+        size.x += Horizontal;
+        size.y += Vertical;
 
         return size;
     }
@@ -33,10 +42,10 @@ public sealed class RelPaddingWidgetExtension : WidgetExtension
     {
         GUIDebugger.DebugRect(this, rect);
 
-        rect.x += Left * containerSize.x;
-        rect.y += Top * containerSize.y;
-        rect.width -= Horizontal * containerSize.x;
-        rect.height -= Vertical * containerSize.y;
+        rect.x += Left;
+        rect.y += Top;
+        rect.width -= Horizontal;
+        rect.height -= Vertical;
 
         Widget.Draw(rect, containerSize);
     }

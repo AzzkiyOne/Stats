@@ -4,7 +4,7 @@ using System.Linq;
 using UnityEngine;
 using Verse;
 
-namespace Stats.Widgets.FilterWidgets;
+namespace Stats.Widgets;
 
 public sealed class BooleanFilter<TObject> : FilterWidget<TObject, bool, bool>
 {

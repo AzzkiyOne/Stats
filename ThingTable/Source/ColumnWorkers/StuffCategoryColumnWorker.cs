@@ -2,13 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using RimWorld;
-using Stats.ColumnWorkers;
-using Stats.ThingTable.Defs;
 using Stats.Widgets;
-using Stats.Widgets.FilterWidgets;
 using Verse;
 
-namespace Stats.ThingTable.ColumnWorkers;
+namespace Stats.ThingTable;
 
 public sealed class StuffCategoryColumnWorker : ColumnWorker<ThingAlike>
 {

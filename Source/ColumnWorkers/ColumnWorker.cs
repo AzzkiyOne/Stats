@@ -1,7 +1,6 @@
 ﻿using Stats.Widgets;
-using Stats.Widgets.FilterWidgets;
 
-namespace Stats.ColumnWorkers;
+namespace Stats;
 
 public abstract class ColumnWorker<TObject>
 {

@@ -3,7 +3,7 @@ using System.Linq;
 using UnityEngine;
 using Verse;
 
-namespace Stats.Widgets.FilterWidgets;
+namespace Stats.Widgets;
 
 public abstract class FilterWidgetWithInputField<TObject, TExprLhs, TExprRhs> : FilterWidget<TObject, TExprLhs, TExprRhs>
     where TExprRhs : notnull

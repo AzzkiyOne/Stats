@@ -1,6 +1,5 @@
 ﻿using System.Linq;
-using Stats.Defs;
-using Stats.Widgets.Extensions.Color;
+using Stats.Widgets.Extensions;
 using UnityEngine;
 using Verse;
 
@@ -9,6 +8,7 @@ namespace Stats.Widgets;
 internal sealed class TableSelector : WidgetWrapper
 {
     private TableDef _CurTableDef;
+    // TODO: We don't actually need the whole table def outside.
     public TableDef CurTableDef
     {
         get => _CurTableDef;

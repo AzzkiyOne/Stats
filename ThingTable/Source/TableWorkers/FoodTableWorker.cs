@@ -1,8 +1,7 @@
 ﻿using RimWorld;
-using Stats.ThingTable.Defs;
 using Verse;
 
-namespace Stats.ThingTable.TableWorkers;
+namespace Stats.ThingTable;
 
 public sealed class FoodTableWorker : TableWorker
 {

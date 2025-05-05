@@ -1,9 +1,8 @@
 ﻿using System.Collections.Generic;
 using RimWorld;
-using Stats.TableWorkers;
 using Verse;
 
-namespace Stats.ThingTable.TableWorkers;
+namespace Stats.ThingTable;
 
 public abstract class TableWorker : TableWorker<ThingAlike>
 {

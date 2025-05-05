@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Stats.Widgets.FilterWidgets;
+namespace Stats.Widgets;
 
 public sealed class StringFilter<TObject> : FilterWidgetWithInputField<TObject, string, string>
 {

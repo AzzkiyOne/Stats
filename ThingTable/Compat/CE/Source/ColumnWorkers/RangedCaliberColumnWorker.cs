@@ -1,12 +1,9 @@
 ﻿using System;
 using RimWorld;
-using Stats.ColumnWorkers;
-using Stats.ThingTable.Defs;
 using Stats.Widgets;
-using Stats.Widgets.FilterWidgets;
 using Verse;
 
-namespace Stats.ThingTable.Compat.CE.ColumnWorkers;
+namespace Stats.ThingTable.Compat.CE;
 
 public sealed class RangedCaliberColumnWorker : ColumnWorker<ThingAlike>
 {

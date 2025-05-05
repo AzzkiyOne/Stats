@@ -1,10 +1,7 @@
-﻿using Stats.ColumnWorkers;
-using Stats.GeneTable.Defs;
-using Stats.Widgets;
-using Stats.Widgets.FilterWidgets;
+﻿using Stats.Widgets;
 using Verse;
 
-namespace Stats.GeneTable.ColumnWorkers;
+namespace Stats.GeneTable;
 
 public sealed class LabelColumnWorker : ColumnWorker<GeneDef>
 {

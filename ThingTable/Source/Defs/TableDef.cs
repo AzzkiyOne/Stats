@@ -1,13 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using Stats.Defs;
-using Stats.TableWorkers;
-using Stats.ThingTable.DefOfs;
 using Stats.Widgets;
 
-namespace Stats.ThingTable.Defs;
+namespace Stats.ThingTable;
 
-public sealed class TableDef : Stats.Defs.TableDef, ITableDef<ThingAlike>
+public sealed class TableDef : Stats.TableDef, ITableDef<ThingAlike>
 {
 #pragma warning disable CS8618
     public Func<TableDef, TableWorker<ThingAlike>> workerFactory;
