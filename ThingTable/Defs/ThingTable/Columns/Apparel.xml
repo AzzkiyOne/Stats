@@ -52,17 +52,17 @@
     </Stats.ThingTable.Defs.ColumnDef>
 
     <Stats.ThingTable.Defs.ColumnDef>
-        <defName>Layers_ThingTableColumn</defName>
+        <defName>OccupiedApparelLayers_ThingTableColumn</defName>
         <labelKey>Layer</labelKey>
         <descriptionKey>Stat_Thing_Apparel_Layer_Desc</descriptionKey>
-        <workerFactory>Stats.ThingTable.ColumnWorkers.Apparel.LayersColumnWorker.Make</workerFactory>
+        <workerFactory>Stats.ThingTable.ColumnWorkers.OccupiedApparelLayersColumnWorker.Make</workerFactory>
     </Stats.ThingTable.Defs.ColumnDef>
 
     <Stats.ThingTable.Defs.ColumnDef>
-        <defName>Coverage_ThingTableColumn</defName>
+        <defName>CoveredBodyPartGroups_ThingTableColumn</defName>
         <labelKey>Covers</labelKey>
         <descriptionKey>Stat_Thing_Apparel_Covers_Desc</descriptionKey>
-        <workerFactory>Stats.ThingTable.ColumnWorkers.Apparel.CoverageColumnWorker.Make</workerFactory>
+        <workerFactory>Stats.ThingTable.ColumnWorkers.CoveredBodyPartGroupsColumnWorker.Make</workerFactory>
     </Stats.ThingTable.Defs.ColumnDef>
 
 </Defs>

@@ -66,8 +66,8 @@
             <li>SharpArmorRating_ThingTableColumn</li>
             <li>BluntArmorRating_ThingTableColumn</li>
             <li>HeatArmorRating_ThingTableColumn</li>
-            <li>Layers_ThingTableColumn</li>
-            <li>Coverage_ThingTableColumn</li>
+            <li>OccupiedApparelLayers_ThingTableColumn</li>
+            <li>CoveredBodyPartGroups_ThingTableColumn</li>
             <li>EquippedStatOffsets_ThingTableColumn</li>
             <li>MaxHitPoints_ThingTableColumn</li>
             <li>Flammability_ThingTableColumn</li>
@@ -91,8 +91,8 @@
             <li>HeatArmorRating_ThingTableColumn</li>
             <li>ColdInsulation_ThingTableColumn</li>
             <li>HeatInsulation_ThingTableColumn</li>
-            <li>Layers_ThingTableColumn</li>
-            <li>Coverage_ThingTableColumn</li>
+            <li>OccupiedApparelLayers_ThingTableColumn</li>
+            <li>CoveredBodyPartGroups_ThingTableColumn</li>
             <li>EquippedStatOffsets_ThingTableColumn</li>
             <li>EnergyShieldCapacity_ThingTableColumn</li>
             <li>EnergyShieldRechargeRate_ThingTableColumn</li>

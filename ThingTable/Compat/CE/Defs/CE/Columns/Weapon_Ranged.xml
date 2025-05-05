@@ -44,7 +44,7 @@
         <defName>CE_RangedReloadTime_ThingTableColumn</defName>
         <stat>ReloadTime</stat>
         <isNegative>true</isNegative>
-        <workerFactory>Stats.ModCompat.CE.ColumnWorkers.RangedWeapon.ReloadTimeColumnWorker.Make</workerFactory>
+        <workerFactory>Stats.ThingTable.Compat.CE.ColumnWorkers.RangedReloadTimeColumnWorker.Make</workerFactory>
     </Stats.ThingTable.Defs.ColumnDef>
 
     <Stats.ThingTable.Defs.ColumnDef>
@@ -52,13 +52,13 @@
         <labelShort>One-handed</labelShort>
         <iconPath>Things/Apparel/BallisticShield/CE_BallisticShield</iconPath>
         <stat>OneHandedness</stat>
-        <workerFactory>Stats.ModCompat.CE.ColumnWorkers.RangedWeapon.OneHandednessColumnWorker.Make</workerFactory>
+        <workerFactory>Stats.ThingTable.Compat.CE.ColumnWorkers.RangedOneHandednessColumnWorker.Make</workerFactory>
     </Stats.ThingTable.Defs.ColumnDef>
 
     <Stats.ThingTable.Defs.ColumnDef>
         <defName>CE_RangedCaliber_ThingTableColumn</defName>
         <stat>Caliber</stat>
-        <workerFactory>Stats.ModCompat.CE.ColumnWorkers.RangedWeapon.CaliberColumnWorker.Make</workerFactory>
+        <workerFactory>Stats.ThingTable.Compat.CE.ColumnWorkers.RangedCaliberColumnWorker.Make</workerFactory>
     </Stats.ThingTable.Defs.ColumnDef>
 
 </Defs>

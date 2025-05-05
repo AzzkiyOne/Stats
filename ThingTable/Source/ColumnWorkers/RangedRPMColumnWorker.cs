@@ -2,9 +2,9 @@
 using Stats.ThingTable.Defs;
 using Verse;
 
-namespace Stats.ThingTable.ColumnWorkers.RangedWeapon;
+namespace Stats.ThingTable.ColumnWorkers;
 
-public static class RPMColumnWorker
+public static class RangedRPMColumnWorker
 {
     public static NumberColumnWorker<ThingAlike> Make(ColumnDef _) => new(GetValue, " rpm");
     private static decimal GetValue(ThingAlike thing)

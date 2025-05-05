@@ -31,8 +31,8 @@
     </Operation>
 
     <Operation Class="PatchOperationRemove">
-        <xpath>Defs/Stats.ThingTable.Defs.TableDef[defName="RangedWeapons_ThingTable"]/columns/
-        li[ text()="RangedStoppingPower_ThingTableColumn"
+        <xpath>Defs/Stats.ThingTable.Defs.TableDef[defName="RangedWeapons_ThingTable"]/columns/li[
+            text()="RangedStoppingPower_ThingTableColumn"
             or text()="RangedArmorPenetration_ThingTableColumn"
             or text()="RangedTouchAccuracy_ThingTableColumn"
             or text()="RangedShortAccuracy_ThingTableColumn"
@@ -58,7 +58,11 @@
     </Operation>
 
     <Operation Class="PatchOperationInsert">
-        <xpath>Defs/Stats.ThingTable.Defs.TableDef[defName="Clothing_ThingTable" or defName="Armor_ThingTable" or defName="UtilityApparel_ThingTable"]/columns/li[text()="CE_Bulk_ThingTableColumn"]</xpath>
+        <xpath>Defs/Stats.ThingTable.Defs.TableDef[
+            defName="Clothing_ThingTable" 
+            or defName="Armor_ThingTable" 
+            or defName="UtilityApparel_ThingTable"
+        ]/columns/li[text()="CE_Bulk_ThingTableColumn"]</xpath>
         <value>
             <li>CE_WornBulk_ThingTableColumn</li>
         </value>

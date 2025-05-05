@@ -6,9 +6,9 @@ using Stats.Widgets;
 using Stats.Widgets.FilterWidgets;
 using Verse;
 
-namespace Stats.ThingTable.Compat.CE.ColumnWorkers.RangedWeapon;
+namespace Stats.ThingTable.Compat.CE.ColumnWorkers;
 
-public sealed class CaliberColumnWorker : ColumnWorker<ThingAlike>
+public sealed class RangedCaliberColumnWorker : ColumnWorker<ThingAlike>
 {
     private static readonly StatDef CaliberStatDef = DefDatabase<StatDef>.GetNamed("Caliber");
     private static readonly Func<ThingAlike, string> GetCaliberName =
@@ -23,10 +23,10 @@ public sealed class CaliberColumnWorker : ColumnWorker<ThingAlike>
                 statReq
             ) ?? "";
         });
-    private CaliberColumnWorker() : base(TableColumnCellStyle.String)
+    private RangedCaliberColumnWorker() : base(TableColumnCellStyle.String)
     {
     }
-    public static CaliberColumnWorker Make(ColumnDef _) => new();
+    public static RangedCaliberColumnWorker Make(ColumnDef _) => new();
     public override Widget? GetTableCellWidget(ThingAlike thing)
     {
         var caliberName = GetCaliberName(thing);

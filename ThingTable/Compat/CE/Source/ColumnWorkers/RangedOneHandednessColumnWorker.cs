@@ -6,10 +6,10 @@ using Stats.ThingTable.Defs;
 using Stats.Widgets;
 using Stats.Widgets.FilterWidgets;
 
-namespace Stats.ThingTable.Compat.CE.ColumnWorkers.RangedWeapon;
+namespace Stats.ThingTable.Compat.CE.ColumnWorkers;
 
 // TODO: Make a BooleanColumnWorker, just as NumberColumnWorker?
-public sealed class OneHandednessColumnWorker : ColumnWorker<ThingAlike>
+public sealed class RangedOneHandednessColumnWorker : ColumnWorker<ThingAlike>
 {
     public static readonly Func<ThingAlike, bool> IsOneHandedWeapon =
         FunctionExtensions.Memoized((ThingAlike thing) =>
@@ -23,10 +23,10 @@ public sealed class OneHandednessColumnWorker : ColumnWorker<ThingAlike>
 
             return false;
         });
-    private OneHandednessColumnWorker() : base(TableColumnCellStyle.Boolean)
+    private RangedOneHandednessColumnWorker() : base(TableColumnCellStyle.Boolean)
     {
     }
-    public static OneHandednessColumnWorker Make(ColumnDef _) => new();
+    public static RangedOneHandednessColumnWorker Make(ColumnDef _) => new();
     public override Widget? GetTableCellWidget(ThingAlike thing)
     {
         var value = IsOneHandedWeapon(thing);

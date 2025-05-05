@@ -7,9 +7,9 @@ using Stats.Widgets;
 using Stats.Widgets.FilterWidgets;
 using Verse;
 
-namespace Stats.ThingTable.ColumnWorkers.Apparel;
+namespace Stats.ThingTable.ColumnWorkers;
 
-public sealed class LayersColumnWorker : ColumnWorker<ThingAlike>
+public sealed class OccupiedApparelLayersColumnWorker : ColumnWorker<ThingAlike>
 {
     private static readonly Func<ThingAlike, HashSet<ApparelLayerDef>> GetLayerDefs = FunctionExtensions.Memoized((ThingAlike thing) =>
         {
@@ -31,10 +31,10 @@ public sealed class LayersColumnWorker : ColumnWorker<ThingAlike>
 
             return string.Join("\n", layerLabels);
         });
-    private LayersColumnWorker() : base(TableColumnCellStyle.String)
+    private OccupiedApparelLayersColumnWorker() : base(TableColumnCellStyle.String)
     {
     }
-    public static LayersColumnWorker Make(ColumnDef _) => new();
+    public static OccupiedApparelLayersColumnWorker Make(ColumnDef _) => new();
     public override Widget? GetTableCellWidget(ThingAlike thing)
     {
         var layerLabels = GetLayersLabels(thing);

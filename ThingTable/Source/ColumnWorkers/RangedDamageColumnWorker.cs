@@ -1,11 +1,11 @@
 ﻿using Stats.ColumnWorkers;
 using Stats.ThingTable.Defs;
 
-namespace Stats.ThingTable.ColumnWorkers.RangedWeapon;
+namespace Stats.ThingTable.ColumnWorkers;
 
-public static class BuildingDamageFactorPassableColumnWorker
+public static class RangedDamageColumnWorker
 {
-    public static NumberColumnWorker<ThingAlike> Make(ColumnDef _) => new(GetValue, "%");
+    public static NumberColumnWorker<ThingAlike> Make(ColumnDef _) => new(GetValue);
     private static decimal GetValue(ThingAlike thing)
     {
         var verb = thing.Def.Verbs.Primary();
@@ -13,7 +13,7 @@ public static class BuildingDamageFactorPassableColumnWorker
 
         if (defaultProj?.damageDef?.harmsHealth == true)
         {
-            return (defaultProj.damageDef.buildingDamageFactorPassable * 100f).ToDecimal("F0");
+            return defaultProj.GetDamageAmount(thing.Def, thing.StuffDef);
         }
 
         return 0m;

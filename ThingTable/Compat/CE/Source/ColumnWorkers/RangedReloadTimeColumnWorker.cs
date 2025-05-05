@@ -3,9 +3,9 @@ using RimWorld;
 using Stats.ColumnWorkers;
 using Stats.ThingTable.Defs;
 
-namespace Stats.ThingTable.Compat.CE.ColumnWorkers.RangedWeapon;
+namespace Stats.ThingTable.Compat.CE.ColumnWorkers;
 
-public static class ReloadTimeColumnWorker
+public static class RangedReloadTimeColumnWorker
 {
     public static NumberColumnWorker<ThingAlike> Make(ColumnDef _) => new(GetValue, " s");
     private static decimal GetValue(ThingAlike thing)

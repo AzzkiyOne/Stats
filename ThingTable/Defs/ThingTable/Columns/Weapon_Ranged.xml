@@ -7,7 +7,7 @@
         <labelKey>Damage</labelKey>
         <descriptionKey>Stat_Thing_Damage_Desc</descriptionKey>
         <iconPath>UI/Commands/Attack</iconPath>
-        <workerFactory>Stats.ThingTable.ColumnWorkers.RangedWeapon.DamageColumnWorker.Make</workerFactory>
+        <workerFactory>Stats.ThingTable.ColumnWorkers.RangedDamageColumnWorker.Make</workerFactory>
     </Stats.ThingTable.Defs.ColumnDef>
 
     <Stats.ThingTable.Defs.ColumnDef>
@@ -16,7 +16,7 @@
         <labelShort>Power</labelShort>
         <descriptionKey>StoppingPowerExplanation</descriptionKey>
         <iconPath>UI/Icons/Trainables/Obedience</iconPath>
-        <workerFactory>Stats.ThingTable.ColumnWorkers.RangedWeapon.StoppingPowerColumnWorker.Make</workerFactory>
+        <workerFactory>Stats.ThingTable.ColumnWorkers.RangedStoppingPowerColumnWorker.Make</workerFactory>
     </Stats.ThingTable.Defs.ColumnDef>
 
     <Stats.ThingTable.Defs.ColumnDef>
@@ -24,14 +24,14 @@
         <labelKey>ArmorPenetration</labelKey>
         <labelShort>AP</labelShort>
         <descriptionKey>ArmorPenetrationExplanation</descriptionKey>
-        <workerFactory>Stats.ThingTable.ColumnWorkers.RangedWeapon.ArmorPenetrationColumnWorker.Make</workerFactory>
+        <workerFactory>Stats.ThingTable.ColumnWorkers.RangedArmorPenetrationColumnWorker.Make</workerFactory>
     </Stats.ThingTable.Defs.ColumnDef>
 
     <Stats.ThingTable.Defs.ColumnDef>
         <defName>RangedRPM_ThingTableColumn</defName>
         <labelKey>BurstShotFireRate</labelKey>
         <descriptionKey>Stat_Thing_Weapon_BurstShotFireRate_Desc</descriptionKey>
-        <workerFactory>Stats.ThingTable.ColumnWorkers.RangedWeapon.RPMColumnWorker.Make</workerFactory>
+        <workerFactory>Stats.ThingTable.ColumnWorkers.RangedRPMColumnWorker.Make</workerFactory>
     </Stats.ThingTable.Defs.ColumnDef>
 
     <Stats.ThingTable.Defs.ColumnDef>
@@ -39,14 +39,14 @@
         <labelKey>BurstShotCount</labelKey>
         <labelShort>BSC</labelShort>
         <descriptionKey>Stat_Thing_Weapon_BurstShotCount_Desc</descriptionKey>
-        <workerFactory>Stats.ThingTable.ColumnWorkers.RangedWeapon.BurstShotCountColumnWorker.Make</workerFactory>
+        <workerFactory>Stats.ThingTable.ColumnWorkers.RangedBurstShotCountColumnWorker.Make</workerFactory>
     </Stats.ThingTable.Defs.ColumnDef>
 
     <Stats.ThingTable.Defs.ColumnDef>
         <defName>RangedRange_ThingTableColumn</defName>
         <labelKey>Range</labelKey>
         <descriptionKey>Stat_Thing_Weapon_Range_Desc</descriptionKey>
-        <workerFactory>Stats.ThingTable.ColumnWorkers.RangedWeapon.RangeColumnWorker.Make</workerFactory>
+        <workerFactory>Stats.ThingTable.ColumnWorkers.RangedRangeColumnWorker.Make</workerFactory>
     </Stats.ThingTable.Defs.ColumnDef>
 
     <Stats.ThingTable.Defs.ColumnDef>
@@ -91,7 +91,7 @@
         <labelShort>Aim t.</labelShort>
         <descriptionKey>Stat_Thing_Weapon_RangedWarmupTime_Desc</descriptionKey>
         <isNegative>true</isNegative>
-        <workerFactory>Stats.ThingTable.ColumnWorkers.RangedWeapon.AimingTimeColumnWorker.Make</workerFactory>
+        <workerFactory>Stats.ThingTable.ColumnWorkers.RangedAimingTimeColumnWorker.Make</workerFactory>
     </Stats.ThingTable.Defs.ColumnDef>
 
     <Stats.ThingTable.Defs.ColumnDef>
@@ -99,7 +99,7 @@
         <labelKey>BuildingDamageFactorPassable</labelKey>
         <labelShort>BDF (P)</labelShort>
         <descriptionKey>BuildingDamageFactorPassableExplanation</descriptionKey>
-        <workerFactory>Stats.ThingTable.ColumnWorkers.RangedWeapon.BuildingDamageFactorPassableColumnWorker.Make</workerFactory>
+        <workerFactory>Stats.ThingTable.ColumnWorkers.RangedPassableBuildingDamageFactorColumnWorker.Make</workerFactory>
     </Stats.ThingTable.Defs.ColumnDef>
 
     <Stats.ThingTable.Defs.ColumnDef>
@@ -107,7 +107,7 @@
         <labelKey>BuildingDamageFactorImpassable</labelKey>
         <labelShort>BDF (I)</labelShort>
         <descriptionKey>BuildingDamageFactorImpassableExplanation</descriptionKey>
-        <workerFactory>Stats.ThingTable.ColumnWorkers.RangedWeapon.BuildingDamageFactorImpassableColumnWorker.Make</workerFactory>
+        <workerFactory>Stats.ThingTable.ColumnWorkers.RangedImpassableBuildingDamageFactorColumnWorker.Make</workerFactory>
     </Stats.ThingTable.Defs.ColumnDef>
 
     <Stats.ThingTable.Defs.ColumnDef>
@@ -115,7 +115,7 @@
         <labelKey>DirectHitChance</labelKey>
         <labelShort>DH %</labelShort>
         <descriptionKey>Stat_Thing_Weapon_DirectHitChance_Desc</descriptionKey>
-        <workerFactory>Stats.ThingTable.ColumnWorkers.RangedWeapon.DirectHitChanceColumnWorker.Make</workerFactory>
+        <workerFactory>Stats.ThingTable.ColumnWorkers.RangedDirectHitChanceColumnWorker.Make</workerFactory>
     </Stats.ThingTable.Defs.ColumnDef>
 
     <Stats.ThingTable.Defs.ColumnDef>
@@ -124,7 +124,7 @@
         <labelShort>MR</labelShort>
         <descriptionKey>Stat_Thing_Weapon_MissRadius_Desc</descriptionKey>
         <isNegative>true</isNegative>
-        <workerFactory>Stats.ThingTable.ColumnWorkers.RangedWeapon.MissRadiusColumnWorker.Make</workerFactory>
+        <workerFactory>Stats.ThingTable.ColumnWorkers.RangedMissRadiusColumnWorker.Make</workerFactory>
     </Stats.ThingTable.Defs.ColumnDef>
 
 </Defs>

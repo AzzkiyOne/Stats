@@ -7,7 +7,7 @@ using Stats.Widgets;
 using Stats.Widgets.FilterWidgets;
 using Verse;
 
-namespace Stats.ThingTable.ColumnWorkers.Apparel;
+namespace Stats.ThingTable.ColumnWorkers;
 
 // In the game, this property is actually displayed as a list of all of the
 // individual body parts that an apprel is covering. The resulting list may be
@@ -16,7 +16,7 @@ namespace Stats.ThingTable.ColumnWorkers.Apparel;
 // Luckily, it looks like in a definition it is allowed to only list the whole
 // groups of body parts. The resulting list is of course significantly smaller
 // and can be safely displayed in a single row/column.
-public sealed class CoverageColumnWorker : ColumnWorker<ThingAlike>
+public sealed class CoveredBodyPartGroupsColumnWorker : ColumnWorker<ThingAlike>
 {
     private static readonly Func<ThingAlike, HashSet<BodyPartGroupDef>> GetBodyPartGroupDefs = FunctionExtensions.Memoized((ThingAlike thing) =>
         {
@@ -38,10 +38,10 @@ public sealed class CoverageColumnWorker : ColumnWorker<ThingAlike>
 
             return string.Join("\n", bodyPartGroupLabels);
         });
-    private CoverageColumnWorker() : base(TableColumnCellStyle.String)
+    private CoveredBodyPartGroupsColumnWorker() : base(TableColumnCellStyle.String)
     {
     }
-    public static CoverageColumnWorker Make(ColumnDef _) => new();
+    public static CoveredBodyPartGroupsColumnWorker Make(ColumnDef _) => new();
     public override Widget? GetTableCellWidget(ThingAlike thing)
     {
         var bodyPartGroupLabels = GetBodyPartGroupLabels(thing);

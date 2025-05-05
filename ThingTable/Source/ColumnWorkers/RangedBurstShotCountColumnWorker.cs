@@ -1,19 +1,18 @@
 ﻿using Stats.ColumnWorkers;
 using Stats.ThingTable.Defs;
 
-namespace Stats.ThingTable.ColumnWorkers.RangedWeapon;
+namespace Stats.ThingTable.ColumnWorkers;
 
-public static class DamageColumnWorker
+public static class RangedBurstShotCountColumnWorker
 {
     public static NumberColumnWorker<ThingAlike> Make(ColumnDef _) => new(GetValue);
     private static decimal GetValue(ThingAlike thing)
     {
         var verb = thing.Def.Verbs.Primary();
-        var defaultProj = verb?.defaultProjectile?.projectile;
 
-        if (defaultProj?.damageDef?.harmsHealth == true)
+        if (verb is { Ranged: true, showBurstShotStats: true, burstShotCount: > 1 })
         {
-            return defaultProj.GetDamageAmount(thing.Def, thing.StuffDef);
+            return verb.burstShotCount;
         }
 
         return 0m;

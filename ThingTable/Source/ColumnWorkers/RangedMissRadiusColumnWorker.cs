@@ -1,20 +1,20 @@
 ﻿using Stats.ColumnWorkers;
 using Stats.ThingTable.Defs;
 
-namespace Stats.ThingTable.ColumnWorkers.RangedWeapon;
+namespace Stats.ThingTable.ColumnWorkers;
 
-public static class BurstShotCountColumnWorker
+public static class RangedMissRadiusColumnWorker
 {
     public static NumberColumnWorker<ThingAlike> Make(ColumnDef _) => new(GetValue);
     private static decimal GetValue(ThingAlike thing)
     {
         var verb = thing.Def.Verbs.Primary();
 
-        if (verb is { Ranged: true, showBurstShotStats: true, burstShotCount: > 1 })
+        if (verb?.ForcedMissRadius == null)
         {
-            return verb.burstShotCount;
+            return 0m;
         }
 
-        return 0m;
+        return verb.ForcedMissRadius.ToDecimal("F1");
     }
 }

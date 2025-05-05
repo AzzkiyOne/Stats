@@ -1,9 +1,9 @@
 ﻿using Stats.ColumnWorkers;
 using Stats.ThingTable.Defs;
 
-namespace Stats.ThingTable.ColumnWorkers.RangedWeapon;
+namespace Stats.ThingTable.ColumnWorkers;
 
-public static class AimingTimeColumnWorker
+public static class RangedAimingTimeColumnWorker
 {
     public static NumberColumnWorker<ThingAlike> Make(ColumnDef _) => new(GetValue, " s");
     private static decimal GetValue(ThingAlike thing)

@@ -2,9 +2,9 @@
 using Stats.ThingTable.Defs;
 using Verse;
 
-namespace Stats.ThingTable.ColumnWorkers.RangedWeapon;
+namespace Stats.ThingTable.ColumnWorkers;
 
-public static class DirectHitChanceColumnWorker
+public static class RangedDirectHitChanceColumnWorker
 {
     public static NumberColumnWorker<ThingAlike> Make(ColumnDef _) => new(GetValue, "%");
     private static decimal GetValue(ThingAlike thing)
