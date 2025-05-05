@@ -267,5 +267,8 @@ public sealed class GenericTable<TObject> : ITableWidget
             filter.Clear();
             filter.OnChange += HandleFilterChange;
         }
+
+        ActiveFilters.Clear();
+        ShouldApplyFilters = true;
     }
 }

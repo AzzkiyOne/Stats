@@ -10,7 +10,7 @@ public sealed class NumberColumnWorker<TObject> : ColumnWorker<TObject>
     public NumberColumnWorker(Func<TObject, decimal> valueFunction, string unitOfMeasure = "")
         : base(TableColumnCellStyle.Number)
     {
-        GetValue = valueFunction.Memoized();
+        GetValue = valueFunction;
         UnitOfMeasure = unitOfMeasure;
     }
     public sealed override Widget? GetTableCellWidget(TObject @object)

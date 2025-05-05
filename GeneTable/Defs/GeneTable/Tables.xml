@@ -7,7 +7,10 @@
         <label>genes</label>
         <workerFactory>Stats.GeneTable.GeneTableWorker.Make</workerFactory>
         <columns>
-            
+            <li>Complexity_GeneTableColumn</li>
+            <li>MetabolicEfficiency_GeneTableColumn</li>
+            <li>RequiredArchiteCapsulesAmount_GeneTableColumn</li>
+            <li>ContentSource_GeneTableColumn</li>
         </columns>
     </Stats.GeneTable.TableDef>
 

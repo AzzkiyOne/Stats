@@ -1,11 +1,12 @@
-﻿using Verse;
+﻿using System;
+using Verse;
 
 namespace Stats.ThingTable;
 
 public static class RangedDirectHitChanceColumnWorker
 {
-    public static NumberColumnWorker<ThingAlike> Make(ColumnDef _) => new(GetValue, "%");
-    private static decimal GetValue(ThingAlike thing)
+    public static NumberColumnWorker<ThingAlike> Make(ColumnDef _) => new(GetValue.Memoized(), "%");
+    private static readonly Func<ThingAlike, decimal> GetValue = thing =>
     {
         var verb = thing.Def.Verbs.Primary();
 
@@ -15,5 +16,5 @@ public static class RangedDirectHitChanceColumnWorker
         }
 
         return (100f / GenRadial.NumCellsInRadius(verb.ForcedMissRadius)).ToDecimal("F1");
-    }
+    };
 }
