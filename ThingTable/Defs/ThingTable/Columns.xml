@@ -311,4 +311,18 @@
         <workerFactory>Stats.ThingTable.RangedMissRadiusColumnWorker.Make</workerFactory>
     </Stats.ThingTable.ColumnDef>
     
+    <Stats.ThingTable.ColumnDef>
+        <defName>CountsAsClothingForNudity_ThingTableColumn</defName>
+        <labelKey>Stat_Thing_Apparel_CountsAsClothingNudity_Name</labelKey>
+        <descriptionKey>Stat_Thing_Apparel_CountsAsClothingNudity_Desc</descriptionKey>
+        <iconPath>Things/Pawn/Humanlike/Bodies/Naked_Female_south</iconPath>
+        <workerFactory>Stats.ThingTable.CountsAsClothingForNudityColumnWorker.Make</workerFactory>
+    </Stats.ThingTable.ColumnDef>
+
+    <Stats.ThingTable.ColumnDef>
+        <defName>EquipDelay_ThingTableColumn</defName>
+        <stat>EquipDelay</stat>
+        <workerFactory>Stats.ThingTable.StatColumnWorker.Make</workerFactory>
+    </Stats.ThingTable.ColumnDef>
+
 </Defs>

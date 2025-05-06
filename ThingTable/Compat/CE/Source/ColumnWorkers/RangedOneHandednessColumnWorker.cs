@@ -1,49 +1,21 @@
 ﻿using System;
 using CombatExtended;
 using RimWorld;
-using Stats.Widgets;
 
 namespace Stats.ThingTable.Compat.CE;
 
-// TODO: Make a BooleanColumnWorker, just as NumberColumnWorker?
-public sealed class RangedOneHandednessColumnWorker : ColumnWorker<ThingAlike>
+public static class RangedOneHandednessColumnWorker
 {
-    public static readonly Func<ThingAlike, bool> IsOneHandedWeapon =
-        FunctionExtensions.Memoized((ThingAlike thing) =>
-        {
-            var statReq = StatRequest.For(thing.Def, thing.StuffDef);
-
-            if (CE_StatDefOf.OneHandedness.Worker.ShouldShowFor(statReq))
-            {
-                return CE_StatDefOf.OneHandedness.Worker.GetValue(statReq) > 0f;
-            }
-
-            return false;
-        });
-    private RangedOneHandednessColumnWorker() : base(TableColumnCellStyle.Boolean)
+    public static BooleanColumnWorker<ThingAlike> Make(ColumnDef _) => new(IsOneHandedWeapon.Memoized());
+    public static readonly Func<ThingAlike, bool> IsOneHandedWeapon = thing =>
     {
-    }
-    public static RangedOneHandednessColumnWorker Make(ColumnDef _) => new();
-    public override Widget? GetTableCellWidget(ThingAlike thing)
-    {
-        var value = IsOneHandedWeapon(thing);
+        var statReq = StatRequest.For(thing.Def, thing.StuffDef);
 
-        if (value == false)
+        if (CE_StatDefOf.OneHandedness.Worker.ShouldShowFor(statReq))
         {
-            return null;
+            return CE_StatDefOf.OneHandedness.Worker.GetValue(statReq) > 0f;
         }
 
-        return new SingleElementContainer(
-            new Icon(Verse.Widgets.CheckboxOnTex)
-                .PaddingRel(0.5f, 0f)
-        );
-    }
-    public override FilterWidget<ThingAlike> GetFilterWidget()
-    {
-        return new BooleanFilter<ThingAlike>(IsOneHandedWeapon);
-    }
-    public override int Compare(ThingAlike thing1, ThingAlike thing2)
-    {
-        return IsOneHandedWeapon(thing1).CompareTo(IsOneHandedWeapon(thing2));
-    }
+        return false;
+    };
 }

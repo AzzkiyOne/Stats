@@ -2,29 +2,9 @@
 
 <Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-        <TargetFramework>net48</TargetFramework>
-        <AssemblyTitle>$(MSBuildProjectName.Replace(" ", "_"))</AssemblyTitle>
-        <Copyright>Copyright © Dmitry "Azzkiy" 2024</Copyright>
-        <LangVersion>latest</LangVersion>
         <OutputPath>..\Assemblies\</OutputPath>
-        <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
-        <Nullable>enable</Nullable>
-        <WarningLevel>5</WarningLevel>
         <RootNamespace>Stats.ThingTable.Compat.CE</RootNamespace>
     </PropertyGroup>
-    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-        <DebugType>portable</DebugType>
-        <Optimize>false</Optimize>
-        <DebugSymbols>true</DebugSymbols>
-    </PropertyGroup>
-    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-        <DebugType>none</DebugType>
-        <Optimize>true</Optimize>
-        <DebugSymbols>false</DebugSymbols>
-    </PropertyGroup>
-    <ItemGroup>
-        <PackageReference Include="Krafs.Rimworld.Ref" Version="1.5.*" />
-    </ItemGroup>
     <ItemGroup>
       <ProjectReference Include="..\..\..\..\Source\Stats.csproj">
         <Private>False</Private>

@@ -3,10 +3,14 @@
 <Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
         <OutputPath>..\Assemblies\</OutputPath>
-        <RootNamespace>Stats.$(MSBuildProjectName.Replace(" ", "_"))</RootNamespace>
+        <RootNamespace>Stats.ThingTable.Compat.Biotech</RootNamespace>
     </PropertyGroup>
     <ItemGroup>
-      <ProjectReference Include="..\..\Source\Stats.csproj">
+      <ProjectReference Include="..\..\..\..\Source\Stats.csproj">
+        <Private>False</Private>
+        <CopyLocalSatelliteAssemblies>False</CopyLocalSatelliteAssemblies>
+      </ProjectReference>
+      <ProjectReference Include="..\..\..\Source\ThingTable.csproj">
         <Private>False</Private>
         <CopyLocalSatelliteAssemblies>False</CopyLocalSatelliteAssemblies>
       </ProjectReference>

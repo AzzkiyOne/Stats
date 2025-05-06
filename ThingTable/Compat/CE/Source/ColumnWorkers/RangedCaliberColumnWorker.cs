@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using RimWorld;
 using Stats.Widgets;
 using Verse;
@@ -42,7 +43,7 @@ public sealed class RangedCaliberColumnWorker : ColumnWorker<ThingAlike>
 
         return new Label(caliberName).Tooltip(tooltip);
     }
-    public override FilterWidget<ThingAlike> GetFilterWidget()
+    public override FilterWidget<ThingAlike> GetFilterWidget(IEnumerable<ThingAlike> _)
     {
         return new StringFilter<ThingAlike>(GetCaliberName);
     }

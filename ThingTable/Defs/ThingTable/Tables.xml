@@ -75,6 +75,9 @@
             <li>CreatedAt_ThingTableColumn</li>
             <li>WorkToMake_ThingTableColumn</li>
             <li>MarketValue_ThingTableColumn</li>
+            <li>CountsAsClothingForNudity_ThingTableColumn</li>
+            <li>EquipDelay_ThingTableColumn</li>
+            <li MayRequire="Ludeon.RimWorld.Biotech">ValidLifeStage_ThingTableColumn</li>
             <li>TechLevel_ThingTableColumn</li>
             <li>ContentSource_ThingTableColumn</li>
         </columns>
@@ -102,6 +105,9 @@
             <li>CreatedAt_ThingTableColumn</li>
             <li>WorkToMake_ThingTableColumn</li>
             <li>MarketValue_ThingTableColumn</li>
+            <li>CountsAsClothingForNudity_ThingTableColumn</li>
+            <li>EquipDelay_ThingTableColumn</li>
+            <li MayRequire="Ludeon.RimWorld.Biotech">ValidLifeStage_ThingTableColumn</li>
             <li>TechLevel_ThingTableColumn</li>
             <li>ContentSource_ThingTableColumn</li>
         </columns>
@@ -122,18 +128,8 @@
             <li>CreatedAt_ThingTableColumn</li>
             <li>WorkToMake_ThingTableColumn</li>
             <li>MarketValue_ThingTableColumn</li>
+            <li>EquipDelay_ThingTableColumn</li>
             <li>TechLevel_ThingTableColumn</li>
-            <li>ContentSource_ThingTableColumn</li>
-        </columns>
-    </Stats.ThingTable.TableDef>
-
-    <Stats.ThingTable.TableDef>
-        <defName>Animals_ThingTable</defName>
-        <label>animals</label>
-        <iconThingDef>Cow</iconThingDef>
-        <workerFactory>Stats.ThingTable.AnimalsTableWorker.Make</workerFactory>
-        <columns>
-            <li>MarketValue_ThingTableColumn</li>
             <li>ContentSource_ThingTableColumn</li>
         </columns>
     </Stats.ThingTable.TableDef>
@@ -153,7 +149,18 @@
         </columns>
     </Stats.ThingTable.TableDef>
 
-    <Stats.ThingTable.TableDef>
+    <!-- <Stats.ThingTable.TableDef>
+        <defName>Animals_ThingTable</defName>
+        <label>animals</label>
+        <iconThingDef>Cow</iconThingDef>
+        <workerFactory>Stats.ThingTable.AnimalsTableWorker.Make</workerFactory>
+        <columns>
+            <li>MarketValue_ThingTableColumn</li>
+            <li>ContentSource_ThingTableColumn</li>
+        </columns>
+    </Stats.ThingTable.TableDef> -->
+
+    <!-- <Stats.ThingTable.TableDef>
         <defName>Plants_ThingTable</defName>
         <label>plants</label>
         <iconThingDef>Plant_TreeOak</iconThingDef>
@@ -164,9 +171,9 @@
             <li>Beauty_ThingTableColumn</li>
             <li>ContentSource_ThingTableColumn</li>
         </columns>
-    </Stats.ThingTable.TableDef>
+    </Stats.ThingTable.TableDef> -->
 
-    <Stats.ThingTable.TableDef>
+    <!-- <Stats.ThingTable.TableDef>
         <defName>Food_ThingTable</defName>
         <label>food</label>
         <iconThingDef>MealLavish</iconThingDef>
@@ -194,6 +201,6 @@
             <li>MarketValue_ThingTableColumn</li>
             <li>ContentSource_ThingTableColumn</li>
         </columns>
-    </Stats.ThingTable.TableDef>
+    </Stats.ThingTable.TableDef> -->
 
 </Defs>
