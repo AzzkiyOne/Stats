@@ -1,4 +1,5 @@
-﻿using Stats.Widgets;
+﻿using System.Collections.Generic;
+using Stats.Widgets;
 using Verse;
 
 namespace Stats.GeneTable;
@@ -25,7 +26,7 @@ public sealed class LabelColumnWorker : ColumnWorker<GeneDef>
         )
         .Tooltip(geneDef.description);
     }
-    public override FilterWidget<GeneDef> GetFilterWidget()
+    public override FilterWidget<GeneDef> GetFilterWidget(IEnumerable<GeneDef> _)
     {
         return new StringFilter<GeneDef>(geneDef => geneDef.label);
     }

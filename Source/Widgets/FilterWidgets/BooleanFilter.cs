@@ -74,7 +74,7 @@ public sealed class BooleanFilter<TObject> : FilterWidget<TObject, bool, bool>
 
     private sealed class BooleanExpression : GenExpression
     {
-        public override IEnumerable<GenericOperator> SupportedOperators => [Operators.EqualTo.Instance];
+        public override IEnumerable<GenericOperator> SupportedOperators => [Operators.IsEqualTo.Instance];
         public BooleanExpression(Func<TObject, bool> lhs) : base(lhs, true)
         {
         }
@@ -87,11 +87,11 @@ public sealed class BooleanFilter<TObject> : FilterWidget<TObject, bool, bool>
 
         private static class Operators
         {
-            public sealed class EqualTo : GenericOperator
+            public sealed class IsEqualTo : GenericOperator
             {
-                private EqualTo() : base("==") { }
+                private IsEqualTo() : base("==") { }
                 public override bool Eval(bool lhs, bool rhs) => lhs == rhs;
-                public static EqualTo Instance { get; } = new();
+                public static IsEqualTo Instance { get; } = new();
             }
         }
     }

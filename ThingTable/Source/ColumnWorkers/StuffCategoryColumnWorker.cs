@@ -45,11 +45,16 @@ public sealed class StuffCategoryColumnWorker : ColumnWorker<ThingAlike>
 
         return new Label(stuffCatLabels);
     }
-    public override FilterWidget<ThingAlike> GetFilterWidget()
+    public override FilterWidget<ThingAlike> GetFilterWidget(IEnumerable<ThingAlike> tableRecords)
     {
+        var stuffCatDefs = tableRecords
+            .SelectMany(GetStuffCatDefs)
+            .Distinct()
+            .OrderBy(stuffCatDef => stuffCatDef.label);
+
         return new ManyToManyFilter<ThingAlike, StuffCategoryDef>(
             GetStuffCatDefs,
-            DefDatabase<StuffCategoryDef>.AllDefsListForReading.OrderBy(stuffCatDef => stuffCatDef.label),
+            stuffCatDefs,
             stuffCatDef => new Label(stuffCatDef.LabelCap)
         );
     }

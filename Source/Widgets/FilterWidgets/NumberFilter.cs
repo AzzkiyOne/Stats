@@ -33,12 +33,12 @@ public sealed class NumberFilter<TObject> : FilterWidgetWithInputField<TObject, 
     private sealed class NumberExpression : GenExpression
     {
         public override IEnumerable<GenericOperator> SupportedOperators => [
-            Operators.EqualTo.Instance,
-            Operators.NotEqualTo.Instance,
-            Operators.GreaterThan.Instance,
-            Operators.LesserThan.Instance,
-            Operators.GreaterThanOrEqualTo.Instance,
-            Operators.LesserThanOrEqualTo.Instance,
+            Operators.IsEqualTo.Instance,
+            Operators.IsNotEqualTo.Instance,
+            Operators.IsGreaterThan.Instance,
+            Operators.IsLesserThan.Instance,
+            Operators.IsGreaterThanOrEqualTo.Instance,
+            Operators.IsLesserThanOrEqualTo.Instance,
         ];
         private string _TextFieldText = "";
         public string TextFieldText
@@ -96,46 +96,46 @@ public sealed class NumberFilter<TObject> : FilterWidgetWithInputField<TObject, 
 
         private static class Operators
         {
-            public sealed class EqualTo : GenericOperator
+            public sealed class IsEqualTo : GenericOperator
             {
-                private EqualTo() : base("==") { }
+                private IsEqualTo() : base("==") { }
                 public override bool Eval(decimal lhs, decimal rhs) => lhs == rhs;
-                public static EqualTo Instance { get; } = new();
+                public static IsEqualTo Instance { get; } = new();
             }
 
-            public sealed class NotEqualTo : GenericOperator
+            public sealed class IsNotEqualTo : GenericOperator
             {
-                private NotEqualTo() : base("!=") { }
+                private IsNotEqualTo() : base("!=") { }
                 public override bool Eval(decimal lhs, decimal rhs) => lhs != rhs;
-                public static NotEqualTo Instance { get; } = new();
+                public static IsNotEqualTo Instance { get; } = new();
             }
 
-            public sealed class GreaterThan : GenericOperator
+            public sealed class IsGreaterThan : GenericOperator
             {
-                private GreaterThan() : base(">") { }
+                private IsGreaterThan() : base(">") { }
                 public override bool Eval(decimal lhs, decimal rhs) => lhs > rhs;
-                public static GreaterThan Instance { get; } = new();
+                public static IsGreaterThan Instance { get; } = new();
             }
 
-            public sealed class LesserThan : GenericOperator
+            public sealed class IsLesserThan : GenericOperator
             {
-                private LesserThan() : base("<") { }
+                private IsLesserThan() : base("<") { }
                 public override bool Eval(decimal lhs, decimal rhs) => lhs < rhs;
-                public static LesserThan Instance { get; } = new();
+                public static IsLesserThan Instance { get; } = new();
             }
 
-            public sealed class GreaterThanOrEqualTo : GenericOperator
+            public sealed class IsGreaterThanOrEqualTo : GenericOperator
             {
-                private GreaterThanOrEqualTo() : base(">=") { }
+                private IsGreaterThanOrEqualTo() : base(">=") { }
                 public override bool Eval(decimal lhs, decimal rhs) => lhs >= rhs;
-                public static GreaterThanOrEqualTo Instance { get; } = new();
+                public static IsGreaterThanOrEqualTo Instance { get; } = new();
             }
 
-            public sealed class LesserThanOrEqualTo : GenericOperator
+            public sealed class IsLesserThanOrEqualTo : GenericOperator
             {
-                private LesserThanOrEqualTo() : base("<=") { }
+                private IsLesserThanOrEqualTo() : base("<=") { }
                 public override bool Eval(decimal lhs, decimal rhs) => lhs <= rhs;
-                public static LesserThanOrEqualTo Instance { get; } = new();
+                public static IsLesserThanOrEqualTo Instance { get; } = new();
             }
         }
     }

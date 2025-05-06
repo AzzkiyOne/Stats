@@ -31,8 +31,8 @@ public sealed class ManyToManyFilter<TObject, TOption> : NToManyFilter<TObject, 
     private sealed class ManyToManyExpression : NtMExpression
     {
         public override IEnumerable<GenericOperator> SupportedOperators => [
-            Operators.EqualTo.Instance,
-            Operators.NotEqualTo.Instance,
+            Operators.IsEqualTo.Instance,
+            Operators.IsNotEqualTo.Instance,
             Operators.IntersectsWith.Instance,
             Operators.NotIntersectsWith.Instance,
             Operators.IsSubsetOf.Instance,
@@ -49,18 +49,18 @@ public sealed class ManyToManyFilter<TObject, TOption> : NToManyFilter<TObject, 
         // - Because of font the game uses, "⊄"/"⊅" are unrecognizable in the game.
         private static class Operators
         {
-            public sealed class EqualTo : GenericOperator
+            public sealed class IsEqualTo : GenericOperator
             {
-                private EqualTo() : base("==") { }
+                private IsEqualTo() : base("==", "Is equal to selected") { }
                 public override bool Eval(HashSet<TOption> lhs, HashSet<TOption> rhs) => lhs.SetEquals(rhs);
-                public static EqualTo Instance { get; } = new();
+                public static IsEqualTo Instance { get; } = new();
             }
 
-            public sealed class NotEqualTo : GenericOperator
+            public sealed class IsNotEqualTo : GenericOperator
             {
-                private NotEqualTo() : base("!=") { }
+                private IsNotEqualTo() : base("!=", "Is not equal to selected") { }
                 public override bool Eval(HashSet<TOption> lhs, HashSet<TOption> rhs) => lhs.SetEquals(rhs) == false;
-                public static NotEqualTo Instance { get; } = new();
+                public static IsNotEqualTo Instance { get; } = new();
             }
 
             public sealed class IntersectsWith : GenericOperator
@@ -72,7 +72,7 @@ public sealed class ManyToManyFilter<TObject, TOption> : NToManyFilter<TObject, 
 
             public sealed class NotIntersectsWith : GenericOperator
             {
-                private NotIntersectsWith() : base("!∩", "Not contains any of selected") { }
+                private NotIntersectsWith() : base("!∩", "Does not contain any of selected") { }
                 public override bool Eval(HashSet<TOption> lhs, HashSet<TOption> rhs) => rhs.Any(lhs.Contains) == false;
                 public static NotIntersectsWith Instance { get; } = new();
             }

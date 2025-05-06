@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Stats.Widgets;
 using Verse;
@@ -16,11 +17,16 @@ public sealed class ContentSourceColumnWorker<TObject> : ColumnWorker<TObject>
     {
         return ModContentPackToWidget(GetModContentPack(@object));
     }
-    public override FilterWidget<TObject> GetFilterWidget()
+    public override FilterWidget<TObject> GetFilterWidget(IEnumerable<TObject> tableRecords)
     {
+        var modContentPacks = tableRecords
+            .Select(GetModContentPack)
+            .Distinct()
+            .OrderBy(mod => mod.Name);
+
         return new OneToManyFilter<TObject, ModContentPack>(
             thing => GetModContentPack(thing),
-            LoadedModManager.RunningMods.OrderBy(mod => mod.Name),
+            modContentPacks,
             ModContentPackToWidget
         );
     }

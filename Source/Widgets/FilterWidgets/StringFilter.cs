@@ -51,7 +51,7 @@ public sealed class StringFilter<TObject> : FilterWidgetWithInputField<TObject, 
 
             public sealed class NotContains : GenericOperator
             {
-                public NotContains() : base("!~=", "Not contains") { }
+                public NotContains() : base("!~=", "Does not contains") { }
                 public override bool Eval(string lhs, string rhs) =>
                     lhs.Contains(rhs, StringComparison.CurrentCultureIgnoreCase) == false;
                 public static NotContains Instance { get; } = new();

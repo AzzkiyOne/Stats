@@ -50,13 +50,16 @@ public sealed class CoveredBodyPartGroupsColumnWorker : ColumnWorker<ThingAlike>
 
         return new Label(bodyPartGroupLabels);
     }
-    public override FilterWidget<ThingAlike> GetFilterWidget()
+    public override FilterWidget<ThingAlike> GetFilterWidget(IEnumerable<ThingAlike> tableRecords)
     {
+        var bodyPartGroupDefs = tableRecords
+            .SelectMany(GetBodyPartGroupDefs)
+            .Distinct()
+            .OrderBy(bodyPartGroupDef => bodyPartGroupDef.label);
+
         return new ManyToManyFilter<ThingAlike, BodyPartGroupDef>(
             GetBodyPartGroupDefs,
-            DefDatabase<BodyPartGroupDef>
-                .AllDefsListForReading
-                .OrderBy(bodyPartGroupDef => bodyPartGroupDef.label),
+            bodyPartGroupDefs,
             bodyPartGroupDef => new Label(bodyPartGroupDef.LabelCap)
         );
     }

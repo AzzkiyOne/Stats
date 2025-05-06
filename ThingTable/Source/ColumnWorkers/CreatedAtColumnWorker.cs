@@ -64,11 +64,12 @@ public sealed class CreatedAtColumnWorker : ColumnWorker<ThingAlike>
 
         return new HorizontalContainer(icons, Globals.GUI.PadSm);
     }
-    public override FilterWidget<ThingAlike> GetFilterWidget()
+    public override FilterWidget<ThingAlike> GetFilterWidget(IEnumerable<ThingAlike> tableRecords)
     {
-        var craftingBenches = DefDatabase<ThingDef>.AllDefsListForReading.Where(
-            thingDef => thingDef.IsWorkTable
-        );
+        var craftingBenches = tableRecords
+            .SelectMany(GetThingCraftingBenches)
+            .Distinct()
+            .OrderBy(thingDef => thingDef.label);
 
         return new ManyToManyFilter<ThingAlike, ThingDef>(
             GetThingCraftingBenches,

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Stats.Widgets;
 
 namespace Stats.ThingTable;
@@ -32,7 +33,7 @@ public sealed class LabelColumnWorker : ColumnWorker<ThingAlike>
         )
         .Tooltip(thing.Def.description);
     }
-    public override FilterWidget<ThingAlike> GetFilterWidget()
+    public override FilterWidget<ThingAlike> GetFilterWidget(IEnumerable<ThingAlike> _)
     {
         return new StringFilter<ThingAlike>(GetThingLabel);
     }

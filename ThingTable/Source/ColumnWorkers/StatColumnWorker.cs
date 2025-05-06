@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using RimWorld;
 using Stats.Widgets;
@@ -114,7 +115,7 @@ public sealed class StatColumnWorker : ColumnWorker<ThingAlike>
 
         return widget;
     }
-    public override FilterWidget<ThingAlike> GetFilterWidget()
+    public override FilterWidget<ThingAlike> GetFilterWidget(IEnumerable<ThingAlike> _)
     {
         return new NumberFilter<ThingAlike>(GetDisplayedStatValue);
     }

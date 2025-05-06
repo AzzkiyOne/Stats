@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using RimWorld;
 using Stats.Widgets;
@@ -20,11 +21,16 @@ public sealed class TechLevelColumnWorker : ColumnWorker<ThingAlike>
 
         return new Label(thing.Def.techLevel.ToString());
     }
-    public override FilterWidget<ThingAlike> GetFilterWidget()
+    public override FilterWidget<ThingAlike> GetFilterWidget(IEnumerable<ThingAlike> tableRecords)
     {
+        var techLevels = tableRecords
+            .Select(thing => thing.Def.techLevel)
+            .Distinct()
+            .OrderBy(techLevel => techLevel);
+
         return new OneToManyFilter<ThingAlike, TechLevel>(
             thing => thing.Def.techLevel,
-            Enum.GetValues(typeof(TechLevel)).Cast<TechLevel>().OrderBy(techLevel => techLevel),
+            techLevels,
             techLevel => new Label(techLevel.ToString())
         );
     }

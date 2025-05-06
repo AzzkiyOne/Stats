@@ -50,6 +50,9 @@ public abstract class FilterWidget<T, TExprLhs, TExprRhs> : FilterWidget<T> wher
                 OnChange?.Invoke(this);
             }
         }
+        // TODO: !!! Doing this can generate temporary strings on each frame.
+        // - See if this is a problem. I have a suspicion that the compiler can optimize this case.
+        // - Check overrides.
         public override string RhsString => _Rhs.ToString();
         private GenericOperator _Operator = EmptyOperator.Instance;
         public GenericOperator Operator

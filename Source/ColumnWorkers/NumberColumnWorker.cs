@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Stats.Widgets;
 using UnityEngine;
 
@@ -46,7 +47,7 @@ public sealed class NumberColumnWorker<TObject> : ColumnWorker<TObject>
 
         return new Label(value.ToString() + UnitOfMeasureString);
     }
-    public sealed override FilterWidget<TObject> GetFilterWidget()
+    public sealed override FilterWidget<TObject> GetFilterWidget(IEnumerable<TObject> _)
     {
         return new NumberFilter<TObject>(GetValue);
     }

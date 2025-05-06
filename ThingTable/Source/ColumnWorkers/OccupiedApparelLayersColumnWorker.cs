@@ -43,13 +43,16 @@ public sealed class OccupiedApparelLayersColumnWorker : ColumnWorker<ThingAlike>
 
         return new Label(layerLabels);
     }
-    public override FilterWidget<ThingAlike> GetFilterWidget()
+    public override FilterWidget<ThingAlike> GetFilterWidget(IEnumerable<ThingAlike> tableRecords)
     {
+        var layerDefs = tableRecords
+            .SelectMany(GetLayerDefs)
+            .Distinct()
+            .OrderBy(layerDef => layerDef.label);
+
         return new ManyToManyFilter<ThingAlike, ApparelLayerDef>(
             GetLayerDefs,
-            DefDatabase<ApparelLayerDef>
-                .AllDefsListForReading
-                .OrderBy(layerDef => layerDef.label),
+            layerDefs,
             layerDef => new Label(layerDef.LabelCap)
         );
     }

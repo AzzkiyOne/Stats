@@ -20,6 +20,10 @@ public sealed class GenericTable<TObject> : ITableWidget
     private bool ShouldApplyFilters = false;
     public GenericTable(ITableDef<TObject> tableDef)
     {
+        // We don't know what exactly tableDef.Worker.GetRecords() returns.
+        // Could be a generator (and in some cases it is). So just in case
+        // we "cache the returned collection".
+        var records = tableDef.Worker.GetRecords().ToArray();
         // Header rows and columns
         var columns = new List<Table.Column>(tableDef.Columns.Count);
         var headerRows = new List<TableRow>();
@@ -37,7 +41,7 @@ public sealed class GenericTable<TObject> : ITableWidget
             columns.Add(column);
 
             labelsRowCells.Add(CreateHeaderCell(columnDef, column));
-            filtersRowCells.Add(CreateFilterCell(columnDef, out var filter));
+            filtersRowCells.Add(CreateFilterCell(columnDef, records, out var filter));
 
             filter.OnChange += HandleFilterChange;
         }
@@ -51,7 +55,7 @@ public sealed class GenericTable<TObject> : ITableWidget
         // Body rows
         var bodyRows = new List<TableRow>();
 
-        foreach (var thing in tableDef.Worker.GetRecords())
+        foreach (var record in records)
         {
             var rowCells = new List<Widget>(tableDef.Columns.Count);
 
@@ -60,10 +64,10 @@ public sealed class GenericTable<TObject> : ITableWidget
                 var columnDef = tableDef.Columns[i];
                 var column = columns[i];
 
-                rowCells.Add(CreateBodyCell(columnDef, thing));
+                rowCells.Add(CreateBodyCell(columnDef, record));
             }
 
-            var row = new TableRow<TObject>(rowCells, DrawBodyRowBG, thing);
+            var row = new TableRow<TObject>(rowCells, DrawBodyRowBG, record);
 
             bodyRows.Add(row);
         }
@@ -143,18 +147,22 @@ public sealed class GenericTable<TObject> : ITableWidget
                 $"<i>{columnDef.LabelCap}</i>\n\n{columnDef.Description}"
             );
     }
-    private static Widget CreateFilterCell(IColumnDef<TObject> columnDef, out FilterWidget<TObject>.AbsExpression filter)
+    private static Widget CreateFilterCell(
+        IColumnDef<TObject> columnDef,
+        IEnumerable<TObject> records,
+        out FilterWidget<TObject>.AbsExpression filter
+    )
     {
-        var filterWidget = columnDef.Worker.GetFilterWidget();
+        var filterWidget = columnDef.Worker.GetFilterWidget(records);
 
         filter = filterWidget.Expression;
         return filterWidget;
     }
-    private static Widget CreateBodyCell(IColumnDef<TObject> columnDef, TObject thing)
+    private static Widget CreateBodyCell(IColumnDef<TObject> columnDef, TObject @object)
     {
         try
         {
-            var cell = columnDef.Worker.GetTableCellWidget(thing);
+            var cell = columnDef.Worker.GetTableCellWidget(@object);
 
             if (cell == null)
             {

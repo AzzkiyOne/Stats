@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System.Collections.Generic;
+using System.Text;
 using Stats.Widgets;
 using UnityEngine;
 using Verse;
@@ -52,7 +53,7 @@ public sealed class EquippedStatOffsetsColumnWorker : ColumnWorker<ThingAlike>
             true
         );
     }
-    public override FilterWidget<ThingAlike> GetFilterWidget()
+    public override FilterWidget<ThingAlike> GetFilterWidget(IEnumerable<ThingAlike> _)
     {
         return new NumberFilter<ThingAlike>(GetOffsetsCount);
     }
