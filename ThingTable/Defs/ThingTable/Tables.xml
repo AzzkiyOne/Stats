@@ -56,38 +56,10 @@
     </Stats.ThingTable.TableDef>
 
     <Stats.ThingTable.TableDef>
-        <defName>Clothing_ThingTable</defName>
-        <label>clothing</label>
+        <defName>Apparel_ThingTable</defName>
+        <label>apparel</label>
         <iconThingDef>Apparel_Duster</iconThingDef>
-        <workerFactory>Stats.ThingTable.ClothingTableWorker.Make</workerFactory>
-        <columns>
-            <li>ColdInsulation_ThingTableColumn</li>
-            <li>HeatInsulation_ThingTableColumn</li>
-            <li>SharpArmorRating_ThingTableColumn</li>
-            <li>BluntArmorRating_ThingTableColumn</li>
-            <li>HeatArmorRating_ThingTableColumn</li>
-            <li>OccupiedApparelLayers_ThingTableColumn</li>
-            <li>CoveredBodyPartGroups_ThingTableColumn</li>
-            <li>EquippedStatOffsets_ThingTableColumn</li>
-            <li>MaxHitPoints_ThingTableColumn</li>
-            <li>Flammability_ThingTableColumn</li>
-            <li>Mass_ThingTableColumn</li>
-            <li>CreatedAt_ThingTableColumn</li>
-            <li>WorkToMake_ThingTableColumn</li>
-            <li>MarketValue_ThingTableColumn</li>
-            <li>CountsAsClothingForNudity_ThingTableColumn</li>
-            <li>EquipDelay_ThingTableColumn</li>
-            <li MayRequire="Ludeon.RimWorld.Biotech">ValidLifeStage_ThingTableColumn</li>
-            <li>TechLevel_ThingTableColumn</li>
-            <li>ContentSource_ThingTableColumn</li>
-        </columns>
-    </Stats.ThingTable.TableDef>
-
-    <Stats.ThingTable.TableDef>
-        <defName>Armor_ThingTable</defName>
-        <label>armor</label>
-        <iconThingDef>Apparel_PowerArmor</iconThingDef>
-        <workerFactory>Stats.ThingTable.ArmorTableWorker.Make</workerFactory>
+        <workerFactory>Stats.ThingTable.ApparelTableWorker.Make</workerFactory>
         <columns>
             <li>SharpArmorRating_ThingTableColumn</li>
             <li>BluntArmorRating_ThingTableColumn</li>
@@ -121,6 +93,9 @@
         <columns>
             <li>EnergyShieldCapacity_ThingTableColumn</li>
             <li>EnergyShieldRechargeRate_ThingTableColumn</li>
+            <li>RangedAimingTime_ThingTableColumn</li>
+            <li>MaxChargesCount_ThingTableColumn</li>
+            <li>IsDestroyedWhenAllChargesSpent_ThingTableColumn</li>
             <li>EquippedStatOffsets_ThingTableColumn</li>
             <li>MaxHitPoints_ThingTableColumn</li>
             <li>Flammability_ThingTableColumn</li>

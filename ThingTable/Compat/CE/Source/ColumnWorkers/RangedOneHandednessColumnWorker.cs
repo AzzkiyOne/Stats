@@ -7,7 +7,7 @@ namespace Stats.ThingTable.Compat.CE;
 public static class RangedOneHandednessColumnWorker
 {
     public static BooleanColumnWorker<ThingAlike> Make(ColumnDef _) => new(IsOneHandedWeapon.Memoized());
-    public static readonly Func<ThingAlike, bool> IsOneHandedWeapon = thing =>
+    private static readonly Func<ThingAlike, bool> IsOneHandedWeapon = thing =>
     {
         var statReq = StatRequest.For(thing.Def, thing.StuffDef);
 

@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Text;
+using RimWorld;
 using Stats.Widgets;
 using UnityEngine;
 using Verse;
@@ -31,10 +32,10 @@ public sealed class EquippedStatOffsetsColumnWorker : ColumnWorker<ThingAlike>
         foreach (var offset in thing.Def.equippedStatOffsets)
         {
             var offsetLabel = $"{offset.stat.LabelCap}:";
-            var offsetValueStr = offset.stat.Worker.ValueToString(
+            var offsetValueStr = offset.stat.ValueToString(
                 offset.value,
-                true,
-                ToStringNumberSense.Offset
+                ToStringNumberSense.Offset,
+                offset.stat.finalizeEquippedStatOffset
             );
 
             labels.AppendInNewLine(offsetLabel);

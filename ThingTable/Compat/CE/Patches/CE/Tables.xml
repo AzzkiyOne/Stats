@@ -40,8 +40,8 @@
             or text()="RangedLongAccuracy_ThingTableColumn"
             or text()="RangedDirectHitChance_ThingTableColumn"
             or text()="RangedMissRadius_ThingTableColumn"
-            or text()="MeleeDPS"
-            or text()="MeleeArmorPenetration"
+            or text()="MeleeDPS_ThingTableColumn"
+            or text()="MeleeArmorPenetration_ThingTableColumn"
         ]</xpath>
     </Operation>
 
@@ -58,11 +58,7 @@
     </Operation>
 
     <Operation Class="PatchOperationInsert">
-        <xpath>Defs/Stats.ThingTable.TableDef[
-            defName="Clothing_ThingTable" 
-            or defName="Armor_ThingTable" 
-            or defName="UtilityApparel_ThingTable"
-        ]/columns/li[text()="CE_Bulk_ThingTableColumn"]</xpath>
+        <xpath>Defs/Stats.ThingTable.TableDef[defName="Apparel_ThingTable" or defName="UtilityApparel_ThingTable"]/columns/li[text()="CE_Bulk_ThingTableColumn"]</xpath>
         <value>
             <li>CE_WornBulk_ThingTableColumn</li>
         </value>

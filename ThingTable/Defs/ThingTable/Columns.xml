@@ -325,4 +325,18 @@
         <workerFactory>Stats.ThingTable.StatColumnWorker.Make</workerFactory>
     </Stats.ThingTable.ColumnDef>
 
+    <Stats.ThingTable.ColumnDef>
+        <defName>MaxChargesCount_ThingTableColumn</defName>
+        <label>charges</label>
+        <description>The maximum number of charges this object has.</description>
+        <workerFactory>Stats.ThingTable.MaxChargesCountColumnWorker.Make</workerFactory>
+    </Stats.ThingTable.ColumnDef>
+
+    <Stats.ThingTable.ColumnDef>
+        <defName>IsDestroyedWhenAllChargesSpent_ThingTableColumn</defName>
+        <label>expendable</label>
+        <description>This item will vanish when its last charge is used.</description>
+        <workerFactory>Stats.ThingTable.IsDestroyedWhenAllChargesSpentColumnWorker.Make</workerFactory>
+    </Stats.ThingTable.ColumnDef>
+
 </Defs>
