@@ -43,6 +43,8 @@ public static class Draw
             GUI.color = GenUI.MouseoverColor;
         }
 
+        var wasClicked = Verse.Widgets.ButtonInvisible(rect);
+
         Verse.Widgets.DrawAtlas(rect, Verse.Widgets.ButtonSubtleAtlas);
 
         rect.x += padHor;
@@ -57,7 +59,7 @@ public static class Draw
 
         GUI.color = origGUIColor;
 
-        return Verse.Widgets.ButtonInvisible(rect);
+        return wasClicked;
     }
     internal static bool ButtonImageSubtle(Rect rect, Texture2D texture)
     {
@@ -68,6 +70,8 @@ public static class Draw
         {
             GUI.color = GenUI.MouseoverColor;
         }
+
+        var wasClicked = Verse.Widgets.ButtonInvisible(rect);
 
         Verse.Widgets.DrawAtlas(rect, Verse.Widgets.ButtonSubtleAtlas);
 
@@ -81,6 +85,6 @@ public static class Draw
 
         GUI.color = origGUIColor;
 
-        return Verse.Widgets.ButtonInvisible(rect);
+        return wasClicked;
     }
 }

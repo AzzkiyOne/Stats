@@ -15,7 +15,6 @@ public abstract class FilterWidget<TObject> : Widget
 
     public abstract class AbsExpression
     {
-        public abstract string OperatorString { get; }
         public abstract string RhsString { get; }
         public abstract bool IsEmpty { get; }
         public abstract event Action<AbsExpression> OnChange;
@@ -52,8 +51,8 @@ public abstract class FilterWidget<T, TExprLhs, TExprRhs> : FilterWidget<T> wher
             }
         }
         public override string RhsString => _Rhs.ToString();
-        private GenOperator _Operator = EmptyOperator.Instance;
-        public GenOperator Operator
+        private GenericOperator _Operator = EmptyOperator.Instance;
+        public GenericOperator Operator
         {
             get => _Operator;
             set
@@ -67,8 +66,7 @@ public abstract class FilterWidget<T, TExprLhs, TExprRhs> : FilterWidget<T> wher
                 OnChange?.Invoke(this);
             }
         }
-        public sealed override string OperatorString => _Operator.ToString();
-        public abstract IEnumerable<GenOperator> SupportedOperators { get; }
+        public abstract IEnumerable<GenericOperator> SupportedOperators { get; }
         public sealed override event Action<AbsExpression>? OnChange;
         public sealed override bool IsEmpty => _Operator == EmptyOperator.Instance;
         public GenExpression(Func<T, TExprLhs> lhs, TExprRhs rhs)
@@ -98,19 +96,25 @@ public abstract class FilterWidget<T, TExprLhs, TExprRhs> : FilterWidget<T> wher
             OnChange?.Invoke(this);
         }
 
-        public abstract class GenOperator
+        public abstract class GenericOperator
         {
+            public string Symbol { get; }
+            public string Description { get; }
+            protected GenericOperator(string symbol = "", string description = "")
+            {
+                Symbol = symbol;
+                Description = description;
+            }
             public abstract bool Eval(TExprLhs lhs, TExprRhs rhs);
         }
 
         // This operator exists only because i don't want to define Operator property as
         // nullable, because it will slow down the whole thing a bit. The table doesn't
         // evaluate empty expressions anyway.
-        private sealed class EmptyOperator : GenOperator
+        private sealed class EmptyOperator : GenericOperator
         {
-            private EmptyOperator() { }
+            private EmptyOperator() : base("...") { }
             public override bool Eval(TExprLhs lhs, TExprRhs rhs) => true;
-            public override string ToString() => "...";
             public static EmptyOperator Instance { get; } = new();
         }
     }

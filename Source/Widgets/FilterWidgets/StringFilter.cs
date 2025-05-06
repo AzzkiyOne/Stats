@@ -25,7 +25,7 @@ public sealed class StringFilter<TObject> : FilterWidgetWithInputField<TObject, 
 
     private sealed class StringExpression : GenExpression
     {
-        public override IEnumerable<GenOperator> SupportedOperators => [
+        public override IEnumerable<GenericOperator> SupportedOperators => [
             Operators.Contains.Instance,
             Operators.NotContains.Instance,
         ];
@@ -41,21 +41,19 @@ public sealed class StringFilter<TObject> : FilterWidgetWithInputField<TObject, 
 
         private static class Operators
         {
-            public sealed class Contains : GenOperator
+            public sealed class Contains : GenericOperator
             {
-                public Contains() { }
+                public Contains() : base("~=", "Contains") { }
                 public override bool Eval(string lhs, string rhs) =>
                     lhs.Contains(rhs, StringComparison.CurrentCultureIgnoreCase);
-                public override string ToString() => "~=";
                 public static Contains Instance { get; } = new();
             }
 
-            public sealed class NotContains : GenOperator
+            public sealed class NotContains : GenericOperator
             {
-                public NotContains() { }
+                public NotContains() : base("!~=", "Not contains") { }
                 public override bool Eval(string lhs, string rhs) =>
                     lhs.Contains(rhs, StringComparison.CurrentCultureIgnoreCase) == false;
-                public override string ToString() => "!~=";
                 public static NotContains Instance { get; } = new();
             }
         }

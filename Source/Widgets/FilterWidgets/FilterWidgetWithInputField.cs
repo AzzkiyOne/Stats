@@ -24,7 +24,12 @@ public abstract class FilterWidgetWithInputField<TObject, TExprLhs, TExprRhs> : 
 
         foreach (var @operator in expression.SupportedOperators)
         {
-            var option = new FloatMenuOption(@operator.ToString(), () => expression.Operator = @operator);
+            var option = new FloatMenuOption(
+                @operator.Description.Length > 0
+                    ? $"{@operator.Symbol} - {@operator.Description}"
+                    : @operator.Symbol,
+                () => expression.Operator = @operator
+            );
 
             operatorsMenuOptions.Add(option);
         }
@@ -65,14 +70,19 @@ public abstract class FilterWidgetWithInputField<TObject, TExprLhs, TExprRhs> : 
     }
     private static Vector2 CalcOperatorButtonSize(GenExpression expression)
     {
-        var size = Text.CalcSize(expression.OperatorString);
+        var size = Text.CalcSize(expression.Operator.Symbol);
         size.x += OperatorButtonPadding * 2f;
 
         return size;
     }
     private static bool DrawOperatorButton(Rect rect, GenExpression expression)
     {
-        return Widgets.Draw.ButtonTextSubtle(rect, expression.OperatorString, OperatorButtonPadding);
+        if (expression.Operator.Description.Length > 0 && Mouse.IsOver(rect))
+        {
+            TooltipHandler.TipRegion(rect, expression.Operator.Description);
+        }
+
+        return Widgets.Draw.ButtonTextSubtle(rect, expression.Operator.Symbol, OperatorButtonPadding);
     }
     private static Vector2 CalcInputFieldSize(GenExpression expression)
     {

@@ -28,7 +28,7 @@ public sealed class OneToManyFilter<TObject, TOption> : NToManyFilter<TObject, T
 
     private sealed class OneToManyExpression : NtMExpression
     {
-        public override IEnumerable<GenOperator> SupportedOperators => [
+        public override IEnumerable<GenericOperator> SupportedOperators => [
             Operators.IsIn.Instance,
             Operators.IsNotIn.Instance
         ];
@@ -38,19 +38,18 @@ public sealed class OneToManyFilter<TObject, TOption> : NToManyFilter<TObject, T
 
         private static class Operators
         {
-            public sealed class IsIn : GenOperator
+            public sealed class IsIn : GenericOperator
             {
-                private IsIn() { }
+                private IsIn() : base("∈", "Is one of selected") { }
                 public override bool Eval(TOption lhs, HashSet<TOption> rhs) => rhs.Contains(lhs);
-                public override string ToString() => "∈";
                 public static IsIn Instance { get; } = new();
             }
 
-            public sealed class IsNotIn : GenOperator
+            // ∉
+            public sealed class IsNotIn : GenericOperator
             {
-                private IsNotIn() { }
+                private IsNotIn() : base("!∈", "Is not one of selected") { }
                 public override bool Eval(TOption lhs, HashSet<TOption> rhs) => rhs.Contains(lhs) == false;
-                public override string ToString() => "∉";
                 public static IsNotIn Instance { get; } = new();
             }
         }

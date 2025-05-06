@@ -32,7 +32,7 @@ public sealed class NumberFilter<TObject> : FilterWidgetWithInputField<TObject, 
 
     private sealed class NumberExpression : GenExpression
     {
-        public override IEnumerable<GenOperator> SupportedOperators => [
+        public override IEnumerable<GenericOperator> SupportedOperators => [
             Operators.EqualTo.Instance,
             Operators.NotEqualTo.Instance,
             Operators.GreaterThan.Instance,
@@ -96,51 +96,45 @@ public sealed class NumberFilter<TObject> : FilterWidgetWithInputField<TObject, 
 
         private static class Operators
         {
-            public sealed class EqualTo : GenOperator
+            public sealed class EqualTo : GenericOperator
             {
-                private EqualTo() { }
+                private EqualTo() : base("==") { }
                 public override bool Eval(decimal lhs, decimal rhs) => lhs == rhs;
-                public override string ToString() => "==";
                 public static EqualTo Instance { get; } = new();
             }
 
-            public sealed class NotEqualTo : GenOperator
+            public sealed class NotEqualTo : GenericOperator
             {
-                private NotEqualTo() { }
+                private NotEqualTo() : base("!=") { }
                 public override bool Eval(decimal lhs, decimal rhs) => lhs != rhs;
-                public override string ToString() => "!=";
                 public static NotEqualTo Instance { get; } = new();
             }
 
-            public sealed class GreaterThan : GenOperator
+            public sealed class GreaterThan : GenericOperator
             {
-                private GreaterThan() { }
+                private GreaterThan() : base(">") { }
                 public override bool Eval(decimal lhs, decimal rhs) => lhs > rhs;
-                public override string ToString() => ">";
                 public static GreaterThan Instance { get; } = new();
             }
 
-            public sealed class LesserThan : GenOperator
+            public sealed class LesserThan : GenericOperator
             {
-                private LesserThan() { }
+                private LesserThan() : base("<") { }
                 public override bool Eval(decimal lhs, decimal rhs) => lhs < rhs;
-                public override string ToString() => "<";
                 public static LesserThan Instance { get; } = new();
             }
 
-            public sealed class GreaterThanOrEqualTo : GenOperator
+            public sealed class GreaterThanOrEqualTo : GenericOperator
             {
-                private GreaterThanOrEqualTo() { }
+                private GreaterThanOrEqualTo() : base(">=") { }
                 public override bool Eval(decimal lhs, decimal rhs) => lhs >= rhs;
-                public override string ToString() => ">=";
                 public static GreaterThanOrEqualTo Instance { get; } = new();
             }
 
-            public sealed class LesserThanOrEqualTo : GenOperator
+            public sealed class LesserThanOrEqualTo : GenericOperator
             {
-                private LesserThanOrEqualTo() { }
+                private LesserThanOrEqualTo() : base("<=") { }
                 public override bool Eval(decimal lhs, decimal rhs) => lhs <= rhs;
-                public override string ToString() => "<=";
                 public static LesserThanOrEqualTo Instance { get; } = new();
             }
         }

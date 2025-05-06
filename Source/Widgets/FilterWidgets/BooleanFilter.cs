@@ -35,7 +35,7 @@ public sealed class BooleanFilter<TObject> : FilterWidget<TObject, bool, bool>
     {
         if (base.Expression.IsEmpty)
         {
-            return Text.CalcSize(Expression.Operator.ToString());
+            return Text.CalcSize(Expression.Operator.Symbol);
         }
 
         return new Vector2(Text.LineHeight, Text.LineHeight);
@@ -48,7 +48,7 @@ public sealed class BooleanFilter<TObject> : FilterWidget<TObject, bool, bool>
     }
     private void DrawEmpty(Rect rect)
     {
-        if (Widgets.Draw.ButtonTextSubtle(rect, Expression.Operator.ToString()))
+        if (Widgets.Draw.ButtonTextSubtle(rect, Expression.Operator.Symbol))
         {
             Expression.Operator = Expression.SupportedOperators.First();
         }
@@ -74,7 +74,7 @@ public sealed class BooleanFilter<TObject> : FilterWidget<TObject, bool, bool>
 
     private sealed class BooleanExpression : GenExpression
     {
-        public override IEnumerable<GenOperator> SupportedOperators => [Operators.EqualTo.Instance];
+        public override IEnumerable<GenericOperator> SupportedOperators => [Operators.EqualTo.Instance];
         public BooleanExpression(Func<TObject, bool> lhs) : base(lhs, true)
         {
         }
@@ -87,11 +87,10 @@ public sealed class BooleanFilter<TObject> : FilterWidget<TObject, bool, bool>
 
         private static class Operators
         {
-            public sealed class EqualTo : GenOperator
+            public sealed class EqualTo : GenericOperator
             {
-                private EqualTo() { }
+                private EqualTo() : base("==") { }
                 public override bool Eval(bool lhs, bool rhs) => lhs == rhs;
-                public override string ToString() => "==";
                 public static EqualTo Instance { get; } = new();
             }
         }
