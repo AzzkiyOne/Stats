@@ -110,7 +110,7 @@ internal class TableRow
         }
 
         // This must go after cells to not interfere with their GUI events.
-        if (Event.current.type == EventType.MouseDown && mouseIsOverRect)
+        if (Event.current.control && Event.current.type == EventType.MouseDown && mouseIsOverRect)
         {
             IsSelected = !_IsSelected;
         }

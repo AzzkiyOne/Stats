@@ -34,8 +34,6 @@ internal sealed class Table
             RecalcLayout();
         }
 
-        HandleHorScroll(rect);
-
         // Probably could cache this.
         var leftColumnsMinWidth = 0f;
         var rightColumnsMinWidth = 0f;
@@ -115,6 +113,8 @@ internal sealed class Table
         var headersRect = rect.CutByY(TotalHeaderRowsHeight);
 
         DrawRows(headersRect, HeaderRows, scrollPos with { y = 0f }, cellExtraWidth, drawPinned);
+        // Register mouse-drag only below headers row to not interfere with filter inputs.
+        DoHorScroll(rect);
         DrawRows(rect, BodyRows, scrollPos, cellExtraWidth, drawPinned);
     }
     private static void DrawRows(
@@ -197,21 +197,13 @@ internal sealed class Table
             }
         }
     }
-    private void HandleHorScroll(Rect rect)
+    private void DoHorScroll(Rect rect)
     {
-        if
-        (
-            Event.current is { control: true, isScrollWheel: true }
-            &&
-            Mouse.IsOver(rect)
-        )
+        if (Event.current.type == EventType.MouseDrag && Mouse.IsOver(rect))
         {
-            ScrollPos.x = Mathf.Max(
-                ScrollPos.x + Event.current.delta.y * 10f,
-                0f
-            );
+            ScrollPos.x = Mathf.Max(ScrollPos.x + Event.current.delta.x, 0f);
 
-            Event.current.Use();
+            // Why no "Event.current.Use();"? Because the thing locks itself on mouse-up.
         }
     }
     public void ScheduleLayoutRecalc()

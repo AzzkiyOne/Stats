@@ -184,7 +184,6 @@
     <Stats.ThingTable.ColumnDef>
         <defName>MeleeDPS_ThingTableColumn</defName>
         <labelShort>DPS (M)</labelShort>
-        <iconPath>UI/Commands/AttackMelee</iconPath>
         <stat>MeleeWeapon_AverageDPS</stat>
         <statValueExplanationType>Full</statValueExplanationType>
         <workerFactory>Stats.ThingTable.StatColumnWorker.Make</workerFactory>

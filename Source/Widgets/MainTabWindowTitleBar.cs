@@ -13,9 +13,9 @@ internal sealed class MainTabWindowTitleBar : WidgetWrapper
     //private static readonly Texture2D ResetWindowTex;
     private static readonly Texture2D ExpandWindowTex;
     private const string Manual =
-        "- Hold [Ctrl] to scroll horizontally.\n" +
+        "- Hold (LMB) and move mouse cursor to scroll horizontally.\n" +
         "- Hold [Ctrl] and click on a column's name to pin/unpin it.\n" +
-        "- Click on a row to select/deselect it.\n" +
+        "- Hold [Ctrl] and click on a row to select/deselect it.\n" +
         "  - You can select multiple rows.\n" +
         "  - Selected rows are unaffected by filters.";
     private const float IconPadding = Globals.GUI.PadXs;

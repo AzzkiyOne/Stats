@@ -101,6 +101,7 @@
     <Stats.ThingTable.ColumnDef>
         <defName>CE_MeleeDamage_ThingTableColumn</defName>
         <labelShort>Damage (M)</labelShort>
+        <iconPath>UI/Commands/AttackMelee</iconPath>
         <stat>MeleeDamage</stat>
         <statValueExplanationType>Full</statValueExplanationType>
         <workerFactory>Stats.ThingTable.StatColumnWorker.Make</workerFactory>
