@@ -9,8 +9,8 @@ namespace Stats.Widgets;
 internal sealed class MainTabWindowTitleBar : WidgetWrapper
 {
     protected override Widget Widget { get; }
-    private static readonly Texture2D HoldToDragTex;
-    private static readonly Texture2D ResetWindowTex;
+    //private static readonly Texture2D HoldToDragTex;
+    //private static readonly Texture2D ResetWindowTex;
     private static readonly Texture2D ExpandWindowTex;
     private const string Manual =
         "- Hold [Ctrl] to scroll horizontally.\n" +
@@ -21,7 +21,7 @@ internal sealed class MainTabWindowTitleBar : WidgetWrapper
     private const float IconPadding = Globals.GUI.PadXs;
     public MainTabWindowTitleBar(
         Widget tableSelector,
-        Action resetWindow,
+        //Action resetWindow,
         Action expandWindow,
         Action closeWindow,
         Action clearTableFilters
@@ -41,30 +41,30 @@ internal sealed class MainTabWindowTitleBar : WidgetWrapper
                     Globals.GUI.Pad,
                     true
                 ).WidthRel(1f),
-                ToToolbarIcon(
-                    new Icon(HoldToDragTex),
-                    "Hold to drag the window (if there's nothing else to hold on to)"
-                ),
+                //ToToolbarIcon(
+                //    new Icon(HoldToDragTex),
+                //    "Hold to drag the window (if there's nothing else to hold on to)"
+                //),
                 ToToolbarIcon(
                     new Icon(TexButton.Info),
                     Manual
                 ),
-                ToToolbarIcon(
-                    new Icon(ResetWindowTex),
-                    resetWindow,
-                    "Reset"
-                ),
+                //ToToolbarIcon(
+                //    new Icon(ResetWindowTex),
+                //    resetWindow,
+                //    "Reset"
+                //),
                 ToToolbarIcon(
                     new Icon(ExpandWindowTex),
                     expandWindow,
                     "Expand"
                 ),
-                ToToolbarIcon(
-                    new Icon(TexButton.CloseXSmall),
-                    closeWindow,
-                    "Close",
-                    IconPadding + 2f
-                ),
+                //ToToolbarIcon(
+                //    new Icon(TexButton.CloseXSmall),
+                //    closeWindow,
+                //    "Close",
+                //    IconPadding + 2f
+                //),
             ],
             Globals.GUI.Pad,
             true
@@ -97,8 +97,8 @@ internal sealed class MainTabWindowTitleBar : WidgetWrapper
 
     static MainTabWindowTitleBar()
     {
-        HoldToDragTex = ContentFinder<Texture2D>.Get("UI/Icons/Trainables/Tameness");
+        //HoldToDragTex = ContentFinder<Texture2D>.Get("UI/Icons/Trainables/Tameness");
         ExpandWindowTex = ContentFinder<Texture2D>.Get("StatsMod/UI/Icons/ExpandWindow");
-        ResetWindowTex = ContentFinder<Texture2D>.Get("StatsMod/UI/Icons/ResetWindow");
+        //ResetWindowTex = ContentFinder<Texture2D>.Get("StatsMod/UI/Icons/ResetWindow");
     }
 }

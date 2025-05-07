@@ -58,8 +58,8 @@
         <defName>CE_RangedMagazineCapacity_ThingTableColumn</defName>
         <labelShort>Mag. cap</labelShort>
         <stat>MagazineCapacity</stat>
-        <workerFactory>Stats.ThingTable.StatColumnWorker.Make</workerFactory>
         <statValueFormatString></statValueFormatString>
+        <workerFactory>Stats.ThingTable.StatColumnWorker.Make</workerFactory>
     </Stats.ThingTable.ColumnDef>
 
     <Stats.ThingTable.ColumnDef>
@@ -70,17 +70,40 @@
     </Stats.ThingTable.ColumnDef>
 
     <Stats.ThingTable.ColumnDef>
-        <defName>CE_RangedOneHandedness_ThingTableColumn</defName>
+        <defName>CE_IsOneHanded_ThingTableColumn</defName>
         <labelShort>One-handed</labelShort>
         <iconPath>Things/Apparel/BallisticShield/CE_BallisticShield</iconPath>
         <stat>OneHandedness</stat>
-        <workerFactory>Stats.ThingTable.Compat.CE.RangedOneHandednessColumnWorker.Make</workerFactory>
+        <workerFactory>Stats.ThingTable.Compat.CE.IsOneHandedColumnWorker.Make</workerFactory>
     </Stats.ThingTable.ColumnDef>
 
     <Stats.ThingTable.ColumnDef>
         <defName>CE_RangedCaliber_ThingTableColumn</defName>
         <stat>Caliber</stat>
         <workerFactory>Stats.ThingTable.Compat.CE.RangedCaliberColumnWorker.Make</workerFactory>
+    </Stats.ThingTable.ColumnDef>
+
+    <Stats.ThingTable.ColumnDef>
+        <defName>CE_MeleeArmorPenetrationFactor_ThingTableColumn</defName>
+        <labelShort>AP % (M)</labelShort>
+        <stat>MeleePenetrationFactor</stat>
+        <statValueExplanationType>FinalizePart</statValueExplanationType>
+        <workerFactory>Stats.ThingTable.StatColumnWorker.Make</workerFactory>
+    </Stats.ThingTable.ColumnDef>
+
+    <Stats.ThingTable.ColumnDef>
+        <defName>CE_MeleeCounterParryBonus_ThingTableColumn</defName>
+        <labelShort>Parry X</labelShort>
+        <stat>MeleeCounterParryBonus</stat>
+        <workerFactory>Stats.ThingTable.StatColumnWorker.Make</workerFactory>
+    </Stats.ThingTable.ColumnDef>
+
+    <Stats.ThingTable.ColumnDef>
+        <defName>CE_MeleeDamage_ThingTableColumn</defName>
+        <labelShort>Damage (M)</labelShort>
+        <stat>MeleeDamage</stat>
+        <statValueExplanationType>Full</statValueExplanationType>
+        <workerFactory>Stats.ThingTable.StatColumnWorker.Make</workerFactory>
     </Stats.ThingTable.ColumnDef>
 
 </Defs>

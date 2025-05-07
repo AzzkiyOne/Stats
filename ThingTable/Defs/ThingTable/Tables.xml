@@ -8,6 +8,9 @@
         <iconThingDef>Gun_Revolver</iconThingDef>
         <workerFactory>Stats.ThingTable.RangedWeaponsTableWorker.Make</workerFactory>
         <columns>
+            <li MayRequire="CETeam.CombatExtended">CE_RangedCaliber_ThingTableColumn</li>
+            <li MayRequire="CETeam.CombatExtended">CE_RangedMagazineCapacity_ThingTableColumn</li>
+            <li MayRequire="CETeam.CombatExtended">CE_RangedReloadTime_ThingTableColumn</li>
             <li>RangedDamage_ThingTableColumn</li>
             <li>RangedStoppingPower_ThingTableColumn</li>
             <li>RangedArmorPenetration_ThingTableColumn</li>
@@ -16,18 +19,22 @@
             <li>RangedCooldown_ThingTableColumn</li>
             <li>RangedAimingTime_ThingTableColumn</li>
             <li>RangedRange_ThingTableColumn</li>
+            <li MayRequire="CETeam.CombatExtended">CE_RangedShotSpread_ThingTableColumn</li>
+            <li MayRequire="CETeam.CombatExtended">CE_RangedSwayFactor_ThingTableColumn</li>
+            <li MayRequire="CETeam.CombatExtended">CE_RangedRecoil_ThingTableColumn</li>
+            <li MayRequire="CETeam.CombatExtended">CE_RangedSightsEfficiency_ThingTableColumn</li>
+            <li MayRequire="CETeam.CombatExtended">CE_IsOneHanded_ThingTableColumn</li>
             <li>RangedTouchAccuracy_ThingTableColumn</li>
             <li>RangedShortAccuracy_ThingTableColumn</li>
             <li>RangedMediumAccuracy_ThingTableColumn</li>
             <li>RangedLongAccuracy_ThingTableColumn</li>
             <li>RangedDirectHitChance_ThingTableColumn</li>
             <li>RangedMissRadius_ThingTableColumn</li>
-            <li>EquippedStatOffsets_ThingTableColumn</li>
-            <li>MeleeDPS_ThingTableColumn</li>
-            <li>MeleeArmorPenetration_ThingTableColumn</li>
             <li>RangedPassableBuildingDamageFactor_ThingTableColumn</li>
             <li>RangedImpassableBuildingDamageFactor_ThingTableColumn</li>
+            <li>EquippedStatOffsets_ThingTableColumn</li>
             <li>Mass_ThingTableColumn</li>
+            <li MayRequire="CETeam.CombatExtended">CE_Bulk_ThingTableColumn</li>
             <li>CreatedAt_ThingTableColumn</li>
             <li>WorkToMake_ThingTableColumn</li>
             <li>MarketValue_ThingTableColumn</li>
@@ -42,11 +49,16 @@
         <iconThingDef>MeleeWeapon_Club</iconThingDef>
         <workerFactory>Stats.ThingTable.MeleeWeaponsTableWorker.Make</workerFactory>
         <columns>
+            <li MayRequire="CETeam.CombatExtended">CE_MeleeDamage_ThingTableColumn</li>
             <li>MeleeDPS_ThingTableColumn</li>
             <li>MeleeArmorPenetration_ThingTableColumn</li>
+            <li MayRequire="CETeam.CombatExtended">CE_MeleeArmorPenetrationFactor_ThingTableColumn</li>
+            <li MayRequire="CETeam.CombatExtended">CE_MeleeCounterParryBonus_ThingTableColumn</li>
             <li>EquippedStatOffsets_ThingTableColumn</li>
+            <li MayRequire="CETeam.CombatExtended">CE_IsOneHanded_ThingTableColumn</li>
             <li>MaxHitPoints_ThingTableColumn</li>
             <li>Mass_ThingTableColumn</li>
+            <li MayRequire="CETeam.CombatExtended">CE_Bulk_ThingTableColumn</li>
             <li>CreatedAt_ThingTableColumn</li>
             <li>WorkToMake_ThingTableColumn</li>
             <li>MarketValue_ThingTableColumn</li>
@@ -64,16 +76,18 @@
             <li>SharpArmorRating_ThingTableColumn</li>
             <li>BluntArmorRating_ThingTableColumn</li>
             <li>HeatArmorRating_ThingTableColumn</li>
+            <li MayRequire="CETeam.CombatExtended">CE_ElectricArmorRating_ThingTableColumn</li>
+            <!-- <li>EnergyShieldCapacity_ThingTableColumn</li> -->
+            <!-- <li>EnergyShieldRechargeRate_ThingTableColumn</li> -->
             <li>ColdInsulation_ThingTableColumn</li>
             <li>HeatInsulation_ThingTableColumn</li>
             <li>OccupiedApparelLayers_ThingTableColumn</li>
             <li>CoveredBodyPartGroups_ThingTableColumn</li>
             <li>EquippedStatOffsets_ThingTableColumn</li>
-            <li>EnergyShieldCapacity_ThingTableColumn</li>
-            <li>EnergyShieldRechargeRate_ThingTableColumn</li>
             <li>MaxHitPoints_ThingTableColumn</li>
             <li>Flammability_ThingTableColumn</li>
             <li>Mass_ThingTableColumn</li>
+            <li MayRequire="CETeam.CombatExtended">CE_WornBulk_ThingTableColumn</li>
             <li>CreatedAt_ThingTableColumn</li>
             <li>WorkToMake_ThingTableColumn</li>
             <li>MarketValue_ThingTableColumn</li>
@@ -100,6 +114,7 @@
             <li>MaxHitPoints_ThingTableColumn</li>
             <li>Flammability_ThingTableColumn</li>
             <li>Mass_ThingTableColumn</li>
+            <li MayRequire="CETeam.CombatExtended">CE_WornBulk_ThingTableColumn</li>
             <li>CreatedAt_ThingTableColumn</li>
             <li>WorkToMake_ThingTableColumn</li>
             <li>MarketValue_ThingTableColumn</li>

@@ -4,7 +4,7 @@ using RimWorld;
 
 namespace Stats.ThingTable.Compat.CE;
 
-public static class RangedOneHandednessColumnWorker
+public static class IsOneHandedColumnWorker
 {
     public static BooleanColumnWorker<ThingAlike> Make(ColumnDef _) => new(IsOneHandedWeapon.Memoized());
     private static readonly Func<ThingAlike, bool> IsOneHandedWeapon = thing =>

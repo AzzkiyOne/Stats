@@ -19,6 +19,7 @@
         <defName>MaxHitPoints_ThingTableColumn</defName>
         <labelShort>Max HP</labelShort>
         <stat>MaxHitPoints</stat>
+        <statValueExplanationType>Unfinalized</statValueExplanationType>
         <workerFactory>Stats.ThingTable.StatColumnWorker.Make</workerFactory>
     </Stats.ThingTable.ColumnDef>
 
@@ -26,6 +27,7 @@
         <defName>Flammability_ThingTableColumn</defName>
         <iconPath>UI/Icons/ColonistBar/Burning</iconPath>
         <stat>Flammability</stat>
+        <statValueExplanationType>Unfinalized</statValueExplanationType>
         <isNegative>true</isNegative>
         <workerFactory>Stats.ThingTable.StatColumnWorker.Make</workerFactory>
     </Stats.ThingTable.ColumnDef>
@@ -33,6 +35,7 @@
     <Stats.ThingTable.ColumnDef>
         <defName>Mass_ThingTableColumn</defName>
         <stat>Mass</stat>
+        <statValueExplanationType>Unfinalized</statValueExplanationType>
         <isNegative>true</isNegative>
         <workerFactory>Stats.ThingTable.StatColumnWorker.Make</workerFactory>
     </Stats.ThingTable.ColumnDef>
@@ -50,6 +53,7 @@
         <defName>WorkToMake_ThingTableColumn</defName>
         <labelShort>Work</labelShort>
         <stat>WorkToMake</stat>
+        <statValueExplanationType>Unfinalized</statValueExplanationType>
         <isNegative>true</isNegative>
         <workerFactory>Stats.ThingTable.StatColumnWorker.Make</workerFactory>
     </Stats.ThingTable.ColumnDef>
@@ -57,6 +61,7 @@
     <Stats.ThingTable.ColumnDef>
         <defName>Beauty_ThingTableColumn</defName>
         <stat>Beauty</stat>
+        <statValueExplanationType>Unfinalized</statValueExplanationType>
         <workerFactory>Stats.ThingTable.StatColumnWorker.Make</workerFactory>
     </Stats.ThingTable.ColumnDef>
 
@@ -72,9 +77,9 @@
         <defName>DeteriorationRate_ThingTableColumn</defName>
         <labelShort>-HP/d</labelShort>
         <stat>DeteriorationRate</stat>
+        <statValueFormatString>0.00/d</statValueFormatString>
         <isNegative>true</isNegative>
         <workerFactory>Stats.ThingTable.StatColumnWorker.Make</workerFactory>
-        <statValueFormatString>0.00/d</statValueFormatString>
     </Stats.ThingTable.ColumnDef>
 
     <Stats.ThingTable.ColumnDef>
@@ -112,6 +117,7 @@
         <defName>ColdInsulation_ThingTableColumn</defName>
         <labelShort>Ins. (C)</labelShort>
         <stat>Insulation_Cold</stat>
+        <statValueExplanationType>FinalizePart</statValueExplanationType>
         <workerFactory>Stats.ThingTable.StatColumnWorker.Make</workerFactory>
     </Stats.ThingTable.ColumnDef>
 
@@ -119,6 +125,7 @@
         <defName>HeatInsulation_ThingTableColumn</defName>
         <labelShort>Ins. (H)</labelShort>
         <stat>Insulation_Heat</stat>
+        <statValueExplanationType>FinalizePart</statValueExplanationType>
         <workerFactory>Stats.ThingTable.StatColumnWorker.Make</workerFactory>
     </Stats.ThingTable.ColumnDef>
 
@@ -126,6 +133,7 @@
         <defName>SharpArmorRating_ThingTableColumn</defName>
         <labelShort>Armor (S)</labelShort>
         <stat>ArmorRating_Sharp</stat>
+        <statValueExplanationType>FinalizePart</statValueExplanationType>
         <workerFactory>Stats.ThingTable.StatColumnWorker.Make</workerFactory>
     </Stats.ThingTable.ColumnDef>
 
@@ -133,6 +141,7 @@
         <defName>BluntArmorRating_ThingTableColumn</defName>
         <labelShort>Armor (B)</labelShort>
         <stat>ArmorRating_Blunt</stat>
+        <statValueExplanationType>FinalizePart</statValueExplanationType>
         <workerFactory>Stats.ThingTable.StatColumnWorker.Make</workerFactory>
     </Stats.ThingTable.ColumnDef>
 
@@ -140,6 +149,7 @@
         <defName>HeatArmorRating_ThingTableColumn</defName>
         <labelShort>Armor (H)</labelShort>
         <stat>ArmorRating_Heat</stat>
+        <statValueExplanationType>FinalizePart</statValueExplanationType>
         <workerFactory>Stats.ThingTable.StatColumnWorker.Make</workerFactory>
     </Stats.ThingTable.ColumnDef>
 
@@ -176,6 +186,7 @@
         <labelShort>DPS (M)</labelShort>
         <iconPath>UI/Commands/AttackMelee</iconPath>
         <stat>MeleeWeapon_AverageDPS</stat>
+        <statValueExplanationType>Full</statValueExplanationType>
         <workerFactory>Stats.ThingTable.StatColumnWorker.Make</workerFactory>
     </Stats.ThingTable.ColumnDef>
 

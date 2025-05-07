@@ -23,13 +23,13 @@ public sealed class MainTabWindow : RimWorld.MainTabWindow
     private readonly TableSelector TableSelector;
     public MainTabWindow()
     {
-        draggable = true;
-        resizeable = true;
+        //draggable = true;
+        //resizeable = true;
 
         TableSelector = new TableSelector();
         TitleBar = new MainTabWindowTitleBar(
             TableSelector,
-            ResetWindow,
+            //ResetWindow,
             ExpandOrCollapseWidow,
             () => Close(),
             ClearCurTableFilters
@@ -60,15 +60,15 @@ public sealed class MainTabWindow : RimWorld.MainTabWindow
     }
     private void Expand()
     {
-        draggable = false;
-        resizeable = false;
+        //draggable = false;
+        //resizeable = false;
         PreExpandRect = windowRect;
         windowRect = ExpandRect;
     }
     private void Collapse()
     {
-        draggable = true;
-        resizeable = true;
+        //draggable = true;
+        //resizeable = true;
 
         if (PreExpandRect is Rect _preExpandRect)
         {
@@ -76,13 +76,13 @@ public sealed class MainTabWindow : RimWorld.MainTabWindow
             PreExpandRect = null;
         }
     }
-    private void ResetWindow()
-    {
-        draggable = true;
-        resizeable = true;
-        PreExpandRect = null;
-        SetInitialSizeAndPosition();
-    }
+    //private void ResetWindow()
+    //{
+    //    draggable = true;
+    //    resizeable = true;
+    //    PreExpandRect = null;
+    //    SetInitialSizeAndPosition();
+    //}
     public override void PreOpen()
     {
         base.PreOpen();
