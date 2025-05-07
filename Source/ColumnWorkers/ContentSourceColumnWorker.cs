@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Stats.Widgets;
@@ -8,26 +9,33 @@ namespace Stats;
 
 public sealed class ContentSourceColumnWorker<TObject> : ColumnWorker<TObject>
 {
-    private readonly Func<TObject, ModContentPack> GetModContentPack;
-    public ContentSourceColumnWorker(Func<TObject, ModContentPack> valueFunction) : base(TableColumnCellStyle.String)
+    private readonly Func<TObject, ModContentPack?> GetModContentPack;
+    public ContentSourceColumnWorker(Func<TObject, ModContentPack?> valueFunction) : base(TableColumnCellStyle.String)
     {
         GetModContentPack = valueFunction;
     }
     public override Widget? GetTableCellWidget(TObject @object)
     {
-        return ModContentPackToWidget(GetModContentPack(@object));
+        var mod = GetModContentPack(@object);
+
+        if (mod == null)
+        {
+            return null;
+        }
+
+        return ModContentPackToWidget(mod);
     }
     public override FilterWidget<TObject> GetFilterWidget(IEnumerable<TObject> tableRecords)
     {
         var modContentPacks = tableRecords
             .Select(GetModContentPack)
             .Distinct()
-            .OrderBy(mod => mod.Name);
+            .OrderBy(mod => mod?.Name ?? "");
 
-        return new OneToManyFilter<TObject, ModContentPack>(
+        return new OneToManyFilter<TObject, ModContentPack?>(
             thing => GetModContentPack(thing),
             modContentPacks,
-            ModContentPackToWidget
+            mod => mod == null ? new Label("") : ModContentPackToWidget(mod)
         );
     }
     private static Widget ModContentPackToWidget(ModContentPack mod)
@@ -36,9 +44,9 @@ public sealed class ContentSourceColumnWorker<TObject> : ColumnWorker<TObject>
     }
     public override int Compare(TObject object1, TObject object2)
     {
-        var modName1 = GetModContentPack(object1).Name;
-        var modName2 = GetModContentPack(object2).Name;
+        var modName1 = GetModContentPack(object1)?.Name;
+        var modName2 = GetModContentPack(object2)?.Name;
 
-        return modName1.CompareTo(modName2);
+        return Comparer.Default.Compare(modName1, modName2);
     }
 }
