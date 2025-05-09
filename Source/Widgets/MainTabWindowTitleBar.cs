@@ -15,9 +15,9 @@ internal sealed class MainTabWindowTitleBar : WidgetWrapper
     private const string Manual =
         "- Hold (LMB) and move mouse cursor to scroll horizontally.\n" +
         "- Hold [Ctrl] and click on a column's name to pin/unpin it.\n" +
-        "- Hold [Ctrl] and click on a row to select/deselect it.\n" +
-        "  - You can select multiple rows.\n" +
-        "  - Selected rows are unaffected by filters.";
+        "- Hold [Ctrl] and click on a row to pin/unpin it.\n" +
+        "  - You can pin multiple rows.\n" +
+        "  - Pinned rows are unaffected by filters.";
     private const float IconPadding = Globals.GUI.PadXs;
     public MainTabWindowTitleBar(
         Widget tableSelector,

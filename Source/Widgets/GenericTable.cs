@@ -232,8 +232,8 @@ public sealed class GenericTable<TObject> : ITableWidget
     }
     private void ApplyFilters()
     {
-        // It is important not to skip selected rows here so we don't have to
-        // re-aplly filters when a row is unselected.
+        // It is important not to skip pinned rows here so we don't have to
+        // re-aplly filters when a row is unpinned.
         foreach (TableRow<TObject> row in Table.BodyRows)
         {
             row.IsHidden = RowPassesFilters(row, ActiveFilters) == false;

@@ -20,16 +20,16 @@ internal class TableRow
     }
     private readonly OnDraw DrawBG;
     private bool IsHovered = false;
-    private bool _IsSelected = false;
-    private bool IsSelected
+    private bool _IsPinned = false;
+    private bool IsPinned
     {
         set
         {
-            _IsSelected = value;
+            _IsPinned = value;
             Parent?.ScheduleLayoutRecalc();
         }
     }
-    public bool IsVisible => !_IsHidden || _IsSelected;
+    public bool IsVisible => !_IsHidden || _IsPinned;
     public TableRow(List<Widget> cells, OnDraw onDraw)
     {
         Cells = cells;
@@ -43,7 +43,7 @@ internal class TableRow
         int index
     )
     {
-        if (_IsSelected)
+        if (_IsPinned)
         {
             Verse.Widgets.DrawHighlightSelected(rect);
         }
@@ -112,7 +112,7 @@ internal class TableRow
         // This must go after cells to not interfere with their GUI events.
         if (Event.current.control && Event.current.type == EventType.MouseDown && mouseIsOverRect)
         {
-            IsSelected = !_IsSelected;
+            IsPinned = !_IsPinned;
         }
     }
     public float RecalcLayout()
