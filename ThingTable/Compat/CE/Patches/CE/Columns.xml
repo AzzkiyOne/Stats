@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<Patch>
+
+    <Operation Class="PatchOperationReplace">
+        <xpath>Defs/Stats.ThingTable.ColumnDef[defName="SharpArmorRating_ThingTableColumn" or defName="BluntArmorRating_ThingTableColumn"]/workerFactory</xpath>
+        <value>
+            <workerFactory>Stats.ThingTable.Compat.CE.BinaryStatColumnWorker.MakeRight</workerFactory>
+        </value>
+    </Operation>
+
+</Patch>

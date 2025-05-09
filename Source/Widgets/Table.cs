@@ -201,7 +201,7 @@ internal sealed class Table
     {
         if (Event.current.type == EventType.MouseDrag && Mouse.IsOver(rect))
         {
-            ScrollPos.x = Mathf.Max(ScrollPos.x + Event.current.delta.x, 0f);
+            ScrollPos.x = Mathf.Max(ScrollPos.x + Event.current.delta.x * -1f, 0f);
 
             // Why no "Event.current.Use();"? Because the thing locks itself on mouse-up.
         }

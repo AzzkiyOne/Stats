@@ -53,13 +53,13 @@
         <defName>CE_RangedMagazineCapacity_ThingTableColumn</defName>
         <labelShort>Mag. cap</labelShort>
         <stat>MagazineCapacity</stat>
-        <workerFactory>Stats.ThingTable.Compat.CE.RangedMagazineCapacityColumnWorker.Make</workerFactory>
+        <workerFactory>Stats.ThingTable.Compat.CE.BinaryStatColumnWorker.MakeLeft</workerFactory>
     </Stats.ThingTable.ColumnDef>
 
     <Stats.ThingTable.ColumnDef>
         <defName>CE_RangedReloadTime_ThingTableColumn</defName>
         <stat>ReloadTime</stat>
-        <workerFactory>Stats.ThingTable.Compat.CE.RangedReloadTimeColumnWorker.Make</workerFactory>
+        <workerFactory>Stats.ThingTable.Compat.CE.BinaryStatColumnWorker.MakeRight</workerFactory>
     </Stats.ThingTable.ColumnDef>
 
     <Stats.ThingTable.ColumnDef>
@@ -80,14 +80,16 @@
         <defName>CE_MeleeSharpArmorPenetration_ThingTableColumn</defName>
         <labelShort>AP (S)</labelShort>
         <stat>MeleeWeapon_AverageArmorPenetration</stat>
-        <workerFactory>Stats.ThingTable.Compat.CE.MeleeSharpArmorPenetrationColumnWorker.Make</workerFactory>
+        <statValueExplanationType>Full</statValueExplanationType>
+        <workerFactory>Stats.ThingTable.Compat.CE.BinaryStatColumnWorker.MakeLeft</workerFactory>
     </Stats.ThingTable.ColumnDef>
 
     <Stats.ThingTable.ColumnDef>
         <defName>CE_MeleeBluntArmorPenetration_ThingTableColumn</defName>
         <labelShort>AP (B)</labelShort>
         <stat>MeleeWeapon_AverageArmorPenetration</stat>
-        <workerFactory>Stats.ThingTable.Compat.CE.MeleeBluntArmorPenetrationColumnWorker.Make</workerFactory>
+        <statValueExplanationType>Full</statValueExplanationType>
+        <workerFactory>Stats.ThingTable.Compat.CE.BinaryStatColumnWorker.MakeRight</workerFactory>
     </Stats.ThingTable.ColumnDef>
 
     <Stats.ThingTable.ColumnDef>
@@ -106,12 +108,21 @@
     </Stats.ThingTable.ColumnDef>
 
     <Stats.ThingTable.ColumnDef>
-        <defName>CE_MeleeDamage_ThingTableColumn</defName>
-        <labelShort>Damage (M)</labelShort>
+        <defName>CE_MeleeDamageMin_ThingTableColumn</defName>
+        <labelShort>Min.</labelShort>
         <iconPath>UI/Commands/AttackMelee</iconPath>
         <stat>MeleeDamage</stat>
         <statValueExplanationType>Full</statValueExplanationType>
-        <workerFactory>Stats.ThingTable.StatColumnWorker.Make</workerFactory>
+        <workerFactory>Stats.ThingTable.Compat.CE.BinaryStatColumnWorker.MakeLeft</workerFactory>
+    </Stats.ThingTable.ColumnDef>
+
+    <Stats.ThingTable.ColumnDef>
+        <defName>CE_MeleeDamageMax_ThingTableColumn</defName>
+        <labelShort>Max.</labelShort>
+        <iconPath>UI/Commands/AttackMelee</iconPath>
+        <stat>MeleeDamage</stat>
+        <statValueExplanationType>Full</statValueExplanationType>
+        <workerFactory>Stats.ThingTable.Compat.CE.BinaryStatColumnWorker.MakeRight</workerFactory>
     </Stats.ThingTable.ColumnDef>
 
 </Defs>

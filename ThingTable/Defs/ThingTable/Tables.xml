@@ -49,7 +49,8 @@
         <iconThingDef>MeleeWeapon_Club</iconThingDef>
         <workerFactory>Stats.ThingTable.MeleeWeaponsTableWorker.Make</workerFactory>
         <columns>
-            <li MayRequire="CETeam.CombatExtended">CE_MeleeDamage_ThingTableColumn</li>
+            <li MayRequire="CETeam.CombatExtended">CE_MeleeDamageMin_ThingTableColumn</li>
+            <li MayRequire="CETeam.CombatExtended">CE_MeleeDamageMax_ThingTableColumn</li>
             <li>MeleeDPS_ThingTableColumn</li>
             <li>MeleeArmorPenetration_ThingTableColumn</li>
             <li MayRequire="CETeam.CombatExtended">CE_MeleeArmorPenetrationFactor_ThingTableColumn</li>
