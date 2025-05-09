@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using RimWorld;
 using Stats.Widgets;
 using Verse;
@@ -53,9 +54,18 @@ public sealed class RangedCaliberColumnWorker : ColumnWorker<ThingAlike>
 
         return widget;
     }
-    public override FilterWidget<ThingAlike> GetFilterWidget(IEnumerable<ThingAlike> _)
+    public override FilterWidget<ThingAlike> GetFilterWidget(IEnumerable<ThingAlike> tableRecords)
     {
-        return new StringFilter<ThingAlike>(GetCaliberName);
+        var calibers = tableRecords
+            .Select(GetCaliberName)
+            .Distinct()
+            .OrderBy(caliber => caliber);
+
+        return new OneToManyFilter<ThingAlike, string>(
+            GetCaliberName,
+            calibers,
+            caliber => new Label(caliber)
+        );
     }
     public override int Compare(ThingAlike thing1, ThingAlike thing2)
     {

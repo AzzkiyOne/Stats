@@ -33,7 +33,7 @@ public sealed class ContentSourceColumnWorker<TObject> : ColumnWorker<TObject>
             .OrderBy(mod => mod?.Name ?? "");
 
         return new OneToManyFilter<TObject, ModContentPack?>(
-            thing => GetModContentPack(thing),
+            GetModContentPack,
             modContentPacks,
             mod => mod == null ? new Label("") : ModContentPackToWidget(mod)
         );

@@ -56,6 +56,10 @@ public abstract class NToManyFilter<TObject, TExprLhs, TOption> : FilterWidgetWi
         protected override float Margin => 0f;
         public override Vector2 InitialSize => OptionsList.GetSize();
         private readonly Widget OptionsList;
+        private bool ContentIsTooHigh = false;
+        private Vector2 ScrollPosition;
+        private static readonly Color BorderColor = Verse.Widgets.SeparatorLineColor;
+        private const float BorderThickness = 1f;
         public OptionsWindowWidget(
             IEnumerable<TOption> options,
             OptionWidgetFactory makeOptionWidget,
@@ -68,8 +72,27 @@ public abstract class NToManyFilter<TObject, TExprLhs, TOption> : FilterWidgetWi
 
             // TODO: Not ideal.
             var optionsList = options.ToList();
-            var optionWidgets = new List<Widget>(optionsList.Count);
-            var borderColor = Verse.Widgets.SeparatorLineColor;
+            // TODO: Copy paste.
+            Widget clearSelectionOptionWidget = new Label("<i>Clear selection</i>")
+                    .PaddingAbs(Globals.GUI.PadSm, Globals.GUI.PadXs)
+                    .WidthRel(1f)
+                    .HoverShiftHor(4f);
+            if (optionsList.Count > 0)
+            {
+                clearSelectionOptionWidget = clearSelectionOptionWidget
+                    .BorderBottom(BorderThickness, BorderColor);
+            }
+            clearSelectionOptionWidget = clearSelectionOptionWidget
+                .HoverBackground(FloatMenuOption.ColorBGActiveMouseover)
+                .OnClick(() =>
+                {
+                    expression.Rhs.Clear();
+                    expression.NotifyChanged();
+                });
+            var optionWidgets = new List<Widget>(optionsList.Count)
+            {
+                clearSelectionOptionWidget
+            };
 
             for (int i = 0; i < optionsList.Count; i++)
             {
@@ -102,7 +125,7 @@ public abstract class NToManyFilter<TObject, TExprLhs, TOption> : FilterWidgetWi
                 if (i < optionsList.Count - 1)
                 {
                     optionWidget = optionWidget
-                        .BorderBottom(borderColor);
+                        .BorderBottom(BorderThickness, BorderColor);
                 }
                 optionWidget = optionWidget
                     .Background(drawOptionBackground)
@@ -113,8 +136,6 @@ public abstract class NToManyFilter<TObject, TExprLhs, TOption> : FilterWidgetWi
             }
 
             OptionsList = new VerticalContainer(optionWidgets)
-                .PaddingAbs(1f)// TODO: Make borders affect widget's size?
-                .Border(borderColor)
                 .Background(Verse.Widgets.WindowBGFillColor);
         }
         public override void DoWindowContents(Rect rect)
@@ -124,10 +145,50 @@ public abstract class NToManyFilter<TObject, TExprLhs, TOption> : FilterWidgetWi
 
             DoFadeEffect(rect);
 
-            OptionsList.Draw(rect, rect.size);
+            if (ContentIsTooHigh)
+            {
+                var contentRect = new Rect(Vector2.zero, InitialSize);
+                Verse.Widgets.BeginScrollView(rect, ref ScrollPosition, contentRect);
+
+                OptionsList.Draw(contentRect, InitialSize);
+
+                Verse.Widgets.EndScrollView();
+
+                // Adjust rect width for borders, but only if there is vertical scrollbar.
+                rect.xMax -= GenUI.ScrollBarWidth;
+            }
+            else
+            {
+                OptionsList.Draw(rect, rect.size);
+            }
+
+            DrawBorders(rect);
 
             Globals.GUI.Opacity = origGUIOpacity;
             GUI.color = origGUIColor;
+        }
+        private void DrawBorders(Rect rect)
+        {
+            if (Event.current.type != EventType.Repaint)
+            {
+                return;
+            }
+
+            var color = BorderColor.AdjustedForGUIOpacity();
+            // Hor:
+            // - Top
+            var horRect = rect with { height = BorderThickness };
+            Verse.Widgets.DrawBoxSolid(horRect, color);
+            // - Bottom
+            horRect.y = rect.yMax - BorderThickness;
+            Verse.Widgets.DrawBoxSolid(horRect, color);
+            // Ver:
+            // - Left
+            var verRect = rect with { width = BorderThickness };
+            Verse.Widgets.DrawBoxSolid(verRect, color);
+            // - Right
+            verRect.x = rect.xMax - BorderThickness;
+            Verse.Widgets.DrawBoxSolid(verRect, color);
         }
         private void DoFadeEffect(Rect rect)
         {
@@ -156,18 +217,32 @@ public abstract class NToManyFilter<TObject, TExprLhs, TOption> : FilterWidgetWi
         protected override void SetInitialSizeAndPosition()
         {
             var position = UI.MousePositionOnUIInverted;
+            var size = InitialSize;
+            // Has to be dynamic because the user can change screen size in game.
+            var maxHeight = UI.screenHeight / 2f;
 
-            if (position.x + InitialSize.x > UI.screenWidth)
+            if (size.y > maxHeight)
             {
-                position.x = UI.screenWidth - InitialSize.x;
+                size.y = maxHeight;
+                size.x += GenUI.ScrollBarWidth;
+                ContentIsTooHigh = true;
+            }
+            else
+            {
+                ContentIsTooHigh = false;
             }
 
-            if (position.y + InitialSize.y > UI.screenHeight)
+            if (position.x + size.x > UI.screenWidth)
             {
-                position.y = UI.screenHeight - InitialSize.y;
+                position.x = UI.screenWidth - size.x;
             }
 
-            windowRect = new Rect(position, InitialSize);
+            if (position.y + size.y > UI.screenHeight)
+            {
+                position.y = UI.screenHeight - size.y;
+            }
+
+            windowRect = new Rect(position, size);
         }
     }
 
