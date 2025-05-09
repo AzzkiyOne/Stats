@@ -1,12 +1,11 @@
-﻿using System;
-using RimWorld;
+﻿using RimWorld;
 
 namespace Stats.ThingTable;
 
-public static class MaxChargesCountColumnWorker
+public sealed class MaxChargesCountColumnWorker : NumberColumnWorker<ThingAlike>
 {
-    public static NumberColumnWorker<ThingAlike> Make(ColumnDef _) => new(GetValue.Memoized());
-    private static readonly Func<ThingAlike, decimal> GetValue = thing =>
+    public static MaxChargesCountColumnWorker Make(ColumnDef _) => new();
+    protected override decimal GetValue(ThingAlike thing)
     {
         var reloadableCompProperties = thing.Def.GetCompProperties<CompProperties_ApparelReloadable>();
 
@@ -16,5 +15,5 @@ public static class MaxChargesCountColumnWorker
         }
 
         return reloadableCompProperties.maxCharges;
-    };
+    }
 }

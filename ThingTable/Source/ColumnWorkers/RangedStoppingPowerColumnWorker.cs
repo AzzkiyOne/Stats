@@ -1,15 +1,15 @@
-﻿using System;
+﻿using Stats.ColumnWorkers;
 
 namespace Stats.ThingTable;
 
-public static class RangedStoppingPowerColumnWorker
+public sealed class RangedStoppingPowerColumnWorker : StatDrawEntryColumnWorker<ThingAlike>
 {
-    public static NumberColumnWorker<ThingAlike> Make(ColumnDef _) => new(GetValue.Memoized());
-    private static readonly Func<ThingAlike, decimal> GetValue = thing =>
+    public static RangedStoppingPowerColumnWorker Make(ColumnDef _) => new();
+    protected override string GetStatDrawEntryLabel(ThingAlike thing)
     {
         var verb = thing.Def.Verbs.Primary();
         var defaultProj = verb?.defaultProjectile?.projectile;
 
-        return defaultProj?.stoppingPower.ToDecimal("F1") ?? 0m;
-    };
+        return defaultProj?.stoppingPower.ToString("F1") ?? "";
+    }
 }

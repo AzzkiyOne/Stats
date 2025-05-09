@@ -1,11 +1,9 @@
-﻿using System;
+﻿namespace Stats.ThingTable;
 
-namespace Stats.ThingTable;
-
-public static class RangedDamageColumnWorker
+public sealed class RangedDamageColumnWorker : NumberColumnWorker<ThingAlike>
 {
-    public static NumberColumnWorker<ThingAlike> Make(ColumnDef _) => new(GetValue.Memoized());
-    private static readonly Func<ThingAlike, decimal> GetValue = thing =>
+    public static RangedDamageColumnWorker Make(ColumnDef _) => new();
+    protected override decimal GetValue(ThingAlike thing)
     {
         var verb = thing.Def.Verbs.Primary();
         var defaultProj = verb?.defaultProjectile?.projectile;
@@ -16,5 +14,5 @@ public static class RangedDamageColumnWorker
         }
 
         return 0m;
-    };
+    }
 }

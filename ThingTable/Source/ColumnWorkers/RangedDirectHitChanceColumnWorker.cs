@@ -1,20 +1,20 @@
-﻿using System;
+﻿using Stats.ColumnWorkers;
 using Verse;
 
 namespace Stats.ThingTable;
 
-public static class RangedDirectHitChanceColumnWorker
+public sealed class RangedDirectHitChanceColumnWorker : StatDrawEntryColumnWorker<ThingAlike>
 {
-    public static NumberColumnWorker<ThingAlike> Make(ColumnDef _) => new(GetValue.Memoized(), "%");
-    private static readonly Func<ThingAlike, decimal> GetValue = thing =>
+    public static RangedDirectHitChanceColumnWorker Make(ColumnDef _) => new();
+    protected override string GetStatDrawEntryLabel(ThingAlike thing)
     {
         var verb = thing.Def.Verbs.Primary();
 
-        if (verb?.ForcedMissRadius == null)
+        if (verb?.ForcedMissRadius > 0f)
         {
-            return 0m;
+            return (1f / GenRadial.NumCellsInRadius(verb.ForcedMissRadius)).ToStringPercent();
         }
 
-        return (100f / GenRadial.NumCellsInRadius(verb.ForcedMissRadius)).ToDecimal("F1");
-    };
+        return "";
+    }
 }

@@ -1,20 +1,21 @@
-﻿using System;
+﻿using Stats.ColumnWorkers;
+using Verse;
 
 namespace Stats.ThingTable;
 
-public static class RangedPassableBuildingDamageFactorColumnWorker
+public sealed class RangedPassableBuildingDamageFactorColumnWorker : StatDrawEntryColumnWorker<ThingAlike>
 {
-    public static NumberColumnWorker<ThingAlike> Make(ColumnDef _) => new(GetValue.Memoized(), "%");
-    private static readonly Func<ThingAlike, decimal> GetValue = thing =>
+    public static RangedPassableBuildingDamageFactorColumnWorker Make(ColumnDef _) => new();
+    protected override string GetStatDrawEntryLabel(ThingAlike thing)
     {
         var verb = thing.Def.Verbs.Primary();
-        var defaultProj = verb?.defaultProjectile?.projectile;
+        var damageDef = verb?.defaultProjectile?.projectile?.damageDef;
 
-        if (defaultProj?.damageDef?.harmsHealth == true)
+        if (damageDef != null && damageDef.buildingDamageFactorPassable != 1f)
         {
-            return (defaultProj.damageDef.buildingDamageFactorPassable * 100f).ToDecimal("F0");
+            return damageDef.buildingDamageFactorPassable.ToStringPercent();
         }
 
-        return 0m;
-    };
+        return "";
+    }
 }

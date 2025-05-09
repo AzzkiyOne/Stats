@@ -1,19 +1,20 @@
-﻿using System;
+﻿using Stats.ColumnWorkers;
+using Verse;
 
 namespace Stats.ThingTable;
 
-public static class RangedAimingTimeColumnWorker
+public sealed class RangedAimingTimeColumnWorker : StatDrawEntryColumnWorker<ThingAlike>
 {
-    public static NumberColumnWorker<ThingAlike> Make(ColumnDef _) => new(GetValue.Memoized(), " s");
-    private static readonly Func<ThingAlike, decimal> GetValue = thing =>
+    public static RangedAimingTimeColumnWorker Make(ColumnDef _) => new();
+    protected override string GetStatDrawEntryLabel(ThingAlike thing)
     {
         var verb = thing.Def.Verbs.Primary();
 
-        if (verb?.warmupTime == null)
+        if (verb?.warmupTime > 0f)
         {
-            return 0m;
+            return $"{verb.warmupTime:0.##} {"LetterSecond".Translate()}";
         }
 
-        return verb.warmupTime.ToDecimal("F2");
-    };
+        return "";
+    }
 }

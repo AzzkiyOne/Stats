@@ -28,7 +28,6 @@
         <iconPath>UI/Icons/ColonistBar/Burning</iconPath>
         <stat>Flammability</stat>
         <statValueExplanationType>Unfinalized</statValueExplanationType>
-        <isNegative>true</isNegative>
         <workerFactory>Stats.ThingTable.StatColumnWorker.Make</workerFactory>
     </Stats.ThingTable.ColumnDef>
 
@@ -36,7 +35,6 @@
         <defName>Mass_ThingTableColumn</defName>
         <stat>Mass</stat>
         <statValueExplanationType>Unfinalized</statValueExplanationType>
-        <isNegative>true</isNegative>
         <workerFactory>Stats.ThingTable.StatColumnWorker.Make</workerFactory>
     </Stats.ThingTable.ColumnDef>
 
@@ -54,33 +52,30 @@
         <labelShort>Work</labelShort>
         <stat>WorkToMake</stat>
         <statValueExplanationType>Unfinalized</statValueExplanationType>
-        <isNegative>true</isNegative>
         <workerFactory>Stats.ThingTable.StatColumnWorker.Make</workerFactory>
     </Stats.ThingTable.ColumnDef>
 
-    <Stats.ThingTable.ColumnDef>
+    <!-- <Stats.ThingTable.ColumnDef>
         <defName>Beauty_ThingTableColumn</defName>
         <stat>Beauty</stat>
         <statValueExplanationType>Unfinalized</statValueExplanationType>
         <workerFactory>Stats.ThingTable.StatColumnWorker.Make</workerFactory>
-    </Stats.ThingTable.ColumnDef>
+    </Stats.ThingTable.ColumnDef> -->
 
-    <Stats.ThingTable.ColumnDef>
+    <!-- <Stats.ThingTable.ColumnDef>
         <defName>SellPriceFactor_ThingTableColumn</defName>
         <labelShort>$$$ %</labelShort>
         <stat>SellPriceFactor</stat>
-        <isNegative>true</isNegative>
         <workerFactory>Stats.ThingTable.StatColumnWorker.Make</workerFactory>
-    </Stats.ThingTable.ColumnDef>
+    </Stats.ThingTable.ColumnDef> -->
 
-    <Stats.ThingTable.ColumnDef>
+    <!-- <Stats.ThingTable.ColumnDef>
         <defName>DeteriorationRate_ThingTableColumn</defName>
         <labelShort>-HP/d</labelShort>
         <stat>DeteriorationRate</stat>
         <statValueFormatString>0.00/d</statValueFormatString>
-        <isNegative>true</isNegative>
         <workerFactory>Stats.ThingTable.StatColumnWorker.Make</workerFactory>
-    </Stats.ThingTable.ColumnDef>
+    </Stats.ThingTable.ColumnDef> -->
 
     <Stats.ThingTable.ColumnDef>
         <defName>ContentSource_ThingTableColumn</defName>
@@ -88,11 +83,11 @@
         <workerFactory>Stats.ThingTable.ContentSourceColumnWorker.Make</workerFactory>
     </Stats.ThingTable.ColumnDef>
 
-    <Stats.ThingTable.ColumnDef>
+    <!-- <Stats.ThingTable.ColumnDef>
         <defName>Nutrition_ThingTableColumn</defName>
         <stat>Nutrition</stat>
         <workerFactory>Stats.ThingTable.StatColumnWorker.Make</workerFactory>
-    </Stats.ThingTable.ColumnDef>
+    </Stats.ThingTable.ColumnDef> -->
 
     <Stats.ThingTable.ColumnDef>
         <defName>TechLevel_ThingTableColumn</defName>
@@ -275,7 +270,6 @@
         <defName>RangedCooldown_ThingTableColumn</defName>
         <labelShort>RCD</labelShort>
         <stat>RangedWeapon_Cooldown</stat>
-        <isNegative>true</isNegative>
         <workerFactory>Stats.ThingTable.StatColumnWorker.Make</workerFactory>
     </Stats.ThingTable.ColumnDef>
 
@@ -284,7 +278,6 @@
         <labelKey>RangedWarmupTime</labelKey>
         <labelShort>Aim t.</labelShort>
         <descriptionKey>Stat_Thing_Weapon_RangedWarmupTime_Desc</descriptionKey>
-        <isNegative>true</isNegative>
         <workerFactory>Stats.ThingTable.RangedAimingTimeColumnWorker.Make</workerFactory>
     </Stats.ThingTable.ColumnDef>
 
@@ -317,7 +310,6 @@
         <labelKey>MissRadius</labelKey>
         <labelShort>MR</labelShort>
         <descriptionKey>Stat_Thing_Weapon_MissRadius_Desc</descriptionKey>
-        <isNegative>true</isNegative>
         <workerFactory>Stats.ThingTable.RangedMissRadiusColumnWorker.Make</workerFactory>
     </Stats.ThingTable.ColumnDef>
     

@@ -1,11 +1,9 @@
-﻿using System;
+﻿namespace Stats.ThingTable;
 
-namespace Stats.ThingTable;
-
-public static class RangedBurstShotCountColumnWorker
+public sealed class RangedBurstShotCountColumnWorker : NumberColumnWorker<ThingAlike>
 {
-    public static NumberColumnWorker<ThingAlike> Make(ColumnDef _) => new(GetValue.Memoized());
-    private static readonly Func<ThingAlike, decimal> GetValue = thing =>
+    public static RangedBurstShotCountColumnWorker Make(ColumnDef _) => new();
+    protected override decimal GetValue(ThingAlike thing)
     {
         var verb = thing.Def.Verbs.Primary();
 
@@ -15,5 +13,5 @@ public static class RangedBurstShotCountColumnWorker
         }
 
         return 0m;
-    };
+    }
 }

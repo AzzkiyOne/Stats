@@ -1,12 +1,12 @@
-﻿using System;
+﻿using Stats.ColumnWorkers;
 
 namespace Stats.ThingTable;
 
-public static class RangedRangeColumnWorker
+public sealed class RangedRangeColumnWorker : StatDrawEntryColumnWorker<ThingAlike>
 {
-    public static NumberColumnWorker<ThingAlike> Make(ColumnDef _) => new(GetValue.Memoized());
-    private static readonly Func<ThingAlike, decimal> GetValue = thing =>
+    public static RangedRangeColumnWorker Make(ColumnDef _) => new();
+    protected override string GetStatDrawEntryLabel(ThingAlike thing)
     {
-        return thing.Def.Verbs.Primary()?.range.ToDecimal() ?? 0m;
-    };
+        return thing.Def.Verbs.Primary()?.range.ToString("F0") ?? "";
+    }
 }

@@ -8,23 +8,27 @@ namespace Stats.ThingTable.Compat.CE;
 
 public sealed class RangedCaliberColumnWorker : ColumnWorker<ThingAlike>
 {
-    private static readonly StatDef CaliberStatDef = DefDatabase<StatDef>.GetNamed("Caliber");
-    private static readonly Func<ThingAlike, string> GetCaliberName =
-        FunctionExtensions.Memoized((ThingAlike thing) =>
-        {
-            var statReq = StatRequest.For(thing.Def, thing.StuffDef);
-
-            return CaliberStatDef.Worker.GetStatDrawEntryLabel(
-                CaliberStatDef,
-                CaliberStatDef.Worker.GetValue(statReq),
-                ToStringNumberSense.Absolute,
-                statReq
-            ) ?? "";
-        });
     private RangedCaliberColumnWorker() : base(TableColumnCellStyle.String)
     {
     }
     public static RangedCaliberColumnWorker Make(ColumnDef _) => new();
+    private static readonly Func<ThingAlike, string> GetCaliberName =
+    FunctionExtensions.Memoized((ThingAlike thing) =>
+    {
+        var statRequest = StatRequest.For(thing.Def, thing.StuffDef);
+
+        if (StatDefOf.Caliber.Worker.ShouldShowFor(statRequest) == false)
+        {
+            return "";
+        }
+
+        return StatDefOf.Caliber.Worker.GetStatDrawEntryLabel(
+            StatDefOf.Caliber,
+            StatDefOf.Caliber.Worker.GetValue(statRequest),
+            ToStringNumberSense.Absolute,
+            statRequest
+        ) ?? "";
+    });
     public override Widget? GetTableCellWidget(ThingAlike thing)
     {
         var caliberName = GetCaliberName(thing);
@@ -34,14 +38,20 @@ public sealed class RangedCaliberColumnWorker : ColumnWorker<ThingAlike>
             return null;
         }
 
-        var statReq = StatRequest.For(thing.Def, thing.StuffDef);
-        var tooltip = CaliberStatDef.Worker.GetExplanationFull(
-            statReq,
+        var statRequest = StatRequest.For(thing.Def, thing.StuffDef);
+        var tooltip = StatDefOf.Caliber.Worker.GetExplanationFull(
+            statRequest,
             ToStringNumberSense.Absolute,
-            CaliberStatDef.Worker.GetValue(statReq)
+            StatDefOf.Caliber.Worker.GetValue(statRequest)
         );
+        var widget = new Label(caliberName);
 
-        return new Label(caliberName).Tooltip(tooltip);
+        if (tooltip?.Length > 0)
+        {
+            return widget.Tooltip(tooltip);
+        }
+
+        return widget;
     }
     public override FilterWidget<ThingAlike> GetFilterWidget(IEnumerable<ThingAlike> _)
     {
