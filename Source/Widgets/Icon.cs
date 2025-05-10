@@ -7,9 +7,11 @@ namespace Stats.Widgets;
 public sealed class Icon : Widget
 {
     public Texture2D Texture { get; set; }
-    public Icon(Texture2D texture)
+    private readonly float Scale;
+    public Icon(Texture2D texture, float scale = 1f)
     {
         Texture = texture;
+        Scale = scale;
     }
     public Icon(Texture2D texture, out Icon iconWidget) : this(texture)
     {
@@ -28,6 +30,6 @@ public sealed class Icon : Widget
             return;
         }
 
-        GUI.DrawTexture(rect, Texture);
+        Verse.Widgets.DrawTextureFitted(rect, Texture, Scale);
     }
 }

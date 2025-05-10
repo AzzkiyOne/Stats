@@ -7,7 +7,7 @@ namespace Stats;
 public sealed class BooleanColumnWorker<TObject> : ColumnWorker<TObject>
 {
     private readonly Func<TObject, bool> GetValue;
-    public BooleanColumnWorker(Func<TObject, bool> valueFunction) : base(TableColumnCellStyle.Boolean)
+    public BooleanColumnWorker(Func<TObject, bool> valueFunction) : base(ColumnCellStyle.Boolean)
     {
         GetValue = valueFunction;
     }

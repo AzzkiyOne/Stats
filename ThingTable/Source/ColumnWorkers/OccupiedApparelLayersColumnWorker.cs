@@ -28,7 +28,7 @@ public sealed class OccupiedApparelLayersColumnWorker : ColumnWorker<ThingAlike>
 
             return string.Join("\n", layerLabels);
         });
-    private OccupiedApparelLayersColumnWorker() : base(TableColumnCellStyle.String)
+    private OccupiedApparelLayersColumnWorker() : base(ColumnCellStyle.String)
     {
     }
     public static OccupiedApparelLayersColumnWorker Make(ColumnDef _) => new();

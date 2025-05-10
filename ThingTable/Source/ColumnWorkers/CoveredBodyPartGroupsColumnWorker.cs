@@ -35,7 +35,7 @@ public sealed class CoveredBodyPartGroupsColumnWorker : ColumnWorker<ThingAlike>
 
             return string.Join("\n", bodyPartGroupLabels);
         });
-    private CoveredBodyPartGroupsColumnWorker() : base(TableColumnCellStyle.String)
+    private CoveredBodyPartGroupsColumnWorker() : base(ColumnCellStyle.String)
     {
     }
     public static CoveredBodyPartGroupsColumnWorker Make(ColumnDef _) => new();

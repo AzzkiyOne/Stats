@@ -7,12 +7,18 @@ namespace Stats;
 public abstract class ColumnDef : Def, IColumnDef
 {
     public string? labelKey;
-    public string? descriptionKey;
     public string labelShort = "";
     public string LabelShort => labelShort;
+    public string? descriptionKey;
     public string Description => description;
     public string? iconPath;
     public Texture2D? Icon { get; private set; }
+    public Color iconColor = Color.white;
+    public Color IconColor => iconColor;
+    public float iconScale = 1f;
+    public float IconScale => iconScale;
+    public IColumnDef.LabelFormatter? labelFormat;
+    public IColumnDef.LabelFormatter LabelFormat => labelFormat!;
     public override void PostLoad()
     {
         base.PostLoad();
@@ -43,6 +49,15 @@ public abstract class ColumnDef : Def, IColumnDef
         if (iconPath?.Length > 0)
         {
             Icon = ContentFinder<Texture2D>.Get(iconPath);
+
+            if (labelFormat == null)
+            {
+                labelFormat = ColumnLabelFormat.LabelWithIcon;
+            }
+        }
+        else
+        {
+            labelFormat = ColumnLabelFormat.LabelOnly;
         }
     }
 }

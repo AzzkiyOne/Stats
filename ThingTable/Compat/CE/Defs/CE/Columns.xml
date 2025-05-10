@@ -17,7 +17,8 @@
 
     <Stats.ThingTable.ColumnDef>
         <defName>CE_ElectricArmorRating_ThingTableColumn</defName>
-        <labelShort>Armor (E)</labelShort>
+        <iconPath>UI/Commands/DesirePower</iconPath>
+        <labelFormat>Stats.ThingTable.ColumnLabelFormat.ArmorRating</labelFormat>
         <stat>ArmorRating_Electric</stat>
         <workerFactory>Stats.ThingTable.StatColumnWorker.Make</workerFactory>
     </Stats.ThingTable.ColumnDef>
@@ -64,8 +65,8 @@
 
     <Stats.ThingTable.ColumnDef>
         <defName>CE_IsOneHanded_ThingTableColumn</defName>
-        <labelShort>One-handed</labelShort>
         <iconPath>Things/Apparel/BallisticShield/CE_BallisticShield</iconPath>
+        <labelFormat>Stats.ColumnLabelFormat.IconOnly</labelFormat>
         <stat>OneHandedness</stat>
         <workerFactory>Stats.ThingTable.Compat.CE.IsOneHandedColumnWorker.Make</workerFactory>
     </Stats.ThingTable.ColumnDef>
@@ -78,7 +79,10 @@
 
     <Stats.ThingTable.ColumnDef>
         <defName>CE_MeleeSharpArmorPenetration_ThingTableColumn</defName>
-        <labelShort>AP (S)</labelShort>
+        <labelShort>AP</labelShort>
+        <iconPath>Things/Item/Equipment/WeaponMelee/Gladius</iconPath>
+        <iconColor>(160,178,181)</iconColor>
+        <iconScale>1.5</iconScale>
         <stat>MeleeWeapon_AverageArmorPenetration</stat>
         <statValueExplanationType>Full</statValueExplanationType>
         <workerFactory>Stats.ThingTable.Compat.CE.BinaryStatColumnWorker.MakeLeft</workerFactory>
@@ -86,7 +90,10 @@
 
     <Stats.ThingTable.ColumnDef>
         <defName>CE_MeleeBluntArmorPenetration_ThingTableColumn</defName>
-        <labelShort>AP (B)</labelShort>
+        <labelShort>AP</labelShort>
+        <iconPath>Things/Item/Equipment/WeaponMelee/Club</iconPath>
+        <iconColor>(160,178,181)</iconColor>
+        <iconScale>1.1</iconScale>
         <stat>MeleeWeapon_AverageArmorPenetration</stat>
         <statValueExplanationType>Full</statValueExplanationType>
         <workerFactory>Stats.ThingTable.Compat.CE.BinaryStatColumnWorker.MakeRight</workerFactory>
@@ -94,7 +101,7 @@
 
     <Stats.ThingTable.ColumnDef>
         <defName>CE_MeleeArmorPenetrationFactor_ThingTableColumn</defName>
-        <labelShort>AP % (M)</labelShort>
+        <labelShort>AP %</labelShort>
         <stat>MeleePenetrationFactor</stat>
         <statValueExplanationType>FinalizePart</statValueExplanationType>
         <workerFactory>Stats.ThingTable.StatColumnWorker.Make</workerFactory>

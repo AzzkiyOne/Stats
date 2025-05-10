@@ -30,7 +30,7 @@ public sealed class StuffCategoryColumnWorker : ColumnWorker<ThingAlike>
 
             return string.Join("\n", labels);
         });
-    private StuffCategoryColumnWorker() : base(TableColumnCellStyle.String)
+    private StuffCategoryColumnWorker() : base(ColumnCellStyle.String)
     {
     }
     public static StuffCategoryColumnWorker Make(ColumnDef _) => new();

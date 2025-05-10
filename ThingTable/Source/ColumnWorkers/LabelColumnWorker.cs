@@ -13,7 +13,7 @@ public sealed class LabelColumnWorker : ColumnWorker<ThingAlike>
                 ? thing.Def.LabelCap.RawText
                 : $"{thing.StuffDef.LabelCap} {thing.Def.label}";
         });
-    private LabelColumnWorker() : base(TableColumnCellStyle.String)
+    private LabelColumnWorker() : base(ColumnCellStyle.String)
     {
     }
     public static LabelColumnWorker Make(ColumnDef _) => new();

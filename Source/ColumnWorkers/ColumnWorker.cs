@@ -3,10 +3,20 @@ using Stats.Widgets;
 
 namespace Stats;
 
+// Column worker encapsulates a virtual property of a TObject (ThingAlike/GeneDef/etc).
+//
+// Column worker provides following abstractions:
+// - GetTableCellWidget: how to display values of the property.
+// - GetFilterWidget: what filter widget to use to filter by this property.
+// - Compare: how to compare two property values.
 public abstract class ColumnWorker<TObject>
 {
-    public TableColumnCellStyle CellStyle { get; }
-    protected ColumnWorker(TableColumnCellStyle cellStyle)
+    // Why is this not in ColumnDef?
+    //
+    // This part of a column representation is governed by column worker,
+    // because only column worker knows what type of data it encapsulates.
+    public ColumnCellStyle CellStyle { get; }
+    protected ColumnWorker(ColumnCellStyle cellStyle)
     {
         CellStyle = cellStyle;
     }

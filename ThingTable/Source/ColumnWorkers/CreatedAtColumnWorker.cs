@@ -31,7 +31,7 @@ public sealed class CreatedAtColumnWorker : ColumnWorker<ThingAlike>
 
             return craftBenchesDefs;
         });
-    private CreatedAtColumnWorker() : base(TableColumnCellStyle.String)
+    private CreatedAtColumnWorker() : base(ColumnCellStyle.String)
     {
     }
     public static CreatedAtColumnWorker Make(ColumnDef _) => new();

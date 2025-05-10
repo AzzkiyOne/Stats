@@ -6,6 +6,6 @@
         <label>Stats</label>
         <description>Open stats browser.</description>
         <tabWindowClass>Stats.Widgets.MainTabWindow</tabWindowClass>
-        <order>21</order>
+        <order>71</order>
     </MainButtonDef>
 </Defs>

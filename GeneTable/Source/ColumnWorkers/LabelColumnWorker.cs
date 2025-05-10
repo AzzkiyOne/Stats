@@ -6,7 +6,7 @@ namespace Stats.GeneTable;
 
 public sealed class LabelColumnWorker : ColumnWorker<GeneDef>
 {
-    private LabelColumnWorker() : base(TableColumnCellStyle.String)
+    private LabelColumnWorker() : base(ColumnCellStyle.String)
     {
     }
     public static LabelColumnWorker Make(ColumnDef _) => new();

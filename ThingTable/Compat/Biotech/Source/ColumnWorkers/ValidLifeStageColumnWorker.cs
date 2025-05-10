@@ -43,7 +43,7 @@ public sealed class ValidLifeStageColumnWorker : ColumnWorker<ThingAlike>
 
         return string.Join("\n", lifeStageLabels);
     });
-    private ValidLifeStageColumnWorker() : base(TableColumnCellStyle.String)
+    private ValidLifeStageColumnWorker() : base(ColumnCellStyle.String)
     {
     }
     public static ValidLifeStageColumnWorker Make(ColumnDef _) => new();

@@ -10,7 +10,7 @@ namespace Stats;
 public sealed class ContentSourceColumnWorker<TObject> : ColumnWorker<TObject>
 {
     private readonly Func<TObject, ModContentPack?> GetModContentPack;
-    public ContentSourceColumnWorker(Func<TObject, ModContentPack?> valueFunction) : base(TableColumnCellStyle.String)
+    public ContentSourceColumnWorker(Func<TObject, ModContentPack?> valueFunction) : base(ColumnCellStyle.String)
     {
         GetModContentPack = valueFunction;
     }

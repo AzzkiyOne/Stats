@@ -88,28 +88,6 @@ public sealed class GenericTable<TObject> : ITableWidget
     }
     private Widget CreateHeaderCell(IColumnDef<TObject> columnDef, Table.Column column)
     {
-        Widget cell;
-
-        if (columnDef.Icon != null)
-        {
-            cell = new Icon(columnDef.Icon);
-
-            if (columnDef.Worker.CellStyle == TableColumnCellStyle.Number)
-            {
-                cell = cell.PaddingRel(1f, 0f, 0f, 0f);
-            }
-            else if (columnDef.Worker.CellStyle == TableColumnCellStyle.Boolean)
-            {
-                cell = cell.PaddingRel(0.5f, 0f);
-            }
-
-            cell = new SingleElementContainer(cell);
-        }
-        else
-        {
-            cell = new Label(columnDef.LabelShort);
-        }
-
         void drawSortIndicator(Rect rect)
         {
             if (SortColumn == columnDef && Event.current.type == EventType.Repaint)
@@ -139,7 +117,7 @@ public sealed class GenericTable<TObject> : ITableWidget
             }
         }
 
-        return cell
+        return columnDef.LabelFormat(columnDef, columnDef.Worker.CellStyle)
             .PaddingAbs(cellPadHor, cellPadVer)
             .Background(drawSortIndicator)
             .ToButtonSubtle(

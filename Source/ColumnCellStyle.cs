@@ -2,7 +2,7 @@
 
 namespace Stats;
 
-public enum TableColumnCellStyle
+public enum ColumnCellStyle
 {
     Number = TextAnchor.LowerRight,
     String = TextAnchor.LowerLeft,

@@ -12,7 +12,7 @@ public abstract class NumberColumnWorker<TObject> : ColumnWorker<TObject>
     protected NumberColumnWorker(
         bool cached = true,
         Texture2D? icon = null
-    ) : base(TableColumnCellStyle.Number)
+    ) : base(ColumnCellStyle.Number)
     {
         GetCahcedValue = GetValue;
 

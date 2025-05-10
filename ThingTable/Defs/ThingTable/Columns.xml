@@ -25,6 +25,7 @@
 
     <Stats.ThingTable.ColumnDef>
         <defName>Flammability_ThingTableColumn</defName>
+        <labelShort>%</labelShort>
         <iconPath>UI/Icons/ColonistBar/Burning</iconPath>
         <stat>Flammability</stat>
         <statValueExplanationType>Unfinalized</statValueExplanationType>
@@ -110,7 +111,9 @@
 
     <Stats.ThingTable.ColumnDef>
         <defName>ColdInsulation_ThingTableColumn</defName>
-        <labelShort>Ins. (C)</labelShort>
+        <iconPath>UI/Buttons/ToggleHeatOverlay</iconPath>
+        <iconColor>(0.04,0.66,1)</iconColor>
+        <labelFormat>Stats.ColumnLabelFormat.IconOnly</labelFormat>
         <stat>Insulation_Cold</stat>
         <statValueExplanationType>FinalizePart</statValueExplanationType>
         <workerFactory>Stats.ThingTable.StatColumnWorker.Make</workerFactory>
@@ -118,7 +121,9 @@
 
     <Stats.ThingTable.ColumnDef>
         <defName>HeatInsulation_ThingTableColumn</defName>
-        <labelShort>Ins. (H)</labelShort>
+        <iconPath>UI/Buttons/ToggleHeatOverlay</iconPath>
+        <iconColor>(1,0.25,0.04)</iconColor>
+        <labelFormat>Stats.ColumnLabelFormat.IconOnly</labelFormat>
         <stat>Insulation_Heat</stat>
         <statValueExplanationType>FinalizePart</statValueExplanationType>
         <workerFactory>Stats.ThingTable.StatColumnWorker.Make</workerFactory>
@@ -126,7 +131,10 @@
 
     <Stats.ThingTable.ColumnDef>
         <defName>SharpArmorRating_ThingTableColumn</defName>
-        <labelShort>Armor (S)</labelShort>
+        <iconPath>Things/Item/Equipment/WeaponMelee/Gladius</iconPath>
+        <iconColor>(160,178,181)</iconColor>
+        <iconScale>1.5</iconScale>
+        <labelFormat>Stats.ThingTable.ColumnLabelFormat.ArmorRating</labelFormat>
         <stat>ArmorRating_Sharp</stat>
         <statValueExplanationType>FinalizePart</statValueExplanationType>
         <workerFactory>Stats.ThingTable.StatColumnWorker.Make</workerFactory>
@@ -134,7 +142,10 @@
 
     <Stats.ThingTable.ColumnDef>
         <defName>BluntArmorRating_ThingTableColumn</defName>
-        <labelShort>Armor (B)</labelShort>
+        <iconPath>Things/Item/Equipment/WeaponMelee/Club</iconPath>
+        <iconColor>(160,178,181)</iconColor>
+        <iconScale>1.1</iconScale>
+        <labelFormat>Stats.ThingTable.ColumnLabelFormat.ArmorRating</labelFormat>
         <stat>ArmorRating_Blunt</stat>
         <statValueExplanationType>FinalizePart</statValueExplanationType>
         <workerFactory>Stats.ThingTable.StatColumnWorker.Make</workerFactory>
@@ -142,7 +153,8 @@
 
     <Stats.ThingTable.ColumnDef>
         <defName>HeatArmorRating_ThingTableColumn</defName>
-        <labelShort>Armor (H)</labelShort>
+        <iconPath>UI/Icons/ColonistBar/Burning</iconPath>
+        <labelFormat>Stats.ThingTable.ColumnLabelFormat.ArmorRating</labelFormat>
         <stat>ArmorRating_Heat</stat>
         <statValueExplanationType>FinalizePart</statValueExplanationType>
         <workerFactory>Stats.ThingTable.StatColumnWorker.Make</workerFactory>
@@ -178,7 +190,7 @@
 
     <Stats.ThingTable.ColumnDef>
         <defName>MeleeDPS_ThingTableColumn</defName>
-        <labelShort>DPS (M)</labelShort>
+        <labelShort>DPS</labelShort>
         <stat>MeleeWeapon_AverageDPS</stat>
         <statValueExplanationType>Full</statValueExplanationType>
         <workerFactory>Stats.ThingTable.StatColumnWorker.Make</workerFactory>
@@ -186,7 +198,7 @@
 
     <Stats.ThingTable.ColumnDef>
         <defName>MeleeArmorPenetration_ThingTableColumn</defName>
-        <labelShort>AP (M)</labelShort>
+        <labelShort>AP</labelShort>
         <stat>MeleeWeapon_AverageArmorPenetration</stat>
         <workerFactory>Stats.ThingTable.StatColumnWorker.Make</workerFactory>
     </Stats.ThingTable.ColumnDef>
@@ -196,15 +208,16 @@
         <labelKey>Damage</labelKey>
         <descriptionKey>Stat_Thing_Damage_Desc</descriptionKey>
         <iconPath>UI/Commands/Attack</iconPath>
+        <labelFormat>Stats.ColumnLabelFormat.IconOnly</labelFormat>
         <workerFactory>Stats.ThingTable.RangedDamageColumnWorker.Make</workerFactory>
     </Stats.ThingTable.ColumnDef>
 
     <Stats.ThingTable.ColumnDef>
         <defName>RangedStoppingPower_ThingTableColumn</defName>
         <labelKey>StoppingPower</labelKey>
-        <labelShort>Power</labelShort>
         <descriptionKey>StoppingPowerExplanation</descriptionKey>
         <iconPath>UI/Icons/Trainables/Obedience</iconPath>
+        <labelFormat>Stats.ColumnLabelFormat.IconOnly</labelFormat>
         <workerFactory>Stats.ThingTable.RangedStoppingPowerColumnWorker.Make</workerFactory>
     </Stats.ThingTable.ColumnDef>
 
@@ -219,6 +232,7 @@
     <Stats.ThingTable.ColumnDef>
         <defName>RangedRPM_ThingTableColumn</defName>
         <labelKey>BurstShotFireRate</labelKey>
+        <labelShort>RPM</labelShort>
         <descriptionKey>Stat_Thing_Weapon_BurstShotFireRate_Desc</descriptionKey>
         <workerFactory>Stats.ThingTable.RangedRPMColumnWorker.Make</workerFactory>
     </Stats.ThingTable.ColumnDef>
@@ -226,7 +240,7 @@
     <Stats.ThingTable.ColumnDef>
         <defName>RangedBurstShotCount_ThingTableColumn</defName>
         <labelKey>BurstShotCount</labelKey>
-        <labelShort>BSC</labelShort>
+        <labelShort>Shots</labelShort>
         <descriptionKey>Stat_Thing_Weapon_BurstShotCount_Desc</descriptionKey>
         <workerFactory>Stats.ThingTable.RangedBurstShotCountColumnWorker.Make</workerFactory>
     </Stats.ThingTable.ColumnDef>
@@ -240,35 +254,39 @@
 
     <Stats.ThingTable.ColumnDef>
         <defName>RangedTouchAccuracy_ThingTableColumn</defName>
-        <labelShort>Acc. (3)</labelShort>
+        <labelShort>3</labelShort>
+        <iconPath>Things/Mote/FeedbackShoot</iconPath>
         <stat>AccuracyTouch</stat>
         <workerFactory>Stats.ThingTable.StatColumnWorker.Make</workerFactory>
     </Stats.ThingTable.ColumnDef>
 
     <Stats.ThingTable.ColumnDef>
         <defName>RangedShortAccuracy_ThingTableColumn</defName>
-        <labelShort>Acc. (12)</labelShort>
+        <labelShort>12</labelShort>
+        <iconPath>Things/Mote/FeedbackShoot</iconPath>
         <stat>AccuracyShort</stat>
         <workerFactory>Stats.ThingTable.StatColumnWorker.Make</workerFactory>
     </Stats.ThingTable.ColumnDef>
 
     <Stats.ThingTable.ColumnDef>
         <defName>RangedMediumAccuracy_ThingTableColumn</defName>
-        <labelShort>Acc. (25)</labelShort>
+        <labelShort>25</labelShort>
+        <iconPath>Things/Mote/FeedbackShoot</iconPath>
         <stat>AccuracyMedium</stat>
         <workerFactory>Stats.ThingTable.StatColumnWorker.Make</workerFactory>
     </Stats.ThingTable.ColumnDef>
 
     <Stats.ThingTable.ColumnDef>
         <defName>RangedLongAccuracy_ThingTableColumn</defName>
-        <labelShort>Acc. (40)</labelShort>
+        <labelShort>40</labelShort>
+        <iconPath>Things/Mote/FeedbackShoot</iconPath>
         <stat>AccuracyLong</stat>
         <workerFactory>Stats.ThingTable.StatColumnWorker.Make</workerFactory>
     </Stats.ThingTable.ColumnDef>
 
     <Stats.ThingTable.ColumnDef>
         <defName>RangedCooldown_ThingTableColumn</defName>
-        <labelShort>RCD</labelShort>
+        <labelShort>CD</labelShort>
         <stat>RangedWeapon_Cooldown</stat>
         <workerFactory>Stats.ThingTable.StatColumnWorker.Make</workerFactory>
     </Stats.ThingTable.ColumnDef>
@@ -284,7 +302,9 @@
     <Stats.ThingTable.ColumnDef>
         <defName>RangedPassableBuildingDamageFactor_ThingTableColumn</defName>
         <labelKey>BuildingDamageFactorPassable</labelKey>
-        <labelShort>BDF (P)</labelShort>
+        <iconPath>Things/Building/Linked/Sandbags_MenuIcon</iconPath>
+        <iconColor>(139,122,87)</iconColor>
+        <labelFormat>Stats.ThingTable.ColumnLabelFormat.DamageFactorTo</labelFormat>
         <descriptionKey>BuildingDamageFactorPassableExplanation</descriptionKey>
         <workerFactory>Stats.ThingTable.RangedPassableBuildingDamageFactorColumnWorker.Make</workerFactory>
     </Stats.ThingTable.ColumnDef>
@@ -292,7 +312,9 @@
     <Stats.ThingTable.ColumnDef>
         <defName>RangedImpassableBuildingDamageFactor_ThingTableColumn</defName>
         <labelKey>BuildingDamageFactorImpassable</labelKey>
-        <labelShort>BDF (I)</labelShort>
+        <iconPath>Things/Building/Linked/WallBricks_MenuIcon</iconPath>
+        <iconColor>(105,95,97)</iconColor>
+        <labelFormat>Stats.ThingTable.ColumnLabelFormat.DamageFactorTo</labelFormat>
         <descriptionKey>BuildingDamageFactorImpassableExplanation</descriptionKey>
         <workerFactory>Stats.ThingTable.RangedImpassableBuildingDamageFactorColumnWorker.Make</workerFactory>
     </Stats.ThingTable.ColumnDef>
@@ -300,7 +322,7 @@
     <Stats.ThingTable.ColumnDef>
         <defName>RangedDirectHitChance_ThingTableColumn</defName>
         <labelKey>DirectHitChance</labelKey>
-        <labelShort>DH %</labelShort>
+        <labelShort>Hit %</labelShort>
         <descriptionKey>Stat_Thing_Weapon_DirectHitChance_Desc</descriptionKey>
         <workerFactory>Stats.ThingTable.RangedDirectHitChanceColumnWorker.Make</workerFactory>
     </Stats.ThingTable.ColumnDef>
@@ -317,7 +339,9 @@
         <defName>CountsAsClothingForNudity_ThingTableColumn</defName>
         <labelKey>Stat_Thing_Apparel_CountsAsClothingNudity_Name</labelKey>
         <descriptionKey>Stat_Thing_Apparel_CountsAsClothingNudity_Desc</descriptionKey>
-        <iconPath>Things/Pawn/Humanlike/Bodies/Naked_Female_south</iconPath>
+        <iconPath>StatsMod/UI/Icons/NudistPawn</iconPath>
+        <iconScale>1.2</iconScale>
+        <labelFormat>Stats.ColumnLabelFormat.IconOnly</labelFormat>
         <workerFactory>Stats.ThingTable.CountsAsClothingForNudityColumnWorker.Make</workerFactory>
     </Stats.ThingTable.ColumnDef>
 

@@ -9,7 +9,7 @@ namespace Stats.ThingTable.Compat.CE;
 
 public sealed class RangedCaliberColumnWorker : ColumnWorker<ThingAlike>
 {
-    private RangedCaliberColumnWorker() : base(TableColumnCellStyle.String)
+    private RangedCaliberColumnWorker() : base(ColumnCellStyle.String)
     {
     }
     public static RangedCaliberColumnWorker Make(ColumnDef _) => new();

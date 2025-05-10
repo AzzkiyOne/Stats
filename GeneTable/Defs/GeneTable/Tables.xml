@@ -5,7 +5,7 @@
     <Stats.GeneTable.TableDef>
         <defName>GeneTable</defName>
         <label>genes</label>
-        <iconPath>UI/Icons/Genes/GeneBackground_Xenogene</iconPath>
+        <iconPath>UI/Gizmos/ViewGenes</iconPath>
         <workerFactory>Stats.GeneTable.GeneTableWorker.Make</workerFactory>
         <columns>
             <li>Complexity_GeneTableColumn</li>

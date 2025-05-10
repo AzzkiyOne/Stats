@@ -7,7 +7,7 @@ namespace Stats.ThingTable;
 
 public sealed class TechLevelColumnWorker : ColumnWorker<ThingAlike>
 {
-    private TechLevelColumnWorker() : base(TableColumnCellStyle.String)
+    private TechLevelColumnWorker() : base(ColumnCellStyle.String)
     {
     }
     public static TechLevelColumnWorker Make(ColumnDef _) => new();

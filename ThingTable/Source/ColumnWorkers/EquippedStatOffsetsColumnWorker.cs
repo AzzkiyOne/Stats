@@ -10,7 +10,7 @@ namespace Stats.ThingTable;
 
 public sealed class EquippedStatOffsetsColumnWorker : ColumnWorker<ThingAlike>
 {
-    private EquippedStatOffsetsColumnWorker() : base(TableColumnCellStyle.String)
+    private EquippedStatOffsetsColumnWorker() : base(ColumnCellStyle.String)
     {
     }
     public static EquippedStatOffsetsColumnWorker Make(ColumnDef _) => new();
