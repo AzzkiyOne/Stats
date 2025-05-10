@@ -1,12 +1,11 @@
-﻿using System;
-using RimWorld;
+﻿using RimWorld;
 
 namespace Stats.ThingTable;
 
-public static class IsDestroyedWhenAllChargesSpentColumnWorker
+public sealed class IsDestroyedWhenAllChargesSpentColumnWorker : BooleanColumnWorker<ThingAlike>
 {
-    public static BooleanColumnWorker<ThingAlike> Make(ColumnDef _) => new(GetValue);
-    private static readonly Func<ThingAlike, bool> GetValue = thing =>
+    public static IsDestroyedWhenAllChargesSpentColumnWorker Make(ColumnDef _) => new();
+    protected override bool GetValue(ThingAlike thing)
     {
         var reloadableCompProperties = thing.Def.GetCompProperties<CompProperties_ApparelReloadable>();
 
@@ -16,5 +15,5 @@ public static class IsDestroyedWhenAllChargesSpentColumnWorker
         }
 
         return reloadableCompProperties.destroyOnEmpty;
-    };
+    }
 }

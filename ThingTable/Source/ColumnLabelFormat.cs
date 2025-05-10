@@ -18,7 +18,7 @@ public static class ColumnLabelFormat
     {
         return new HorizontalContainer(
             [
-                new Icon(ArmorIcon).Color(new(105,105,105)).PaddingRel(1f, 0f, 0f, 0f),
+                new Icon(ArmorIcon).Color(new(0.4f,0.4f,0.4f)).PaddingRel(1f, 0f, 0f, 0f),
                 new Icon(columnDef.Icon!, columnDef.IconScale).Color(columnDef.IconColor)
             ],
             Globals.GUI.PadSm,

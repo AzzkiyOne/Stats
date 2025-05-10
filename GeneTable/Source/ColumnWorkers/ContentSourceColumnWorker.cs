@@ -2,7 +2,14 @@
 
 namespace Stats.GeneTable;
 
-public static class ContentSourceColumnWorker
+public sealed class ContentSourceColumnWorker : Stats.ContentSourceColumnWorker<GeneDef>
 {
-    public static ContentSourceColumnWorker<GeneDef> Make(ColumnDef _) => new(geneDef => geneDef.modContentPack);
+    private ContentSourceColumnWorker() : base(false)
+    {
+    }
+    public static ContentSourceColumnWorker Make(ColumnDef _) => new();
+    protected override ModContentPack? GetModContentPack(GeneDef geneDef)
+    {
+        return geneDef.modContentPack;
+    }
 }

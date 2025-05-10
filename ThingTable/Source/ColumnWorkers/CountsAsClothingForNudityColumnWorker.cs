@@ -1,12 +1,13 @@
-﻿using System;
+﻿namespace Stats.ThingTable;
 
-namespace Stats.ThingTable;
-
-public static class CountsAsClothingForNudityColumnWorker
+public sealed class CountsAsClothingForNudityColumnWorker : BooleanColumnWorker<ThingAlike>
 {
-    public static BooleanColumnWorker<ThingAlike> Make(ColumnDef _) => new(GetValue);
-    public static readonly Func<ThingAlike, bool> GetValue = thing =>
+    private CountsAsClothingForNudityColumnWorker() : base(false)
+    {
+    }
+    public static CountsAsClothingForNudityColumnWorker Make(ColumnDef _) => new();
+    protected override bool GetValue(ThingAlike thing)
     {
         return thing.Def.apparel?.countsAsClothingForNudity ?? false;
-    };
+    }
 }

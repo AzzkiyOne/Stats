@@ -4,14 +4,20 @@ using Stats.Widgets;
 
 namespace Stats;
 
-public sealed class BooleanColumnWorker<TObject> : ColumnWorker<TObject>
+public abstract class BooleanColumnWorker<TObject> : ColumnWorker<TObject>
 {
-    private readonly Func<TObject, bool> GetValue;
-    public BooleanColumnWorker(Func<TObject, bool> valueFunction) : base(ColumnCellStyle.Boolean)
+    private readonly Func<TObject, bool> GetCachedValue;
+    protected BooleanColumnWorker(bool cached = true) : base(ColumnCellStyle.Boolean)
     {
-        GetValue = valueFunction;
+        GetCachedValue = GetValue;
+
+        if (cached)
+        {
+            GetCachedValue = GetCachedValue.Memoized();
+        }
     }
-    public override Widget? GetTableCellWidget(TObject @object)
+    protected abstract bool GetValue(TObject @object);
+    public sealed override Widget? GetTableCellWidget(TObject @object)
     {
         var value = GetValue(@object);
 
@@ -25,12 +31,12 @@ public sealed class BooleanColumnWorker<TObject> : ColumnWorker<TObject>
                 .PaddingRel(0.5f, 0f)
         );
     }
-    public override FilterWidget<TObject> GetFilterWidget(IEnumerable<TObject> _)
+    public sealed override FilterWidget<TObject> GetFilterWidget(IEnumerable<TObject> _)
     {
-        return new BooleanFilter<TObject>(GetValue);
+        return new BooleanFilter<TObject>(GetCachedValue);
     }
-    public override int Compare(TObject object1, TObject object2)
+    public sealed override int Compare(TObject object1, TObject object2)
     {
-        return GetValue(object1).CompareTo(GetValue(object2));
+        return GetCachedValue(object1).CompareTo(GetCachedValue(object2));
     }
 }

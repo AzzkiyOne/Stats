@@ -8,17 +8,17 @@ namespace Stats;
 public abstract class NumberColumnWorker<TObject> : ColumnWorker<TObject>
 {
     private readonly Texture2D? Icon = null;
-    private readonly Func<TObject, decimal> GetCahcedValue;
+    private readonly Func<TObject, decimal> GetCachedValue;
     protected NumberColumnWorker(
         bool cached = true,
         Texture2D? icon = null
     ) : base(ColumnCellStyle.Number)
     {
-        GetCahcedValue = GetValue;
+        GetCachedValue = GetValue;
 
         if (cached)
         {
-            GetCahcedValue = GetCahcedValue.Memoized();
+            GetCachedValue = GetCachedValue.Memoized();
         }
 
         Icon = icon;
@@ -51,10 +51,10 @@ public abstract class NumberColumnWorker<TObject> : ColumnWorker<TObject>
     }
     public sealed override FilterWidget<TObject> GetFilterWidget(IEnumerable<TObject> _)
     {
-        return new NumberFilter<TObject>(GetCahcedValue);
+        return new NumberFilter<TObject>(GetCachedValue);
     }
     public sealed override int Compare(TObject object1, TObject object2)
     {
-        return GetCahcedValue(object1).CompareTo(GetCahcedValue(object2));
+        return GetCachedValue(object1).CompareTo(GetCachedValue(object2));
     }
 }

@@ -226,7 +226,7 @@ public abstract class NToManyFilter<TObject, TExprLhs, TOption> : FilterWidgetWi
             var position = UI.MousePositionOnUIInverted;
             var size = InitialSize;
             // Has to be dynamic because the user can change screen size in game.
-            var maxHeight = UI.screenHeight / 2f;
+            var maxHeight = UI.screenHeight / 2.5f;
 
             if (size.y > maxHeight)
             {

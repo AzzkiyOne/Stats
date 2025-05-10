@@ -340,7 +340,6 @@
         <labelKey>Stat_Thing_Apparel_CountsAsClothingNudity_Name</labelKey>
         <descriptionKey>Stat_Thing_Apparel_CountsAsClothingNudity_Desc</descriptionKey>
         <iconPath>StatsMod/UI/Icons/NudistPawn</iconPath>
-        <iconScale>1.2</iconScale>
         <labelFormat>Stats.ColumnLabelFormat.IconOnly</labelFormat>
         <workerFactory>Stats.ThingTable.CountsAsClothingForNudityColumnWorker.Make</workerFactory>
     </Stats.ThingTable.ColumnDef>

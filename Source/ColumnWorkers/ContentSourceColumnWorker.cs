@@ -7,14 +7,20 @@ using Verse;
 
 namespace Stats;
 
-public sealed class ContentSourceColumnWorker<TObject> : ColumnWorker<TObject>
+public abstract class ContentSourceColumnWorker<TObject> : ColumnWorker<TObject>
 {
-    private readonly Func<TObject, ModContentPack?> GetModContentPack;
-    public ContentSourceColumnWorker(Func<TObject, ModContentPack?> valueFunction) : base(ColumnCellStyle.String)
+    private readonly Func<TObject, ModContentPack?> GetCachedModContentPack;
+    protected ContentSourceColumnWorker(bool cached = true) : base(ColumnCellStyle.String)
     {
-        GetModContentPack = valueFunction;
+        GetCachedModContentPack = GetModContentPack;
+
+        if (cached)
+        {
+            GetCachedModContentPack = GetCachedModContentPack.Memoized();
+        }
     }
-    public override Widget? GetTableCellWidget(TObject @object)
+    protected abstract ModContentPack? GetModContentPack(TObject @object);
+    public sealed override Widget? GetTableCellWidget(TObject @object)
     {
         var mod = GetModContentPack(@object);
 
@@ -25,15 +31,15 @@ public sealed class ContentSourceColumnWorker<TObject> : ColumnWorker<TObject>
 
         return ModContentPackToWidget(mod);
     }
-    public override FilterWidget<TObject> GetFilterWidget(IEnumerable<TObject> tableRecords)
+    public sealed override FilterWidget<TObject> GetFilterWidget(IEnumerable<TObject> tableRecords)
     {
         var modContentPacks = tableRecords
-            .Select(GetModContentPack)
+            .Select(GetCachedModContentPack)
             .Distinct()
             .OrderBy(mod => mod?.Name ?? "");
 
         return new OneToManyFilter<TObject, ModContentPack?>(
-            GetModContentPack,
+            GetCachedModContentPack,
             modContentPacks,
             mod => mod == null ? new Label("") : ModContentPackToWidget(mod)
         );
@@ -42,10 +48,10 @@ public sealed class ContentSourceColumnWorker<TObject> : ColumnWorker<TObject>
     {
         return new Label(mod.Name).Tooltip(mod.PackageIdPlayerFacing);
     }
-    public override int Compare(TObject object1, TObject object2)
+    public sealed override int Compare(TObject object1, TObject object2)
     {
-        var modName1 = GetModContentPack(object1)?.Name;
-        var modName2 = GetModContentPack(object2)?.Name;
+        var modName1 = GetCachedModContentPack(object1)?.Name;
+        var modName2 = GetCachedModContentPack(object2)?.Name;
 
         return Comparer.Default.Compare(modName1, modName2);
     }
