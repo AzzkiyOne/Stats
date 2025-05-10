@@ -13,7 +13,7 @@ internal sealed class Table
     private float TotalBodyRowsHeight = 0f;
     private Vector2 ScrollPos = new();
     private static Color ColumnSeparatorLineColor = new(1f, 1f, 1f, 0.05f);
-    private bool ShouldRecalcLayout = true;
+    private bool ShouldRecalcLayout = false;
     public Table(
         List<Column> columns,
         List<TableRow> headerRows,
@@ -26,12 +26,14 @@ internal sealed class Table
 
         AttachTo(headerRows);
         AttachTo(bodyRows);
+        RecalcLayout();
     }
     public void Draw(Rect rect)
     {
         if (ShouldRecalcLayout && Event.current.type == EventType.Layout)
         {
-            RecalcLayout();
+            TEMP_RecalcOnlyHeaders();
+            ShouldRecalcLayout = false;
         }
 
         // Probably could cache this.
@@ -210,6 +212,33 @@ internal sealed class Table
     {
         ShouldRecalcLayout = true;
     }
+    private void TEMP_RecalcOnlyHeaders()
+    {
+        foreach (var column in Columns)
+        {
+            column.Width = 0f;
+        }
+
+        TotalHeaderRowsHeight = 0f;
+        TotalBodyRowsHeight = 0f;
+
+        foreach (var row in HeaderRows)
+        {
+            if (row.IsVisible)
+            {
+                row.TEMP_RecalcLayout();
+                TotalHeaderRowsHeight += row.Height;
+            }
+        }
+
+        foreach (var row in BodyRows)
+        {
+            if (row.IsVisible)
+            {
+                TotalBodyRowsHeight += row.Height;
+            }
+        }
+    }
     // TODO: Could it be faster to recalc by column?
     private void RecalcLayout()
     {
@@ -221,7 +250,6 @@ internal sealed class Table
         //ScrollPos.y = 0f;
         TotalHeaderRowsHeight = RecalcRows(HeaderRows);
         TotalBodyRowsHeight = RecalcRows(BodyRows);
-        ShouldRecalcLayout = false;
     }
     private static float RecalcRows(List<TableRow> rows)
     {
@@ -231,7 +259,8 @@ internal sealed class Table
         {
             if (row.IsVisible)
             {
-                totalHeight += row.RecalcLayout();
+                row.RecalcLayout();
+                totalHeight += row.Height;
             }
         }
 
@@ -249,6 +278,7 @@ internal sealed class Table
     {
         public bool IsPinned;
         public float Width;
+        public float InitialWidth;
         public readonly TextAnchor TextAnchor;
         public Column(bool isPinned, TextAnchor textAnchor)
         {

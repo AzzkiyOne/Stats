@@ -16,6 +16,7 @@ public abstract class FilterWidgetWithInputField<TObject, TExprLhs, TExprRhs> : 
     private static readonly TipSignal ResetButtonTooltip = "Reset";
     private readonly FloatMenu OperatorsMenu;
     private const float OperatorButtonPadding = Globals.GUI.Pad;
+    private static readonly Color OperatorColor = new(1f, 0.98f, 0.62f);
     protected FilterWidgetWithInputField(GenExpression expression) : base(expression)
     {
         ResetButtonSize = new Vector2(Text.LineHeight, Text.LineHeight);
@@ -34,9 +35,10 @@ public abstract class FilterWidgetWithInputField<TObject, TExprLhs, TExprRhs> : 
 
                 expression.Operator = @operator;
             }
+            var operatorString = @operator.Symbol.Colorize(OperatorColor);
             var optionLabel = @operator.Description.Length > 0
-                    ? $"{@operator.Symbol} - {@operator.Description}"
-                    : @operator.Symbol;
+                    ? $"{operatorString} - {@operator.Description}"
+                    : operatorString;
             var option = new FloatMenuOption(optionLabel, handleOptionClick);
 
             operatorsMenuOptions.Add(option);
@@ -119,7 +121,13 @@ public abstract class FilterWidgetWithInputField<TObject, TExprLhs, TExprRhs> : 
             TooltipHandler.TipRegion(rect, expression.Operator.Description);
         }
 
-        return Widgets.Draw.ButtonTextSubtle(rect, expression.Operator.Symbol, OperatorButtonPadding);
+        var color = Color.white;
+        if (expression.IsEmpty == false)
+        {
+            color = OperatorColor;
+        }
+
+        return Widgets.Draw.ButtonTextSubtle(rect, expression.Operator.Symbol, color, OperatorButtonPadding);
     }
     protected abstract Vector2 CalcInputFieldContentSize();
     private Vector2 CalcInputFieldSize()

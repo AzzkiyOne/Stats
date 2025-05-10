@@ -115,23 +115,30 @@ internal class TableRow
             IsPinned = !_IsPinned;
         }
     }
-    public float RecalcLayout()
+    public void TEMP_RecalcLayout()
+    {
+        for (int i = 0; i < Cells.Count; i++)
+        {
+            var cell = Cells[i];
+            var cellSize = cell.GetSize();
+            var column = Parent!.Columns[i];
+
+            column.Width = Mathf.Max(column.InitialWidth, cellSize.x);
+        }
+    }
+    public void RecalcLayout()
     {
         Height = 0f;
 
         for (int i = 0; i < Cells.Count; i++)
         {
-            Widget? cell = Cells[i];
+            var cell = Cells[i];
             var cellSize = cell.GetSize();
             var column = Parent!.Columns[i];
 
-            column.Width = Mathf.Max(column.Width, cellSize.x);
-            // This seems pointless (at least for now). But i'll just leave it for
-            // correctness sake.
+            column.Width = column.InitialWidth = Mathf.Max(column.Width, cellSize.x);
             Height = Mathf.Max(Height, cellSize.y);
         }
-
-        return Height;
     }
 
     public delegate void OnDraw(Rect rect, bool isHovered, int index);

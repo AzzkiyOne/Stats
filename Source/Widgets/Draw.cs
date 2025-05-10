@@ -33,7 +33,7 @@ public static class Draw
         Verse.Widgets.DrawLineVertical(x, y, length);
         GUI.color = origGUIColor;
     }
-    internal static bool ButtonTextSubtle(Rect rect, string text, float padHor = 0f)
+    internal static bool ButtonTextSubtle(Rect rect, string text, Color textColor, float padHor = 0f)
     {
         var mouseIsOverRect = Mouse.IsOver(rect);
         var origGUIColor = GUI.color;
@@ -55,11 +55,16 @@ public static class Draw
             rect.y -= ButtonSubtleHoverOffset;
         }
 
+        GUI.color = textColor;
         Verse.Widgets.Label(rect, text);
 
         GUI.color = origGUIColor;
 
         return wasClicked;
+    }
+    internal static bool ButtonTextSubtle(Rect rect, string text, float padHor = 0f)
+    {
+        return ButtonTextSubtle(rect, text, Color.white, padHor);
     }
     internal static bool ButtonImageSubtle(Rect rect, Texture2D texture, float textureScale = 0.7f)
     {
