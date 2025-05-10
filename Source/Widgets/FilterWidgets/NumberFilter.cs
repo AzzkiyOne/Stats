@@ -16,6 +16,10 @@ public sealed class NumberFilter<TObject> : FilterWidgetWithInputField<TObject, 
     {
         Expression = expression;
     }
+    protected override Vector2 CalcInputFieldContentSize()
+    {
+        return Text.CalcSize(Expression.TextFieldText);
+    }
     protected override void DrawInputField(Rect rect)
     {
         if (Expression.InputIsValid == false)
@@ -32,7 +36,7 @@ public sealed class NumberFilter<TObject> : FilterWidgetWithInputField<TObject, 
 
     private sealed class NumberExpression : GenExpression
     {
-        public override IEnumerable<GenericOperator> SupportedOperators => [
+        public override IEnumerable<GenericOperator> SupportedOperators { get; } = [
             Operators.IsEqualTo.Instance,
             Operators.IsNotEqualTo.Instance,
             Operators.IsGreaterThan.Instance,
@@ -81,14 +85,13 @@ public sealed class NumberFilter<TObject> : FilterWidgetWithInputField<TObject, 
                 }
             }
         }
-        public override string RhsString => _TextFieldText;
         public bool InputIsValid { get; private set; } = true;
         public NumberExpression(Func<TObject, decimal> lhs) : base(lhs, 0m)
         {
         }
-        public override void Clear()
+        public override void Reset()
         {
-            base.Clear();
+            base.Reset();
 
             Rhs = 0m;
             _TextFieldText = "";

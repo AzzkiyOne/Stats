@@ -15,11 +15,10 @@ public abstract class FilterWidget<TObject> : Widget
 
     public abstract class AbsExpression
     {
-        public abstract string RhsString { get; }
         public abstract bool IsEmpty { get; }
         public abstract event Action<AbsExpression> OnChange;
         public abstract bool Eval(TObject thing);
-        public abstract void Clear();
+        public abstract void Reset();
         public abstract void NotifyChanged();
     }
 }
@@ -50,10 +49,6 @@ public abstract class FilterWidget<T, TExprLhs, TExprRhs> : FilterWidget<T> wher
                 OnChange?.Invoke(this);
             }
         }
-        // TODO: !!! Doing this can generate temporary strings on each frame.
-        // - See if this is a problem. I have a suspicion that the compiler can optimize this case.
-        // - Check overrides.
-        public override string RhsString => _Rhs.ToString();
         private GenericOperator _Operator = EmptyOperator.Instance;
         public GenericOperator Operator
         {
@@ -90,7 +85,7 @@ public abstract class FilterWidget<T, TExprLhs, TExprRhs> : FilterWidget<T> wher
                 return false;
             }
         }
-        public override void Clear()
+        public override void Reset()
         {
             Operator = EmptyOperator.Instance;
         }

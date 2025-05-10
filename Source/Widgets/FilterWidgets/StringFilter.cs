@@ -14,6 +14,10 @@ public sealed class StringFilter<TObject> : FilterWidgetWithInputField<TObject, 
     {
         Expression = expression;
     }
+    protected override Vector2 CalcInputFieldContentSize()
+    {
+        return Verse.Text.CalcSize(Expression.Rhs);
+    }
     protected override void DrawInputField(Rect rect)
     {
         Expression.Rhs = Verse.Widgets.TextField(rect, Expression.Rhs);
@@ -25,16 +29,16 @@ public sealed class StringFilter<TObject> : FilterWidgetWithInputField<TObject, 
 
     private sealed class StringExpression : GenExpression
     {
-        public override IEnumerable<GenericOperator> SupportedOperators => [
+        public override IEnumerable<GenericOperator> SupportedOperators { get; } = [
             Operators.Contains.Instance,
             Operators.NotContains.Instance,
         ];
         public StringExpression(Func<TObject, string> lhs) : base(lhs, "")
         {
         }
-        public override void Clear()
+        public override void Reset()
         {
-            base.Clear();
+            base.Reset();
 
             Rhs = "";
         }

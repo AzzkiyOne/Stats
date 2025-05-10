@@ -28,7 +28,7 @@ public sealed class OneToManyFilter<TObject, TOption> : NToManyFilter<TObject, T
 
     private sealed class OneToManyExpression : NtMExpression
     {
-        public override IEnumerable<GenericOperator> SupportedOperators => [
+        public override IEnumerable<GenericOperator> SupportedOperators { get; } = [
             Operators.IsIn.Instance,
             Operators.IsNotIn.Instance
         ];

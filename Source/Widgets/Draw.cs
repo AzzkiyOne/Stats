@@ -61,7 +61,7 @@ public static class Draw
 
         return wasClicked;
     }
-    internal static bool ButtonImageSubtle(Rect rect, Texture2D texture)
+    internal static bool ButtonImageSubtle(Rect rect, Texture2D texture, float textureScale = 0.7f)
     {
         var mouseIsOverRect = Mouse.IsOver(rect);
         var origGUIColor = GUI.color;
@@ -81,7 +81,7 @@ public static class Draw
             rect.y -= ButtonSubtleHoverOffset;
         }
 
-        Verse.Widgets.DrawTextureFitted(rect, texture, 0.7f);
+        Verse.Widgets.DrawTextureFitted(rect, texture, textureScale);
 
         GUI.color = origGUIColor;
 

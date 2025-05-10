@@ -25,25 +25,32 @@ public abstract class NToManyFilter<TObject, TExprLhs, TOption> : FilterWidgetWi
         MakeOptionWidget = makeOptionWidget;
         OptionsWindow = new(options, makeOptionWidget, expression);
     }
+    protected override Vector2 CalcInputFieldContentSize()
+    {
+        return Text.CalcSize(Expression.Rhs.Count.ToString());
+    }
     protected sealed override void DrawInputField(Rect rect)
     {
         const float horPad = Globals.GUI.EstimatedInputFieldInnerPadding;
 
-        if (Widgets.Draw.ButtonTextSubtle(rect, base.Expression.RhsString, horPad))
+        if (Widgets.Draw.ButtonTextSubtle(rect, Expression.Rhs.Count.ToString(), horPad))
         {
             Find.WindowStack.Add(OptionsWindow);
         }
     }
+    protected override void FocusInputField()
+    {
+        Find.WindowStack.Add(OptionsWindow);
+    }
 
     protected abstract class NtMExpression : GenExpression
     {
-        public sealed override string RhsString => Rhs.Count.ToString();
         public NtMExpression(Func<TObject, TExprLhs> lhs) : base(lhs, [])
         {
         }
-        public sealed override void Clear()
+        public sealed override void Reset()
         {
-            base.Clear();
+            base.Reset();
 
             Rhs.Clear();
             // TODO: NotifyChanged()?

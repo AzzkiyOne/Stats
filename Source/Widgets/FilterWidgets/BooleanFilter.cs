@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
-using Verse;
 
 namespace Stats.Widgets;
 
-public sealed class BooleanFilter<TObject> : FilterWidget<TObject, bool, bool>
+public sealed class BooleanFilter<TObject> : FilterWidgetWithInputField<TObject, bool, bool>
 {
     new private readonly BooleanExpression Expression;
     private Action<Rect> DrawValue;
@@ -16,7 +14,7 @@ public sealed class BooleanFilter<TObject> : FilterWidget<TObject, bool, bool>
     private BooleanFilter(BooleanExpression expression) : base(expression)
     {
         Expression = expression;
-        DrawValue = DrawEmpty;
+        DrawValue = DrawTrue;
 
         expression.OnChange += HandleStateChange;
     }
@@ -24,34 +22,11 @@ public sealed class BooleanFilter<TObject> : FilterWidget<TObject, bool, bool>
     {
         DrawValue = Expression switch
         {
-            { IsEmpty: true } => DrawEmpty,
             { Rhs: true } => DrawTrue,
             { Rhs: false } => DrawFalse,
         };
 
         Resize();
-    }
-    protected override Vector2 CalcSize()
-    {
-        if (base.Expression.IsEmpty)
-        {
-            return Text.CalcSize(Expression.Operator.Symbol);
-        }
-
-        return new Vector2(Text.LineHeight, Text.LineHeight);
-    }
-    public override void Draw(Rect rect, Vector2 _)
-    {
-        GUIDebugger.DebugRect(this, rect);
-
-        DrawValue(rect);
-    }
-    private void DrawEmpty(Rect rect)
-    {
-        if (Widgets.Draw.ButtonTextSubtle(rect, Expression.Operator.Symbol))
-        {
-            Expression.Operator = Expression.SupportedOperators.First();
-        }
     }
     private void DrawTrue(Rect rect)
     {
@@ -64,8 +39,16 @@ public sealed class BooleanFilter<TObject> : FilterWidget<TObject, bool, bool>
     {
         if (Widgets.Draw.ButtonImageSubtle(rect, Verse.Widgets.CheckboxOffTex))
         {
-            Expression.Clear();
+            Expression.Rhs = true;
         }
+    }
+    protected override Vector2 CalcInputFieldContentSize()
+    {
+        return new Vector2(Verse.Text.LineHeight, Verse.Text.LineHeight);
+    }
+    protected override void DrawInputField(Rect rect)
+    {
+        DrawValue(rect);
     }
     public override FilterWidget<TObject> Clone()
     {
@@ -74,13 +57,13 @@ public sealed class BooleanFilter<TObject> : FilterWidget<TObject, bool, bool>
 
     private sealed class BooleanExpression : GenExpression
     {
-        public override IEnumerable<GenericOperator> SupportedOperators => [Operators.IsEqualTo.Instance];
+        public override IEnumerable<GenericOperator> SupportedOperators { get; } = [Operators.IsEqualTo.Instance];
         public BooleanExpression(Func<TObject, bool> lhs) : base(lhs, true)
         {
         }
-        public override void Clear()
+        public override void Reset()
         {
-            base.Clear();
+            base.Reset();
 
             Rhs = true;
         }

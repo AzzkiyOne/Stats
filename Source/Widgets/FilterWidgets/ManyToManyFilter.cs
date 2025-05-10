@@ -30,15 +30,15 @@ public sealed class ManyToManyFilter<TObject, TOption> : NToManyFilter<TObject, 
 
     private sealed class ManyToManyExpression : NtMExpression
     {
-        public override IEnumerable<GenericOperator> SupportedOperators => [
-            Operators.IsEqualTo.Instance,
-            Operators.IsNotEqualTo.Instance,
+        public override IEnumerable<GenericOperator> SupportedOperators { get; } = [
             Operators.IntersectsWith.Instance,
             Operators.NotIntersectsWith.Instance,
             Operators.IsSubsetOf.Instance,
             //Operators.IsNotSubsetOf.Instance,
             Operators.IsSupersetOf.Instance,
             //Operators.IsNotSupersetOf.Instance,
+            Operators.IsEqualTo.Instance,
+            Operators.IsNotEqualTo.Instance,
         ];
         public ManyToManyExpression(Func<TObject, HashSet<TOption>> lhs) : base(lhs)
         {

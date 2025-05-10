@@ -253,7 +253,7 @@ public sealed class GenericTable<TObject> : ITableWidget
 
         return true;
     }
-    public void ClearFilters()
+    public void ResetFilters()
     {
         if (ActiveFilters.Count == 0)
         {
@@ -272,7 +272,7 @@ public sealed class GenericTable<TObject> : ITableWidget
             //
             // TODO: !!! This ofc is a hack, but i don't have a better solution currently.
             filter.OnChange -= HandleFilterChange;
-            filter.Clear();
+            filter.Reset();
             filter.OnChange += HandleFilterChange;
         }
 

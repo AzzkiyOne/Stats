@@ -24,7 +24,7 @@ internal sealed class MainTabWindowTitleBar : WidgetWrapper
         //Action resetWindow,
         Action expandWindow,
         Action closeWindow,
-        Action clearTableFilters
+        Action resetTableFilters
     )
     {
         Widget = new HorizontalContainer(
@@ -34,8 +34,8 @@ internal sealed class MainTabWindowTitleBar : WidgetWrapper
                         tableSelector,
                         ToToolbarIcon(
                             new Icon(TexUI.RotRightTex),
-                            clearTableFilters,
-                            "Clear filters"
+                            resetTableFilters,
+                            "Reset filters"
                         ),
                     ],
                     Globals.GUI.Pad,
