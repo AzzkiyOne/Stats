@@ -8,7 +8,7 @@ namespace Stats.ColumnWorkers;
 public abstract class StatDrawEntryColumnWorker<TObject> : ColumnWorker<TObject>
 {
     private static readonly Regex NonZeroNumberRegex = new(@"[1-9]{1}", RegexOptions.Compiled);
-    private static readonly Regex NumberRegex = new(@"([0-9]+\.?[0-9]*).*", RegexOptions.Compiled);
+    private static readonly Regex NumberRegex = new(@"(-?[0-9]+\.?[0-9]*).*", RegexOptions.Compiled);
     private readonly Func<TObject, decimal> GetNumber;
     protected StatDrawEntryColumnWorker() : base(TableColumnCellStyle.Number)
     {
