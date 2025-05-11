@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using Stats.Widgets.Extensions;
 using UnityEngine;
 using Verse;
@@ -7,19 +8,11 @@ namespace Stats.Widgets;
 
 internal sealed class TableSelector : WidgetWrapper
 {
-    private TableDef _CurTableDef;
-    // TODO: We don't actually need the whole table def outside.
-    public TableDef CurTableDef
+    protected override Widget Widget { get; }
+    public TableDef TableDef
     {
-        get => _CurTableDef;
-        private set
+        set
         {
-            if (_CurTableDef == value)
-            {
-                return;
-            }
-
-            _CurTableDef = value;
             IconWidget.Texture = value.Icon;
             IconColorExtension.Color = value.IconColor;
             LabelWidget.Text = value.LabelCap;
@@ -29,17 +22,16 @@ internal sealed class TableSelector : WidgetWrapper
     private readonly Icon IconWidget;
     private readonly ColorWidgetExtension IconColorExtension;
     private readonly Label LabelWidget;
-    protected override Widget Widget { get; }
-    public TableSelector()
+    public event Action<TableDef>? OnTableSelect;
+    public TableSelector(TableDef tableDef)
     {
-        _CurTableDef = DefDatabase<TableDef>.GetNamed("RangedWeapons_ThingTable");
         Widget = new HorizontalContainer(
             [
-                new Icon(_CurTableDef.Icon, out IconWidget)
+                new Icon(tableDef.Icon, out IconWidget)
                     .PaddingAbs(Globals.GUI.PadXs)
                     .SizeAbs(MainTabWindow.TitleBarHeight)
-                    .Color(_CurTableDef.IconColor, out IconColorExtension),
-                new Label(_CurTableDef.LabelCap, out LabelWidget)
+                    .Color(tableDef.IconColor, out IconColorExtension),
+                new Label(tableDef.LabelCap, out LabelWidget)
                     .HeightAbs(MainTabWindow.TitleBarHeight)
                     .TextAnchor(TextAnchor.MiddleLeft),
             ],
@@ -55,7 +47,7 @@ internal sealed class TableSelector : WidgetWrapper
             .AllDefs
             .Select(tableDef => new FloatMenuOption(
                 tableDef.LabelCap,
-                () => CurTableDef = tableDef,
+                () => OnTableSelect?.Invoke(tableDef),
                 tableDef.Icon,
                 tableDef.IconColor
             ))

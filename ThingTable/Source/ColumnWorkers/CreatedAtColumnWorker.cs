@@ -54,7 +54,7 @@ public sealed class CreatedAtColumnWorker : ColumnWorker<ThingAlike>
             }
 
             Widget icon = new ThingIcon(thingDef)
-                .ToButtonSubtle(
+                .ToButtonGhostly(
                     openDefInfoDialog,
                     $"<i>{thingDef.LabelCap}</i>\n\n{thingDef.description}"
                 );

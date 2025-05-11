@@ -19,7 +19,7 @@ public sealed class LabelColumnWorker : ColumnWorker<GeneDef>
 
         return new HorizontalContainer(
             [
-                new Icon(geneDef.Icon).ToButtonSubtle(openDefInfoDialog),
+                new Icon(geneDef.Icon).ToButtonGhostly(openDefInfoDialog),
                 new Label(geneDef.LabelCap),
             ],
             Globals.GUI.Pad

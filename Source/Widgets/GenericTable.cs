@@ -18,6 +18,27 @@ public sealed class GenericTable<TObject> : ITableWidget
     private readonly HashSet<FilterWidget<TObject>.AbsExpression> ActiveFilters;
     private readonly Table Table;
     private bool ShouldApplyFilters = false;
+    private TableFilterMode _FilterMode;
+    public TableFilterMode FilterMode
+    {
+        get => _FilterMode;
+        set
+        {
+            if (value == _FilterMode)
+            {
+                return;
+            }
+
+            _FilterMode = value;
+            OnFilterModeChange?.Invoke(value);
+
+            if (ActiveFilters.Count > 1)
+            {
+                ShouldApplyFilters = true;
+            }
+        }
+    }
+    public event Action<TableFilterMode>? OnFilterModeChange;
     public GenericTable(ITableDef<TObject> tableDef)
     {
         // We don't know what exactly tableDef.Worker.GetRecords() returns.
@@ -120,7 +141,7 @@ public sealed class GenericTable<TObject> : ITableWidget
         return columnDef.LabelFormat(columnDef, columnDef.Worker.CellStyle)
             .PaddingAbs(cellPadHor, cellPadVer)
             .Background(drawSortIndicator)
-            .ToButtonSubtle(
+            .ToButtonGhostly(
                 handleCellClick,
                 $"<i>{columnDef.LabelCap}</i>\n\n{columnDef.Description}"
             );
@@ -212,24 +233,23 @@ public sealed class GenericTable<TObject> : ITableWidget
     {
         // It is important not to skip pinned rows here so we don't have to
         // re-aplly filters when a row is unpinned.
-        foreach (TableRow<TObject> row in Table.BodyRows)
-        {
-            row.IsHidden = RowPassesFilters(row, ActiveFilters) == false;
-        }
 
-        ShouldApplyFilters = false;
-    }
-    private static bool RowPassesFilters(TableRow<TObject> row, HashSet<FilterWidget<TObject>.AbsExpression> filters)
-    {
-        foreach (var filter in filters)
+        if (FilterMode == TableFilterMode.AND)
         {
-            if (filter.Eval(row.Id) == false)
+            foreach (TableRow<TObject> row in Table.BodyRows)
             {
-                return false;
+                row.IsHidden = ActiveFilters.Any(filter => filter.Eval(row.Id) == false);
+            }
+        }
+        else
+        {
+            foreach (TableRow<TObject> row in Table.BodyRows)
+            {
+                row.IsHidden = !ActiveFilters.Any(filter => filter.Eval(row.Id));
             }
         }
 
-        return true;
+        ShouldApplyFilters = false;
     }
     public void ResetFilters()
     {
@@ -255,6 +275,19 @@ public sealed class GenericTable<TObject> : ITableWidget
         }
 
         ActiveFilters.Clear();
-        ShouldApplyFilters = true;
+
+        foreach (TableRow<TObject> row in Table.BodyRows)
+        {
+            row.IsHidden = false;
+        }
+    }
+    public void ToggleFilterMode()
+    {
+        FilterMode = FilterMode switch
+        {
+            TableFilterMode.AND => TableFilterMode.OR,
+            TableFilterMode.OR => TableFilterMode.AND,
+            _ => throw new NotSupportedException("Unsupported table filtering mode."),
+        };
     }
 }

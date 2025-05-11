@@ -182,15 +182,15 @@ public static class WidgetAPI
     // --- Transformers ---
 
     public static Widget
-        ToButtonSubtle(this Widget widget, Action clickEventHandler) =>
+        ToButtonGhostly(this Widget widget, Action clickEventHandler) =>
             widget
             .HoverBackground(TexUI.HighlightTex)
             .OnClick(clickEventHandler);
 
     public static Widget
-        ToButtonSubtle(this Widget widget, Action clickEventHandler, string tooltip) =>
+        ToButtonGhostly(this Widget widget, Action clickEventHandler, string tooltip) =>
             widget
-            .ToButtonSubtle(clickEventHandler)
+            .ToButtonGhostly(clickEventHandler)
             .Tooltip(tooltip);
 
     // --- Utils ---

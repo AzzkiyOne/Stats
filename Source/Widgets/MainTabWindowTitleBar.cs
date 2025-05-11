@@ -4,7 +4,6 @@ using Verse;
 
 namespace Stats.Widgets;
 
-// Just to make RW stop throwing warning regarding assets loading.
 [StaticConstructorOnStartup]
 internal sealed class MainTabWindowTitleBar : WidgetWrapper
 {
@@ -19,14 +18,34 @@ internal sealed class MainTabWindowTitleBar : WidgetWrapper
         "  - You can pin multiple rows.\n" +
         "  - Pinned rows are unaffected by filters.";
     private const float IconPadding = Globals.GUI.PadXs;
+    private readonly Label LabelWidget;
+    private ITableWidget _TableWidget;
+    public ITableWidget TableWidget
+    {
+        set
+        {
+            if (value == _TableWidget)
+            {
+                return;
+            }
+
+            _TableWidget.OnFilterModeChange -= HandleTableFilterModeChange;
+            _TableWidget = value;
+            value.OnFilterModeChange += HandleTableFilterModeChange;
+            LabelWidget.Text = value.FilterMode.ToString();
+        }
+    }
     public MainTabWindowTitleBar(
+        ITableWidget tableWidget,
         Widget tableSelector,
         //Action resetWindow,
         Action expandWindow,
-        Action closeWindow,
+        //Action closeWindow,
         Action resetTableFilters
     )
     {
+        _TableWidget = tableWidget;
+        tableWidget.OnFilterModeChange += HandleTableFilterModeChange;
         Widget = new HorizontalContainer(
             [
                 new HorizontalContainer(
@@ -36,7 +55,16 @@ internal sealed class MainTabWindowTitleBar : WidgetWrapper
                             new Icon(TexUI.RotRightTex),
                             resetTableFilters,
                             "Reset filters"
-                        ),
+                    ),
+                    new Label(tableWidget.FilterMode.ToString(), out LabelWidget)
+                        .HeightAbs(MainTabWindow.TitleBarHeight)
+                        .PaddingAbs(Globals.GUI.PadSm, 0f)
+                        .TextAnchor(TextAnchor.MiddleCenter)
+                        .ToButtonGhostly(
+                            () => _TableWidget.ToggleFilterMode(),
+                            "Click to switch between filtering modes.\n" +
+                            "This setting is individual for each table."
+                        )
                     ],
                     Globals.GUI.Pad,
                     true
@@ -81,7 +109,7 @@ internal sealed class MainTabWindowTitleBar : WidgetWrapper
     )
     {
         return ToToolbarIcon(widget, tooltip, pad)
-            .ToButtonSubtle(clickEventHandler);
+            .ToButtonGhostly(clickEventHandler);
     }
     private static Widget ToToolbarIcon(
         Widget widget,
@@ -93,6 +121,10 @@ internal sealed class MainTabWindowTitleBar : WidgetWrapper
             .PaddingAbs(pad)
             .SizeAbs(MainTabWindow.TitleBarHeight)
             .Tooltip(tooltip);
+    }
+    private void HandleTableFilterModeChange(TableFilterMode filterMode)
+    {
+        LabelWidget.Text = filterMode.ToString();
     }
 
     static MainTabWindowTitleBar()
