@@ -207,7 +207,7 @@
         <defName>RangedDamage_ThingTableColumn</defName>
         <labelKey>Damage</labelKey>
         <descriptionKey>Stat_Thing_Damage_Desc</descriptionKey>
-        <iconPath>UI/Commands/Attack</iconPath>
+        <iconPath>UI/Commands/FireAtWill</iconPath>
         <labelFormat>Stats.ColumnLabelFormat.IconOnly</labelFormat>
         <workerFactory>Stats.ThingTable.RangedDamageColumnWorker.Make</workerFactory>
     </Stats.ThingTable.ColumnDef>
@@ -322,7 +322,8 @@
     <Stats.ThingTable.ColumnDef>
         <defName>RangedDirectHitChance_ThingTableColumn</defName>
         <labelKey>DirectHitChance</labelKey>
-        <labelShort>Hit %</labelShort>
+        <labelShort>%</labelShort>
+        <iconPath>UI/Commands/Attack</iconPath>
         <descriptionKey>Stat_Thing_Weapon_DirectHitChance_Desc</descriptionKey>
         <workerFactory>Stats.ThingTable.RangedDirectHitChanceColumnWorker.Make</workerFactory>
     </Stats.ThingTable.ColumnDef>
