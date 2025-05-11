@@ -1,0 +1,54 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.8.34408.163
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Stats", "Source\Stats.csproj", "{DC107B78-C176-421F-83F3-3AE9D5240875}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{3F2D775F-2C27-427F-A70E-7886D1851BAD}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ThingTableCECompat", "ThingTable\Compat\CE\Source\ThingTableCECompat.csproj", "{2BB6FF31-6837-4A3D-952E-D9F1F40520A8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ThingTable", "ThingTable\Source\ThingTable.csproj", "{F4E498C3-50AC-4EF9-BF01-AAAAFDC3010B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GeneTable", "GeneTable\Source\GeneTable.csproj", "{AE071E5A-51E3-4604-9448-BF6DA5BF1B17}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ThingTableBiotechCompat", "ThingTable\Compat\Biotech\Source\ThingTableBiotechCompat.csproj", "{35C130E5-7EF6-41B1-9E1B-BC22AB1A977F}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{DC107B78-C176-421F-83F3-3AE9D5240875}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DC107B78-C176-421F-83F3-3AE9D5240875}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DC107B78-C176-421F-83F3-3AE9D5240875}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DC107B78-C176-421F-83F3-3AE9D5240875}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2BB6FF31-6837-4A3D-952E-D9F1F40520A8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2BB6FF31-6837-4A3D-952E-D9F1F40520A8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2BB6FF31-6837-4A3D-952E-D9F1F40520A8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2BB6FF31-6837-4A3D-952E-D9F1F40520A8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F4E498C3-50AC-4EF9-BF01-AAAAFDC3010B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F4E498C3-50AC-4EF9-BF01-AAAAFDC3010B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F4E498C3-50AC-4EF9-BF01-AAAAFDC3010B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F4E498C3-50AC-4EF9-BF01-AAAAFDC3010B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AE071E5A-51E3-4604-9448-BF6DA5BF1B17}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AE071E5A-51E3-4604-9448-BF6DA5BF1B17}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AE071E5A-51E3-4604-9448-BF6DA5BF1B17}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AE071E5A-51E3-4604-9448-BF6DA5BF1B17}.Release|Any CPU.Build.0 = Release|Any CPU
+		{35C130E5-7EF6-41B1-9E1B-BC22AB1A977F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{35C130E5-7EF6-41B1-9E1B-BC22AB1A977F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{35C130E5-7EF6-41B1-9E1B-BC22AB1A977F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{35C130E5-7EF6-41B1-9E1B-BC22AB1A977F}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {463E6390-CC82-487B-A90E-BA8F7ADCA9BD}
+	EndGlobalSection
+EndGlobal

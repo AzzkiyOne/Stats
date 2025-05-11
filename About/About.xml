@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<ModMetaData>
+    <packageId>Azzkiy.Stats</packageId>
+    <name>Stats</name>
+    <author>Azzkiy</author>
+    <url>https://github.com/AzzkiyOne/Stats</url>
+    <description>Satisfy your minmaxing needs!</description>
+    <supportedVersions>
+        <li>1.5</li>
+    </supportedVersions>
+</ModMetaData>

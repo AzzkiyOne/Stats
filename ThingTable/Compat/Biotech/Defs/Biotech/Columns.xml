@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<Defs>
+
+    <Stats.ThingTable.ColumnDef>
+        <defName>ValidLifeStage_ThingTableColumn</defName>
+        <labelKey>Stat_Thing_Apparel_ValidLifestage</labelKey>
+        <descriptionKey>Stat_Thing_Apparel_ValidLifestage_Desc</descriptionKey>
+        <workerFactory>Stats.ThingTable.Compat.Biotech.ValidLifeStageColumnWorker.Make</workerFactory>
+    </Stats.ThingTable.ColumnDef>
+
+</Defs>

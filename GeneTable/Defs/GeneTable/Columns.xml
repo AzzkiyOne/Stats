@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<Defs>
+
+    <Stats.GeneTable.ColumnDef>
+        <defName>Label_GeneTableColumn</defName>
+        <label>label</label>
+        <workerFactory>Stats.GeneTable.LabelColumnWorker.Make</workerFactory>
+    </Stats.GeneTable.ColumnDef>
+
+    <Stats.GeneTable.ColumnDef>
+        <defName>ContentSource_GeneTableColumn</defName>
+        <labelKey>Stat_Source_Label</labelKey>
+        <workerFactory>Stats.GeneTable.ContentSourceColumnWorker.Make</workerFactory>
+    </Stats.GeneTable.ColumnDef>
+
+    <Stats.GeneTable.ColumnDef>
+        <defName>Complexity_GeneTableColumn</defName>
+        <labelKey>Complexity</labelKey>
+        <descriptionKey>ComplexityDesc</descriptionKey>
+        <workerFactory>Stats.GeneTable.ComplexityColumnWorker.Make</workerFactory>
+    </Stats.GeneTable.ColumnDef>
+
+    <Stats.GeneTable.ColumnDef>
+        <defName>MetabolicEfficiency_GeneTableColumn</defName>
+        <labelKey>Metabolism</labelKey>
+        <descriptionKey>MetabolismDesc</descriptionKey>
+        <workerFactory>Stats.GeneTable.MetabolicEfficiencyColumnWorker.Make</workerFactory>
+    </Stats.GeneTable.ColumnDef>
+
+    <Stats.GeneTable.ColumnDef>
+        <defName>RequiredArchiteCapsulesAmount_GeneTableColumn</defName>
+        <labelKey>ArchitesRequired</labelKey>
+        <descriptionKey>ArchitesRequiredDesc</descriptionKey>
+        <workerFactory>Stats.GeneTable.RequiredArchiteCapsulesAmountColumnWorker.Make</workerFactory>
+    </Stats.GeneTable.ColumnDef>
+
+</Defs>

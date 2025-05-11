@@ -1,0 +1,20 @@
+﻿using CombatExtended;
+using RimWorld;
+
+namespace Stats.ThingTable.Compat.CE;
+
+public sealed class IsOneHandedColumnWorker : BooleanColumnWorker<ThingAlike>
+{
+    public static IsOneHandedColumnWorker Make(ColumnDef _) => new();
+    protected override bool GetValue(ThingAlike thing)
+    {
+        var statReq = StatRequest.For(thing.Def, thing.StuffDef);
+
+        if (CE_StatDefOf.OneHandedness.Worker.ShouldShowFor(statReq))
+        {
+            return CE_StatDefOf.OneHandedness.Worker.GetValue(statReq) > 0f;
+        }
+
+        return false;
+    }
+}

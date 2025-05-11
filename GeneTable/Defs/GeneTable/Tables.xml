@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<Defs>
+
+    <Stats.GeneTable.TableDef>
+        <defName>GeneTable</defName>
+        <label>genes</label>
+        <iconPath>UI/Gizmos/ViewGenes</iconPath>
+        <workerFactory>Stats.GeneTable.GeneTableWorker.Make</workerFactory>
+        <columns>
+            <li>Complexity_GeneTableColumn</li>
+            <li>MetabolicEfficiency_GeneTableColumn</li>
+            <li>RequiredArchiteCapsulesAmount_GeneTableColumn</li>
+            <li>ContentSource_GeneTableColumn</li>
+        </columns>
+    </Stats.GeneTable.TableDef>
+
+</Defs>

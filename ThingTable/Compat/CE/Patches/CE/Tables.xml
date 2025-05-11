@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<Patch>
+
+    <Operation Class="PatchOperationRemove">
+        <xpath>Defs/Stats.ThingTable.TableDef/columns/li[
+            text()="RangedDamage_ThingTableColumn"
+            or text()="RangedStoppingPower_ThingTableColumn"
+            or text()="RangedArmorPenetration_ThingTableColumn"
+            or text()="RangedTouchAccuracy_ThingTableColumn"
+            or text()="RangedShortAccuracy_ThingTableColumn"
+            or text()="RangedMediumAccuracy_ThingTableColumn"
+            or text()="RangedLongAccuracy_ThingTableColumn"
+            or text()="RangedDirectHitChance_ThingTableColumn"
+            or text()="RangedMissRadius_ThingTableColumn"
+        ]</xpath>
+    </Operation>
+
+    <Operation Class="PatchOperationReplace">
+        <xpath>Defs/Stats.ThingTable.TableDef/columns/li[text()="MeleeArmorPenetration_ThingTableColumn"]</xpath>
+        <value>
+            <li>CE_MeleeSharpArmorPenetration_ThingTableColumn</li>
+            <li>CE_MeleeBluntArmorPenetration_ThingTableColumn</li>
+        </value>
+    </Operation>
+
+</Patch>
