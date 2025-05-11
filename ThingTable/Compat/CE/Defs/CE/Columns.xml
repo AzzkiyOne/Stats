@@ -80,9 +80,9 @@
     <Stats.ThingTable.ColumnDef>
         <defName>CE_MeleeSharpArmorPenetration_ThingTableColumn</defName>
         <labelShort>AP</labelShort>
-        <iconPath>Things/Item/Equipment/WeaponMelee/Gladius</iconPath>
+        <iconPath>Things/Item/Equipment/WeaponMelee/Longsword</iconPath>
         <iconColor>(160,178,181)</iconColor>
-        <iconScale>1.5</iconScale>
+        <iconScale>1.4</iconScale>
         <stat>MeleeWeapon_AverageArmorPenetration</stat>
         <statValueExplanationType>Full</statValueExplanationType>
         <workerFactory>Stats.ThingTable.Compat.CE.BinaryStatColumnWorker.MakeLeft</workerFactory>
@@ -93,7 +93,7 @@
         <labelShort>AP</labelShort>
         <iconPath>Things/Item/Equipment/WeaponMelee/Club</iconPath>
         <iconColor>(160,178,181)</iconColor>
-        <iconScale>1.1</iconScale>
+        <iconScale>1.2</iconScale>
         <stat>MeleeWeapon_AverageArmorPenetration</stat>
         <statValueExplanationType>Full</statValueExplanationType>
         <workerFactory>Stats.ThingTable.Compat.CE.BinaryStatColumnWorker.MakeRight</workerFactory>

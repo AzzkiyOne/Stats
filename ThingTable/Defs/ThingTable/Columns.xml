@@ -131,9 +131,9 @@
 
     <Stats.ThingTable.ColumnDef>
         <defName>SharpArmorRating_ThingTableColumn</defName>
-        <iconPath>Things/Item/Equipment/WeaponMelee/Gladius</iconPath>
+        <iconPath>Things/Item/Equipment/WeaponMelee/Longsword</iconPath>
         <iconColor>(160,178,181)</iconColor>
-        <iconScale>1.5</iconScale>
+        <iconScale>1.4</iconScale>
         <labelFormat>Stats.ThingTable.ColumnLabelFormat.ArmorRating</labelFormat>
         <stat>ArmorRating_Sharp</stat>
         <statValueExplanationType>FinalizePart</statValueExplanationType>
@@ -144,7 +144,7 @@
         <defName>BluntArmorRating_ThingTableColumn</defName>
         <iconPath>Things/Item/Equipment/WeaponMelee/Club</iconPath>
         <iconColor>(160,178,181)</iconColor>
-        <iconScale>1.1</iconScale>
+        <iconScale>1.2</iconScale>
         <labelFormat>Stats.ThingTable.ColumnLabelFormat.ArmorRating</labelFormat>
         <stat>ArmorRating_Blunt</stat>
         <statValueExplanationType>FinalizePart</statValueExplanationType>
