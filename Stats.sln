@@ -10,13 +10,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		.editorconfig = .editorconfig
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ThingTableCECompat", "ThingTable\Compat\CE\Source\ThingTableCECompat.csproj", "{2BB6FF31-6837-4A3D-952E-D9F1F40520A8}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CECompat", "Compat\CE\Source\CECompat.csproj", "{FB2707CF-A3D4-4DC2-B8CC-4EE6EEFB94AF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ThingTable", "ThingTable\Source\ThingTable.csproj", "{F4E498C3-50AC-4EF9-BF01-AAAAFDC3010B}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GeneTable", "GeneTable\Source\GeneTable.csproj", "{AE071E5A-51E3-4604-9448-BF6DA5BF1B17}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ThingTableBiotechCompat", "ThingTable\Compat\Biotech\Source\ThingTableBiotechCompat.csproj", "{35C130E5-7EF6-41B1-9E1B-BC22AB1A977F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BiotechCompat", "Compat\Biotech\Source\BiotechCompat.csproj", "{B5C6632E-966C-4CA9-8264-BCDD4BEA8B5A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -28,22 +24,14 @@ Global
 		{DC107B78-C176-421F-83F3-3AE9D5240875}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DC107B78-C176-421F-83F3-3AE9D5240875}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DC107B78-C176-421F-83F3-3AE9D5240875}.Release|Any CPU.Build.0 = Release|Any CPU
-		{2BB6FF31-6837-4A3D-952E-D9F1F40520A8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{2BB6FF31-6837-4A3D-952E-D9F1F40520A8}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{2BB6FF31-6837-4A3D-952E-D9F1F40520A8}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{2BB6FF31-6837-4A3D-952E-D9F1F40520A8}.Release|Any CPU.Build.0 = Release|Any CPU
-		{F4E498C3-50AC-4EF9-BF01-AAAAFDC3010B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{F4E498C3-50AC-4EF9-BF01-AAAAFDC3010B}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{F4E498C3-50AC-4EF9-BF01-AAAAFDC3010B}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{F4E498C3-50AC-4EF9-BF01-AAAAFDC3010B}.Release|Any CPU.Build.0 = Release|Any CPU
-		{AE071E5A-51E3-4604-9448-BF6DA5BF1B17}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{AE071E5A-51E3-4604-9448-BF6DA5BF1B17}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{AE071E5A-51E3-4604-9448-BF6DA5BF1B17}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{AE071E5A-51E3-4604-9448-BF6DA5BF1B17}.Release|Any CPU.Build.0 = Release|Any CPU
-		{35C130E5-7EF6-41B1-9E1B-BC22AB1A977F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{35C130E5-7EF6-41B1-9E1B-BC22AB1A977F}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{35C130E5-7EF6-41B1-9E1B-BC22AB1A977F}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{35C130E5-7EF6-41B1-9E1B-BC22AB1A977F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FB2707CF-A3D4-4DC2-B8CC-4EE6EEFB94AF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FB2707CF-A3D4-4DC2-B8CC-4EE6EEFB94AF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FB2707CF-A3D4-4DC2-B8CC-4EE6EEFB94AF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FB2707CF-A3D4-4DC2-B8CC-4EE6EEFB94AF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B5C6632E-966C-4CA9-8264-BCDD4BEA8B5A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B5C6632E-966C-4CA9-8264-BCDD4BEA8B5A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B5C6632E-966C-4CA9-8264-BCDD4BEA8B5A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B5C6632E-966C-4CA9-8264-BCDD4BEA8B5A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

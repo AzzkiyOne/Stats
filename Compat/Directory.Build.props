@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<Project>
+    <Import Project="../Directory.Build.props" />
+    <ItemGroup>
+        <ProjectReference Include="..\..\..\Source\Stats.csproj">
+            <Private>False</Private>
+            <CopyLocalSatelliteAssemblies>False</CopyLocalSatelliteAssemblies>
+        </ProjectReference>
+    </ItemGroup>
+</Project>

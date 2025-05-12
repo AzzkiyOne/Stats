@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <RootNamespace>Stats.Compat.CE</RootNamespace>
+    </PropertyGroup>
+    <ItemGroup>
+        <Reference Include="CombatExtended">
+            <HintPath>..\CombatExtended.dll</HintPath>
+            <Private>False</Private>
+        </Reference>
+    </ItemGroup>
+</Project>

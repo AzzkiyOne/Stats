@@ -3,9 +3,7 @@
 <loadFolders>
     <v1.5>
         <li>/</li>
-        <li>ThingTable</li>
-        <li IfModActive="Ludeon.RimWorld.Biotech">ThingTable/Compat/Biotech</li>
-        <li IfModActive="CETeam.CombatExtended">ThingTable/Compat/CE</li>
-        <li IfModActive="Ludeon.RimWorld.Biotech">GeneTable</li>
+        <li IfModActive="Ludeon.RimWorld.Biotech">Compat/Biotech</li>
+        <li IfModActive="CETeam.CombatExtended">Compat/CE</li>
     </v1.5>
 </loadFolders>
