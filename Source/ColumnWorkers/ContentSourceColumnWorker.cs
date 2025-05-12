@@ -10,7 +10,7 @@ namespace Stats;
 public abstract class ContentSourceColumnWorker<TObject> : ColumnWorker<TObject>
 {
     private readonly Func<TObject, ModContentPack?> GetCachedModContentPack;
-    protected ContentSourceColumnWorker(bool cached = true) : base(ColumnCellStyle.String)
+    protected ContentSourceColumnWorker(ColumnDef columndef, bool cached = true) : base(columndef, ColumnCellStyle.String)
     {
         GetCachedModContentPack = GetModContentPack;
 

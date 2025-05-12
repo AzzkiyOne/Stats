@@ -6,27 +6,33 @@ namespace Stats.ThingTable;
 
 public abstract class TableWorker : TableWorker<ThingAlike>
 {
-    public sealed override IEnumerable<ThingAlike> GetRecords()
+    protected sealed override IEnumerable<ThingAlike> Records
     {
-        foreach (var thingDef in DefDatabase<ThingDef>.AllDefs)
+        get
         {
-            if (IsValidThingDef(thingDef) == false)
+            foreach (var thingDef in DefDatabase<ThingDef>.AllDefs)
             {
-                continue;
-            }
+                if (IsValidThingDef(thingDef) == false)
+                {
+                    continue;
+                }
 
-            if (thingDef.MadeFromStuff == false)
-            {
-                yield return new(thingDef);
-            }
+                if (thingDef.MadeFromStuff == false)
+                {
+                    yield return new(thingDef);
+                }
 
-            var allowedStuffs = GenStuff.AllowedStuffsFor(thingDef);
+                var allowedStuffs = GenStuff.AllowedStuffsFor(thingDef);
 
-            foreach (var stuffDef in allowedStuffs)
-            {
-                yield return new(thingDef, stuffDef);
+                foreach (var stuffDef in allowedStuffs)
+                {
+                    yield return new(thingDef, stuffDef);
+                }
             }
         }
+    }
+    protected TableWorker(TableDef tableDef) : base(tableDef)
+    {
     }
     protected abstract bool IsValidThingDef(ThingDef thingDef);
 }

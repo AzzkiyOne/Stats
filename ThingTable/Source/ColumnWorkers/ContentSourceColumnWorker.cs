@@ -2,12 +2,11 @@
 
 namespace Stats.ThingTable;
 
-public sealed class ContentSourceColumnWorker : Stats.ContentSourceColumnWorker<ThingAlike>
+public sealed class ContentSourceColumnWorker : ContentSourceColumnWorker<ThingAlike>
 {
-    private ContentSourceColumnWorker() : base(false)
+    public ContentSourceColumnWorker(ColumnDef columnDef) : base(columnDef, false)
     {
     }
-    public static ContentSourceColumnWorker Make(ColumnDef _) => new();
     protected override ModContentPack? GetModContentPack(ThingAlike thing)
     {
         return thing.Def.modContentPack;

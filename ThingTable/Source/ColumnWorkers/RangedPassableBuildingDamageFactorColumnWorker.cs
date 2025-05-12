@@ -5,7 +5,9 @@ namespace Stats.ThingTable;
 
 public sealed class RangedPassableBuildingDamageFactorColumnWorker : StatDrawEntryColumnWorker<ThingAlike>
 {
-    public static RangedPassableBuildingDamageFactorColumnWorker Make(ColumnDef _) => new();
+    public RangedPassableBuildingDamageFactorColumnWorker(ColumnDef columndef) : base(columndef)
+    {
+    }
     protected override string GetStatDrawEntryLabel(ThingAlike thing)
     {
         var verb = thing.Def.Verbs.Primary();

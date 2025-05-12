@@ -6,9 +6,24 @@ using Verse;
 
 namespace Stats.Widgets;
 
-public sealed class GenericTable<TObject> : ITableWidget
+internal abstract class ObjectTable
 {
-    private IColumnDef<TObject> SortColumn;
+    public abstract void Draw(Rect rect);
+    public abstract void ResetFilters();
+    public abstract TableFilterMode FilterMode { get; set; }
+    public abstract void ToggleFilterMode();
+    public abstract event Action<TableFilterMode> OnFilterModeChange;
+
+    public enum TableFilterMode
+    {
+        AND = 0,
+        OR = 1,
+    }
+}
+
+internal sealed class ObjectTable<TObject> : ObjectTable
+{
+    private ColumnWorker<TObject> SortColumn;
     private int SortDirection = SortDirectionDescending;
     private const int SortDirectionAscending = 1;
     private const int SortDirectionDescending = -1;
@@ -19,7 +34,7 @@ public sealed class GenericTable<TObject> : ITableWidget
     private readonly Table Table;
     private bool ShouldApplyFilters = false;
     private TableFilterMode _FilterMode;
-    public TableFilterMode FilterMode
+    public override TableFilterMode FilterMode
     {
         get => _FilterMode;
         set
@@ -38,31 +53,31 @@ public sealed class GenericTable<TObject> : ITableWidget
             }
         }
     }
-    public event Action<TableFilterMode>? OnFilterModeChange;
-    public GenericTable(ITableDef<TObject> tableDef)
+    public override event Action<TableFilterMode>? OnFilterModeChange;
+    public ObjectTable(List<ColumnWorker<TObject>> columnWorkers, IEnumerable<TObject> records)
     {
         // We don't know what exactly tableDef.Worker.GetRecords() returns.
         // Could be a generator (and in some cases it is). So just in case
         // we "cache the returned collection".
-        var records = tableDef.Worker.GetRecords().ToArray();
+        var recordsArr = records.ToArray();
         // Header rows and columns
-        var columns = new List<Table.Column>(tableDef.Columns.Count);
+        var columns = new List<Table.Column>(columnWorkers.Count);
         var headerRows = new List<TableRow>();
-        var labelsRowCells = new List<Widget>(tableDef.Columns.Count);
-        var filtersRowCells = new List<Widget>(tableDef.Columns.Count);
-        ActiveFilters = new(tableDef.Columns.Count);
-        SortColumn = tableDef.Columns.First();
+        var labelsRowCells = new List<Widget>(columnWorkers.Count);
+        var filtersRowCells = new List<Widget>(columnWorkers.Count);
+        ActiveFilters = new(columnWorkers.Count);
+        SortColumn = columnWorkers.First();
 
-        foreach (var columnDef in tableDef.Columns)
+        foreach (var columnWorker in columnWorkers)
         {
             var column = new Table.Column(
-                columnDef == SortColumn,
-                (TextAnchor)columnDef.Worker.CellStyle
+                columnWorker == SortColumn,
+                (TextAnchor)columnWorker.CellStyle
             );
             columns.Add(column);
 
-            labelsRowCells.Add(CreateHeaderCell(columnDef, column));
-            filtersRowCells.Add(CreateFilterCell(columnDef, records, out var filter));
+            labelsRowCells.Add(CreateHeaderCell(columnWorker, column));
+            filtersRowCells.Add(CreateFilterCell(columnWorker, recordsArr, out var filter));
 
             filter.OnChange += HandleFilterChange;
         }
@@ -74,18 +89,18 @@ public sealed class GenericTable<TObject> : ITableWidget
         headerRows.Add(filtersRow);
 
         // Body rows
-        var bodyRows = new List<TableRow>();
+        var bodyRows = new List<TableRow>(recordsArr.Length);
 
-        foreach (var record in records)
+        foreach (var record in recordsArr)
         {
-            var rowCells = new List<Widget>(tableDef.Columns.Count);
+            var rowCells = new List<Widget>(columnWorkers.Count);
 
-            for (int i = 0; i < tableDef.Columns.Count; i++)
+            for (int i = 0; i < columnWorkers.Count; i++)
             {
-                var columnDef = tableDef.Columns[i];
+                var columnWorker = columnWorkers[i];
                 var column = columns[i];
 
-                rowCells.Add(CreateBodyCell(columnDef, record));
+                rowCells.Add(CreateBodyCell(columnWorker, record));
             }
 
             var row = new TableRow<TObject>(rowCells, DrawBodyRowBG, record);
@@ -98,7 +113,7 @@ public sealed class GenericTable<TObject> : ITableWidget
 
         SortRowsByColumn(SortColumn);
     }
-    public void Draw(Rect rect)
+    public override void Draw(Rect rect)
     {
         if (ShouldApplyFilters && Event.current.type == EventType.Layout)
         {
@@ -107,11 +122,11 @@ public sealed class GenericTable<TObject> : ITableWidget
 
         Table.Draw(rect);
     }
-    private Widget CreateHeaderCell(IColumnDef<TObject> columnDef, Table.Column column)
+    private Widget CreateHeaderCell(ColumnWorker<TObject> columnWorker, Table.Column column)
     {
         void drawSortIndicator(Rect rect)
         {
-            if (SortColumn == columnDef && Event.current.type == EventType.Repaint)
+            if (SortColumn == columnWorker && Event.current.type == EventType.Repaint)
             {
                 if (SortDirection == SortDirectionAscending)
                 {
@@ -134,34 +149,34 @@ public sealed class GenericTable<TObject> : ITableWidget
             }
             else
             {
-                SortRowsByColumn(columnDef);
+                SortRowsByColumn(columnWorker);
             }
         }
 
-        return columnDef.LabelFormat(columnDef, columnDef.Worker.CellStyle)
+        return columnWorker.ColumnDef.LabelFormat(columnWorker.ColumnDef, columnWorker.CellStyle)
             .PaddingAbs(cellPadHor, cellPadVer)
             .Background(drawSortIndicator)
             .ToButtonGhostly(
                 handleCellClick,
-                $"<i>{columnDef.LabelCap}</i>\n\n{columnDef.Description}"
+                $"<i>{columnWorker.ColumnDef.LabelCap}</i>\n\n{columnWorker.ColumnDef.Description}"
             );
     }
     private static Widget CreateFilterCell(
-        IColumnDef<TObject> columnDef,
+        ColumnWorker<TObject> columnWorker,
         IEnumerable<TObject> records,
         out FilterWidget<TObject>.AbsExpression filter
     )
     {
-        var filterWidget = columnDef.Worker.GetFilterWidget(records);
+        var filterWidget = columnWorker.GetFilterWidget(records);
 
         filter = filterWidget.Expression;
         return filterWidget;
     }
-    private static Widget CreateBodyCell(IColumnDef<TObject> columnDef, TObject @object)
+    private static Widget CreateBodyCell(ColumnWorker<TObject> columnWorker, TObject @object)
     {
         try
         {
-            var cell = columnDef.Worker.GetTableCellWidget(@object);
+            var cell = columnWorker.GetTableCellWidget(@object);
 
             if (cell == null)
             {
@@ -197,20 +212,20 @@ public sealed class GenericTable<TObject> : ITableWidget
             Verse.Widgets.DrawLightHighlight(rect);
         }
     }
-    private void SortRowsByColumn(IColumnDef<TObject> columnDef)
+    private void SortRowsByColumn(ColumnWorker<TObject> columnWorker)
     {
-        if (SortColumn == columnDef)
+        if (SortColumn == columnWorker)
         {
             SortDirection *= -1;
         }
         else
         {
-            SortColumn = columnDef;
+            SortColumn = columnWorker;
         }
 
         // TODO: Handle exception.
         Table.BodyRows.Sort((r1, r2) =>
-            SortColumn.Worker.Compare(
+            SortColumn.Compare(
                 ((TableRow<TObject>)r1).Id,
                 ((TableRow<TObject>)r2).Id
             ) * SortDirection
@@ -251,7 +266,7 @@ public sealed class GenericTable<TObject> : ITableWidget
 
         ShouldApplyFilters = false;
     }
-    public void ResetFilters()
+    public override void ResetFilters()
     {
         if (ActiveFilters.Count == 0)
         {
@@ -281,7 +296,7 @@ public sealed class GenericTable<TObject> : ITableWidget
             row.IsHidden = false;
         }
     }
-    public void ToggleFilterMode()
+    public override void ToggleFilterMode()
     {
         FilterMode = FilterMode switch
         {

@@ -17,8 +17,8 @@ internal sealed class MainTabWindowTitleBar : WidgetWrapper
         "  - Pinned rows are unaffected by filters.";
     private const float IconPadding = Globals.GUI.PadXs;
     private readonly Label LabelWidget;
-    private ITableWidget _TableWidget;
-    public ITableWidget TableWidget
+    private ObjectTable _TableWidget;
+    public ObjectTable TableWidget
     {
         set
         {
@@ -34,7 +34,7 @@ internal sealed class MainTabWindowTitleBar : WidgetWrapper
         }
     }
     public MainTabWindowTitleBar(
-        ITableWidget tableWidget,
+        ObjectTable tableWidget,
         Widget tableSelector,
         Action expandOrResetWindow,
         Action resetTableFilters
@@ -103,7 +103,7 @@ internal sealed class MainTabWindowTitleBar : WidgetWrapper
             .SizeAbs(MainTabWindow.TitleBarHeight)
             .Tooltip(tooltip);
     }
-    private void HandleTableFilterModeChange(TableFilterMode filterMode)
+    private void HandleTableFilterModeChange(ObjectTable.TableFilterMode filterMode)
     {
         LabelWidget.Text = filterMode.ToString();
     }

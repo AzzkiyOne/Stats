@@ -2,10 +2,9 @@
 
 public sealed class CountsAsClothingForNudityColumnWorker : BooleanColumnWorker<ThingAlike>
 {
-    private CountsAsClothingForNudityColumnWorker() : base(false)
+    public CountsAsClothingForNudityColumnWorker(ColumnDef columnDef) : base(columnDef, false)
     {
     }
-    public static CountsAsClothingForNudityColumnWorker Make(ColumnDef _) => new();
     protected override bool GetValue(ThingAlike thing)
     {
         return thing.Def.apparel?.countsAsClothingForNudity ?? false;

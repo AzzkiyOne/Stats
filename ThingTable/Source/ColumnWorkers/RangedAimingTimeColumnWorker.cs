@@ -5,7 +5,9 @@ namespace Stats.ThingTable;
 
 public sealed class RangedAimingTimeColumnWorker : StatDrawEntryColumnWorker<ThingAlike>
 {
-    public static RangedAimingTimeColumnWorker Make(ColumnDef _) => new();
+    public RangedAimingTimeColumnWorker(ColumnDef columndef) : base(columndef)
+    {
+    }
     protected override string GetStatDrawEntryLabel(ThingAlike thing)
     {
         var verb = thing.Def.Verbs.Primary();

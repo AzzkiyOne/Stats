@@ -10,9 +10,10 @@ public abstract class NumberColumnWorker<TObject> : ColumnWorker<TObject>
     private readonly Texture2D? Icon = null;
     private readonly Func<TObject, decimal> GetCachedValue;
     protected NumberColumnWorker(
+        ColumnDef columndef,
         bool cached = true,
         Texture2D? icon = null
-    ) : base(ColumnCellStyle.Number)
+    ) : base(columndef, ColumnCellStyle.Number)
     {
         GetCachedValue = GetValue;
 

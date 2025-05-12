@@ -10,18 +10,11 @@ public class StatColumnWorker : StatDrawEntryColumnWorker<ThingAlike>
     private const ToStringNumberSense toStringNumberSense = ToStringNumberSense.Absolute;
     protected StatDef Stat { get; }
     private readonly StatValueExplanationType ExplanationType;
-    protected StatColumnWorker(ColumnDef columnDef) : this(columnDef.stat!, columnDef.statValueExplanationType)
+    public StatColumnWorker(StatColumnDef columnDef) : base(columnDef)
     {
+        Stat = columnDef.stat;
+        ExplanationType = columnDef.statValueExplanationType;
     }
-    protected StatColumnWorker(
-        StatDef stat,
-        StatValueExplanationType statValueExplanationType = StatValueExplanationType.None
-    ) : base()
-    {
-        Stat = stat;
-        ExplanationType = statValueExplanationType;
-    }
-    public static StatColumnWorker Make(ColumnDef columnDef) => new(columnDef);
     private string? GetStatValueExplanation(ThingAlike thing)
     {
         var worker = Stat.Worker;

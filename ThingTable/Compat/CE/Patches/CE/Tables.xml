@@ -3,7 +3,7 @@
 <Patch>
 
     <Operation Class="PatchOperationRemove">
-        <xpath>Defs/Stats.ThingTable.TableDef/columns/li[
+        <xpath>Defs/Stats.TableDef/columns/li[
             text()="RangedDamage_ThingTableColumn"
             or text()="RangedStoppingPower_ThingTableColumn"
             or text()="RangedArmorPenetration_ThingTableColumn"
@@ -17,7 +17,7 @@
     </Operation>
 
     <Operation Class="PatchOperationReplace">
-        <xpath>Defs/Stats.ThingTable.TableDef/columns/li[text()="MeleeArmorPenetration_ThingTableColumn"]</xpath>
+        <xpath>Defs/Stats.TableDef/columns/li[text()="MeleeArmorPenetration_ThingTableColumn"]</xpath>
         <value>
             <li>CE_MeleeSharpArmorPenetration_ThingTableColumn</li>
             <li>CE_MeleeBluntArmorPenetration_ThingTableColumn</li>

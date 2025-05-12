@@ -14,7 +14,7 @@ public static class ColumnLabelFormat
         ArmorIcon = ContentFinder<Texture2D>.Get("Things/Pawn/Humanlike/Apparel/FlakVest/FlakVest");
         DamageToIcon = ContentFinder<Texture2D>.Get("UI/Commands/FireAtWill");
     }
-    public static Widget ArmorRating(IColumnDef columnDef, ColumnCellStyle _)
+    public static Widget ArmorRating(ColumnDef columnDef, ColumnCellStyle _)
     {
         return new HorizontalContainer(
             [
@@ -25,7 +25,7 @@ public static class ColumnLabelFormat
             true
         );
     }
-    public static Widget DamageFactorTo(IColumnDef columnDef, ColumnCellStyle _)
+    public static Widget DamageFactorTo(ColumnDef columnDef, ColumnCellStyle _)
     {
         return new HorizontalContainer(
             [

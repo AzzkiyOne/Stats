@@ -35,10 +35,9 @@ public sealed class CoveredBodyPartGroupsColumnWorker : ColumnWorker<ThingAlike>
 
             return string.Join("\n", bodyPartGroupLabels);
         });
-    private CoveredBodyPartGroupsColumnWorker() : base(ColumnCellStyle.String)
+    public CoveredBodyPartGroupsColumnWorker(ColumnDef columnDef) : base(columnDef, ColumnCellStyle.String)
     {
     }
-    public static CoveredBodyPartGroupsColumnWorker Make(ColumnDef _) => new();
     public override Widget? GetTableCellWidget(ThingAlike thing)
     {
         var bodyPartGroupLabels = GetBodyPartGroupLabels(thing);

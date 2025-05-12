@@ -28,10 +28,9 @@ public sealed class OccupiedApparelLayersColumnWorker : ColumnWorker<ThingAlike>
 
             return string.Join("\n", layerLabels);
         });
-    private OccupiedApparelLayersColumnWorker() : base(ColumnCellStyle.String)
+    public OccupiedApparelLayersColumnWorker(ColumnDef columnDef) : base(columnDef, ColumnCellStyle.String)
     {
     }
-    public static OccupiedApparelLayersColumnWorker Make(ColumnDef _) => new();
     public override Widget? GetTableCellWidget(ThingAlike thing)
     {
         var layerLabels = GetLayersLabels(thing);

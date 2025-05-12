@@ -5,7 +5,9 @@ namespace Stats.ThingTable;
 
 public sealed class RangedRPMColumnWorker : StatDrawEntryColumnWorker<ThingAlike>
 {
-    public static RangedRPMColumnWorker Make(ColumnDef _) => new();
+    public RangedRPMColumnWorker(ColumnDef columndef) : base(columndef)
+    {
+    }
     protected override string GetStatDrawEntryLabel(ThingAlike thing)
     {
         var verb = thing.Def.Verbs.Primary();

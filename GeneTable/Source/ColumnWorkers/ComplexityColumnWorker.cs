@@ -11,10 +11,9 @@ public sealed class ComplexityColumnWorker : NumberColumnWorker<GeneDef>
     {
         ComplexityIcon = ContentFinder<Texture2D>.Get("UI/Icons/Biostats/Complexity");
     }
-    public ComplexityColumnWorker() : base(false, ComplexityIcon)
+    public ComplexityColumnWorker(ColumnDef columnDef) : base(columnDef, false, ComplexityIcon)
     {
     }
-    public static ComplexityColumnWorker Make(ColumnDef _) => new();
     protected override decimal GetValue(GeneDef geneDef)
     {
         return geneDef.biostatCpx;

@@ -5,7 +5,9 @@ namespace Stats.ThingTable;
 
 public sealed class RangedDirectHitChanceColumnWorker : StatDrawEntryColumnWorker<ThingAlike>
 {
-    public static RangedDirectHitChanceColumnWorker Make(ColumnDef _) => new();
+    public RangedDirectHitChanceColumnWorker(ColumnDef columndef) : base(columndef)
+    {
+    }
     protected override string GetStatDrawEntryLabel(ThingAlike thing)
     {
         var verb = thing.Def.Verbs.Primary();

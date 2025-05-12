@@ -2,7 +2,9 @@
 
 public sealed class RangedDamageColumnWorker : NumberColumnWorker<ThingAlike>
 {
-    public static RangedDamageColumnWorker Make(ColumnDef _) => new();
+    public RangedDamageColumnWorker(ColumnDef columndef) : base(columndef)
+    {
+    }
     protected override decimal GetValue(ThingAlike thing)
     {
         var verb = thing.Def.Verbs.Primary();

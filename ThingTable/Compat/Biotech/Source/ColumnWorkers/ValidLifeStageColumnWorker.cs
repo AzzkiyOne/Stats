@@ -43,10 +43,9 @@ public sealed class ValidLifeStageColumnWorker : ColumnWorker<ThingAlike>
 
         return string.Join("\n", lifeStageLabels);
     });
-    private ValidLifeStageColumnWorker() : base(ColumnCellStyle.String)
+    public ValidLifeStageColumnWorker(ColumnDef columnDef) : base(columnDef, ColumnCellStyle.String)
     {
     }
-    public static ValidLifeStageColumnWorker Make(ColumnDef _) => new();
     public override Widget? GetTableCellWidget(ThingAlike thing)
     {
         var lifeStageLabels = GetLifeStageLabels(thing);

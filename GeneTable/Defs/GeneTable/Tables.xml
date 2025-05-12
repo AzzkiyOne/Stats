@@ -2,17 +2,18 @@
 
 <Defs>
 
-    <Stats.GeneTable.TableDef>
+    <Stats.TableDef>
         <defName>GeneTable</defName>
         <label>genes</label>
         <iconPath>UI/Gizmos/ViewGenes</iconPath>
-        <workerFactory>Stats.GeneTable.GeneTableWorker.Make</workerFactory>
+        <workerClass>Stats.GeneTable.GeneTableWorker</workerClass>
         <columns>
+            <li>Label_GeneTableColumn</li>
             <li>Complexity_GeneTableColumn</li>
             <li>MetabolicEfficiency_GeneTableColumn</li>
             <li>RequiredArchiteCapsulesAmount_GeneTableColumn</li>
             <li>ContentSource_GeneTableColumn</li>
         </columns>
-    </Stats.GeneTable.TableDef>
+    </Stats.TableDef>
 
 </Defs>

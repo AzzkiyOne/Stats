@@ -25,18 +25,18 @@ public sealed class MainTabWindow : RimWorld.MainTabWindow
 
             _CurTableDef = value;
             TableSelector.TableDef = value;
-            TitleBar.TableWidget = value.Widget;
+            TitleBar.TableWidget = value.Worker.TableWidget;
         }
     }
     public MainTabWindow()
     {
         // TODO: All of this TableDef/ITableWidget juggling,
         // can probably be replaced with a single stream of TableDefs.
-        _CurTableDef = DefDatabase<TableDef>.GetNamed("RangedWeapons_ThingTable");
+        _CurTableDef = TableDefOf.RangedWeapons_ThingTable;
         TableSelector = new TableSelector(_CurTableDef);
         TableSelector.OnTableSelect += tableDef => CurTableDef = tableDef;
         TitleBar = new MainTabWindowTitleBar(
-            _CurTableDef.Widget,
+            _CurTableDef.Worker.TableWidget,
             TableSelector,
             ExpandOrResetWidow,
             ResetCurrentTableFilters
@@ -49,7 +49,7 @@ public sealed class MainTabWindow : RimWorld.MainTabWindow
 
         TitleBarWidget.DrawIn(rect.TopPartPixels(TitleBarHeight));
 
-        _CurTableDef.Widget.Draw(rect.BottomPartPixels(rect.height - TitleBarHeight));
+        _CurTableDef.Worker.TableWidget.Draw(rect.BottomPartPixels(rect.height - TitleBarHeight));
 
         GUIDebugger.DrawDebugInfo(rect);
 
@@ -79,6 +79,6 @@ public sealed class MainTabWindow : RimWorld.MainTabWindow
     }
     private void ResetCurrentTableFilters()
     {
-        _CurTableDef.Widget.ResetFilters();
+        _CurTableDef.Worker.TableWidget.ResetFilters();
     }
 }

@@ -4,7 +4,9 @@ namespace Stats.ThingTable;
 
 public sealed class RangedMissRadiusColumnWorker : StatDrawEntryColumnWorker<ThingAlike>
 {
-    public static RangedMissRadiusColumnWorker Make(ColumnDef _) => new();
+    public RangedMissRadiusColumnWorker(ColumnDef columndef) : base(columndef)
+    {
+    }
     protected override string GetStatDrawEntryLabel(ThingAlike thing)
     {
         var verb = thing.Def.Verbs.Primary();

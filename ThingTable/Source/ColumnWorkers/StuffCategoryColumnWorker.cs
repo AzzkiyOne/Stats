@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using RimWorld;
 using Stats.Widgets;
-using Verse;
 
 namespace Stats.ThingTable;
 
@@ -30,10 +29,9 @@ public sealed class StuffCategoryColumnWorker : ColumnWorker<ThingAlike>
 
             return string.Join("\n", labels);
         });
-    private StuffCategoryColumnWorker() : base(ColumnCellStyle.String)
+    public StuffCategoryColumnWorker(ColumnDef columnDef) : base(columnDef, ColumnCellStyle.String)
     {
     }
-    public static StuffCategoryColumnWorker Make(ColumnDef _) => new();
     public override Widget? GetTableCellWidget(ThingAlike thing)
     {
         var stuffCatLabels = GetStuffCatLabels(thing);

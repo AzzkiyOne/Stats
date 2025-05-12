@@ -4,11 +4,11 @@ namespace Stats;
 
 public static class ColumnLabelFormat
 {
-    public static Widget LabelOnly(IColumnDef columnDef, ColumnCellStyle cellStyle)
+    public static Widget LabelOnly(ColumnDef columnDef, ColumnCellStyle cellStyle)
     {
         return new Label(columnDef.LabelShort);
     }
-    public static Widget IconOnly(IColumnDef columnDef, ColumnCellStyle cellStyle)
+    public static Widget IconOnly(ColumnDef columnDef, ColumnCellStyle cellStyle)
     {
         var icon = new Icon(columnDef.Icon!, columnDef.IconScale).Color(columnDef.IconColor);
 
@@ -19,7 +19,7 @@ public static class ColumnLabelFormat
             _ => icon
         };
     }
-    public static Widget LabelWithIcon(IColumnDef columnDef, ColumnCellStyle cellStyle)
+    public static Widget LabelWithIcon(ColumnDef columnDef, ColumnCellStyle cellStyle)
     {
         var label = new Label(columnDef.LabelShort);
         var icon = new Icon(columnDef.Icon!, columnDef.IconScale).Color(columnDef.IconColor);

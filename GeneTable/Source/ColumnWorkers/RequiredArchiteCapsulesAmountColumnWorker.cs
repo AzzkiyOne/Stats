@@ -11,10 +11,9 @@ public sealed class RequiredArchiteCapsulesAmountColumnWorker : NumberColumnWork
     {
         ArchiteCapsuleIcon = ContentFinder<Texture2D>.Get("UI/Icons/Biostats/ArchiteCapsuleRequired");
     }
-    public RequiredArchiteCapsulesAmountColumnWorker() : base(false, ArchiteCapsuleIcon)
+    public RequiredArchiteCapsulesAmountColumnWorker(ColumnDef columnDef) : base(columnDef, false, ArchiteCapsuleIcon)
     {
     }
-    public static RequiredArchiteCapsulesAmountColumnWorker Make(ColumnDef _) => new();
     protected override decimal GetValue(GeneDef geneDef)
     {
         return geneDef.biostatArc;

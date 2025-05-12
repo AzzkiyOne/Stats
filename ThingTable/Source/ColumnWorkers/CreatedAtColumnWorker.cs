@@ -31,10 +31,9 @@ public sealed class CreatedAtColumnWorker : ColumnWorker<ThingAlike>
 
             return craftBenchesDefs;
         });
-    private CreatedAtColumnWorker() : base(ColumnCellStyle.String)
+    public CreatedAtColumnWorker(ColumnDef columnDef) : base(columnDef, ColumnCellStyle.String)
     {
     }
-    public static CreatedAtColumnWorker Make(ColumnDef _) => new();
     public override Widget? GetTableCellWidget(ThingAlike thing)
     {
         var thingDefs = GetThingCraftingBenches(thing);

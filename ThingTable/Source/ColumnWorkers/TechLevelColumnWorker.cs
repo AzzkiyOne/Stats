@@ -7,10 +7,9 @@ namespace Stats.ThingTable;
 
 public sealed class TechLevelColumnWorker : ColumnWorker<ThingAlike>
 {
-    private TechLevelColumnWorker() : base(ColumnCellStyle.String)
+    public TechLevelColumnWorker(ColumnDef columnDef) : base(columnDef, ColumnCellStyle.String)
     {
     }
-    public static TechLevelColumnWorker Make(ColumnDef _) => new();
     public override Widget? GetTableCellWidget(ThingAlike thing)
     {
         if (thing.Def.techLevel == TechLevel.Undefined)

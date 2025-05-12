@@ -4,7 +4,9 @@ namespace Stats.ThingTable;
 
 public sealed class MaxChargesCountColumnWorker : NumberColumnWorker<ThingAlike>
 {
-    public static MaxChargesCountColumnWorker Make(ColumnDef _) => new();
+    public MaxChargesCountColumnWorker(ColumnDef columndef) : base(columndef)
+    {
+    }
     protected override decimal GetValue(ThingAlike thing)
     {
         var reloadableCompProperties = thing.Def.GetCompProperties<CompProperties_ApparelReloadable>();

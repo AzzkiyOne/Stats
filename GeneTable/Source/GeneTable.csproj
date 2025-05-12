@@ -6,6 +6,11 @@
         <RootNamespace>Stats.$(MSBuildProjectName.Replace(" ", "_"))</RootNamespace>
     </PropertyGroup>
     <ItemGroup>
+      <Compile Remove="DefOfs\**" />
+      <EmbeddedResource Remove="DefOfs\**" />
+      <None Remove="DefOfs\**" />
+    </ItemGroup>
+    <ItemGroup>
       <ProjectReference Include="..\..\Source\Stats.csproj">
         <Private>False</Private>
         <CopyLocalSatelliteAssemblies>False</CopyLocalSatelliteAssemblies>

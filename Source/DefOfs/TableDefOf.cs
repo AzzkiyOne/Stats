@@ -1,6 +1,6 @@
 ﻿using RimWorld;
 
-namespace Stats.ThingTable;
+namespace Stats;
 
 [DefOf]
 public static class TableDefOf

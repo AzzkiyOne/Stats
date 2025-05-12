@@ -10,10 +10,9 @@ namespace Stats.ThingTable;
 
 public sealed class EquippedStatOffsetsColumnWorker : ColumnWorker<ThingAlike>
 {
-    private EquippedStatOffsetsColumnWorker() : base(ColumnCellStyle.String)
+    public EquippedStatOffsetsColumnWorker(ColumnDef columnDef) : base(columnDef, ColumnCellStyle.String)
     {
     }
-    public static EquippedStatOffsetsColumnWorker Make(ColumnDef _) => new();
     private static readonly Func<ThingAlike, string> GetOffsetsString =
     FunctionExtensions.Memoized((ThingAlike thing) =>
     {

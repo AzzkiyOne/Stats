@@ -9,10 +9,9 @@ namespace Stats.ThingTable.Compat.CE;
 
 public sealed class RangedCaliberColumnWorker : ColumnWorker<ThingAlike>
 {
-    private RangedCaliberColumnWorker() : base(ColumnCellStyle.String)
+    public RangedCaliberColumnWorker(ColumnDef columnDef) : base(columnDef, ColumnCellStyle.String)
     {
     }
-    public static RangedCaliberColumnWorker Make(ColumnDef _) => new();
     private static readonly Func<ThingAlike, string> GetCaliberName =
     FunctionExtensions.Memoized((ThingAlike thing) =>
     {

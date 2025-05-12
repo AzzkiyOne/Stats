@@ -7,7 +7,7 @@ namespace Stats;
 public abstract class BooleanColumnWorker<TObject> : ColumnWorker<TObject>
 {
     private readonly Func<TObject, bool> GetCachedValue;
-    protected BooleanColumnWorker(bool cached = true) : base(ColumnCellStyle.Boolean)
+    protected BooleanColumnWorker(ColumnDef columndef, bool cached = true) : base(columndef, ColumnCellStyle.Boolean)
     {
         GetCachedValue = GetValue;
 

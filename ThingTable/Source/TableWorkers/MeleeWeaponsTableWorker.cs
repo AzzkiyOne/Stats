@@ -4,7 +4,9 @@ namespace Stats.ThingTable;
 
 public sealed class MeleeWeaponsTableWorker : TableWorker
 {
-    public static MeleeWeaponsTableWorker Make(TableDef _) => new();
+    public MeleeWeaponsTableWorker(TableDef tableDef) : base(tableDef)
+    {
+    }
     protected override bool IsValidThingDef(ThingDef thingDef)
     {
         return thingDef.IsMeleeWeapon;

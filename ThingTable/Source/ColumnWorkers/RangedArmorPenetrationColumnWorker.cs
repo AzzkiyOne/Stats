@@ -5,7 +5,9 @@ namespace Stats.ThingTable;
 
 public sealed class RangedArmorPenetrationColumnWorker : StatDrawEntryColumnWorker<ThingAlike>
 {
-    public static RangedArmorPenetrationColumnWorker Make(ColumnDef _) => new();
+    public RangedArmorPenetrationColumnWorker(ColumnDef columndef) : base(columndef)
+    {
+    }
     protected override string GetStatDrawEntryLabel(ThingAlike thing)
     {
         var verb = thing.Def.Verbs.Primary();

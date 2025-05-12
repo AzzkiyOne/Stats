@@ -5,9 +5,8 @@ namespace Stats.GeneTable;
 
 public sealed class GeneTableWorker : TableWorker<GeneDef>
 {
-    public static GeneTableWorker Make(TableDef _) => new();
-    public override IEnumerable<GeneDef> GetRecords()
+    protected override IEnumerable<GeneDef> Records => DefDatabase<GeneDef>.AllDefs;
+    public GeneTableWorker(TableDef tableDef) : base(tableDef)
     {
-        return DefDatabase<GeneDef>.AllDefs;
     }
 }

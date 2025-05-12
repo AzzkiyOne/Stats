@@ -13,10 +13,9 @@ public sealed class LabelColumnWorker : ColumnWorker<ThingAlike>
                 ? thing.Def.LabelCap.RawText
                 : $"{thing.StuffDef.LabelCap} {thing.Def.label}";
         });
-    private LabelColumnWorker() : base(ColumnCellStyle.String)
+    public LabelColumnWorker(ColumnDef columnDef) : base(columnDef, ColumnCellStyle.String)
     {
     }
-    public static LabelColumnWorker Make(ColumnDef _) => new();
     public override Widget? GetTableCellWidget(ThingAlike thing)
     {
         void openDefInfoDialog()

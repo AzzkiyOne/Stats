@@ -2,11 +2,11 @@
 
 <Defs>
 
-    <Stats.ThingTable.ColumnDef>
+    <Stats.ColumnDef>
         <defName>ValidLifeStage_ThingTableColumn</defName>
         <labelKey>Stat_Thing_Apparel_ValidLifestage</labelKey>
         <descriptionKey>Stat_Thing_Apparel_ValidLifestage_Desc</descriptionKey>
-        <workerFactory>Stats.ThingTable.Compat.Biotech.ValidLifeStageColumnWorker.Make</workerFactory>
-    </Stats.ThingTable.ColumnDef>
+        <workerClass>Stats.ThingTable.Compat.Biotech.ValidLifeStageColumnWorker</workerClass>
+    </Stats.ColumnDef>
 
 </Defs>

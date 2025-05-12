@@ -4,7 +4,9 @@ namespace Stats.ThingTable;
 
 public sealed class IsDestroyedWhenAllChargesSpentColumnWorker : BooleanColumnWorker<ThingAlike>
 {
-    public static IsDestroyedWhenAllChargesSpentColumnWorker Make(ColumnDef _) => new();
+    public IsDestroyedWhenAllChargesSpentColumnWorker(ColumnDef columndef) : base(columndef)
+    {
+    }
     protected override bool GetValue(ThingAlike thing)
     {
         var reloadableCompProperties = thing.Def.GetCompProperties<CompProperties_ApparelReloadable>();

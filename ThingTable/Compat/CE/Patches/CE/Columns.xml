@@ -2,10 +2,23 @@
 
 <Patch>
 
+    <Operation Class="PatchOperationAttributeSet">
+        <xpath>Defs/Stats.ColumnDef[defName="SharpArmorRating_ThingTableColumn" or defName="BluntArmorRating_ThingTableColumn"]</xpath>
+        <attribute>Class</attribute>
+        <value>Stats.ThingTable.Compat.CE.BinaryStatColumnDef</value>
+    </Operation>
+
     <Operation Class="PatchOperationReplace">
-        <xpath>Defs/Stats.ThingTable.ColumnDef[defName="SharpArmorRating_ThingTableColumn" or defName="BluntArmorRating_ThingTableColumn"]/workerFactory</xpath>
+        <xpath>Defs/Stats.ColumnDef[defName="SharpArmorRating_ThingTableColumn" or defName="BluntArmorRating_ThingTableColumn"]/workerClass</xpath>
         <value>
-            <workerFactory>Stats.ThingTable.Compat.CE.BinaryStatColumnWorker.MakeRight</workerFactory>
+            <workerClass>Stats.ThingTable.Compat.CE.BinaryStatColumnWorkerRight</workerClass>
+        </value>
+    </Operation>
+
+    <Operation Class="PatchOperationAdd">
+        <xpath>Defs/Stats.ColumnDef[defName="SharpArmorRating_ThingTableColumn" or defName="BluntArmorRating_ThingTableColumn"]</xpath>
+        <value>
+            <statValueSeparator>~</statValueSeparator>
         </value>
     </Operation>
 

@@ -6,10 +6,9 @@ namespace Stats.GeneTable;
 
 public sealed class LabelColumnWorker : ColumnWorker<GeneDef>
 {
-    private LabelColumnWorker() : base(ColumnCellStyle.String)
+    public LabelColumnWorker(ColumnDef columnDef) : base(columnDef, ColumnCellStyle.String)
     {
     }
-    public static LabelColumnWorker Make(ColumnDef _) => new();
     public override Widget? GetTableCellWidget(GeneDef geneDef)
     {
         void openDefInfoDialog()

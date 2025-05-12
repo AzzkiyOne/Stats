@@ -2,134 +2,104 @@
 
 <Defs>
 
-    <Stats.ThingTable.ColumnDef>
+    <Stats.ColumnDef>
         <defName>Label_ThingTableColumn</defName>
         <label>label</label>
-        <workerFactory>Stats.ThingTable.LabelColumnWorker.Make</workerFactory>
-    </Stats.ThingTable.ColumnDef>
+        <workerClass>Stats.ThingTable.LabelColumnWorker</workerClass>
+    </Stats.ColumnDef>
 
-    <Stats.ThingTable.ColumnDef>
+    <Stats.ColumnDef Class="Stats.ThingTable.StatColumnDef">
         <defName>MarketValue_ThingTableColumn</defName>
         <labelShort>$$$</labelShort>
         <stat>MarketValue</stat>
-        <workerFactory>Stats.ThingTable.StatColumnWorker.Make</workerFactory>
-    </Stats.ThingTable.ColumnDef>
+        <workerClass>Stats.ThingTable.StatColumnWorker</workerClass>
+    </Stats.ColumnDef>
 
-    <Stats.ThingTable.ColumnDef>
+    <Stats.ColumnDef Class="Stats.ThingTable.StatColumnDef">
         <defName>MaxHitPoints_ThingTableColumn</defName>
         <labelShort>Max HP</labelShort>
         <stat>MaxHitPoints</stat>
         <statValueExplanationType>Unfinalized</statValueExplanationType>
-        <workerFactory>Stats.ThingTable.StatColumnWorker.Make</workerFactory>
-    </Stats.ThingTable.ColumnDef>
+        <workerClass>Stats.ThingTable.StatColumnWorker</workerClass>
+    </Stats.ColumnDef>
 
-    <Stats.ThingTable.ColumnDef>
+    <Stats.ColumnDef Class="Stats.ThingTable.StatColumnDef">
         <defName>Flammability_ThingTableColumn</defName>
         <labelShort>%</labelShort>
         <iconPath>UI/Icons/ColonistBar/Burning</iconPath>
         <stat>Flammability</stat>
         <statValueExplanationType>Unfinalized</statValueExplanationType>
-        <workerFactory>Stats.ThingTable.StatColumnWorker.Make</workerFactory>
-    </Stats.ThingTable.ColumnDef>
+        <workerClass>Stats.ThingTable.StatColumnWorker</workerClass>
+    </Stats.ColumnDef>
 
-    <Stats.ThingTable.ColumnDef>
+    <Stats.ColumnDef Class="Stats.ThingTable.StatColumnDef">
         <defName>Mass_ThingTableColumn</defName>
         <stat>Mass</stat>
         <statValueExplanationType>Unfinalized</statValueExplanationType>
-        <workerFactory>Stats.ThingTable.StatColumnWorker.Make</workerFactory>
-    </Stats.ThingTable.ColumnDef>
+        <workerClass>Stats.ThingTable.StatColumnWorker</workerClass>
+    </Stats.ColumnDef>
 
-    <Stats.ThingTable.ColumnDef>
+    <Stats.ColumnDef>
         <defName>CreatedAt_ThingTableColumn</defName>
         <labelKey>CreatedAt</labelKey>
         <descriptionKey>Stat_Thing_CreatedAt_Desc</descriptionKey>
-        <workerFactory>Stats.ThingTable.CreatedAtColumnWorker.Make</workerFactory>
-    </Stats.ThingTable.ColumnDef>
+        <workerClass>Stats.ThingTable.CreatedAtColumnWorker</workerClass>
+    </Stats.ColumnDef>
 
-    <!-- Ingredients? -->
-
-    <Stats.ThingTable.ColumnDef>
+    <Stats.ColumnDef Class="Stats.ThingTable.StatColumnDef">
         <defName>WorkToMake_ThingTableColumn</defName>
         <labelShort>Work</labelShort>
         <stat>WorkToMake</stat>
         <statValueExplanationType>Unfinalized</statValueExplanationType>
-        <workerFactory>Stats.ThingTable.StatColumnWorker.Make</workerFactory>
-    </Stats.ThingTable.ColumnDef>
+        <workerClass>Stats.ThingTable.StatColumnWorker</workerClass>
+    </Stats.ColumnDef>
 
-    <!-- <Stats.ThingTable.ColumnDef>
-        <defName>Beauty_ThingTableColumn</defName>
-        <stat>Beauty</stat>
-        <statValueExplanationType>Unfinalized</statValueExplanationType>
-        <workerFactory>Stats.ThingTable.StatColumnWorker.Make</workerFactory>
-    </Stats.ThingTable.ColumnDef> -->
-
-    <!-- <Stats.ThingTable.ColumnDef>
-        <defName>SellPriceFactor_ThingTableColumn</defName>
-        <labelShort>$$$ %</labelShort>
-        <stat>SellPriceFactor</stat>
-        <workerFactory>Stats.ThingTable.StatColumnWorker.Make</workerFactory>
-    </Stats.ThingTable.ColumnDef> -->
-
-    <!-- <Stats.ThingTable.ColumnDef>
-        <defName>DeteriorationRate_ThingTableColumn</defName>
-        <labelShort>-HP/d</labelShort>
-        <stat>DeteriorationRate</stat>
-        <statValueFormatString>0.00/d</statValueFormatString>
-        <workerFactory>Stats.ThingTable.StatColumnWorker.Make</workerFactory>
-    </Stats.ThingTable.ColumnDef> -->
-
-    <Stats.ThingTable.ColumnDef>
+    <Stats.ColumnDef>
         <defName>ContentSource_ThingTableColumn</defName>
         <labelKey>Stat_Source_Label</labelKey>
-        <workerFactory>Stats.ThingTable.ContentSourceColumnWorker.Make</workerFactory>
-    </Stats.ThingTable.ColumnDef>
+        <workerClass>Stats.ThingTable.ContentSourceColumnWorker</workerClass>
+    </Stats.ColumnDef>
 
-    <!-- <Stats.ThingTable.ColumnDef>
-        <defName>Nutrition_ThingTableColumn</defName>
-        <stat>Nutrition</stat>
-        <workerFactory>Stats.ThingTable.StatColumnWorker.Make</workerFactory>
-    </Stats.ThingTable.ColumnDef> -->
-
-    <Stats.ThingTable.ColumnDef>
+    <Stats.ColumnDef>
         <defName>TechLevel_ThingTableColumn</defName>
         <label>tech level</label>
-        <workerFactory>Stats.ThingTable.TechLevelColumnWorker.Make</workerFactory>
-    </Stats.ThingTable.ColumnDef>
+        <workerClass>Stats.ThingTable.TechLevelColumnWorker</workerClass>
+    </Stats.ColumnDef>
 
-    <Stats.ThingTable.ColumnDef>
+    <Stats.ColumnDef>
         <defName>EquippedStatOffsets_ThingTableColumn</defName>
         <label>Offsets when equipped</label>
         <labelShort>Offsets</labelShort>
-        <workerFactory>Stats.ThingTable.EquippedStatOffsetsColumnWorker.Make</workerFactory>
-    </Stats.ThingTable.ColumnDef>
+        <workerClass>Stats.ThingTable.EquippedStatOffsetsColumnWorker</workerClass>
+    </Stats.ColumnDef>
     
-    <Stats.ThingTable.ColumnDef>
+    <Stats.ColumnDef>
         <defName>StuffCategory_ThingTableColumn</defName>
         <label>category</label>
-        <workerFactory>Stats.ThingTable.StuffCategoryColumnWorker.Make</workerFactory>
-    </Stats.ThingTable.ColumnDef>
+        <workerClass>Stats.ThingTable.StuffCategoryColumnWorker</workerClass>
+    </Stats.ColumnDef>
 
-    <Stats.ThingTable.ColumnDef>
+    <Stats.ColumnDef Class="Stats.ThingTable.StatColumnDef">
         <defName>ColdInsulation_ThingTableColumn</defName>
         <iconPath>UI/Buttons/ToggleHeatOverlay</iconPath>
         <iconColor>(0.04,0.66,1)</iconColor>
         <labelFormat>Stats.ColumnLabelFormat.IconOnly</labelFormat>
         <stat>Insulation_Cold</stat>
         <statValueExplanationType>FinalizePart</statValueExplanationType>
-        <workerFactory>Stats.ThingTable.StatColumnWorker.Make</workerFactory>
-    </Stats.ThingTable.ColumnDef>
+        <workerClass>Stats.ThingTable.StatColumnWorker</workerClass>
+    </Stats.ColumnDef>
 
-    <Stats.ThingTable.ColumnDef>
+    <Stats.ColumnDef Class="Stats.ThingTable.StatColumnDef">
         <defName>HeatInsulation_ThingTableColumn</defName>
         <iconPath>UI/Buttons/ToggleHeatOverlay</iconPath>
         <iconColor>(1,0.25,0.04)</iconColor>
         <labelFormat>Stats.ColumnLabelFormat.IconOnly</labelFormat>
         <stat>Insulation_Heat</stat>
         <statValueExplanationType>FinalizePart</statValueExplanationType>
-        <workerFactory>Stats.ThingTable.StatColumnWorker.Make</workerFactory>
-    </Stats.ThingTable.ColumnDef>
+        <workerClass>Stats.ThingTable.StatColumnWorker</workerClass>
+    </Stats.ColumnDef>
 
-    <Stats.ThingTable.ColumnDef>
+    <Stats.ColumnDef Class="Stats.ThingTable.StatColumnDef">
         <defName>SharpArmorRating_ThingTableColumn</defName>
         <iconPath>Things/Item/Equipment/WeaponMelee/Longsword</iconPath>
         <iconColor>(160,178,181)</iconColor>
@@ -137,10 +107,10 @@
         <labelFormat>Stats.ThingTable.ColumnLabelFormat.ArmorRating</labelFormat>
         <stat>ArmorRating_Sharp</stat>
         <statValueExplanationType>FinalizePart</statValueExplanationType>
-        <workerFactory>Stats.ThingTable.StatColumnWorker.Make</workerFactory>
-    </Stats.ThingTable.ColumnDef>
+        <workerClass>Stats.ThingTable.StatColumnWorker</workerClass>
+    </Stats.ColumnDef>
 
-    <Stats.ThingTable.ColumnDef>
+    <Stats.ColumnDef Class="Stats.ThingTable.StatColumnDef">
         <defName>BluntArmorRating_ThingTableColumn</defName>
         <iconPath>Things/Item/Equipment/WeaponMelee/Club</iconPath>
         <iconColor>(160,178,181)</iconColor>
@@ -148,221 +118,221 @@
         <labelFormat>Stats.ThingTable.ColumnLabelFormat.ArmorRating</labelFormat>
         <stat>ArmorRating_Blunt</stat>
         <statValueExplanationType>FinalizePart</statValueExplanationType>
-        <workerFactory>Stats.ThingTable.StatColumnWorker.Make</workerFactory>
-    </Stats.ThingTable.ColumnDef>
+        <workerClass>Stats.ThingTable.StatColumnWorker</workerClass>
+    </Stats.ColumnDef>
 
-    <Stats.ThingTable.ColumnDef>
+    <Stats.ColumnDef Class="Stats.ThingTable.StatColumnDef">
         <defName>HeatArmorRating_ThingTableColumn</defName>
         <iconPath>UI/Icons/ColonistBar/Burning</iconPath>
         <labelFormat>Stats.ThingTable.ColumnLabelFormat.ArmorRating</labelFormat>
         <stat>ArmorRating_Heat</stat>
         <statValueExplanationType>FinalizePart</statValueExplanationType>
-        <workerFactory>Stats.ThingTable.StatColumnWorker.Make</workerFactory>
-    </Stats.ThingTable.ColumnDef>
+        <workerClass>Stats.ThingTable.StatColumnWorker</workerClass>
+    </Stats.ColumnDef>
 
-    <Stats.ThingTable.ColumnDef>
+    <Stats.ColumnDef Class="Stats.ThingTable.StatColumnDef">
         <defName>EnergyShieldCapacity_ThingTableColumn</defName>
         <labelShort>Shiled %</labelShort>
         <stat>EnergyShieldEnergyMax</stat>
-        <workerFactory>Stats.ThingTable.StatColumnWorker.Make</workerFactory>
-    </Stats.ThingTable.ColumnDef>
+        <workerClass>Stats.ThingTable.StatColumnWorker</workerClass>
+    </Stats.ColumnDef>
 
-    <Stats.ThingTable.ColumnDef>
+    <Stats.ColumnDef Class="Stats.ThingTable.StatColumnDef">
         <defName>EnergyShieldRechargeRate_ThingTableColumn</defName>
         <labelShort>Shiled %/s</labelShort>
         <stat>EnergyShieldRechargeRate</stat>
-        <workerFactory>Stats.ThingTable.StatColumnWorker.Make</workerFactory>
-    </Stats.ThingTable.ColumnDef>
+        <workerClass>Stats.ThingTable.StatColumnWorker</workerClass>
+    </Stats.ColumnDef>
 
-    <Stats.ThingTable.ColumnDef>
+    <Stats.ColumnDef>
         <defName>OccupiedApparelLayers_ThingTableColumn</defName>
         <labelKey>Layer</labelKey>
         <descriptionKey>Stat_Thing_Apparel_Layer_Desc</descriptionKey>
-        <workerFactory>Stats.ThingTable.OccupiedApparelLayersColumnWorker.Make</workerFactory>
-    </Stats.ThingTable.ColumnDef>
+        <workerClass>Stats.ThingTable.OccupiedApparelLayersColumnWorker</workerClass>
+    </Stats.ColumnDef>
 
-    <Stats.ThingTable.ColumnDef>
+    <Stats.ColumnDef>
         <defName>CoveredBodyPartGroups_ThingTableColumn</defName>
         <labelKey>Covers</labelKey>
         <descriptionKey>Stat_Thing_Apparel_Covers_Desc</descriptionKey>
-        <workerFactory>Stats.ThingTable.CoveredBodyPartGroupsColumnWorker.Make</workerFactory>
-    </Stats.ThingTable.ColumnDef>
+        <workerClass>Stats.ThingTable.CoveredBodyPartGroupsColumnWorker</workerClass>
+    </Stats.ColumnDef>
 
-    <Stats.ThingTable.ColumnDef>
+    <Stats.ColumnDef Class="Stats.ThingTable.StatColumnDef">
         <defName>MeleeDPS_ThingTableColumn</defName>
         <labelShort>DPS</labelShort>
         <stat>MeleeWeapon_AverageDPS</stat>
         <statValueExplanationType>Full</statValueExplanationType>
-        <workerFactory>Stats.ThingTable.StatColumnWorker.Make</workerFactory>
-    </Stats.ThingTable.ColumnDef>
+        <workerClass>Stats.ThingTable.StatColumnWorker</workerClass>
+    </Stats.ColumnDef>
 
-    <Stats.ThingTable.ColumnDef>
+    <Stats.ColumnDef Class="Stats.ThingTable.StatColumnDef">
         <defName>MeleeArmorPenetration_ThingTableColumn</defName>
         <labelShort>AP</labelShort>
         <stat>MeleeWeapon_AverageArmorPenetration</stat>
-        <workerFactory>Stats.ThingTable.StatColumnWorker.Make</workerFactory>
-    </Stats.ThingTable.ColumnDef>
+        <workerClass>Stats.ThingTable.StatColumnWorker</workerClass>
+    </Stats.ColumnDef>
 
-    <Stats.ThingTable.ColumnDef>
+    <Stats.ColumnDef>
         <defName>RangedDamage_ThingTableColumn</defName>
         <labelKey>Damage</labelKey>
         <descriptionKey>Stat_Thing_Damage_Desc</descriptionKey>
         <iconPath>UI/Commands/FireAtWill</iconPath>
         <labelFormat>Stats.ColumnLabelFormat.IconOnly</labelFormat>
-        <workerFactory>Stats.ThingTable.RangedDamageColumnWorker.Make</workerFactory>
-    </Stats.ThingTable.ColumnDef>
+        <workerClass>Stats.ThingTable.RangedDamageColumnWorker</workerClass>
+    </Stats.ColumnDef>
 
-    <Stats.ThingTable.ColumnDef>
+    <Stats.ColumnDef>
         <defName>RangedStoppingPower_ThingTableColumn</defName>
         <labelKey>StoppingPower</labelKey>
         <descriptionKey>StoppingPowerExplanation</descriptionKey>
         <iconPath>UI/Icons/Trainables/Obedience</iconPath>
         <labelFormat>Stats.ColumnLabelFormat.IconOnly</labelFormat>
-        <workerFactory>Stats.ThingTable.RangedStoppingPowerColumnWorker.Make</workerFactory>
-    </Stats.ThingTable.ColumnDef>
+        <workerClass>Stats.ThingTable.RangedStoppingPowerColumnWorker</workerClass>
+    </Stats.ColumnDef>
 
-    <Stats.ThingTable.ColumnDef>
+    <Stats.ColumnDef>
         <defName>RangedArmorPenetration_ThingTableColumn</defName>
         <labelKey>ArmorPenetration</labelKey>
         <labelShort>AP</labelShort>
         <descriptionKey>ArmorPenetrationExplanation</descriptionKey>
-        <workerFactory>Stats.ThingTable.RangedArmorPenetrationColumnWorker.Make</workerFactory>
-    </Stats.ThingTable.ColumnDef>
+        <workerClass>Stats.ThingTable.RangedArmorPenetrationColumnWorker</workerClass>
+    </Stats.ColumnDef>
 
-    <Stats.ThingTable.ColumnDef>
+    <Stats.ColumnDef>
         <defName>RangedRPM_ThingTableColumn</defName>
         <labelKey>BurstShotFireRate</labelKey>
         <labelShort>RPM</labelShort>
         <descriptionKey>Stat_Thing_Weapon_BurstShotFireRate_Desc</descriptionKey>
-        <workerFactory>Stats.ThingTable.RangedRPMColumnWorker.Make</workerFactory>
-    </Stats.ThingTable.ColumnDef>
+        <workerClass>Stats.ThingTable.RangedRPMColumnWorker</workerClass>
+    </Stats.ColumnDef>
 
-    <Stats.ThingTable.ColumnDef>
+    <Stats.ColumnDef>
         <defName>RangedBurstShotCount_ThingTableColumn</defName>
         <labelKey>BurstShotCount</labelKey>
         <labelShort>Shots</labelShort>
         <descriptionKey>Stat_Thing_Weapon_BurstShotCount_Desc</descriptionKey>
-        <workerFactory>Stats.ThingTable.RangedBurstShotCountColumnWorker.Make</workerFactory>
-    </Stats.ThingTable.ColumnDef>
+        <workerClass>Stats.ThingTable.RangedBurstShotCountColumnWorker</workerClass>
+    </Stats.ColumnDef>
 
-    <Stats.ThingTable.ColumnDef>
+    <Stats.ColumnDef>
         <defName>RangedRange_ThingTableColumn</defName>
         <labelKey>Range</labelKey>
         <descriptionKey>Stat_Thing_Weapon_Range_Desc</descriptionKey>
-        <workerFactory>Stats.ThingTable.RangedRangeColumnWorker.Make</workerFactory>
-    </Stats.ThingTable.ColumnDef>
+        <workerClass>Stats.ThingTable.RangedRangeColumnWorker</workerClass>
+    </Stats.ColumnDef>
 
-    <Stats.ThingTable.ColumnDef>
+    <Stats.ColumnDef Class="Stats.ThingTable.StatColumnDef">
         <defName>RangedTouchAccuracy_ThingTableColumn</defName>
         <labelShort>3</labelShort>
         <iconPath>Things/Mote/FeedbackShoot</iconPath>
         <stat>AccuracyTouch</stat>
-        <workerFactory>Stats.ThingTable.StatColumnWorker.Make</workerFactory>
-    </Stats.ThingTable.ColumnDef>
+        <workerClass>Stats.ThingTable.StatColumnWorker</workerClass>
+    </Stats.ColumnDef>
 
-    <Stats.ThingTable.ColumnDef>
+    <Stats.ColumnDef Class="Stats.ThingTable.StatColumnDef">
         <defName>RangedShortAccuracy_ThingTableColumn</defName>
         <labelShort>12</labelShort>
         <iconPath>Things/Mote/FeedbackShoot</iconPath>
         <stat>AccuracyShort</stat>
-        <workerFactory>Stats.ThingTable.StatColumnWorker.Make</workerFactory>
-    </Stats.ThingTable.ColumnDef>
+        <workerClass>Stats.ThingTable.StatColumnWorker</workerClass>
+    </Stats.ColumnDef>
 
-    <Stats.ThingTable.ColumnDef>
+    <Stats.ColumnDef Class="Stats.ThingTable.StatColumnDef">
         <defName>RangedMediumAccuracy_ThingTableColumn</defName>
         <labelShort>25</labelShort>
         <iconPath>Things/Mote/FeedbackShoot</iconPath>
         <stat>AccuracyMedium</stat>
-        <workerFactory>Stats.ThingTable.StatColumnWorker.Make</workerFactory>
-    </Stats.ThingTable.ColumnDef>
+        <workerClass>Stats.ThingTable.StatColumnWorker</workerClass>
+    </Stats.ColumnDef>
 
-    <Stats.ThingTable.ColumnDef>
+    <Stats.ColumnDef Class="Stats.ThingTable.StatColumnDef">
         <defName>RangedLongAccuracy_ThingTableColumn</defName>
         <labelShort>40</labelShort>
         <iconPath>Things/Mote/FeedbackShoot</iconPath>
         <stat>AccuracyLong</stat>
-        <workerFactory>Stats.ThingTable.StatColumnWorker.Make</workerFactory>
-    </Stats.ThingTable.ColumnDef>
+        <workerClass>Stats.ThingTable.StatColumnWorker</workerClass>
+    </Stats.ColumnDef>
 
-    <Stats.ThingTable.ColumnDef>
+    <Stats.ColumnDef Class="Stats.ThingTable.StatColumnDef">
         <defName>RangedCooldown_ThingTableColumn</defName>
         <labelShort>CD</labelShort>
         <stat>RangedWeapon_Cooldown</stat>
-        <workerFactory>Stats.ThingTable.StatColumnWorker.Make</workerFactory>
-    </Stats.ThingTable.ColumnDef>
+        <workerClass>Stats.ThingTable.StatColumnWorker</workerClass>
+    </Stats.ColumnDef>
 
-    <Stats.ThingTable.ColumnDef>
+    <Stats.ColumnDef>
         <defName>RangedAimingTime_ThingTableColumn</defName>
         <labelKey>RangedWarmupTime</labelKey>
         <labelShort>Aim t.</labelShort>
         <descriptionKey>Stat_Thing_Weapon_RangedWarmupTime_Desc</descriptionKey>
-        <workerFactory>Stats.ThingTable.RangedAimingTimeColumnWorker.Make</workerFactory>
-    </Stats.ThingTable.ColumnDef>
+        <workerClass>Stats.ThingTable.RangedAimingTimeColumnWorker</workerClass>
+    </Stats.ColumnDef>
 
-    <Stats.ThingTable.ColumnDef>
+    <Stats.ColumnDef>
         <defName>RangedPassableBuildingDamageFactor_ThingTableColumn</defName>
         <labelKey>BuildingDamageFactorPassable</labelKey>
         <iconPath>Things/Building/Linked/Sandbags_MenuIcon</iconPath>
         <iconColor>(139,122,87)</iconColor>
         <labelFormat>Stats.ThingTable.ColumnLabelFormat.DamageFactorTo</labelFormat>
         <descriptionKey>BuildingDamageFactorPassableExplanation</descriptionKey>
-        <workerFactory>Stats.ThingTable.RangedPassableBuildingDamageFactorColumnWorker.Make</workerFactory>
-    </Stats.ThingTable.ColumnDef>
+        <workerClass>Stats.ThingTable.RangedPassableBuildingDamageFactorColumnWorker</workerClass>
+    </Stats.ColumnDef>
 
-    <Stats.ThingTable.ColumnDef>
+    <Stats.ColumnDef>
         <defName>RangedImpassableBuildingDamageFactor_ThingTableColumn</defName>
         <labelKey>BuildingDamageFactorImpassable</labelKey>
         <iconPath>Things/Building/Linked/WallBricks_MenuIcon</iconPath>
         <iconColor>(105,95,97)</iconColor>
         <labelFormat>Stats.ThingTable.ColumnLabelFormat.DamageFactorTo</labelFormat>
         <descriptionKey>BuildingDamageFactorImpassableExplanation</descriptionKey>
-        <workerFactory>Stats.ThingTable.RangedImpassableBuildingDamageFactorColumnWorker.Make</workerFactory>
-    </Stats.ThingTable.ColumnDef>
+        <workerClass>Stats.ThingTable.RangedImpassableBuildingDamageFactorColumnWorker</workerClass>
+    </Stats.ColumnDef>
 
-    <Stats.ThingTable.ColumnDef>
+    <Stats.ColumnDef>
         <defName>RangedDirectHitChance_ThingTableColumn</defName>
         <labelKey>DirectHitChance</labelKey>
         <labelShort>%</labelShort>
         <iconPath>UI/Commands/Attack</iconPath>
         <descriptionKey>Stat_Thing_Weapon_DirectHitChance_Desc</descriptionKey>
-        <workerFactory>Stats.ThingTable.RangedDirectHitChanceColumnWorker.Make</workerFactory>
-    </Stats.ThingTable.ColumnDef>
+        <workerClass>Stats.ThingTable.RangedDirectHitChanceColumnWorker</workerClass>
+    </Stats.ColumnDef>
 
-    <Stats.ThingTable.ColumnDef>
+    <Stats.ColumnDef>
         <defName>RangedMissRadius_ThingTableColumn</defName>
         <labelKey>MissRadius</labelKey>
         <labelShort>MR</labelShort>
         <descriptionKey>Stat_Thing_Weapon_MissRadius_Desc</descriptionKey>
-        <workerFactory>Stats.ThingTable.RangedMissRadiusColumnWorker.Make</workerFactory>
-    </Stats.ThingTable.ColumnDef>
+        <workerClass>Stats.ThingTable.RangedMissRadiusColumnWorker</workerClass>
+    </Stats.ColumnDef>
     
-    <Stats.ThingTable.ColumnDef>
+    <Stats.ColumnDef>
         <defName>CountsAsClothingForNudity_ThingTableColumn</defName>
         <labelKey>Stat_Thing_Apparel_CountsAsClothingNudity_Name</labelKey>
         <descriptionKey>Stat_Thing_Apparel_CountsAsClothingNudity_Desc</descriptionKey>
         <iconPath>StatsMod/UI/Icons/NudistPawn</iconPath>
         <labelFormat>Stats.ColumnLabelFormat.IconOnly</labelFormat>
-        <workerFactory>Stats.ThingTable.CountsAsClothingForNudityColumnWorker.Make</workerFactory>
-    </Stats.ThingTable.ColumnDef>
+        <workerClass>Stats.ThingTable.CountsAsClothingForNudityColumnWorker</workerClass>
+    </Stats.ColumnDef>
 
-    <Stats.ThingTable.ColumnDef>
+    <Stats.ColumnDef Class="Stats.ThingTable.StatColumnDef">
         <defName>EquipDelay_ThingTableColumn</defName>
         <stat>EquipDelay</stat>
-        <workerFactory>Stats.ThingTable.StatColumnWorker.Make</workerFactory>
-    </Stats.ThingTable.ColumnDef>
+        <workerClass>Stats.ThingTable.StatColumnWorker</workerClass>
+    </Stats.ColumnDef>
 
-    <Stats.ThingTable.ColumnDef>
+    <Stats.ColumnDef>
         <defName>MaxChargesCount_ThingTableColumn</defName>
         <label>charges</label>
         <description>The maximum number of charges this object has.</description>
-        <workerFactory>Stats.ThingTable.MaxChargesCountColumnWorker.Make</workerFactory>
-    </Stats.ThingTable.ColumnDef>
+        <workerClass>Stats.ThingTable.MaxChargesCountColumnWorker</workerClass>
+    </Stats.ColumnDef>
 
-    <Stats.ThingTable.ColumnDef>
+    <Stats.ColumnDef>
         <defName>IsDestroyedWhenAllChargesSpent_ThingTableColumn</defName>
         <label>expendable</label>
         <description>This item will vanish when its last charge is used.</description>
-        <workerFactory>Stats.ThingTable.IsDestroyedWhenAllChargesSpentColumnWorker.Make</workerFactory>
-    </Stats.ThingTable.ColumnDef>
+        <workerClass>Stats.ThingTable.IsDestroyedWhenAllChargesSpentColumnWorker</workerClass>
+    </Stats.ColumnDef>
 
 </Defs>

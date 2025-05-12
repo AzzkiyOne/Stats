@@ -5,7 +5,9 @@ namespace Stats.ThingTable.Compat.CE;
 
 public sealed class IsOneHandedColumnWorker : BooleanColumnWorker<ThingAlike>
 {
-    public static IsOneHandedColumnWorker Make(ColumnDef _) => new();
+    public IsOneHandedColumnWorker(ColumnDef columndef) : base(columndef)
+    {
+    }
     protected override bool GetValue(ThingAlike thing)
     {
         var statReq = StatRequest.For(thing.Def, thing.StuffDef);

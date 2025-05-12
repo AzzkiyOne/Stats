@@ -2,37 +2,37 @@
 
 <Defs>
 
-    <Stats.GeneTable.ColumnDef>
+    <Stats.ColumnDef>
         <defName>Label_GeneTableColumn</defName>
         <label>label</label>
-        <workerFactory>Stats.GeneTable.LabelColumnWorker.Make</workerFactory>
-    </Stats.GeneTable.ColumnDef>
+        <workerClass>Stats.GeneTable.LabelColumnWorker</workerClass>
+    </Stats.ColumnDef>
 
-    <Stats.GeneTable.ColumnDef>
+    <Stats.ColumnDef>
         <defName>ContentSource_GeneTableColumn</defName>
         <labelKey>Stat_Source_Label</labelKey>
-        <workerFactory>Stats.GeneTable.ContentSourceColumnWorker.Make</workerFactory>
-    </Stats.GeneTable.ColumnDef>
+        <workerClass>Stats.GeneTable.ContentSourceColumnWorker</workerClass>
+    </Stats.ColumnDef>
 
-    <Stats.GeneTable.ColumnDef>
+    <Stats.ColumnDef>
         <defName>Complexity_GeneTableColumn</defName>
         <labelKey>Complexity</labelKey>
         <descriptionKey>ComplexityDesc</descriptionKey>
-        <workerFactory>Stats.GeneTable.ComplexityColumnWorker.Make</workerFactory>
-    </Stats.GeneTable.ColumnDef>
+        <workerClass>Stats.GeneTable.ComplexityColumnWorker</workerClass>
+    </Stats.ColumnDef>
 
-    <Stats.GeneTable.ColumnDef>
+    <Stats.ColumnDef>
         <defName>MetabolicEfficiency_GeneTableColumn</defName>
         <labelKey>Metabolism</labelKey>
         <descriptionKey>MetabolismDesc</descriptionKey>
-        <workerFactory>Stats.GeneTable.MetabolicEfficiencyColumnWorker.Make</workerFactory>
-    </Stats.GeneTable.ColumnDef>
+        <workerClass>Stats.GeneTable.MetabolicEfficiencyColumnWorker</workerClass>
+    </Stats.ColumnDef>
 
-    <Stats.GeneTable.ColumnDef>
+    <Stats.ColumnDef>
         <defName>RequiredArchiteCapsulesAmount_GeneTableColumn</defName>
         <labelKey>ArchitesRequired</labelKey>
         <descriptionKey>ArchitesRequiredDesc</descriptionKey>
-        <workerFactory>Stats.GeneTable.RequiredArchiteCapsulesAmountColumnWorker.Make</workerFactory>
-    </Stats.GeneTable.ColumnDef>
+        <workerClass>Stats.GeneTable.RequiredArchiteCapsulesAmountColumnWorker</workerClass>
+    </Stats.ColumnDef>
 
 </Defs>
