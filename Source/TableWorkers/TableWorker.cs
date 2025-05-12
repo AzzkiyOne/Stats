@@ -36,5 +36,4 @@ public abstract class TableWorker<TObject> : TableWorker
 
         return new ObjectTable<TObject>(columnWorkers, Records);
     }
-    //protected abstract IEnumerable<TObject> GetRecords();
 }
