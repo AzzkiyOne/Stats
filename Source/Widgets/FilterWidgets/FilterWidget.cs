@@ -17,13 +17,13 @@ public abstract class FilterWidget<TObject> : Widget
     {
         public abstract bool IsEmpty { get; }
         public abstract event Action<AbsExpression> OnChange;
-        public abstract bool Eval(TObject thing);
+        public abstract bool Eval(TObject @object);
         public abstract void Reset();
         public abstract void NotifyChanged();
     }
 }
 
-public abstract class FilterWidget<T, TExprLhs, TExprRhs> : FilterWidget<T> where TExprRhs : notnull
+public abstract class FilterWidget<TObject, TExprLhs, TExprRhs> : FilterWidget<TObject> where TExprRhs : notnull
 {
     new protected GenExpression Expression { get; }
     protected FilterWidget(GenExpression expression) : base(expression)
@@ -33,7 +33,7 @@ public abstract class FilterWidget<T, TExprLhs, TExprRhs> : FilterWidget<T> wher
 
     protected abstract class GenExpression : AbsExpression
     {
-        private readonly Func<T, TExprLhs> Lhs;
+        private readonly Func<TObject, TExprLhs> Lhs;
         private TExprRhs _Rhs;
         public TExprRhs Rhs
         {
@@ -67,12 +67,12 @@ public abstract class FilterWidget<T, TExprLhs, TExprRhs> : FilterWidget<T> wher
         public abstract IEnumerable<GenericOperator> SupportedOperators { get; }
         public sealed override event Action<AbsExpression>? OnChange;
         public sealed override bool IsEmpty => _Operator == EmptyOperator.Instance;
-        public GenExpression(Func<T, TExprLhs> lhs, TExprRhs rhs)
+        public GenExpression(Func<TObject, TExprLhs> lhs, TExprRhs rhs)
         {
             Lhs = lhs;
             _Rhs = rhs;
         }
-        public sealed override bool Eval(T thing)
+        public sealed override bool Eval(TObject thing)
         {
             try
             {
