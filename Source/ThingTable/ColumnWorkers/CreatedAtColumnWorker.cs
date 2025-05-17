@@ -8,35 +8,55 @@ namespace Stats.ThingTable;
 
 public sealed class CreatedAtColumnWorker : ColumnWorker<ThingAlike>
 {
-    private static readonly Func<ThingAlike, HashSet<ThingDef>> GetThingCraftingBenches =
-        FunctionExtensions.Memoized((ThingAlike thing) =>
+    private static readonly Dictionary<ThingDef, HashSet<ThingDef>> ThingCraftingBenches = [];
+    static CreatedAtColumnWorker()
+    {
+        foreach (var recipeDef in DefDatabase<RecipeDef>.AllDefs)
         {
-            var craftBenchesDefs = new HashSet<ThingDef>();
-
-            foreach (var recipe in DefDatabase<RecipeDef>.AllDefs)
+            // See Verse.ThingDef.SpecialDisplayStats()
+            if (recipeDef is { products.Count: 1, IsSurgery: false })
             {
-                if
-                (
-                    recipe is { products.Count: 1, IsSurgery: false }
-                    &&
-                    recipe.products.First().thingDef == thing.Def
-                )
+                var producedThingDef = recipeDef.products[0]?.thingDef;
+
+                if (producedThingDef == null)
                 {
-                    foreach (var recipeUser in recipe.AllRecipeUsers)
+                    continue;
+                }
+
+                if (recipeDef.recipeUsers?.Count > 0)
+                {
+                    var craftingBenchesEntryExists = ThingCraftingBenches.TryGetValue(producedThingDef, out var craftingBenches);
+
+                    if (craftingBenchesEntryExists)
                     {
-                        craftBenchesDefs.Add(recipeUser);
+                        craftingBenches.AddRange(recipeDef.recipeUsers);
+                    }
+                    else
+                    {
+                        ThingCraftingBenches[producedThingDef] = [.. recipeDef.recipeUsers];
                     }
                 }
             }
+        }
+    }
+    private static readonly Func<ThingAlike, HashSet<ThingDef>> GetThingCraftingBenchesDefs =
+    FunctionExtensions.Memoized((ThingAlike thing) =>
+    {
+        var thingCanBeCrafted = ThingCraftingBenches.TryGetValue(thing.Def, out var craftingBenchesDefs);
 
-            return craftBenchesDefs;
-        });
+        if (thingCanBeCrafted)
+        {
+            return craftingBenchesDefs;
+        }
+
+        return [];
+    });
     public CreatedAtColumnWorker(ColumnDef columnDef) : base(columnDef, ColumnCellStyle.String)
     {
     }
     public override Widget? GetTableCellWidget(ThingAlike thing)
     {
-        var thingDefs = GetThingCraftingBenches(thing);
+        var thingDefs = GetThingCraftingBenchesDefs(thing);
 
         if (thingDefs.Count == 0)
         {
@@ -65,14 +85,14 @@ public sealed class CreatedAtColumnWorker : ColumnWorker<ThingAlike>
     }
     public override FilterWidget<ThingAlike> GetFilterWidget(IEnumerable<ThingAlike> tableRecords)
     {
-        var craftingBenches = tableRecords
-            .SelectMany(GetThingCraftingBenches)
+        var craftingBenchesDefs = tableRecords
+            .SelectMany(GetThingCraftingBenchesDefs)
             .Distinct()
             .OrderBy(thingDef => thingDef.label);
 
         return new ManyToManyFilter<ThingAlike, ThingDef>(
-            GetThingCraftingBenches,
-            craftingBenches,
+            GetThingCraftingBenchesDefs,
+            craftingBenchesDefs,
             ThingDefToFilterOptionWidget
         );
     }
@@ -89,8 +109,8 @@ public sealed class CreatedAtColumnWorker : ColumnWorker<ThingAlike>
     }
     public override int Compare(ThingAlike thing1, ThingAlike thing2)
     {
-        var craftingBechesCount1 = GetThingCraftingBenches(thing1).Count;
-        var craftingBechesCount2 = GetThingCraftingBenches(thing2).Count;
+        var craftingBechesCount1 = GetThingCraftingBenchesDefs(thing1).Count;
+        var craftingBechesCount2 = GetThingCraftingBenchesDefs(thing2).Count;
 
         return craftingBechesCount1.CompareTo(craftingBechesCount2);
     }

@@ -10,54 +10,46 @@ namespace Stats.Widgets;
 
 public abstract class NToManyFilter<TObject, TExprLhs, TOption> : FilterWidgetWithInputField<TObject, TExprLhs, HashSet<TOption>>
 {
-    new protected NtMExpression Expression { get; }
     protected IEnumerable<TOption> Options { get; }
     protected OptionWidgetFactory MakeOptionWidget { get; }
-    private readonly OptionsWindowWidget OptionsWindow;
+    private OptionsWindowWidget? _OptionsWindow;
+    // IEnumerable<TOption> can be a heavy generator, so we defer options window creation.
+    private OptionsWindowWidget OptionsWindow => _OptionsWindow ??= new(Options, MakeOptionWidget, this);
     protected NToManyFilter(
-        NtMExpression expression,
+        Func<TObject, TExprLhs> lhs,
         IEnumerable<TOption> options,
-        OptionWidgetFactory makeOptionWidget
-    ) : base(expression)
+        OptionWidgetFactory makeOptionWidget,
+        IEnumerable<AbsOperator> operators
+    ) : base(lhs, [], operators)
     {
-        Expression = expression;
         Options = options;
         MakeOptionWidget = makeOptionWidget;
-        OptionsWindow = new(options, makeOptionWidget, expression);
     }
     protected override Vector2 CalcInputFieldContentSize()
     {
-        return Text.CalcSize(Expression.Rhs.Count.ToString());
+        return Text.CalcSize(Rhs.Count.ToString());
     }
     protected sealed override void DrawInputField(Rect rect)
     {
         const float horPad = Globals.GUI.EstimatedInputFieldInnerPadding;
 
-        if (Widgets.Draw.ButtonTextSubtle(rect, Expression.Rhs.Count.ToString(), horPad))
+        if (Widgets.Draw.ButtonTextSubtle(rect, Rhs.Count.ToString(), horPad))
         {
             Find.WindowStack.Add(OptionsWindow);
         }
+    }
+    public sealed override void Reset()
+    {
+        base.Reset();
+
+        Rhs.Clear();
+        // TODO: NotifyChanged()?
     }
     protected override void FocusInputField()
     {
         Find.WindowStack.Add(OptionsWindow);
     }
 
-    protected abstract class NtMExpression : GenExpression
-    {
-        public NtMExpression(Func<TObject, TExprLhs> lhs) : base(lhs, [])
-        {
-        }
-        public sealed override void Reset()
-        {
-            base.Reset();
-
-            Rhs.Clear();
-            // TODO: NotifyChanged()?
-        }
-    }
-
-    // TODO: Implement scroll.
     private sealed class OptionsWindowWidget : Window
     {
         protected override float Margin => 0f;
@@ -70,7 +62,7 @@ public abstract class NToManyFilter<TObject, TExprLhs, TOption> : FilterWidgetWi
         public OptionsWindowWidget(
             IEnumerable<TOption> options,
             OptionWidgetFactory makeOptionWidget,
-            NtMExpression expression
+            NToManyFilter<TObject, TExprLhs, TOption> parent
         )
         {
             doWindowBackground = false;
@@ -93,8 +85,8 @@ public abstract class NToManyFilter<TObject, TExprLhs, TOption> : FilterWidgetWi
                 .HoverBackground(FloatMenuOption.ColorBGActiveMouseover)
                 .OnClick(() =>
                 {
-                    expression.Rhs.Clear();
-                    expression.NotifyChanged();
+                    parent.Rhs.Clear();
+                    parent.NotifyChanged();
                 });
             var optionWidgets = new List<Widget>(optionsList.Count)
             {
@@ -106,23 +98,23 @@ public abstract class NToManyFilter<TObject, TExprLhs, TOption> : FilterWidgetWi
                 var option = optionsList[i];
                 void drawOptionBackground(Rect rect)
                 {
-                    if (Event.current.type == EventType.Repaint && expression.Rhs.Contains(option))
+                    if (Event.current.type == EventType.Repaint && parent.Rhs.Contains(option))
                     {
                         Verse.Widgets.DrawHighlightSelected(rect);
                     }
                 }
                 void handleOptionClick()
                 {
-                    if (expression.Rhs.Contains(option))
+                    if (parent.Rhs.Contains(option))
                     {
-                        expression.Rhs.Remove(option);
+                        parent.Rhs.Remove(option);
                     }
                     else
                     {
-                        expression.Rhs.Add(option);
+                        parent.Rhs.Add(option);
                     }
 
-                    expression.NotifyChanged();
+                    parent.NotifyChanged();
                 }
 
                 Widget optionWidget = makeOptionWidget(option)

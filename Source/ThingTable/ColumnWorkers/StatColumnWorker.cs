@@ -7,7 +7,7 @@ namespace Stats.ThingTable;
 
 public class StatColumnWorker : StatDrawEntryColumnWorker<ThingAlike>
 {
-    private const ToStringNumberSense toStringNumberSense = ToStringNumberSense.Absolute;
+    private const ToStringNumberSense _ToStringNumberSense = ToStringNumberSense.Absolute;
     protected StatDef Stat { get; }
     private readonly StatValueExplanationType ExplanationType;
     public StatColumnWorker(StatColumnDef columnDef) : base(columnDef)
@@ -23,9 +23,9 @@ public class StatColumnWorker : StatDrawEntryColumnWorker<ThingAlike>
 
         return ExplanationType switch
         {
-            StatValueExplanationType.Full => worker.GetExplanationFull(statRequest, toStringNumberSense, statValue),
-            StatValueExplanationType.Unfinalized => worker.GetExplanationUnfinalized(statRequest, toStringNumberSense),
-            StatValueExplanationType.FinalizePart => worker.GetExplanationFinalizePart(statRequest, toStringNumberSense, statValue),
+            StatValueExplanationType.Full => worker.GetExplanationFull(statRequest, _ToStringNumberSense, statValue),
+            StatValueExplanationType.Unfinalized => worker.GetExplanationUnfinalized(statRequest, _ToStringNumberSense),
+            StatValueExplanationType.FinalizePart => worker.GetExplanationFinalizePart(statRequest, _ToStringNumberSense, statValue),
             _ => "",
         };
     }
@@ -34,14 +34,17 @@ public class StatColumnWorker : StatDrawEntryColumnWorker<ThingAlike>
         var worker = Stat.Worker;
         var statRequest = StatRequest.For(thing.Def, thing.StuffDef);
 
-        if (worker.ShouldShowFor(statRequest) == false)
+        if (worker.ShouldShowFor(statRequest))
         {
-            return "";
+            var statValue = worker.GetValue(statRequest);
+
+            if (statValue != 0f)
+            {
+                return worker.GetStatDrawEntryLabel(Stat, statValue, _ToStringNumberSense, statRequest);
+            }
         }
 
-        var statValue = worker.GetValue(statRequest);
-
-        return worker.GetStatDrawEntryLabel(Stat, statValue, toStringNumberSense, statRequest);
+        return "";
     }
     public sealed override Widget? GetTableCellWidget(ThingAlike thing)
     {

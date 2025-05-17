@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using RimWorld;
 using Stats.Widgets;
@@ -53,7 +54,7 @@ public sealed class EquippedStatOffsetsColumnWorker : ColumnWorker<ThingAlike>
         var labels = new StringBuilder();
         var values = new StringBuilder();
 
-        foreach (var offset in thing.Def.equippedStatOffsets)
+        foreach (var offset in thing.Def.equippedStatOffsets.OrderBy(offset => offset.stat.label))
         {
             var offsetLabel = $"{offset.stat.LabelCap}:";
             var offsetValueStr = GetOffsetValueString(offset);

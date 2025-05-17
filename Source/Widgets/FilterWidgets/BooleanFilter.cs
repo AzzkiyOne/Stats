@@ -1,45 +1,37 @@
 ﻿using System;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace Stats.Widgets;
 
 public sealed class BooleanFilter<TObject> : FilterWidgetWithInputField<TObject, bool, bool>
 {
-    new private readonly BooleanExpression Expression;
     private Action<Rect> DrawValue;
-    public BooleanFilter(Func<TObject, bool> lhs) : this(new BooleanExpression(lhs))
+    public BooleanFilter(Func<TObject, bool> lhs) : base(lhs, true, [Operators.IsEqualTo.Instance])
     {
-    }
-    private BooleanFilter(BooleanExpression expression) : base(expression)
-    {
-        Expression = expression;
         DrawValue = DrawTrue;
-
-        expression.OnChange += HandleStateChange;
     }
-    private void HandleStateChange(AbsExpression _)
+    protected override void HandleStateChange(FilterWidget<TObject> _)
     {
-        DrawValue = Expression switch
+        DrawValue = Rhs switch
         {
-            { Rhs: true } => DrawTrue,
-            { Rhs: false } => DrawFalse,
+            true => DrawTrue,
+            false => DrawFalse,
         };
 
-        Resize();
+        base.HandleStateChange(this);
     }
     private void DrawTrue(Rect rect)
     {
         if (Widgets.Draw.ButtonImageSubtle(rect, Verse.Widgets.CheckboxOnTex))
         {
-            Expression.Rhs = false;
+            Rhs = false;
         }
     }
     private void DrawFalse(Rect rect)
     {
         if (Widgets.Draw.ButtonImageSubtle(rect, Verse.Widgets.CheckboxOffTex))
         {
-            Expression.Rhs = true;
+            Rhs = true;
         }
     }
     protected override Vector2 CalcInputFieldContentSize()
@@ -50,32 +42,20 @@ public sealed class BooleanFilter<TObject> : FilterWidgetWithInputField<TObject,
     {
         DrawValue(rect);
     }
-    public override FilterWidget<TObject> Clone()
+    public override void Reset()
     {
-        return new BooleanFilter<TObject>(Expression);
+        base.Reset();
+
+        Rhs = true;
     }
 
-    private sealed class BooleanExpression : GenExpression
+    private static class Operators
     {
-        public override IEnumerable<GenericOperator> SupportedOperators { get; } = [Operators.IsEqualTo.Instance];
-        public BooleanExpression(Func<TObject, bool> lhs) : base(lhs, true)
+        public sealed class IsEqualTo : AbsOperator
         {
-        }
-        public override void Reset()
-        {
-            base.Reset();
-
-            Rhs = true;
-        }
-
-        private static class Operators
-        {
-            public sealed class IsEqualTo : GenericOperator
-            {
-                private IsEqualTo() : base("==") { }
-                public override bool Eval(bool lhs, bool rhs) => lhs == rhs;
-                public static IsEqualTo Instance { get; } = new();
-            }
+            private IsEqualTo() : base("==") { }
+            public override bool Eval(bool lhs, bool rhs) => lhs == rhs;
+            public static IsEqualTo Instance { get; } = new();
         }
     }
 }

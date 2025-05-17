@@ -41,35 +41,35 @@ public sealed class LabelColumnWorker : ColumnWorker<ThingAlike>
     public override FilterWidget<ThingAlike> GetFilterWidget(IEnumerable<ThingAlike> tableRecords)
     {
         var labelFilter = new StringFilter<ThingAlike>(GetThingLabel);
-        var stuffDefs = tableRecords
-            .Select(thing => thing.StuffDef)
-            .Distinct()
-            .OrderBy(stuffDef => stuffDef?.label);
 
-        if (stuffDefs.Count() == 1 && stuffDefs.First() == null)
+        if (tableRecords.Any(record => record.StuffDef != null))
         {
-            return labelFilter;
+            var stuffDefs = tableRecords
+                .Select(thing => thing.StuffDef)
+                .Distinct()
+                .OrderBy(stuffDef => stuffDef?.label);
+            var stuffFilter = new OneToManyFilter<ThingAlike, ThingDef?>(
+                thing => thing.StuffDef,
+                stuffDefs,
+                stuffDef => stuffDef == null
+                    ? new Label("")
+                    : new HorizontalContainer(
+                        [
+                            new ThingIcon(stuffDef),
+                        new Label(stuffDef.LabelCap).WidthRel(1f)
+                        ],
+                        Globals.GUI.PadSm,
+                        true
+                    )
+            );
+
+            return new CompositeFilter<ThingAlike>(
+                stuffFilter.Tooltip("Filter by stuff."),
+                labelFilter.WidthRel(1f).Tooltip("Filter by label.")
+            );
         }
 
-        var stuffFilter = new OneToManyFilter<ThingAlike, ThingDef?>(
-            thing => thing.StuffDef,
-            stuffDefs,
-            stuffDef => stuffDef == null
-                ? new Label("")
-                : new HorizontalContainer(
-                    [
-                        new ThingIcon(stuffDef),
-                        new Label(stuffDef.LabelCap).WidthRel(1f)
-                    ],
-                    Globals.GUI.PadSm,
-                    true
-                )
-        );
-
-        return new CompositeFilter<ThingAlike>(
-            stuffFilter.Tooltip("Filter by stuff."),
-            labelFilter.WidthRel(1f).Tooltip("Filter by label.")
-        );
+        return labelFilter;
     }
     public override int Compare(ThingAlike thing1, ThingAlike thing2)
     {

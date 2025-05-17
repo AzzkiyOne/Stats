@@ -15,26 +15,27 @@ namespace Stats.ThingTable;
 // and can be safely displayed in a single row/column.
 public sealed class CoveredBodyPartGroupsColumnWorker : ColumnWorker<ThingAlike>
 {
-    private static readonly Func<ThingAlike, HashSet<BodyPartGroupDef>> GetBodyPartGroupDefs = FunctionExtensions.Memoized((ThingAlike thing) =>
-        {
-            return thing.Def.apparel?.bodyPartGroups.ToHashSet() ?? [];
-        });
+    private static readonly Func<ThingAlike, HashSet<BodyPartGroupDef>> GetBodyPartGroupDefs =
+    FunctionExtensions.Memoized((ThingAlike thing) =>
+    {
+        return thing.Def.apparel?.bodyPartGroups.ToHashSet() ?? [];
+    });
     private static readonly Func<ThingAlike, string> GetBodyPartGroupLabels =
-        FunctionExtensions.Memoized((ThingAlike thing) =>
+    FunctionExtensions.Memoized((ThingAlike thing) =>
+    {
+        var bodyPartGroupDefs = GetBodyPartGroupDefs(thing);
+
+        if (bodyPartGroupDefs.Count == 0)
         {
-            var bodyPartGroupDefs = GetBodyPartGroupDefs(thing);
+            return "";
+        }
 
-            if (bodyPartGroupDefs.Count == 0)
-            {
-                return "";
-            }
+        var bodyPartGroupLabels = bodyPartGroupDefs
+            .OrderBy(bodyPartGroupDef => bodyPartGroupDef.label)
+            .Select(bodyPartGroupDef => bodyPartGroupDef.LabelCap);
 
-            var bodyPartGroupLabels = bodyPartGroupDefs
-                .OrderBy(bodyPartGroupDef => bodyPartGroupDef.label)
-                .Select(bodyPartGroupDef => bodyPartGroupDef.LabelCap);
-
-            return string.Join("\n", bodyPartGroupLabels);
-        });
+        return string.Join("\n", bodyPartGroupLabels);
+    });
     public CoveredBodyPartGroupsColumnWorker(ColumnDef columnDef) : base(columnDef, ColumnCellStyle.String)
     {
     }

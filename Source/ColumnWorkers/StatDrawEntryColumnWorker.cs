@@ -5,39 +5,43 @@ using Stats.Widgets;
 
 namespace Stats.ColumnWorkers;
 
+// We do not sanitize labels here, because this will
+// deoptimize cases where they don't need to be sanitized.
 public abstract class StatDrawEntryColumnWorker<TObject> : ColumnWorker<TObject>
 {
-    private static readonly Regex NonZeroNumberRegex = new(@"[1-9]{1}", RegexOptions.Compiled);
     private static readonly Regex NumberRegex = new(@"(-?[0-9]+\.?[0-9]*).*", RegexOptions.Compiled);
     private readonly Func<TObject, decimal> GetNumber;
     protected StatDrawEntryColumnWorker(ColumnDef columndef) : base(columndef, ColumnCellStyle.Number)
     {
         GetNumber = new Func<TObject, decimal>(@object =>
         {
-            var text = GetStatDrawEntryLabel(@object).Trim();
+            var label = GetStatDrawEntryLabel(@object);
 
-            if (text == "" || NonZeroNumberRegex.IsMatch(text) == false)
+            if (label.Length > 0)
             {
-                return 0m;
+                var match = NumberRegex.Match(label);
+
+                if (match.Success)
+                {
+                    return decimal.Parse(match.Groups[1].Captures[0].Value);
+                }
             }
 
-            var match = NumberRegex.Match(text);
-
-            return decimal.Parse(match.Groups[1].Captures[0].Value);
+            return 0m;
         }).Memoized();
     }
     protected abstract string GetStatDrawEntryLabel(TObject @object);
     public override Widget? GetTableCellWidget(TObject @object)
     {
         // Do not populate cache until we need to.
-        var label = GetStatDrawEntryLabel(@object).Trim();
+        var label = GetStatDrawEntryLabel(@object);
 
-        if (label == "" || NonZeroNumberRegex.IsMatch(label) == false)
+        if (label.Length > 0)
         {
-            return null;
+            return new Label(label);
         }
 
-        return new Label(label);
+        return null;
     }
     public sealed override FilterWidget<TObject> GetFilterWidget(IEnumerable<TObject> _)
     {

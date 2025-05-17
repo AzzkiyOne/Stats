@@ -8,26 +8,27 @@ namespace Stats.ThingTable;
 
 public sealed class OccupiedApparelLayersColumnWorker : ColumnWorker<ThingAlike>
 {
-    private static readonly Func<ThingAlike, HashSet<ApparelLayerDef>> GetLayerDefs = FunctionExtensions.Memoized((ThingAlike thing) =>
-        {
-            return thing.Def.apparel?.layers.ToHashSet() ?? [];
-        });
+    private static readonly Func<ThingAlike, HashSet<ApparelLayerDef>> GetLayerDefs =
+    FunctionExtensions.Memoized((ThingAlike thing) =>
+    {
+        return thing.Def.apparel?.layers.ToHashSet() ?? [];
+    });
     private static readonly Func<ThingAlike, string> GetLayersLabels =
-        FunctionExtensions.Memoized((ThingAlike thing) =>
+    FunctionExtensions.Memoized((ThingAlike thing) =>
+    {
+        var layerDefs = GetLayerDefs(thing);
+
+        if (layerDefs.Count == 0)
         {
-            var layerDefs = GetLayerDefs(thing);
+            return "";
+        }
 
-            if (layerDefs.Count == 0)
-            {
-                return "";
-            }
+        var layerLabels = layerDefs
+            .OrderBy(layerDef => layerDef.label)
+            .Select(layerDef => layerDef.LabelCap);
 
-            var layerLabels = layerDefs
-                .OrderBy(layerDef => layerDef.label)
-                .Select(layerDef => layerDef.LabelCap);
-
-            return string.Join("\n", layerLabels);
-        });
+        return string.Join("\n", layerLabels);
+    });
     public OccupiedApparelLayersColumnWorker(ColumnDef columnDef) : base(columnDef, ColumnCellStyle.String)
     {
     }

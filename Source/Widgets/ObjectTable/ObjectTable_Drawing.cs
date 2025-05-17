@@ -4,36 +4,24 @@ using Verse;
 
 namespace Stats.Widgets;
 
-internal sealed class Table
+internal sealed partial class ObjectTable<TObject>
 {
-    public List<Column> Columns { get; }
-    private readonly List<TableRow> HeaderRows;
-    public List<TableRow> BodyRows { get; }
-    private float TotalHeaderRowsHeight = 0f;
-    private float TotalBodyRowsHeight = 0f;
-    private Vector2 ScrollPos = new();
+    private readonly float TotalHeaderRowsHeight;
+    private float TotalBodyRowsHeight;
+    private Vector2 ScrollPosition;
     private static Color ColumnSeparatorLineColor = new(1f, 1f, 1f, 0.05f);
-    private bool ShouldRecalcLayout = false;
-    public Table(
-        List<Column> columns,
-        List<TableRow> headerRows,
-        List<TableRow> bodyRows
-    )
+    private const float cellPadHor = 15f;
+    private const float cellPadVer = 5f;
+    public override void Draw(Rect rect)
     {
-        Columns = columns;
-        HeaderRows = headerRows;
-        BodyRows = bodyRows;
-
-        AttachTo(headerRows);
-        AttachTo(bodyRows);
-        RecalcLayout();
-    }
-    public void Draw(Rect rect)
-    {
-        if (ShouldRecalcLayout && Event.current.type == EventType.Layout)
+        // Why to do it like this?
+        //
+        // Filters can spam events (though not very often).
+        // On each filter's OnChange event we set ShouldApplyFilters flag
+        // to then apply filters only once.
+        if (ShouldApplyFilters && Event.current.type == EventType.Layout)
         {
-            TEMP_RecalcOnlyHeaders();
-            ShouldRecalcLayout = false;
+            ApplyFilters();
         }
 
         // Probably could cache this.
@@ -75,16 +63,16 @@ internal sealed class Table
             Vector2.Max(contentSizeMax, contentSizeVisible)
         );
 
-        Verse.Widgets.BeginScrollView(rect, ref ScrollPos, contentRectMax, true);
+        Verse.Widgets.BeginScrollView(rect, ref ScrollPosition, contentRectMax, true);
 
-        var contentRectVisible = new Rect(ScrollPos, contentSizeVisible);
+        var contentRectVisible = new Rect(ScrollPosition, contentSizeVisible);
 
         // Left part
         if (leftColumnsMinWidth > 0f)
         {
             var leftPartRect = contentRectVisible.CutByX(leftColumnsMinWidth);
 
-            DrawPart(leftPartRect, ScrollPos with { x = 0f }, 0f, true);
+            DrawPart(leftPartRect, ScrollPosition with { x = 0f }, 0f, true);
 
             // Separator line
             Widgets.Draw.VerticalLine(
@@ -99,30 +87,30 @@ internal sealed class Table
         var rightPartFreeSpace = contentRectVisible.width - rightColumnsMinWidth;
         var cellExtraWidth = Mathf.Max(rightPartFreeSpace / rightColumnsCount, 0f);
 
-        DrawPart(contentRectVisible, ScrollPos, cellExtraWidth, false);
+        DrawPart(contentRectVisible, ScrollPosition, cellExtraWidth, false);
 
         Verse.Widgets.EndScrollView();
     }
     private void DrawPart(
         Rect rect,
-        Vector2 scrollPos,
+        Vector2 scrollPosition,
         float cellExtraWidth,
         bool drawPinned
     )
     {
-        DrawColumnSeparators(rect, Columns, scrollPos.x, cellExtraWidth, drawPinned);
+        DrawColumnSeparators(rect, Columns, scrollPosition.x, cellExtraWidth, drawPinned);
 
         var headersRect = rect.CutByY(TotalHeaderRowsHeight);
 
-        DrawRows(headersRect, HeaderRows, scrollPos with { y = 0f }, cellExtraWidth, drawPinned);
+        DrawRows(headersRect, HeaderRows, scrollPosition with { y = 0f }, cellExtraWidth, drawPinned);
         // Register mouse-drag only below headers row to not interfere with filter inputs.
-        DoHorScroll(rect);
-        DrawRows(rect, BodyRows, scrollPos, cellExtraWidth, drawPinned);
+        DoHorScroll(rect, ref ScrollPosition);
+        DrawRows(rect, BodyRows, scrollPosition, cellExtraWidth, drawPinned);
     }
     private static void DrawRows(
         Rect rect,
-        List<TableRow> rows,
-        Vector2 scrollPos,
+        IReadOnlyList<Row> rows,
+        Vector2 scrollPosition,
         float cellExtraWidth,
         bool drawPinned
     )
@@ -131,7 +119,7 @@ internal sealed class Table
 
         var yMax = rect.height;
         rect.x = 0f;
-        rect.y = -scrollPos.y;
+        rect.y = -scrollPosition.y;
         var i = 0;
 
         foreach (var row in rows)
@@ -141,19 +129,17 @@ internal sealed class Table
                 break;
             }
 
-            if (row.IsVisible == false)
+            if (row.IsVisible)
             {
-                continue;
-            }
+                rect.height = row.Height;
+                if (rect.yMax > 0f)
+                {
+                    row.Draw(rect, scrollPosition.x, drawPinned, cellExtraWidth, i);
+                }
 
-            rect.height = row.Height;
-            if (rect.yMax > 0f)
-            {
-                row.Draw(rect, scrollPos.x, drawPinned, cellExtraWidth, i);
+                rect.y = rect.yMax;
+                i++;
             }
-
-            rect.y = rect.yMax;
-            i++;
         }
 
         GUI.EndClip();
@@ -162,7 +148,7 @@ internal sealed class Table
     // individual column's cell is huge. So we have to keep this.
     private static void DrawColumnSeparators(
         Rect rect,
-        List<Column> columns,
+        Column[] columns,
         float offsetX,
         float cellExtraWidth,
         bool drawPinned
@@ -199,91 +185,13 @@ internal sealed class Table
             }
         }
     }
-    private void DoHorScroll(Rect rect)
+    private static void DoHorScroll(Rect rect, ref Vector2 scrollPosition)
     {
         if (Event.current.type == EventType.MouseDrag && Mouse.IsOver(rect))
         {
-            ScrollPos.x = Mathf.Max(ScrollPos.x + Event.current.delta.x * -1f, 0f);
+            scrollPosition.x = Mathf.Max(scrollPosition.x + Event.current.delta.x * -1f, 0f);
 
             // Why no "Event.current.Use();"? Because the thing locks itself on mouse-up.
-        }
-    }
-    public void ScheduleLayoutRecalc()
-    {
-        ShouldRecalcLayout = true;
-    }
-    private void TEMP_RecalcOnlyHeaders()
-    {
-        foreach (var column in Columns)
-        {
-            column.Width = 0f;
-        }
-
-        TotalHeaderRowsHeight = 0f;
-        TotalBodyRowsHeight = 0f;
-
-        foreach (var row in HeaderRows)
-        {
-            if (row.IsVisible)
-            {
-                row.TEMP_RecalcLayout();
-                TotalHeaderRowsHeight += row.Height;
-            }
-        }
-
-        foreach (var row in BodyRows)
-        {
-            if (row.IsVisible)
-            {
-                TotalBodyRowsHeight += row.Height;
-            }
-        }
-    }
-    // TODO: Could it be faster to recalc by column?
-    private void RecalcLayout()
-    {
-        foreach (var column in Columns)
-        {
-            column.Width = 0f;
-        }
-
-        //ScrollPos.y = 0f;
-        TotalHeaderRowsHeight = RecalcRows(HeaderRows);
-        TotalBodyRowsHeight = RecalcRows(BodyRows);
-    }
-    private static float RecalcRows(List<TableRow> rows)
-    {
-        var totalHeight = 0f;
-
-        foreach (var row in rows)
-        {
-            if (row.IsVisible)
-            {
-                row.RecalcLayout();
-                totalHeight += row.Height;
-            }
-        }
-
-        return totalHeight;
-    }
-    private void AttachTo(List<TableRow> rows)
-    {
-        foreach (var row in rows)
-        {
-            row.Parent = this;
-        }
-    }
-
-    public class Column
-    {
-        public bool IsPinned;
-        public float Width;
-        public float InitialWidth;
-        public readonly TextAnchor TextAnchor;
-        public Column(bool isPinned, TextAnchor textAnchor)
-        {
-            IsPinned = isPinned;
-            TextAnchor = textAnchor;
         }
     }
 }

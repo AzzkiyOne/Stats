@@ -1,5 +1,4 @@
-﻿using RimWorld;
-using UnityEngine;
+﻿using UnityEngine;
 using Verse;
 
 namespace Stats.Widgets;
@@ -26,9 +25,7 @@ public sealed class ThingIcon : Widget
         }
         else
         {
-            Color = thingDef.MadeFromStuff
-                ? thingDef.GetColorForStuff(GenStuff.DefaultStuffFor(thingDef))
-                : thingDef.uiIconColor;
+            Color = thingDef.uiIconColor;
         }
 
         if (thingDef.graphicData != null)

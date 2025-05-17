@@ -12,7 +12,19 @@ public sealed class BinaryStatColumnWorkerLeft : StatColumnWorker
     }
     protected override string GetStatDrawEntryLabel(ThingAlike thing)
     {
-        return base.GetStatDrawEntryLabel(thing).Split(Separator).First();
+        var label = base.GetStatDrawEntryLabel(thing);
+
+        if (label.Length > 0)
+        {
+            label = label.Split(Separator).First();
+
+            if (Utils.NonZeroNumberRegex.IsMatch(label))
+            {
+                return label.TrimEnd();
+            }
+        }
+
+        return "";
     }
 }
 
@@ -25,6 +37,18 @@ public sealed class BinaryStatColumnWorkerRight : StatColumnWorker
     }
     protected override string GetStatDrawEntryLabel(ThingAlike thing)
     {
-        return base.GetStatDrawEntryLabel(thing).Split(Separator).Last();
+        var label = base.GetStatDrawEntryLabel(thing);
+
+        if (label.Length > 0)
+        {
+            label = label.Split(Separator).Last();
+
+            if (Utils.NonZeroNumberRegex.IsMatch(label))
+            {
+                return label.TrimStart();
+            }
+        }
+
+        return "";
     }
 }

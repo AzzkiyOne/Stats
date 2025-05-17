@@ -3,17 +3,19 @@ using UnityEngine;
 
 namespace Stats.Widgets;
 
-// Highly experimental.
 internal sealed class CompositeFilter<TObject> : FilterWidget<TObject>
 {
+    public override bool IsActive => Left.IsActive || Right.IsActive;
+    public override event Action<FilterWidget<TObject>>? OnChange;
+    private readonly FilterWidget<TObject> Left;
+    private readonly FilterWidget<TObject> Right;
     private readonly Widget Container;
-    public CompositeFilter(Widget left, Widget right) : base(
-        new CompositeExpression(
-            left.Get<FilterWidget<TObject>>().Expression,
-            right.Get<FilterWidget<TObject>>().Expression
-        )
-    )
+    public CompositeFilter(Widget left, Widget right)
     {
+        Left = left.Get<FilterWidget<TObject>>();
+        Left.OnChange += filter => OnChange?.Invoke(this);
+        Right = right.Get<FilterWidget<TObject>>();
+        Right.OnChange += filter => OnChange?.Invoke(this);
         Container = new HorizontalContainer([left, right], shareFreeSpace: true);
         Container.Parent = this;
     }
@@ -29,40 +31,16 @@ internal sealed class CompositeFilter<TObject> : FilterWidget<TObject>
     {
         Container.Draw(rect, containerSize);
     }
-    public override FilterWidget<TObject> Clone()
+    public override bool Eval(TObject @object)
     {
-        // TODO: Maybe i don't need the whole cloning thing.
-        throw new NotImplementedException();
+        // TODO: Maybe it will be a good idea to somehow pass table's filtering mode here
+        // instead of hardcoding it to AND. But it may depend on the use case of the filter.
+        return Left.Eval(@object) && Right.Eval(@object);
     }
-
-    private sealed class CompositeExpression : AbsExpression
+    public override void Reset()
     {
-        public override bool IsEmpty => Left.IsEmpty && Right.IsEmpty;
-        public override event Action<AbsExpression>? OnChange;
-        private readonly AbsExpression Left;
-        private readonly AbsExpression Right;
-        public CompositeExpression(AbsExpression left, AbsExpression right)
-        {
-            Left = left;
-            left.OnChange += expression => OnChange?.Invoke(this);
-            Right = right;
-            right.OnChange += expression => OnChange?.Invoke(this);
-        }
-        public override bool Eval(TObject @object)
-        {
-            // TODO: Maybe it will be a good idea to somehow pass table's filtering mode here
-            // instead of hardcoding it to AND. But it may depend on the use case of the filter.
-            return Left.Eval(@object) && Right.Eval(@object);
-        }
-        public override void NotifyChanged()
-        {
-            OnChange?.Invoke(this);
-        }
-        public override void Reset()
-        {
-            // TODO: This will cause double the amount of events to be emitted.
-            Left.Reset();
-            Right.Reset();
-        }
+        // TODO: This will cause double the amount of events to be emitted.
+        Left.Reset();
+        Right.Reset();
     }
 }
