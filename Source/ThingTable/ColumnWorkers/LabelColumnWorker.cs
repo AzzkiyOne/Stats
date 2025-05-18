@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Stats.Widgets;
+using UnityEngine;
 using Verse;
 
 namespace Stats.ThingTable;
@@ -56,17 +57,18 @@ public sealed class LabelColumnWorker : ColumnWorker<ThingAlike>
                     : new HorizontalContainer(
                         [
                             new ThingIcon(stuffDef),
-                        new Label(stuffDef.LabelCap).WidthRel(1f)
+                            new Label(stuffDef.LabelCap).WidthRel(1f)
                         ],
                         Globals.GUI.PadSm,
                         true
                     )
             );
 
-            return new CompositeFilter<ThingAlike>(
-                stuffFilter.Tooltip("Filter by stuff."),
+            return new CompositeFilter<ThingAlike>([
+                new StuffedVariantsDisplayModeToggleButton(),
+                stuffFilter.Tooltip("Filter by material."),
                 labelFilter.WidthRel(1f).Tooltip("Filter by label.")
-            );
+            ]);
         }
 
         return labelFilter;
@@ -74,5 +76,58 @@ public sealed class LabelColumnWorker : ColumnWorker<ThingAlike>
     public override int Compare(ThingAlike thing1, ThingAlike thing2)
     {
         return GetThingLabel(thing1).CompareTo(GetThingLabel(thing2));
+    }
+
+    private sealed class StuffedVariantsDisplayModeToggleButton : FilterWidget<ThingAlike>
+    {
+        private bool _IsActive = false;
+        public override bool IsActive => _IsActive;
+        public override event Action<FilterWidget<ThingAlike>>? OnChange;
+        private const string ButtonTextActive = "D";
+        private const string ButtonTextDisabled = "A";
+        private static readonly TipSignal Manual =
+            "Click to switch material variants display mode:\n" +
+            "A - \"All\"'. Show every variant.\n" +
+            "D - \"Distinct\". Show only distinct variants. Material for each distinct variant is chosen based on item's type definition.";
+        protected override Vector2 CalcSize()
+        {
+            return new Vector2(Text.LineHeight, Text.LineHeight);
+        }
+        public override void Draw(Rect rect, Vector2 _)
+        {
+            var origTextAnchor = Text.Anchor;
+            Text.Anchor = TextAnchor.LowerCenter;
+
+            if (Widgets.Draw.ButtonTextSubtle(rect, _IsActive ? ButtonTextActive : ButtonTextDisabled))
+            {
+                _IsActive = !_IsActive;
+
+                OnChange?.Invoke(this);
+            }
+
+            Text.Anchor = origTextAnchor;
+
+            TooltipHandler.TipRegion(rect, Manual);
+        }
+        public override bool Eval(ThingAlike thing)
+        {
+            if (_IsActive)
+            {
+                // Do not filter out stuffless things.
+                // - You can filter them out with stuff filter.
+                // - There are cases where one may want to compare
+                //   things by stats unrelated to stuff. Ex. equipped
+                //   stat offsets.
+                return thing.StuffDef == thing.Def.GetDefaultStuff();
+            }
+
+            return true;
+        }
+        public override void Reset()
+        {
+            _IsActive = false;
+
+            OnChange?.Invoke(this);
+        }
     }
 }

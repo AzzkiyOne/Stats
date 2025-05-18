@@ -1,22 +1,26 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace Stats.Widgets;
 
 internal sealed class CompositeFilter<TObject> : FilterWidget<TObject>
 {
-    public override bool IsActive => Left.IsActive || Right.IsActive;
+    public override bool IsActive => Filters.Any(filter => filter.IsActive);
     public override event Action<FilterWidget<TObject>>? OnChange;
-    private readonly FilterWidget<TObject> Left;
-    private readonly FilterWidget<TObject> Right;
+    private readonly List<FilterWidget<TObject>> Filters;
     private readonly Widget Container;
-    public CompositeFilter(Widget left, Widget right)
+    public CompositeFilter(List<Widget> filters)
     {
-        Left = left.Get<FilterWidget<TObject>>();
-        Left.OnChange += filter => OnChange?.Invoke(this);
-        Right = right.Get<FilterWidget<TObject>>();
-        Right.OnChange += filter => OnChange?.Invoke(this);
-        Container = new HorizontalContainer([left, right], shareFreeSpace: true);
+        Filters = filters.Select(widget => widget.Get<FilterWidget<TObject>>()).ToList();
+
+        foreach (var filter in Filters)
+        {
+            filter.OnChange += filter => OnChange?.Invoke(this);
+        }
+
+        Container = new HorizontalContainer(filters, shareFreeSpace: true);
         Container.Parent = this;
     }
     protected override Vector2 CalcSize(Vector2 containerSize)
@@ -35,12 +39,14 @@ internal sealed class CompositeFilter<TObject> : FilterWidget<TObject>
     {
         // TODO: Maybe it will be a good idea to somehow pass table's filtering mode here
         // instead of hardcoding it to AND. But it may depend on the use case of the filter.
-        return Left.Eval(@object) && Right.Eval(@object);
+        return Filters.All(filter => filter.Eval(@object));
     }
     public override void Reset()
     {
         // TODO: This will cause double the amount of events to be emitted.
-        Left.Reset();
-        Right.Reset();
+        foreach (var filter in Filters)
+        {
+            filter.Reset();
+        }
     }
 }
