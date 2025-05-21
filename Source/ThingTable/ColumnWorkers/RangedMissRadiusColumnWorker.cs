@@ -1,6 +1,4 @@
-﻿using Stats.ColumnWorkers;
-
-namespace Stats.ThingTable;
+﻿namespace Stats.ThingTable;
 
 public sealed class RangedMissRadiusColumnWorker : StatDrawEntryColumnWorker<ThingAlike>
 {

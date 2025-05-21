@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using Stats.Widgets;
 
-namespace Stats.ColumnWorkers;
+namespace Stats;
 
 // We do not sanitize labels here, because this will
 // deoptimize cases where they don't need to be sanitized.
