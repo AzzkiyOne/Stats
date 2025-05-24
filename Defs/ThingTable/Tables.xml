@@ -72,7 +72,7 @@
 
     <Stats.TableDef>
         <defName>Apparel_ThingTable</defName>
-        <label>apparel</label>
+        <label>Apparel</label>
         <iconThingDef>Apparel_Duster</iconThingDef>
         <workerClass>Stats.ThingTable.ApparelTableWorker</workerClass>
         <columns>
@@ -103,7 +103,7 @@
 
     <Stats.TableDef>
         <defName>UtilityApparel_ThingTable</defName>
-        <label>utility apparel</label>
+        <label>Apparel / Utility</label>
         <iconThingDef>Apparel_FirefoampopPack</iconThingDef>
         <workerClass>Stats.ThingTable.UtilityApparelTableWorker</workerClass>
         <columns>
