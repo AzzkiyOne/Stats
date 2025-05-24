@@ -10,7 +10,7 @@ public static class ColumnLabelFormat
     }
     public static Widget IconOnly(ColumnDef columnDef, ColumnCellStyle cellStyle)
     {
-        var icon = new Icon(columnDef.Icon!, columnDef.IconScale).Color(columnDef.IconColor);
+        var icon = new InlineTexture(columnDef.Icon!, columnDef.IconScale).Color(columnDef.IconColor);
 
         return cellStyle switch
         {
@@ -22,7 +22,7 @@ public static class ColumnLabelFormat
     public static Widget LabelWithIcon(ColumnDef columnDef, ColumnCellStyle cellStyle)
     {
         var label = new Label(columnDef.LabelShort);
-        var icon = new Icon(columnDef.Icon!, columnDef.IconScale).Color(columnDef.IconColor);
+        var icon = new InlineTexture(columnDef.Icon!, columnDef.IconScale).Color(columnDef.IconColor);
 
         return cellStyle switch
         {

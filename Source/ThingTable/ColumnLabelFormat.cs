@@ -18,8 +18,8 @@ public static class ColumnLabelFormat
     {
         return new HorizontalContainer(
             [
-                new Icon(ArmorIcon).Color(new(0.4f,0.4f,0.4f)).PaddingRel(1f, 0f, 0f, 0f),
-                new Icon(columnDef.Icon!, columnDef.IconScale).Color(columnDef.IconColor)
+                new InlineTexture(ArmorIcon).Color(new(0.4f,0.4f,0.4f)).PaddingRel(1f, 0f, 0f, 0f),
+                new InlineTexture(columnDef.Icon!, columnDef.IconScale).Color(columnDef.IconColor)
             ],
             Globals.GUI.PadSm,
             true
@@ -29,9 +29,9 @@ public static class ColumnLabelFormat
     {
         return new HorizontalContainer(
             [
-                new Icon(DamageToIcon, 1.2f).PaddingRel(1f, 0f, 0f, 0f),
+                new InlineTexture(DamageToIcon, 1.2f).PaddingRel(1f, 0f, 0f, 0f),
                 new Label("%"),
-                new Icon(columnDef.Icon!, columnDef.IconScale).Color(columnDef.IconColor)
+                new InlineTexture(columnDef.Icon!, columnDef.IconScale).Color(columnDef.IconColor)
             ],
             Globals.GUI.PadXs,
             true
