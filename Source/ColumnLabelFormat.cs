@@ -28,13 +28,13 @@ public static class ColumnLabelFormat
         {
             ColumnCellStyle.Number => new HorizontalContainer(
                 [icon.PaddingRel(1f, 0f, 0f, 0f), label],
-                Globals.GUI.PadSm,
+                Globals.GUI.PadXs,
                 true
             ),
             ColumnCellStyle.Boolean => new SingleElementContainer(
-                new HorizontalContainer([icon, label], Globals.GUI.PadSm).PaddingRel(0.5f, 0f)
+                new HorizontalContainer([icon, label], Globals.GUI.PadXs).PaddingRel(0.5f, 0f)
             ),
-            _ => new HorizontalContainer([icon, label], Globals.GUI.PadSm),
+            _ => new HorizontalContainer([icon, label], Globals.GUI.PadXs),
         };
     }
 }

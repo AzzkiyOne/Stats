@@ -21,7 +21,7 @@ public static class ColumnLabelFormat
                 new InlineTexture(ArmorIcon).Color(new(0.4f,0.4f,0.4f)).PaddingRel(1f, 0f, 0f, 0f),
                 new InlineTexture(columnDef.Icon!, columnDef.IconScale).Color(columnDef.IconColor)
             ],
-            Globals.GUI.PadSm,
+            Globals.GUI.PadXs,
             true
         );
     }
