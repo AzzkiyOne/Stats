@@ -35,7 +35,7 @@ public sealed class ResourcesRequiredForConstructionColumnWorker : ColumnWorker<
         {
             var costListEntryExists = costList.ContainsKey(thing.StuffDef);
             var stuffCost = thing.StuffDef.smallVolume
-                ? (int)Math.Round(thing.Def.CostStuffCount / thing.StuffDef.VolumePerUnit)
+                ? thing.Def.CostStuffCount * ThingDef.SmallUnitPerVolume
                 : thing.Def.CostStuffCount;
 
             if (costListEntryExists)
