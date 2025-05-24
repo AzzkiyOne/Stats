@@ -17,7 +17,7 @@
 
     <Stats.ColumnDef Class="Stats.ThingTable.StatColumnDef">
         <defName>CE_ElectricArmorRating_ThingTableColumn</defName>
-        <iconPath>UI/Commands/DesirePower</iconPath>
+        <iconPath>StatsMod/UI/Icons/Electricity</iconPath>
         <labelFormat>Stats.ThingTable.ColumnLabelFormat.ArmorRating</labelFormat>
         <stat>ArmorRating_Electric</stat>
         <workerClass>Stats.ThingTable.StatColumnWorker</workerClass>
