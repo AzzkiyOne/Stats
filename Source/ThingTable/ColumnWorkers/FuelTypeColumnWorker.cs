@@ -48,7 +48,15 @@ public sealed class FuelTypeColumnWorker : ColumnWorker<ThingAlike>
         return new OneToManyFilter<ThingAlike, ThingDef?>(
             GetFuelTypeDef,
             fuelTypeDefs,
-            fuelTypeDef => new Label(fuelTypeDef?.LabelCap ?? "")
+            fuelTypeDef => fuelTypeDef == null
+                ? new Label("")
+                : new HorizontalContainer(
+                    [
+                        new ThingIcon(fuelTypeDef),
+                        new Label(fuelTypeDef.LabelCap),
+                    ],
+                    Globals.GUI.Pad
+                )
         );
     }
     public override int Compare(ThingAlike thing1, ThingAlike thing2)
