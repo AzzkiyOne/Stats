@@ -194,4 +194,21 @@
         </columns>
     </Stats.TableDef>
 
+    <Stats.TableDef>
+        <defName>Chairs_ThingTable</defName>
+        <label>Buildings / Furniture / Chairs</label>
+        <iconThingDef>Armchair</iconThingDef>
+        <workerClass>Stats.ThingTable.ChairsTableWorker</workerClass>
+        <columns>
+            <li>Label_ThingTableColumn</li>
+            <li>Comfort_ThingTableColumn</li>
+            <li>Beauty_ThingTableColumn</li>
+            <li>ConstructionSkillPrerequisite_ThingTableColumn</li>
+            <li>ResourcesRequiredForConstruction_ThingTableColumn</li>
+            <li>WorkToBuild_ThingTableColumn</li>
+            <li>MarketValue_ThingTableColumn</li>
+            <li>ContentSource_ThingTableColumn</li>
+        </columns>
+    </Stats.TableDef>
+
 </Defs>
