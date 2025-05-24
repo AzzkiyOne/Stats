@@ -4,7 +4,7 @@
 
     <Stats.TableDef>
         <defName>RangedWeapons_ThingTable</defName>
-        <label>ranged weapons</label>
+        <label>Weapons / Ranged</label>
         <iconThingDef>Gun_Revolver</iconThingDef>
         <workerClass>Stats.ThingTable.RangedWeaponsTableWorker</workerClass>
         <columns>
@@ -46,7 +46,7 @@
 
     <Stats.TableDef>
         <defName>MeleeWeapons_ThingTable</defName>
-        <label>melee weapons</label>
+        <label>Weapons / Melee</label>
         <iconThingDef>MeleeWeapon_Club</iconThingDef>
         <workerClass>Stats.ThingTable.MeleeWeaponsTableWorker</workerClass>
         <columns>
