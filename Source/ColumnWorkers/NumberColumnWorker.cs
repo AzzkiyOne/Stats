@@ -9,10 +9,12 @@ public abstract class NumberColumnWorker<TObject> : ColumnWorker<TObject>
 {
     private readonly Texture2D? Icon = null;
     private readonly Func<TObject, decimal> GetCachedValue;
+    private readonly string FormatString;
     protected NumberColumnWorker(
         ColumnDef columndef,
         bool cached = true,
-        Texture2D? icon = null
+        Texture2D? icon = null,
+        string formatString = ""
     ) : base(columndef, ColumnCellStyle.Number)
     {
         GetCachedValue = GetValue;
@@ -23,6 +25,7 @@ public abstract class NumberColumnWorker<TObject> : ColumnWorker<TObject>
         }
 
         Icon = icon;
+        FormatString = formatString;
     }
     protected abstract decimal GetValue(TObject @object);
     public sealed override Widget? GetTableCellWidget(TObject @object)
@@ -34,7 +37,7 @@ public abstract class NumberColumnWorker<TObject> : ColumnWorker<TObject>
             return null;
         }
 
-        var label = new Label(value.ToString());
+        var label = new Label(value.ToString(FormatString));
 
         if (Icon != null)
         {
