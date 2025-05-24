@@ -450,4 +450,61 @@
         <workerClass>Stats.ThingTable.PowerConsumptionColumnWorker</workerClass>
     </Stats.ColumnDef>
 
+    <Stats.ColumnDef Class="Stats.ThingTable.StatColumnDef">
+        <defName>Comfort_ThingTableColumn</defName>
+        <stat>Comfort</stat>
+        <statValueExplanationType>Full</statValueExplanationType>
+        <workerClass>Stats.ThingTable.StatColumnWorker</workerClass>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef Class="Stats.ThingTable.StatColumnDef">
+        <defName>BedRestEffectiveness_ThingTableColumn</defName>
+        <labelShort>Rest *%</labelShort>
+        <stat>BedRestEffectiveness</stat>
+        <statValueExplanationType>Full</statValueExplanationType>
+        <workerClass>Stats.ThingTable.StatColumnWorker</workerClass>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef Class="Stats.ThingTable.StatColumnDef">
+        <defName>ImmunityGainSpeedFactor_ThingTableColumn</defName>
+        <labelShort>Immunity *%</labelShort>
+        <stat>ImmunityGainSpeedFactor</stat>
+        <statValueExplanationType>Full</statValueExplanationType>
+        <workerClass>Stats.ThingTable.StatColumnWorker</workerClass>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef Class="Stats.ThingTable.StatColumnDef">
+        <defName>MedicalTendQualityOffset_ThingTableColumn</defName>
+        <labelShort>Tend +%</labelShort>
+        <stat>MedicalTendQualityOffset</stat>
+        <statValueExplanationType>Full</statValueExplanationType>
+        <workerClass>Stats.ThingTable.StatColumnWorker</workerClass>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef Class="Stats.ThingTable.StatColumnDef">
+        <defName>SurgerySuccessChanceFactor_ThingTableColumn</defName>
+        <labelShort>Surgery *%</labelShort>
+        <stat>SurgerySuccessChanceFactor</stat>
+        <statValueExplanationType>Full</statValueExplanationType>
+        <workerClass>Stats.ThingTable.StatColumnWorker</workerClass>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef>
+        <defName>BedFitsSmallAnimals_ThingTableColumn</defName>
+        <label>for small animals</label>
+        <iconPath>Things/Pawn/Animal/Chicken/Chicken_east</iconPath>
+        <iconColor>(200,150,85)</iconColor>
+        <labelFormat>Stats.ColumnLabelFormat.IconOnly</labelFormat>
+        <workerClass>Stats.ThingTable.BedFitsSmallAnimalsColumnWorker</workerClass>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef>
+        <defName>BedFitsLargeAnimals_ThingTableColumn</defName>
+        <label>for large animals</label>
+        <iconPath>Things/Pawn/Animal/Cow/Bull_east</iconPath>
+        <iconColor>(170,170,170)</iconColor>
+        <labelFormat>Stats.ColumnLabelFormat.IconOnly</labelFormat>
+        <workerClass>Stats.ThingTable.BedFitsLargeAnimalsColumnWorker</workerClass>
+    </Stats.ColumnDef>
+
 </Defs>
