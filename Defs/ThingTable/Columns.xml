@@ -421,4 +421,33 @@
         <workerClass>Stats.ThingTable.StatColumnWorker</workerClass>
     </Stats.ColumnDef>
 
+    <Stats.ColumnDef Class="Stats.ThingTable.StatColumnDef">
+        <defName>JoyGainFactor_ThingTableColumn</defName>
+        <stat>JoyGainFactor</stat>
+        <statValueExplanationType>Full</statValueExplanationType>
+        <workerClass>Stats.ThingTable.StatColumnWorker</workerClass>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef>
+        <defName>BuildingRecreationType_ThingTableColumn</defName>
+        <labelKey>StatsReport_JoyKind</labelKey>
+        <descriptionKey>Stat_RecreationType_Desc</descriptionKey>
+        <workerClass>Stats.ThingTable.BuildingRecreationTypeColumnWorker</workerClass>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef Class="Stats.ThingTable.StatColumnDef">
+        <defName>Beauty_ThingTableColumn</defName>
+        <stat>Beauty</stat>
+        <statValueExplanationType>Full</statValueExplanationType>
+        <workerClass>Stats.ThingTable.StatColumnWorker</workerClass>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef>
+        <defName>PowerConsumption_ThingTableColumn</defName>
+        <label>power consumption</label>
+        <labelShort>Consumption</labelShort>
+        <iconPath>StatsMod/UI/Icons/Electricity</iconPath>
+        <workerClass>Stats.ThingTable.PowerConsumptionColumnWorker</workerClass>
+    </Stats.ColumnDef>
+
 </Defs>
