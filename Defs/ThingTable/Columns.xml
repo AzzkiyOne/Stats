@@ -335,4 +335,90 @@
         <workerClass>Stats.ThingTable.IsDestroyedWhenAllChargesSpentColumnWorker</workerClass>
     </Stats.ColumnDef>
 
+    <Stats.ColumnDef>
+        <defName>PowerOutput_ThingTableColumn</defName>
+        <label>power output</label>
+        <labelShort>Output</labelShort>
+        <iconPath>StatsMod/UI/Icons/Electricity</iconPath>
+        <workerClass>Stats.ThingTable.PowerOutputColumnWorker</workerClass>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef>
+        <defName>PowerPerCell_ThingTableColumn</defName>
+        <label>power/cell</label>
+        <labelShort>/cell</labelShort>
+        <iconPath>StatsMod/UI/Icons/Electricity</iconPath>
+        <workerClass>Stats.ThingTable.PowerPerCellColumnWorker</workerClass>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef>
+        <defName>FuelType_ThingTableColumn</defName>
+        <label>fuel type</label>
+        <labelShort>Type</labelShort>
+        <iconPath>Things/Item/Resource/Chemfuel</iconPath>
+        <workerClass>Stats.ThingTable.FuelTypeColumnWorker</workerClass>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef>
+        <defName>FuelCapacity_ThingTableColumn</defName>
+        <label>fuel capacity</label>
+        <labelShort>Cap.</labelShort>
+        <iconPath>Things/Item/Resource/Chemfuel</iconPath>
+        <workerClass>Stats.ThingTable.FuelCapacityColumnWorker</workerClass>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef>
+        <defName>FuelConsumptionRate_ThingTableColumn</defName>
+        <label>fuel consumption rate</label>
+        <description>Measured in amount/day.</description>
+        <labelShort>/d</labelShort>
+        <iconPath>Things/Item/Resource/Chemfuel</iconPath>
+        <workerClass>Stats.ThingTable.FuelConsumptionRateColumnWorker</workerClass>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef>
+        <defName>DaysOnFullTank_ThingTableColumn</defName>
+        <label>days on full tank</label>
+        <workerClass>Stats.ThingTable.DaysOnFullTankColumnWorker</workerClass>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef>
+        <defName>PowerPerFuel_ThingTableColumn</defName>
+        <label>power/fuel</label>
+        <labelShort>/fuel</labelShort>
+        <description>Measured in watts/unit.</description>
+        <iconPath>StatsMod/UI/Icons/Electricity</iconPath>
+        <workerClass>Stats.ThingTable.PowerPerFuelColumnWorker</workerClass>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef>
+        <defName>Size_ThingTableColumn</defName>
+        <label>size</label>
+        <workerClass>Stats.ThingTable.SizeColumnWorker</workerClass>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef>
+        <defName>ConstructionSkillPrerequisite_ThingTableColumn</defName>
+        <label>construction skill required</label>
+        <labelShort>Skill</labelShort>
+        <iconPath>StatsMod/UI/Icons/Construction</iconPath>
+        <workerClass>Stats.ThingTable.ConstructionSkillPrerequisiteColumnWorker</workerClass>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef>
+        <defName>ResourcesRequiredForConstruction_ThingTableColumn</defName>
+        <labelKey>Stat_Building_ResourcesToMake</labelKey>
+        <labelShort>Resources</labelShort>
+        <descriptionKey>Stat_Building_ResourcesToMakeDesc</descriptionKey>
+        <workerClass>Stats.ThingTable.ResourcesRequiredForConstructionColumnWorker</workerClass>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef Class="Stats.ThingTable.StatColumnDef">
+        <defName>WorkToBuild_ThingTableColumn</defName>
+        <labelShort>Work</labelShort>
+        <stat>WorkToBuild</stat>
+        <statValueExplanationType>Full</statValueExplanationType>
+        <workerClass>Stats.ThingTable.StatColumnWorker</workerClass>
+    </Stats.ColumnDef>
+
 </Defs>

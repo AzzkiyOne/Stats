@@ -17,4 +17,22 @@ public static class VerseThingDefExtensions
     {
         return GetDefaultStuffCached(thingDef);
     }
+    private static readonly Func<ThingDef, CompProperties_Power?> GetPowerCompPropertiesCached =
+    FunctionExtensions.Memoized((ThingDef thingDef) =>
+    {
+        return thingDef.GetCompProperties<CompProperties_Power>();
+    });
+    public static CompProperties_Power? GetPowerCompProperties(this ThingDef thingDef)
+    {
+        return GetPowerCompPropertiesCached(thingDef);
+    }
+    private static readonly Func<ThingDef, CompProperties_Refuelable?> GetRefuelableCompPropertiesCached =
+    FunctionExtensions.Memoized((ThingDef thingDef) =>
+    {
+        return thingDef.GetCompProperties<CompProperties_Refuelable>();
+    });
+    public static CompProperties_Refuelable? GetRefuelableCompProperties(this ThingDef thingDef)
+    {
+        return GetRefuelableCompPropertiesCached(thingDef);
+    }
 }
