@@ -211,4 +211,19 @@
         </columns>
     </Stats.TableDef>
 
+    <Stats.TableDef>
+        <defName>ArtBuildings_ThingTable</defName>
+        <label>Buildings / Art</label>
+        <iconThingDef>SculptureGrand</iconThingDef>
+        <workerClass>Stats.ThingTable.ArtBuildingsTableWorker</workerClass>
+        <columns>
+            <li>Label_ThingTableColumn</li>
+            <li>Beauty_ThingTableColumn</li>
+            <li>Size_ThingTableColumn</li>
+            <li>CreatedAt_ThingTableColumn</li>
+            <li>MarketValue_ThingTableColumn</li>
+            <li>ContentSource_ThingTableColumn</li>
+        </columns>
+    </Stats.TableDef>
+
 </Defs>
