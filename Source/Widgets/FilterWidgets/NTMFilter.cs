@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using RimWorld;
 using UnityEngine;
 using Verse;
@@ -46,16 +45,32 @@ internal abstract class NTMFilter<TObject, TExprLhs, TOption> : FilterWidgetWith
     {
         Find.WindowStack.Add(OptionsWindow);
     }
+    private void HandleOptionClick(TOption option)
+    {
+        if (Rhs.Contains(option))
+        {
+            Rhs.Remove(option);
+        }
+        else
+        {
+            Rhs.Add(option);
+        }
+
+        NotifyChanged();
+    }
 
     private sealed class OptionsWindowWidget : Window
     {
         protected override float Margin => 0f;
-        public override Vector2 InitialSize => OptionsList.GetSize();
-        private readonly Widget OptionsList;
-        private bool ContentIsTooHigh = false;
-        private Vector2 ScrollPosition;
+        public override Vector2 InitialSize => Widget.GetSize();
+        private readonly Widget Widget;
         private static readonly Color BorderColor = Verse.Widgets.SeparatorLineColor;
         private const float BorderThickness = 1f;
+        private static readonly Color BackgroundColor = Verse.Widgets.WindowBGFillColor;
+        private const float OptionHoverHorShiftAmount = 4f;
+        private static readonly Color OptionHoverBackgroundColor = FloatMenuOption.ColorBGActiveMouseover;
+        private const float OptionHorPad = Globals.GUI.PadSm;
+        private const float OptionVerPad = Globals.GUI.PadXs;
         public OptionsWindowWidget(
             IEnumerable<NTMFilterOption<TOption>> options,
             NTMFilter<TObject, TExprLhs, TOption> parent
@@ -65,96 +80,54 @@ internal abstract class NTMFilter<TObject, TExprLhs, TOption> : FilterWidgetWith
             drawShadow = false;
             closeOnClickedOutside = true;
 
-            // TODO: Not ideal.
-            var optionsList = options.ToList();
-            // TODO: Copy paste.
-            Widget clearSelectionOptionWidget = new Label("<i>Clear selection</i>")
-                    .PaddingAbs(Globals.GUI.PadSm, Globals.GUI.PadXs)
+            var optionWidgets = new List<Widget>();
+
+            foreach (var option in options)
+            {
+                Widget optionWidget = option
+                    .ToWidget()
+                    .PaddingAbs(OptionHorPad, OptionVerPad)
                     .WidthRel(1f)
-                    .HoverShiftHor(4f);
-            if (optionsList.Count > 0)
-            {
-                clearSelectionOptionWidget = clearSelectionOptionWidget
-                    .BorderBottom(BorderThickness, BorderColor);
-            }
-            clearSelectionOptionWidget = clearSelectionOptionWidget
-                .HoverBackground(FloatMenuOption.ColorBGActiveMouseover)
-                .OnClick(() =>
-                {
-                    parent.Rhs.Clear();
-                    parent.NotifyChanged();
-                });
-            var optionWidgets = new List<Widget>(optionsList.Count)
-            {
-                clearSelectionOptionWidget
-            };
-
-            for (int i = 0; i < optionsList.Count; i++)
-            {
-                var option = optionsList[i];
-                void drawOptionBackground(Rect rect)
-                {
-                    if (Event.current.type == EventType.Repaint && parent.Rhs.Contains(option.Value))
+                    .HoverShiftHor(OptionHoverHorShiftAmount)
+                    .Background(rect =>
                     {
-                        Verse.Widgets.DrawHighlightSelected(rect);
-                    }
-                }
-                void handleOptionClick()
-                {
-                    if (parent.Rhs.Contains(option.Value))
-                    {
-                        parent.Rhs.Remove(option.Value);
-                    }
-                    else
-                    {
-                        parent.Rhs.Add(option.Value);
-                    }
-
-                    parent.NotifyChanged();
-                }
-
-                Widget optionWidget;
-
-                if (option.Value == null)
-                {
-                    optionWidget = new Label("");
-                }
-                else if (option.Icon != null)
-                {
-                    optionWidget = new HorizontalContainer(
-                        [option.Icon, new Label(option.Label ?? "")],
-                        Globals.GUI.PadSm
-                    );
-                }
-                else
-                {
-                    optionWidget = new Label(option.Label ?? "");
-                }
-
-                optionWidget = optionWidget
-                    .PaddingAbs(Globals.GUI.PadSm, Globals.GUI.PadXs)
-                    .WidthRel(1f)
-                    .HoverShiftHor(4f);
-                if (i < optionsList.Count - 1)
-                {
-                    optionWidget = optionWidget
-                        .BorderBottom(BorderThickness, BorderColor);
-                }
-                optionWidget = optionWidget
-                    .Background(drawOptionBackground)
-                    .HoverBackground(FloatMenuOption.ColorBGActiveMouseover)
-                    .OnClick(handleOptionClick);
+                        if (parent.Rhs.Contains(option.Value))
+                        {
+                            Verse.Widgets.DrawHighlightSelected(rect);
+                        }
+                    })
+                    .HoverBackground(OptionHoverBackgroundColor)
+                    .OnClick(() => parent.HandleOptionClick(option.Value));
 
                 if (option.Tooltip?.Length > 0)
                 {
                     optionWidget = optionWidget.Tooltip(option.Tooltip);
                 }
 
+                if (optionWidgets.Count > 0)
+                {
+                    optionWidget = optionWidget.BorderTop(BorderThickness, BorderColor);
+                }
+
                 optionWidgets.Add(optionWidget);
             }
 
-            OptionsList = new VerticalContainer(optionWidgets)
-                .Background(Verse.Widgets.WindowBGFillColor);
+            var optionsList = new VerticalContainer(optionWidgets)
+                .OverflowScroll()
+                .SizeRel(1f)
+                .BorderTop(BorderThickness, BorderColor);
+            var clearSelectionButton = new Label("Clear selection")
+                .PaddingAbs(OptionHorPad, OptionVerPad)
+                .WidthRel(1f)
+                .ToButtonSubtle(() =>
+                {
+                    parent.Rhs.Clear();
+                    parent.NotifyChanged();
+                });
+
+            Widget = new VerticalContainer([clearSelectionButton, optionsList], shareFreeSpace: true)
+                .Background(BackgroundColor)
+                .Border(BorderThickness, BorderColor);
         }
         public override void DoWindowContents(Rect rect)
         {
@@ -163,50 +136,10 @@ internal abstract class NTMFilter<TObject, TExprLhs, TOption> : FilterWidgetWith
 
             DoFadeEffect(rect);
 
-            if (ContentIsTooHigh)
-            {
-                var contentRect = new Rect(Vector2.zero, InitialSize);
-                Verse.Widgets.BeginScrollView(rect, ref ScrollPosition, contentRect);
-
-                OptionsList.Draw(contentRect, InitialSize);
-
-                Verse.Widgets.EndScrollView();
-
-                // Adjust rect width for borders, but only if there is vertical scrollbar.
-                rect.xMax -= GenUI.ScrollBarWidth;
-            }
-            else
-            {
-                OptionsList.Draw(rect, rect.size);
-            }
-
-            DrawBorders(rect);
+            Widget.Draw(rect, rect.size);
 
             Globals.GUI.Opacity = origGUIOpacity;
             GUI.color = origGUIColor;
-        }
-        private void DrawBorders(Rect rect)
-        {
-            if (Event.current.type != EventType.Repaint)
-            {
-                return;
-            }
-
-            var color = BorderColor.AdjustedForGUIOpacity();
-            // Hor:
-            // - Top
-            var horRect = rect with { height = BorderThickness };
-            Verse.Widgets.DrawBoxSolid(horRect, color);
-            // - Bottom
-            horRect.y = rect.yMax - BorderThickness;
-            Verse.Widgets.DrawBoxSolid(horRect, color);
-            // Ver:
-            // - Left
-            var verRect = rect with { width = BorderThickness };
-            Verse.Widgets.DrawBoxSolid(verRect, color);
-            // - Right
-            verRect.x = rect.xMax - BorderThickness;
-            Verse.Widgets.DrawBoxSolid(verRect, color);
         }
         private void DoFadeEffect(Rect rect)
         {
@@ -243,11 +176,6 @@ internal abstract class NTMFilter<TObject, TExprLhs, TOption> : FilterWidgetWith
             {
                 size.y = maxHeight;
                 size.x += GenUI.ScrollBarWidth;
-                ContentIsTooHigh = true;
-            }
-            else
-            {
-                ContentIsTooHigh = false;
             }
 
             if (position.x + size.x > UI.screenWidth)
@@ -265,5 +193,22 @@ internal abstract class NTMFilter<TObject, TExprLhs, TOption> : FilterWidgetWith
     }
 }
 
-public readonly record struct NTMFilterOption<TValue>(TValue Value, string? Label = null, Widget? Icon = null, string? Tooltip = null);
+public readonly record struct NTMFilterOption<TValue>(TValue Value, string? Label = null, Widget? Icon = null, string? Tooltip = null)
+{
+    public Widget ToWidget()
+    {
+        if (Value == null)
+        {
+            return new Label("<i>Undefined</i>");
+        }
 
+        Widget label = new Label(Label ?? "");
+
+        if (Icon != null)
+        {
+            return new HorizontalContainer([Icon, label], Globals.GUI.PadSm);
+        }
+
+        return label;
+    }
+}

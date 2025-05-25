@@ -2,19 +2,19 @@
 
 namespace Stats.Widgets.Extensions;
 
+// Basic "overflow: auto" implementation.
+// - Doesn't work in all cases.
+// - Scroll optimizations in Horizontal/Vertical containers do not work.
 public sealed class ScrollOverflowWidgetExtension : WidgetExtension
 {
     private Vector2 ScrollPosition;
-    private IScrollable WidgetScrollable => (IScrollable)Widget;
     internal ScrollOverflowWidgetExtension(Widget widget) : base(widget)
     {
     }
     public override void Draw(Rect rect, Vector2 containerSize)
     {
         // Note to myself: Do the same thing as in table widget. Only this time, you probably don't need to pass offset because it can be read from rect.
-        // TODO: Test with padding.
-        // TODO: Add caching.
-        var contentSize = WidgetScrollable.CalcContentSize(rect.size);
+        var contentSize = Widget.GetSize(containerSize);
 
         if (contentSize.x > rect.width || contentSize.y > rect.height)
         {
@@ -30,11 +30,5 @@ public sealed class ScrollOverflowWidgetExtension : WidgetExtension
         {
             Widget.Draw(rect, containerSize);
         }
-    }
-
-    public interface IScrollable
-    {
-        // TODO: Pass scroll position to child.
-        Vector2 CalcContentSize(in Vector2 size);
     }
 }

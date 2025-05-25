@@ -207,6 +207,10 @@ public static class WidgetAPI
         HoverShift(this Widget widget, float amountHor, float amountVer) =>
         new(widget, amountHor, amountVer);
 
+    public static ScrollOverflowWidgetExtension
+        OverflowScroll(this Widget widget) =>
+        new(widget);
+
     // --- Transformers ---
 
     public static Widget
