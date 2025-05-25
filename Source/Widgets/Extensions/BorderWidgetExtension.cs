@@ -11,6 +11,22 @@ public sealed class BorderWidgetExtension : WidgetExtension
         Thickness = thickness;
         Color = color;
     }
+    protected override Vector2 CalcSize(Vector2 containerSize)
+    {
+        var size = base.CalcSize(containerSize);
+        size.x += Thickness * 2;
+        size.y += Thickness * 2;
+
+        return size;
+    }
+    protected override Vector2 CalcSize()
+    {
+        var size = base.CalcSize();
+        size.x += Thickness * 2;
+        size.y += Thickness * 2;
+
+        return size;
+    }
     public override void Draw(Rect rect, Vector2 containerSize)
     {
         if (Event.current.type == EventType.Repaint)
@@ -31,6 +47,11 @@ public sealed class BorderWidgetExtension : WidgetExtension
             verRect.x = rect.xMax - Thickness;
             Verse.Widgets.DrawBoxSolid(verRect, color);
         }
+
+        rect.x += Thickness;
+        rect.y += Thickness;
+        rect.width -= Thickness * 2;
+        rect.height -= Thickness * 2;
 
         Widget.Draw(rect, containerSize);
     }

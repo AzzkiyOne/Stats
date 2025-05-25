@@ -11,6 +11,20 @@ public sealed class BorderBottomWidgetExtension : WidgetExtension
         Thickness = thickness;
         Color = color;
     }
+    protected override Vector2 CalcSize(Vector2 containerSize)
+    {
+        var size = base.CalcSize(containerSize);
+        size.y += Thickness;
+
+        return size;
+    }
+    protected override Vector2 CalcSize()
+    {
+        var size = base.CalcSize();
+        size.y += Thickness;
+
+        return size;
+    }
     public override void Draw(Rect rect, Vector2 containerSize)
     {
         if (Event.current.type == EventType.Repaint)
@@ -20,6 +34,8 @@ public sealed class BorderBottomWidgetExtension : WidgetExtension
                 Color.AdjustedForGUIOpacity()
             );
         }
+
+        rect.height -= Thickness;
 
         Widget.Draw(rect, containerSize);
     }
