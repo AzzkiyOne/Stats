@@ -5,13 +5,12 @@ using Verse;
 
 namespace Stats.Widgets;
 
-public sealed class ManyToManyFilter<TObject, TOption> : NToManyFilter<TObject, HashSet<TOption>, TOption>
+internal sealed class MTMFilter<TObject, TOption> : NTMFilter<TObject, HashSet<TOption>, TOption>
 {
-    public ManyToManyFilter(
+    public MTMFilter(
         Func<TObject, HashSet<TOption>> lhs,
-        IEnumerable<TOption> options,
-        OptionWidgetFactory makeOptionWidget
-    ) : base(lhs, options, makeOptionWidget, [
+        IEnumerable<NTMFilterOption<TOption>> options
+    ) : base(lhs, options, [
         Operators.IntersectsWith.Instance,
         Operators.NotIntersectsWith.Instance,
         Operators.IsSubsetOf.Instance,

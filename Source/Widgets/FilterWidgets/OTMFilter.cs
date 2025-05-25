@@ -3,13 +3,12 @@ using System.Collections.Generic;
 
 namespace Stats.Widgets;
 
-public sealed class OneToManyFilter<TObject, TOption> : NToManyFilter<TObject, TOption, TOption>
+internal sealed class OTMFilter<TObject, TOption> : NTMFilter<TObject, TOption, TOption>
 {
-    public OneToManyFilter(
+    public OTMFilter(
         Func<TObject, TOption> lhs,
-        IEnumerable<TOption> options,
-        OptionWidgetFactory makeOptionWidget
-    ) : base(lhs, options, makeOptionWidget, [
+        IEnumerable<NTMFilterOption<TOption>> options
+    ) : base(lhs, options, [
         Operators.IsIn.Instance,
         Operators.IsNotIn.Instance
     ])

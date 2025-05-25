@@ -6,7 +6,7 @@ using Verse;
 
 namespace Stats.Widgets;
 
-public abstract class FilterWidgetWithInputField<TObject, TExprLhs, TExprRhs> : FilterWidget<TObject, TExprLhs, TExprRhs>
+internal abstract class FilterWidgetWithInputField<TObject, TExprLhs, TExprRhs> : FilterWidget<TObject, TExprLhs, TExprRhs>
     where TExprRhs : notnull
 {
     private Vector2 OperatorButtonSize;

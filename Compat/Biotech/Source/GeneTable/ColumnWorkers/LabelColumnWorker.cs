@@ -27,7 +27,7 @@ public sealed class LabelColumnWorker : ColumnWorker<GeneDef>
     }
     public override FilterWidget<GeneDef> GetFilterWidget(IEnumerable<GeneDef> _)
     {
-        return new StringFilter<GeneDef>(geneDef => geneDef.label);
+        return Make.StringFilter((GeneDef geneDef) => geneDef.label);
     }
     public override int Compare(GeneDef geneDef1, GeneDef geneDef2)
     {

@@ -60,16 +60,16 @@ public sealed class ValidLifeStageColumnWorker : ColumnWorker<ThingAlike>
     }
     public override FilterWidget<ThingAlike> GetFilterWidget(IEnumerable<ThingAlike> tableRecords)
     {
-        var lifeStages = tableRecords
+        var filterOptions = tableRecords
             .SelectMany(GetValidLifeStages)
             .Distinct()
-            .OrderBy(lifeStage => lifeStage);
+            .OrderBy(lifeStage => lifeStage)
+            .Select(lifeStage => new NTMFilterOption<DevelopmentalStage>(
+                lifeStage,
+                lifeStage.ToString().Translate().CapitalizeFirst().RawText
+            ));
 
-        return new ManyToManyFilter<ThingAlike, DevelopmentalStage>(
-            GetValidLifeStages,
-            lifeStages,
-            lifeStage => new Label(lifeStage.ToString().Translate().CapitalizeFirst().RawText)
-        );
+        return Make.MTMFilter(GetValidLifeStages, filterOptions);
     }
     public override int Compare(ThingAlike thing1, ThingAlike thing2)
     {

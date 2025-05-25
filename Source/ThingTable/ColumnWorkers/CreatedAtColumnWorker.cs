@@ -85,27 +85,7 @@ public sealed class CreatedAtColumnWorker : ColumnWorker<ThingAlike>
     }
     public override FilterWidget<ThingAlike> GetFilterWidget(IEnumerable<ThingAlike> tableRecords)
     {
-        var craftingBenchesDefs = tableRecords
-            .SelectMany(GetThingCraftingBenchesDefs)
-            .Distinct()
-            .OrderBy(thingDef => thingDef.label);
-
-        return new ManyToManyFilter<ThingAlike, ThingDef>(
-            GetThingCraftingBenchesDefs,
-            craftingBenchesDefs,
-            ThingDefToFilterOptionWidget
-        );
-    }
-    private static Widget ThingDefToFilterOptionWidget(ThingDef thingDef)
-    {
-        return new HorizontalContainer(
-            [
-                new ThingIcon(thingDef),
-                new Label(thingDef.LabelCap).WidthRel(1f)
-            ],
-            Globals.GUI.PadSm,
-            true
-        );
+        return Make.MTMThingDefFilter(GetThingCraftingBenchesDefs, tableRecords);
     }
     public override int Compare(ThingAlike thing1, ThingAlike thing2)
     {

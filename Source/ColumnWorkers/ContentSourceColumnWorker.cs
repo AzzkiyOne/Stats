@@ -29,24 +29,19 @@ public abstract class ContentSourceColumnWorker<TObject> : ColumnWorker<TObject>
             return null;
         }
 
-        return ModContentPackToWidget(mod);
+        return new Label(mod.Name).Tooltip(mod.PackageIdPlayerFacing);
     }
     public sealed override FilterWidget<TObject> GetFilterWidget(IEnumerable<TObject> tableRecords)
     {
-        var modContentPacks = tableRecords
+        var filterOptions = tableRecords
             .Select(GetCachedModContentPack)
             .Distinct()
-            .OrderBy(mod => mod?.Name ?? "");
+            .OrderBy(mod => mod?.Name)
+            .Select<ModContentPack?, NTMFilterOption<ModContentPack?>>(
+                mod => mod == null ? new() : new(mod, mod.Name, null, mod.PackageIdPlayerFacing)
+            );
 
-        return new OneToManyFilter<TObject, ModContentPack?>(
-            GetCachedModContentPack,
-            modContentPacks,
-            mod => mod == null ? new Label("") : ModContentPackToWidget(mod)
-        );
-    }
-    private static Widget ModContentPackToWidget(ModContentPack mod)
-    {
-        return new Label(mod.Name).Tooltip(mod.PackageIdPlayerFacing);
+        return Make.OTMFilter(GetCachedModContentPack, filterOptions);
     }
     public sealed override int Compare(TObject object1, TObject object2)
     {

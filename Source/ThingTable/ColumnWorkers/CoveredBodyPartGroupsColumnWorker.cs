@@ -52,16 +52,7 @@ public sealed class CoveredBodyPartGroupsColumnWorker : ColumnWorker<ThingAlike>
     }
     public override FilterWidget<ThingAlike> GetFilterWidget(IEnumerable<ThingAlike> tableRecords)
     {
-        var bodyPartGroupDefs = tableRecords
-            .SelectMany(GetBodyPartGroupDefs)
-            .Distinct()
-            .OrderBy(bodyPartGroupDef => bodyPartGroupDef.label);
-
-        return new ManyToManyFilter<ThingAlike, BodyPartGroupDef>(
-            GetBodyPartGroupDefs,
-            bodyPartGroupDefs,
-            bodyPartGroupDef => new Label(bodyPartGroupDef.LabelCap)
-        );
+        return Make.MTMDefFilter(GetBodyPartGroupDefs, tableRecords);
     }
     public override int Compare(ThingAlike thing1, ThingAlike thing2)
     {

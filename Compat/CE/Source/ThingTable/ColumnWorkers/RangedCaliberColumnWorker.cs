@@ -13,14 +13,14 @@ public sealed class RangedCaliberColumnWorker : ColumnWorker<ThingAlike>
     public RangedCaliberColumnWorker(ColumnDef columnDef) : base(columnDef, ColumnCellStyle.String)
     {
     }
-    private static readonly Func<ThingAlike, string> GetCaliberName =
+    private static readonly Func<ThingAlike, string?> GetCaliberName =
     FunctionExtensions.Memoized((ThingAlike thing) =>
     {
         var statRequest = StatRequest.For(thing.Def, thing.StuffDef);
 
         if (StatDefOf.Caliber.Worker.ShouldShowFor(statRequest) == false)
         {
-            return "";
+            return null;
         }
 
         return StatDefOf.Caliber.Worker.GetStatDrawEntryLabel(
@@ -28,13 +28,13 @@ public sealed class RangedCaliberColumnWorker : ColumnWorker<ThingAlike>
             StatDefOf.Caliber.Worker.GetValue(statRequest),
             ToStringNumberSense.Absolute,
             statRequest
-        ) ?? "";
+        );
     });
     public override Widget? GetTableCellWidget(ThingAlike thing)
     {
         var caliberName = GetCaliberName(thing);
 
-        if (caliberName.Length == 0)
+        if (caliberName == null || caliberName.Length == 0)
         {
             return null;
         }
@@ -56,19 +56,10 @@ public sealed class RangedCaliberColumnWorker : ColumnWorker<ThingAlike>
     }
     public override FilterWidget<ThingAlike> GetFilterWidget(IEnumerable<ThingAlike> tableRecords)
     {
-        var calibers = tableRecords
-            .Select(GetCaliberName)
-            .Distinct()
-            .OrderBy(caliber => caliber);
-
-        return new OneToManyFilter<ThingAlike, string>(
-            GetCaliberName,
-            calibers,
-            caliber => new Label(caliber)
-        );
+        return Make.OTMFilter(GetCaliberName, tableRecords);
     }
     public override int Compare(ThingAlike thing1, ThingAlike thing2)
     {
-        return GetCaliberName(thing1).CompareTo(GetCaliberName(thing2));
+        return Comparer<string?>.Default.Compare(GetCaliberName(thing1), GetCaliberName(thing2));
     }
 }

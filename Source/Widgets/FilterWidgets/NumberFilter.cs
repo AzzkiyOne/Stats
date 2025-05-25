@@ -4,7 +4,7 @@ using Verse;
 
 namespace Stats.Widgets;
 
-public sealed class NumberFilter<TObject> : FilterWidgetWithInputField<TObject, decimal, decimal>
+internal sealed class NumberFilter<TObject> : FilterWidgetWithInputField<TObject, decimal, decimal>
 {
     private bool InputIsValid = true;
     private string _TextFieldText = "";

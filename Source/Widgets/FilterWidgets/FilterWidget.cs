@@ -11,7 +11,7 @@ public abstract class FilterWidget<TObject> : Widget
     public abstract void Reset();
 }
 
-public abstract class FilterWidget<TObject, TExprLhs, TExprRhs> : FilterWidget<TObject> where TExprRhs : notnull
+internal abstract class FilterWidget<TObject, TExprLhs, TExprRhs> : FilterWidget<TObject> where TExprRhs : notnull
 {
     private readonly Func<TObject, TExprLhs> Lhs;
     private TExprRhs _Rhs;

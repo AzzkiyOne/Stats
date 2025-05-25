@@ -21,16 +21,7 @@ public sealed class TechLevelColumnWorker : ColumnWorker<ThingAlike>
     }
     public override FilterWidget<ThingAlike> GetFilterWidget(IEnumerable<ThingAlike> tableRecords)
     {
-        var techLevels = tableRecords
-            .Select(thing => thing.Def.techLevel)
-            .Distinct()
-            .OrderBy(techLevel => techLevel);
-
-        return new OneToManyFilter<ThingAlike, TechLevel>(
-            thing => thing.Def.techLevel,
-            techLevels,
-            techLevel => new Label(techLevel.ToString())
-        );
+        return Make.OTMFilter(thing => thing.Def.techLevel, tableRecords);
     }
     public override int Compare(ThingAlike thing1, ThingAlike thing2)
     {

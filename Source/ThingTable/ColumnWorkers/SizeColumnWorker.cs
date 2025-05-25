@@ -25,16 +25,13 @@ public sealed class SizeColumnWorker : ColumnWorker<ThingAlike>
     }
     public override FilterWidget<ThingAlike> GetFilterWidget(IEnumerable<ThingAlike> tableRecords)
     {
-        var sizes = tableRecords
+        var filterOptions = tableRecords
             .Select(GetSize)
             .Distinct()
-            .OrderBy(size => size.Area);
+            .OrderBy(size => size.Area)
+            .Select(size => new NTMFilterOption<IntVec2>(size, size.ToStringCross()));
 
-        return new OneToManyFilter<ThingAlike, IntVec2>(
-            GetSize,
-            sizes,
-            size => new Label(size.ToStringCross())
-        );
+        return Make.OTMFilter(GetSize, filterOptions);
     }
     public override int Compare(ThingAlike thing1, ThingAlike thing2)
     {

@@ -45,16 +45,7 @@ public sealed class OccupiedApparelLayersColumnWorker : ColumnWorker<ThingAlike>
     }
     public override FilterWidget<ThingAlike> GetFilterWidget(IEnumerable<ThingAlike> tableRecords)
     {
-        var layerDefs = tableRecords
-            .SelectMany(GetLayerDefs)
-            .Distinct()
-            .OrderBy(layerDef => layerDef.label);
-
-        return new ManyToManyFilter<ThingAlike, ApparelLayerDef>(
-            GetLayerDefs,
-            layerDefs,
-            layerDef => new Label(layerDef.LabelCap)
-        );
+        return Make.MTMDefFilter(GetLayerDefs, tableRecords);
     }
     public override int Compare(ThingAlike thing1, ThingAlike thing2)
     {

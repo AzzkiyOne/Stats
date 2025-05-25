@@ -87,22 +87,7 @@ public sealed class ResourcesRequiredForConstructionColumnWorker : ColumnWorker<
     FunctionExtensions.Memoized((ThingAlike thing) => GetCostList(thing)?.Keys.ToHashSet() ?? []);
     public override FilterWidget<ThingAlike> GetFilterWidget(IEnumerable<ThingAlike> tableRecords)
     {
-        var options = tableRecords
-            .SelectMany(GetResourceDefs)
-            .Distinct()
-            .OrderBy(thingDef => thingDef.label);
-
-        return new ManyToManyFilter<ThingAlike, ThingDef>(
-            GetResourceDefs,
-            options,
-            thingDef => new HorizontalContainer(
-                [
-                    new ThingIcon(thingDef),
-                    new Label(thingDef.LabelCap),
-                ],
-                Globals.GUI.Pad
-            )
-        );
+        return Make.MTMThingDefFilter(GetResourceDefs, tableRecords);
     }
     private static readonly Func<ThingAlike, int> GetTotalResourcesCost =
     FunctionExtensions.Memoized((ThingAlike thing) =>

@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Stats.Widgets;
 
-public sealed class StringFilter<TObject> : FilterWidgetWithInputField<TObject, string, string>
+internal sealed class StringFilter<TObject> : FilterWidgetWithInputField<TObject, string, string>
 {
     public StringFilter(Func<TObject, string> lhs) : base(lhs, "", [
         Operators.Contains.Instance,

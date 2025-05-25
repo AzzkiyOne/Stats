@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using Stats.Widgets;
 using Verse;
 
@@ -40,24 +39,7 @@ public sealed class FuelTypeColumnWorker : ColumnWorker<ThingAlike>
     }
     public override FilterWidget<ThingAlike> GetFilterWidget(IEnumerable<ThingAlike> tableRecords)
     {
-        var fuelTypeDefs = tableRecords
-            .Select(GetFuelTypeDef)
-            .Distinct()
-            .OrderBy(fuelTypeDef => fuelTypeDef?.label);
-
-        return new OneToManyFilter<ThingAlike, ThingDef?>(
-            GetFuelTypeDef,
-            fuelTypeDefs,
-            fuelTypeDef => fuelTypeDef == null
-                ? new Label("")
-                : new HorizontalContainer(
-                    [
-                        new ThingIcon(fuelTypeDef),
-                        new Label(fuelTypeDef.LabelCap),
-                    ],
-                    Globals.GUI.Pad
-                )
-        );
+        return Make.OTMThingDefFilter(GetFuelTypeDef, tableRecords);
     }
     public override int Compare(ThingAlike thing1, ThingAlike thing2)
     {

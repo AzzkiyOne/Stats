@@ -33,7 +33,7 @@ public abstract class BooleanColumnWorker<TObject> : ColumnWorker<TObject>
     }
     public sealed override FilterWidget<TObject> GetFilterWidget(IEnumerable<TObject> _)
     {
-        return new BooleanFilter<TObject>(GetCachedValue);
+        return Make.BooleanFilter(GetCachedValue);
     }
     public sealed override int Compare(TObject object1, TObject object2)
     {

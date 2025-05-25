@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Stats.Widgets;
 
-public sealed class BooleanFilter<TObject> : FilterWidgetWithInputField<TObject, bool, bool>
+internal sealed class BooleanFilter<TObject> : FilterWidgetWithInputField<TObject, bool, bool>
 {
     private Action<Rect> DrawValue;
     public BooleanFilter(Func<TObject, bool> lhs) : base(lhs, true, [Operators.IsEqualTo.Instance])

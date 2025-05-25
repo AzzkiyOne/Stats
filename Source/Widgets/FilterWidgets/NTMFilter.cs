@@ -8,22 +8,19 @@ using Verse.Sound;
 
 namespace Stats.Widgets;
 
-public abstract class NToManyFilter<TObject, TExprLhs, TOption> : FilterWidgetWithInputField<TObject, TExprLhs, HashSet<TOption>>
+internal abstract class NTMFilter<TObject, TExprLhs, TOption> : FilterWidgetWithInputField<TObject, TExprLhs, HashSet<TOption>>
 {
-    protected IEnumerable<TOption> Options { get; }
-    protected OptionWidgetFactory MakeOptionWidget { get; }
+    protected IEnumerable<NTMFilterOption<TOption>> Options { get; }
     private OptionsWindowWidget? _OptionsWindow;
     // IEnumerable<TOption> can be a heavy generator, so we defer options window creation.
-    private OptionsWindowWidget OptionsWindow => _OptionsWindow ??= new(Options, MakeOptionWidget, this);
-    protected NToManyFilter(
+    private OptionsWindowWidget OptionsWindow => _OptionsWindow ??= new(Options, this);
+    protected NTMFilter(
         Func<TObject, TExprLhs> lhs,
-        IEnumerable<TOption> options,
-        OptionWidgetFactory makeOptionWidget,
+        IEnumerable<NTMFilterOption<TOption>> options,
         IEnumerable<AbsOperator> operators
     ) : base(lhs, [], operators)
     {
         Options = options;
-        MakeOptionWidget = makeOptionWidget;
     }
     protected override Vector2 CalcInputFieldContentSize()
     {
@@ -60,9 +57,8 @@ public abstract class NToManyFilter<TObject, TExprLhs, TOption> : FilterWidgetWi
         private static readonly Color BorderColor = Verse.Widgets.SeparatorLineColor;
         private const float BorderThickness = 1f;
         public OptionsWindowWidget(
-            IEnumerable<TOption> options,
-            OptionWidgetFactory makeOptionWidget,
-            NToManyFilter<TObject, TExprLhs, TOption> parent
+            IEnumerable<NTMFilterOption<TOption>> options,
+            NTMFilter<TObject, TExprLhs, TOption> parent
         )
         {
             doWindowBackground = false;
@@ -98,26 +94,44 @@ public abstract class NToManyFilter<TObject, TExprLhs, TOption> : FilterWidgetWi
                 var option = optionsList[i];
                 void drawOptionBackground(Rect rect)
                 {
-                    if (Event.current.type == EventType.Repaint && parent.Rhs.Contains(option))
+                    if (Event.current.type == EventType.Repaint && parent.Rhs.Contains(option.Value))
                     {
                         Verse.Widgets.DrawHighlightSelected(rect);
                     }
                 }
                 void handleOptionClick()
                 {
-                    if (parent.Rhs.Contains(option))
+                    if (parent.Rhs.Contains(option.Value))
                     {
-                        parent.Rhs.Remove(option);
+                        parent.Rhs.Remove(option.Value);
                     }
                     else
                     {
-                        parent.Rhs.Add(option);
+                        parent.Rhs.Add(option.Value);
                     }
 
                     parent.NotifyChanged();
                 }
 
-                Widget optionWidget = makeOptionWidget(option)
+                Widget optionWidget;
+
+                if (option.Value == null)
+                {
+                    optionWidget = new Label("");
+                }
+                else if (option.Icon != null)
+                {
+                    optionWidget = new HorizontalContainer(
+                        [option.Icon, new Label(option.Label ?? "")],
+                        Globals.GUI.PadSm
+                    );
+                }
+                else
+                {
+                    optionWidget = new Label(option.Label ?? "");
+                }
+
+                optionWidget = optionWidget
                     .PaddingAbs(Globals.GUI.PadSm, Globals.GUI.PadXs)
                     .WidthRel(1f)
                     .HoverShiftHor(4f);
@@ -130,6 +144,11 @@ public abstract class NToManyFilter<TObject, TExprLhs, TOption> : FilterWidgetWi
                     .Background(drawOptionBackground)
                     .HoverBackground(FloatMenuOption.ColorBGActiveMouseover)
                     .OnClick(handleOptionClick);
+
+                if (option.Tooltip?.Length > 0)
+                {
+                    optionWidget = optionWidget.Tooltip(option.Tooltip);
+                }
 
                 optionWidgets.Add(optionWidget);
             }
@@ -244,6 +263,7 @@ public abstract class NToManyFilter<TObject, TExprLhs, TOption> : FilterWidgetWi
             windowRect = new Rect(position, size);
         }
     }
-
-    public delegate Widget OptionWidgetFactory(TOption option);
 }
+
+public readonly record struct NTMFilterOption<TValue>(TValue Value, string? Label = null, Widget? Icon = null, string? Tooltip = null);
+

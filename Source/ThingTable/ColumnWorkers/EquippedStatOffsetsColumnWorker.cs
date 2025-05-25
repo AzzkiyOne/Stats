@@ -77,7 +77,7 @@ public sealed class EquippedStatOffsetsColumnWorker : ColumnWorker<ThingAlike>
     }
     public override FilterWidget<ThingAlike> GetFilterWidget(IEnumerable<ThingAlike> _)
     {
-        return new StringFilter<ThingAlike>(GetOffsetsString);
+        return Make.StringFilter(GetOffsetsString);
     }
     public override int Compare(ThingAlike thing1, ThingAlike thing2)
     {

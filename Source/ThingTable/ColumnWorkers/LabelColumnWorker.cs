@@ -41,30 +41,13 @@ public sealed class LabelColumnWorker : ColumnWorker<ThingAlike>
     }
     public override FilterWidget<ThingAlike> GetFilterWidget(IEnumerable<ThingAlike> tableRecords)
     {
-        var labelFilter = new StringFilter<ThingAlike>(GetThingLabel);
+        var labelFilter = Make.StringFilter(GetThingLabel);
 
         if (tableRecords.Any(record => record.StuffDef != null))
         {
-            var stuffDefs = tableRecords
-                .Select(thing => thing.StuffDef)
-                .Distinct()
-                .OrderBy(stuffDef => stuffDef?.label);
-            var stuffFilter = new OneToManyFilter<ThingAlike, ThingDef?>(
-                thing => thing.StuffDef,
-                stuffDefs,
-                stuffDef => stuffDef == null
-                    ? new Label("")
-                    : new HorizontalContainer(
-                        [
-                            new ThingIcon(stuffDef),
-                            new Label(stuffDef.LabelCap).WidthRel(1f)
-                        ],
-                        Globals.GUI.PadSm,
-                        true
-                    )
-            );
+            var stuffFilter = Make.OTMThingDefFilter(thing => thing.StuffDef, tableRecords);
 
-            return new CompositeFilter<ThingAlike>([
+            return Make.CompositeFilter<ThingAlike>([
                 new StuffedVariantsDisplayModeToggleButton(),
                 stuffFilter.Tooltip("Filter by material."),
                 labelFilter.WidthRel(1f).Tooltip("Filter by label.")

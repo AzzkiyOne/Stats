@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using RimWorld;
 using Stats.Widgets;
 
@@ -30,16 +29,7 @@ public sealed class BuildingRecreationTypeColumnWorker : ColumnWorker<ThingAlike
     }
     public override FilterWidget<ThingAlike> GetFilterWidget(IEnumerable<ThingAlike> tableRecords)
     {
-        var joyKindDefs = tableRecords
-            .Select(GetJoyKindDef)
-            .Distinct()
-            .OrderBy(joyKindDef => joyKindDef?.label);
-
-        return new OneToManyFilter<ThingAlike, JoyKindDef?>(
-            GetJoyKindDef,
-            joyKindDefs,
-            joyKindDef => new Label(joyKindDef == null ? "" : joyKindDef.LabelCap)
-        );
+        return Make.OTMDefFilter(GetJoyKindDef, tableRecords);
     }
     public override int Compare(ThingAlike thing1, ThingAlike thing2)
     {
