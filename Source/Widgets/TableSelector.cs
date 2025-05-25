@@ -29,10 +29,10 @@ internal sealed class TableSelector : WidgetWrapper
             [
                 new Icon(tableDef.Icon, out IconWidget)
                     .PaddingAbs(Globals.GUI.PadXs)
-                    .SizeAbs(MainTabWindow.TitleBarHeight)
+                    .SizeAbs(MainTabWindowTitleBar.Height)
                     .Color(tableDef.IconColor, out IconColorExtension),
                 new Label(tableDef.LabelCap, out LabelWidget)
-                    .HeightAbs(MainTabWindow.TitleBarHeight)
+                    .HeightAbs(MainTabWindowTitleBar.Height)
                     .TextAnchor(TextAnchor.MiddleLeft),
             ],
             Globals.GUI.Pad

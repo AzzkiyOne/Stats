@@ -15,6 +15,7 @@ internal sealed class MainTabWindowTitleBar : WidgetWrapper
         "- Hold [Ctrl] and click on a row to pin/unpin it.\n" +
         "  - You can pin multiple rows.\n" +
         "  - Pinned rows are unaffected by filters.";
+    internal const float Height = 30f;
     private const float IconPadding = Globals.GUI.PadXs;
     private readonly Label LabelWidget;
     private ObjectTable _TableWidget;
@@ -53,7 +54,7 @@ internal sealed class MainTabWindowTitleBar : WidgetWrapper
                             "Reset filters"
                     ),
                     new Label(tableWidget.FilterMode.ToString(), out LabelWidget)
-                        .HeightAbs(MainTabWindow.TitleBarHeight)
+                        .HeightAbs(Height)
                         .PaddingAbs(Globals.GUI.PadSm, 0f)
                         .TextAnchor(TextAnchor.MiddleCenter)
                         .ToButtonGhostly(
@@ -78,8 +79,8 @@ internal sealed class MainTabWindowTitleBar : WidgetWrapper
             Globals.GUI.Pad,
             true
         )
-        .BorderBottom(1f, MainTabWindow.BorderLineColor)
-        .Background(Verse.Widgets.LightHighlight);
+        .Background(Verse.Widgets.LightHighlight)
+        .BorderBottom(1f, MainTabWindow.BorderLineColor);
         Widget.Parent = this;
     }
     private static Widget ToToolbarIcon(
@@ -100,7 +101,7 @@ internal sealed class MainTabWindowTitleBar : WidgetWrapper
     {
         return widget
             .PaddingAbs(pad)
-            .SizeAbs(MainTabWindow.TitleBarHeight)
+            .SizeAbs(Height)
             .Tooltip(tooltip);
     }
     private void HandleTableFilterModeChange(ObjectTable.TableFilterMode filterMode)

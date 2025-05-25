@@ -8,7 +8,6 @@ public sealed class MainTabWindow : RimWorld.MainTabWindow
     protected override float Margin { get => 1f; }
     public override Vector2 RequestedTabSize => new(UI.screenWidth, base.RequestedTabSize.y);
     private bool IsExpanded;
-    internal const float TitleBarHeight = 30f;
     internal static readonly Color BorderLineColor = new(1f, 1f, 1f, 0.4f);
     private readonly Widget TitleBarWidget;
     private readonly MainTabWindowTitleBar TitleBar;
@@ -45,11 +44,14 @@ public sealed class MainTabWindow : RimWorld.MainTabWindow
     }
     public override void DoWindowContents(Rect rect)
     {
+        var rectSize = rect.size;
+        var titleBarHeight = TitleBarWidget.GetSize(rectSize).y;
+
         Text.WordWrap = false;
 
-        TitleBarWidget.DrawIn(rect.TopPartPixels(TitleBarHeight));
+        TitleBarWidget.Draw(rect.TopPartPixels(titleBarHeight), rectSize);
 
-        _CurTableDef.Worker.TableWidget.Draw(rect.BottomPartPixels(rect.height - TitleBarHeight));
+        _CurTableDef.Worker.TableWidget.Draw(rect.BottomPartPixels(rect.height - titleBarHeight));
 
         GUIDebugger.DrawDebugInfo(rect);
 
