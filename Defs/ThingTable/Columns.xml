@@ -72,12 +72,6 @@
         <labelShort>Offsets</labelShort>
         <workerClass>Stats.ThingTable.EquippedStatOffsetsColumnWorker</workerClass>
     </Stats.ColumnDef>
-    
-    <Stats.ColumnDef>
-        <defName>StuffCategory_ThingTableColumn</defName>
-        <label>category</label>
-        <workerClass>Stats.ThingTable.StuffCategoryColumnWorker</workerClass>
-    </Stats.ColumnDef>
 
     <Stats.ColumnDef Class="Stats.ThingTable.StatColumnDef">
         <defName>ColdInsulation_ThingTableColumn</defName>
