@@ -145,6 +145,26 @@ public static class WidgetAPI
         Border(this Widget widget) =>
         widget.Border(1f, UnityEngine.Color.white);
 
+    // --- Border: top ---
+
+    public static BorderTopWidgetExtension
+        BorderTop(this Widget widget, float thickness, Color color) =>
+        new(widget, thickness, color);
+
+    public static BorderTopWidgetExtension
+        BorderTop(this Widget widget, Color color) =>
+        widget.BorderTop(1f, color);
+
+    public static BorderTopWidgetExtension
+        BorderTop(this Widget widget, float thickness) =>
+        widget.BorderTop(thickness, UnityEngine.Color.white);
+
+    public static BorderTopWidgetExtension
+        BorderTop(this Widget widget) =>
+        widget.BorderTop(1f, UnityEngine.Color.white);
+
+    // --- Border: bottom ---
+
     public static BorderBottomWidgetExtension
         BorderBottom(this Widget widget, float thickness, Color color) =>
         new(widget, thickness, color);
