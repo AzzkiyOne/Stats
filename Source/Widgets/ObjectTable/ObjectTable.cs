@@ -49,7 +49,7 @@ internal sealed partial class ObjectTable<TObject> : ObjectTable
 
             void drawSortIndicator(Rect rect)
             {
-                if (SortColumn == columnWorker && Event.current.type == EventType.Repaint)
+                if (SortColumn == columnWorker)
                 {
                     if (SortDirection == SortDirectionAscending)
                     {

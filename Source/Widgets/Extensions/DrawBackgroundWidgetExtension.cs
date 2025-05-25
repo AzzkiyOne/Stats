@@ -5,18 +5,21 @@ namespace Stats.Widgets.Extensions;
 
 public sealed class DrawBackgroundWidgetExtension : WidgetExtension
 {
-    private readonly Action<Rect> _DrawBackground;
+    private readonly Action<Rect> DrawBackground;
     internal DrawBackgroundWidgetExtension(
         Widget widget,
         Action<Rect>
         drawBackground
     ) : base(widget)
     {
-        _DrawBackground = drawBackground;
+        DrawBackground = drawBackground;
     }
     public override void Draw(Rect rect, Vector2 containerSize)
     {
-        _DrawBackground(rect);
+        if (Event.current.type == EventType.Repaint)
+        {
+            DrawBackground(rect);
+        }
 
         Widget.Draw(rect, containerSize);
     }
