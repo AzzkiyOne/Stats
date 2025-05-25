@@ -113,6 +113,10 @@ public static class WidgetAPI
         HoverBackground(this Widget widget, Color color) =>
         widget.HoverBackground(BaseContent.WhiteTex, color);
 
+    public static BackgroundAtlasWidgetExtension
+        BackgroundAtlas(this Widget widget, Texture2D atlasTexture) =>
+        new(widget, atlasTexture);
+
     // --- Color ---
 
     public static ColorWidgetExtension
@@ -199,6 +203,10 @@ public static class WidgetAPI
         HoverShiftHor(this Widget widget, float amount) =>
         new(widget, amount);
 
+    public static HoverShiftWidgetExtension
+        HoverShift(this Widget widget, float amountHor, float amountVer) =>
+        new(widget, amountHor, amountVer);
+
     // --- Transformers ---
 
     public static Widget
@@ -212,6 +220,16 @@ public static class WidgetAPI
             widget
             .ToButtonGhostly(clickEventHandler)
             .Tooltip(tooltip);
+
+    public static Widget
+        ToButtonSubtle(this Widget widget, Action clickEventHandler) =>
+            widget
+            // TODO: Deal with the "color situation".
+            .Color(UnityEngine.Color.white)
+            .HoverShift(Globals.GUI.ButtonSubtleContentHoverOffset, -Globals.GUI.ButtonSubtleContentHoverOffset)
+            .BackgroundAtlas(Verse.Widgets.ButtonSubtleAtlas)
+            .HoverColor(GenUI.MouseoverColor)
+            .OnClick(clickEventHandler);
 
     // --- Utils ---
 

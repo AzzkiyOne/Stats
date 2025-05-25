@@ -6,7 +6,6 @@ namespace Stats.Widgets;
 
 public static class Draw
 {
-    private const float ButtonSubtleHoverOffset = 2f;
     private static readonly FieldInfo DialogInfoCardStuffField =
         typeof(Dialog_InfoCard)
         .GetField("stuff", BindingFlags.Instance | BindingFlags.NonPublic);
@@ -51,8 +50,8 @@ public static class Draw
         rect.width -= padHor * 2f;
         if (mouseIsOverRect)
         {
-            rect.x += ButtonSubtleHoverOffset;
-            rect.y -= ButtonSubtleHoverOffset;
+            rect.x += Globals.GUI.ButtonSubtleContentHoverOffset;
+            rect.y -= Globals.GUI.ButtonSubtleContentHoverOffset;
         }
 
         GUI.color = textColor;
@@ -82,8 +81,8 @@ public static class Draw
 
         if (mouseIsOverRect)
         {
-            rect.x += ButtonSubtleHoverOffset;
-            rect.y -= ButtonSubtleHoverOffset;
+            rect.x += Globals.GUI.ButtonSubtleContentHoverOffset;
+            rect.y -= Globals.GUI.ButtonSubtleContentHoverOffset;
         }
 
         Verse.Widgets.DrawTextureFitted(rect, texture, textureScale);
