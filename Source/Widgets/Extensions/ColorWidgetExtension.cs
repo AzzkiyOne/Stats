@@ -12,7 +12,7 @@ public sealed class ColorWidgetExtension : WidgetExtension
     public override void Draw(Rect rect, Vector2 containerSize)
     {
         var origGUIColor = GUI.color;
-        GUI.color = Color;
+        GUI.color = Color.AdjustedForGUIOpacity();
 
         Widget.Draw(rect, containerSize);
 
