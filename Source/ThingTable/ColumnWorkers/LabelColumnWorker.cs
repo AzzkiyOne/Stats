@@ -81,7 +81,21 @@ public sealed class LabelColumnWorker : ColumnWorker<ThingAlike>
             var origTextAnchor = Text.Anchor;
             Text.Anchor = TextAnchor.LowerCenter;
 
-            if (Widgets.Draw.ButtonTextSubtle(rect, _IsActive ? ButtonTextActive : ButtonTextDisabled))
+            string buttonText;
+            Color buttonTextColor;
+
+            if (_IsActive)
+            {
+                buttonText = ButtonTextActive;
+                buttonTextColor = Globals.GUI.ActiveFilterOperatorColor;
+            }
+            else
+            {
+                buttonText = ButtonTextDisabled;
+                buttonTextColor = Color.white;
+            }
+
+            if (Widgets.Draw.ButtonTextSubtle(rect, buttonText, buttonTextColor))
             {
                 _IsActive = !_IsActive;
 

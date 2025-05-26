@@ -17,7 +17,6 @@ internal abstract class FilterWidgetWithInputField<TObject, TExprLhs, TExprRhs> 
     private static readonly TipSignal ResetButtonTooltip = "Reset";
     private readonly FloatMenu OperatorsMenu;
     private const float OperatorButtonPadding = Globals.GUI.Pad;
-    private static readonly Color OperatorColor = new(1f, 0.98f, 0.62f);
     private readonly IEnumerable<AbsOperator> Operators;
     protected FilterWidgetWithInputField(
         Func<TObject, TExprLhs> lhs,
@@ -42,7 +41,7 @@ internal abstract class FilterWidgetWithInputField<TObject, TExprLhs, TExprRhs> 
 
                 Operator = @operator;
             }
-            var operatorString = @operator.Symbol.Colorize(OperatorColor);
+            var operatorString = @operator.Symbol.Colorize(Globals.GUI.ActiveFilterOperatorColor);
             var optionLabel = @operator.Description.Length > 0
                     ? $"{operatorString} - {@operator.Description}"
                     : operatorString;
@@ -138,7 +137,7 @@ internal abstract class FilterWidgetWithInputField<TObject, TExprLhs, TExprRhs> 
             TooltipHandler.TipRegion(rect, Operator.Description);
         }
 
-        var color = IsActive ? OperatorColor : Color.white;
+        var color = IsActive ? Globals.GUI.ActiveFilterOperatorColor : Color.white;
 
         return Widgets.Draw.ButtonTextSubtle(rect, Operator.Symbol, color, OperatorButtonPadding);
     }
