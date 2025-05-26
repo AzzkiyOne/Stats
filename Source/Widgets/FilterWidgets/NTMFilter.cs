@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 using RimWorld;
 using UnityEngine;
 using Verse;
@@ -9,10 +11,35 @@ namespace Stats.Widgets;
 
 internal abstract class NTMFilter<TObject, TExprLhs, TOption> : FilterWidgetWithInputField<TObject, TExprLhs, HashSet<TOption>>
 {
-    protected IEnumerable<NTMFilterOption<TOption>> Options { get; }
+    // TODO: See if IEnumerable is most fitting type here.
+    private readonly IEnumerable<NTMFilterOption<TOption>> Options;
+    private List<NTMFilterOption<TOption>>? _OptionsList;
+    private List<NTMFilterOption<TOption>> OptionsList => _OptionsList ??= Options.ToList();
     private OptionsWindowWidget? _OptionsWindow;
-    // IEnumerable<TOption> can be a heavy generator, so we defer options window creation.
-    private OptionsWindowWidget OptionsWindow => _OptionsWindow ??= new(Options, this);
+    private OptionsWindowWidget OptionsWindow => _OptionsWindow ??= new(OptionsList, this);
+    private TipSignal? _SelectedOptionsTooltip = "";
+    private TipSignal SelectedOptionsTooltip
+    {
+        get
+        {
+            if (_SelectedOptionsTooltip is TipSignal tipSignal)
+            {
+                return tipSignal;
+            }
+
+            var stringBuilder = new StringBuilder();
+
+            foreach (var option in OptionsList)
+            {
+                if (Rhs.Contains(option.Value))
+                {
+                    stringBuilder.AppendLine($"- {option.Label}");
+                }
+            }
+
+            return (TipSignal)(_SelectedOptionsTooltip = stringBuilder.ToString());
+        }
+    }
     protected NTMFilter(
         Func<TObject, TExprLhs> lhs,
         IEnumerable<NTMFilterOption<TOption>> options,
@@ -33,6 +60,8 @@ internal abstract class NTMFilter<TObject, TExprLhs, TOption> : FilterWidgetWith
         {
             Find.WindowStack.Add(OptionsWindow);
         }
+
+        TooltipHandler.TipRegion(rect, SelectedOptionsTooltip);
     }
     public sealed override void Reset()
     {
@@ -47,13 +76,13 @@ internal abstract class NTMFilter<TObject, TExprLhs, TOption> : FilterWidgetWith
     }
     private void HandleOptionClick(TOption option)
     {
-        if (Rhs.Contains(option))
+        var optionWasAddedOrRemoved = Rhs.Contains(option)
+            ? Rhs.Remove(option)
+            : Rhs.Add(option);
+
+        if (optionWasAddedOrRemoved)
         {
-            Rhs.Remove(option);
-        }
-        else
-        {
-            Rhs.Add(option);
+            _SelectedOptionsTooltip = null;
         }
 
         NotifyChanged();
@@ -72,7 +101,7 @@ internal abstract class NTMFilter<TObject, TExprLhs, TOption> : FilterWidgetWith
         private const float OptionHorPad = Globals.GUI.PadSm;
         private const float OptionVerPad = Globals.GUI.PadXs;
         public OptionsWindowWidget(
-            IEnumerable<NTMFilterOption<TOption>> options,
+            List<NTMFilterOption<TOption>> options,
             NTMFilter<TObject, TExprLhs, TOption> parent
         )
         {
@@ -193,16 +222,27 @@ internal abstract class NTMFilter<TObject, TExprLhs, TOption> : FilterWidgetWith
     }
 }
 
-public readonly record struct NTMFilterOption<TValue>(TValue Value, string? Label = null, Widget? Icon = null, string? Tooltip = null)
+public readonly record struct NTMFilterOption<TValue>
 {
+    public TValue Value { get; }
+    public string Label { get; }
+    public Widget? Icon { get; }
+    public string? Tooltip { get; }
+    public NTMFilterOption()
+    {
+        Value = default;
+        Label = "<i>Undefined</i>";
+    }
+    public NTMFilterOption(TValue value, string label, Widget? icon = null, string? tooltip = null)
+    {
+        Value = value;
+        Label = label;
+        Icon = icon;
+        Tooltip = tooltip;
+    }
     public Widget ToWidget()
     {
-        if (Value == null)
-        {
-            return new Label("<i>Undefined</i>");
-        }
-
-        Widget label = new Label(Label ?? "");
+        var label = new Label(Label);
 
         if (Icon != null)
         {

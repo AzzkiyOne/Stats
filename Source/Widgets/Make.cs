@@ -39,7 +39,7 @@ public static class Make
             .Distinct()
             .OrderBy(option => option)
             .Select<TOption, NTMFilterOption<TOption>>(
-                option => option == null ? new() : new(option, option?.ToString())
+                option => option == null ? new() : new(option, option.ToString())
             );
 
         return OTMFilter(lhs, options);
