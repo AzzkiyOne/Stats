@@ -18,7 +18,7 @@ public sealed class LabelColumnWorker : ColumnWorker<ThingAlike>
             // icon but of different color.
             return thing.StuffDef == null
                 ? thing.Def.LabelCap.RawText
-                : $"{thing.StuffDef.LabelCap} {thing.Def.label}";
+                : $"{thing.StuffDef.LabelAsStuff.CapitalizeFirst()} {thing.Def.label}";
         });
     public LabelColumnWorker(ColumnDef columnDef) : base(columnDef, ColumnCellStyle.String)
     {
