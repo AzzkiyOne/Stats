@@ -5,7 +5,7 @@
     <Stats.TableDef>
         <defName>RangedWeapons_ThingTable</defName>
         <label>Weapons / Ranged</label>
-        <iconThingDef>Gun_Revolver</iconThingDef>
+        <iconPath>Things/Item/Equipment/WeaponRanged/Revolver</iconPath>
         <workerClass>Stats.ThingTable.RangedWeaponsTableWorker</workerClass>
         <columns>
             <li>Label_ThingTableColumn</li>
@@ -47,7 +47,8 @@
     <Stats.TableDef>
         <defName>MeleeWeapons_ThingTable</defName>
         <label>Weapons / Melee</label>
-        <iconThingDef>MeleeWeapon_Club</iconThingDef>
+        <iconPath>Things/Item/Equipment/WeaponMelee/Club</iconPath>
+        <iconColor>(105,95,97)</iconColor>
         <workerClass>Stats.ThingTable.MeleeWeaponsTableWorker</workerClass>
         <columns>
             <li>Label_ThingTableColumn</li>
@@ -73,7 +74,8 @@
     <Stats.TableDef>
         <defName>Apparel_ThingTable</defName>
         <label>Apparel</label>
-        <iconThingDef>Apparel_Duster</iconThingDef>
+        <iconPath>Things/Pawn/Humanlike/Apparel/Duster/Duster</iconPath>
+        <iconColor>(112,82,65)</iconColor>
         <workerClass>Stats.ThingTable.ApparelTableWorker</workerClass>
         <columns>
             <li>Label_ThingTableColumn</li>
@@ -104,7 +106,7 @@
     <Stats.TableDef>
         <defName>UtilityApparel_ThingTable</defName>
         <label>Apparel / Utility</label>
-        <iconThingDef>Apparel_FirefoampopPack</iconThingDef>
+        <iconPath>Things/Pawn/Humanlike/Apparel/FirefoamPack/FirefoamPack</iconPath>
         <workerClass>Stats.ThingTable.UtilityApparelTableWorker</workerClass>
         <columns>
             <li>Label_ThingTableColumn</li>
@@ -130,7 +132,7 @@
     <Stats.TableDef>
         <defName>PowerGenerators_ThingTable</defName>
         <label>Buildings / Power / Generators</label>
-        <iconThingDef>ChemfuelPoweredGenerator</iconThingDef>
+        <iconPath>Things/Building/Power/ChemfuelPoweredGenerator</iconPath>
         <workerClass>Stats.ThingTable.PowerGeneratorsTableWorker</workerClass>
         <columns>
             <li>Label_ThingTableColumn</li>
@@ -153,7 +155,8 @@
     <Stats.TableDef>
         <defName>RecreationalBuildings_ThingTable</defName>
         <label>Buildings / Recreation</label>
-        <iconThingDef>BilliardsTable</iconThingDef>
+        <iconPath>Things/Building/Joy/BilliardsTable_east</iconPath>
+        <iconColor>(133,97,67)</iconColor>
         <workerClass>Stats.ThingTable.RecreationalBuildingsTableWorker</workerClass>
         <columns>
             <li>Label_ThingTableColumn</li>
@@ -173,7 +176,8 @@
     <Stats.TableDef>
         <defName>Beds_ThingTable</defName>
         <label>Buildings / Furniture / Beds</label>
-        <iconThingDef>Bed</iconThingDef>
+        <iconPath>Things/Building/Furniture/Bed/Bed_south</iconPath>
+        <iconColor>(133,97,67)</iconColor>
         <workerClass>Stats.ThingTable.BedsTableWorker</workerClass>
         <columns>
             <li>Label_ThingTableColumn</li>
@@ -197,7 +201,8 @@
     <Stats.TableDef>
         <defName>Chairs_ThingTable</defName>
         <label>Buildings / Furniture / Chairs</label>
-        <iconThingDef>Armchair</iconThingDef>
+        <iconPath>Things/Building/Furniture/DiningChair_south</iconPath>
+        <iconColor>(133,97,67)</iconColor>
         <workerClass>Stats.ThingTable.ChairsTableWorker</workerClass>
         <columns>
             <li>Label_ThingTableColumn</li>
@@ -214,7 +219,8 @@
     <Stats.TableDef>
         <defName>ArtBuildings_ThingTable</defName>
         <label>Buildings / Art</label>
-        <iconThingDef>SculptureGrand</iconThingDef>
+        <iconPath>StatsMod/UI/Icons/Art</iconPath>
+        <iconColor>(132,135,132)</iconColor>
         <workerClass>Stats.ThingTable.ArtBuildingsTableWorker</workerClass>
         <columns>
             <li>Label_ThingTableColumn</li>
