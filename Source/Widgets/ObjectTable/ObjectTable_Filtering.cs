@@ -88,9 +88,16 @@ internal sealed partial class ObjectTable<TObject>
             filter.Reset();
         }
 
-        foreach (var row in BodyRows)
+        if (ActiveFilters.Count == 0)
         {
-            row.IsHidden = false;
+            foreach (var row in BodyRows)
+            {
+                row.IsHidden = false;
+            }
+        }
+        else
+        {
+            ShouldApplyFilters = true;
         }
     }
     public override void ToggleFilterMode()

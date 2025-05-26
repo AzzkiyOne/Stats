@@ -108,9 +108,6 @@ public sealed class LabelColumnWorker : ColumnWorker<ThingAlike>
         }
         public override void Reset()
         {
-            _IsActive = false;
-
-            OnChange?.Invoke(this);
         }
     }
 }
