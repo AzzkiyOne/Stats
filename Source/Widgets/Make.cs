@@ -44,16 +44,16 @@ public static class Make
 
         return OTMFilter(lhs, options);
     }
-    public static FilterWidget<TObject> OTMThingDefFilter<TObject>(
-        Func<TObject, ThingDef?> lhs,
+    public static FilterWidget<TObject> OTMThingDefFilter<TObject, TOption>(
+        Func<TObject, TOption> lhs,
         IEnumerable<TObject> objects
-    )
+    ) where TOption : ThingDef?
     {
         var options = objects
             .Select(lhs)
             .Distinct()
             .OrderBy(thingDef => thingDef?.label)
-            .Select<ThingDef?, NTMFilterOption<ThingDef?>>(
+            .Select<TOption, NTMFilterOption<TOption>>(
                 thingDef => thingDef == null
                     ? new()
                     : new(thingDef, thingDef.LabelCap, new ThingIcon(thingDef))
@@ -85,16 +85,16 @@ public static class Make
     {
         return new MTMFilter<TObject, TOption>(lhs, options);
     }
-    public static FilterWidget<TObject> MTMThingDefFilter<TObject>(
-        Func<TObject, HashSet<ThingDef>> lhs,
+    public static FilterWidget<TObject> MTMThingDefFilter<TObject, TOption>(
+        Func<TObject, HashSet<TOption>> lhs,
         IEnumerable<TObject> objects
-    )
+    ) where TOption : ThingDef
     {
         var options = objects
             .SelectMany(lhs)
             .Distinct()
             .OrderBy(thingDef => thingDef.label)
-            .Select<ThingDef, NTMFilterOption<ThingDef>>(
+            .Select<TOption, NTMFilterOption<TOption>>(
                 thingDef => thingDef == null
                     ? new()
                     : new(thingDef, thingDef.LabelCap, new ThingIcon(thingDef))
