@@ -1,5 +1,4 @@
 ﻿using RimWorld;
-using Stats.ColumnWorkers;
 
 namespace Stats.ThingTable;
 

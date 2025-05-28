@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Stats.Widgets;
 using Verse;
 
-namespace Stats.ColumnWorkers;
+namespace Stats;
 
 public abstract class DefColumnWorker<TObject, TValue> : ColumnWorker<TObject> where TValue : Def?
 {

@@ -2,7 +2,7 @@
 using Stats.Widgets;
 using Verse;
 
-namespace Stats.ColumnWorkers;
+namespace Stats;
 
 public abstract class ThingDefColumnWorker<TObject, TValue> : DefColumnWorker<TObject, TValue> where TValue : ThingDef?
 {
