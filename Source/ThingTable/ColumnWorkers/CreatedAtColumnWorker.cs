@@ -1,13 +1,24 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using Stats.Widgets;
+﻿using System.Collections.Generic;
 using Verse;
 
 namespace Stats.ThingTable;
 
-public sealed class CreatedAtColumnWorker : ColumnWorker<ThingAlike>
+public sealed class CreatedAtColumnWorker : ThingDefSetColumnWorker<ThingAlike, ThingDef>
 {
+    public CreatedAtColumnWorker(ColumnDef columnDef) : base(columnDef)
+    {
+    }
+    protected override HashSet<ThingDef> GetValue(ThingAlike thing)
+    {
+        var thingCanBeCrafted = ThingCraftingBenches.TryGetValue(thing.Def, out var craftingBenchesDefs);
+
+        if (thingCanBeCrafted)
+        {
+            return craftingBenchesDefs;
+        }
+
+        return [];
+    }
     private static readonly Dictionary<ThingDef, HashSet<ThingDef>> ThingCraftingBenches = [];
     static CreatedAtColumnWorker()
     {
@@ -38,60 +49,5 @@ public sealed class CreatedAtColumnWorker : ColumnWorker<ThingAlike>
                 }
             }
         }
-    }
-    private static readonly Func<ThingAlike, HashSet<ThingDef>> GetThingCraftingBenchesDefs =
-    FunctionExtensions.Memoized((ThingAlike thing) =>
-    {
-        var thingCanBeCrafted = ThingCraftingBenches.TryGetValue(thing.Def, out var craftingBenchesDefs);
-
-        if (thingCanBeCrafted)
-        {
-            return craftingBenchesDefs;
-        }
-
-        return [];
-    });
-    public CreatedAtColumnWorker(ColumnDef columnDef) : base(columnDef, ColumnCellStyle.String)
-    {
-    }
-    public override Widget? GetTableCellWidget(ThingAlike thing)
-    {
-        var thingDefs = GetThingCraftingBenchesDefs(thing);
-
-        if (thingDefs.Count == 0)
-        {
-            return null;
-        }
-
-        var icons = new List<Widget>();
-
-        foreach (var thingDef in thingDefs.OrderBy(thingDef => thingDef.label))
-        {
-            void openDefInfoDialog()
-            {
-                Draw.DefInfoDialog(thingDef);
-            }
-
-            Widget icon = new ThingIcon(thingDef)
-                .ToButtonGhostly(
-                    openDefInfoDialog,
-                    $"<i>{thingDef.LabelCap}</i>\n\n{thingDef.description}"
-                );
-
-            icons.Add(icon);
-        }
-
-        return new HorizontalContainer(icons, Globals.GUI.PadSm);
-    }
-    public override FilterWidget<ThingAlike> GetFilterWidget(IEnumerable<ThingAlike> tableRecords)
-    {
-        return Make.MTMThingDefFilter(GetThingCraftingBenchesDefs, tableRecords);
-    }
-    public override int Compare(ThingAlike thing1, ThingAlike thing2)
-    {
-        var craftingBechesCount1 = GetThingCraftingBenchesDefs(thing1).Count;
-        var craftingBechesCount2 = GetThingCraftingBenchesDefs(thing2).Count;
-
-        return craftingBechesCount1.CompareTo(craftingBechesCount2);
     }
 }

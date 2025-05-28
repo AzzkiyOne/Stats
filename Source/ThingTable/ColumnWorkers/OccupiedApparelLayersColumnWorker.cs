@@ -1,54 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using Stats.Widgets;
 using Verse;
 
 namespace Stats.ThingTable;
 
-public sealed class OccupiedApparelLayersColumnWorker : ColumnWorker<ThingAlike>
+public sealed class OccupiedApparelLayersColumnWorker : DefSetColumnWorker<ThingAlike, ApparelLayerDef>
 {
-    private static readonly Func<ThingAlike, HashSet<ApparelLayerDef>> GetLayerDefs =
-    FunctionExtensions.Memoized((ThingAlike thing) =>
+    public OccupiedApparelLayersColumnWorker(ColumnDef columnDef) : base(columnDef)
+    {
+    }
+    protected override HashSet<ApparelLayerDef> GetValue(ThingAlike thing)
     {
         return thing.Def.apparel?.layers.ToHashSet() ?? [];
-    });
-    private static readonly Func<ThingAlike, string> GetLayersLabels =
-    FunctionExtensions.Memoized((ThingAlike thing) =>
-    {
-        var layerDefs = GetLayerDefs(thing);
-
-        if (layerDefs.Count == 0)
-        {
-            return "";
-        }
-
-        var layerLabels = layerDefs
-            .OrderBy(layerDef => layerDef.label)
-            .Select(layerDef => layerDef.LabelCap);
-
-        return string.Join("\n", layerLabels);
-    });
-    public OccupiedApparelLayersColumnWorker(ColumnDef columnDef) : base(columnDef, ColumnCellStyle.String)
-    {
-    }
-    public override Widget? GetTableCellWidget(ThingAlike thing)
-    {
-        var layerLabels = GetLayersLabels(thing);
-
-        if (layerLabels.Length == 0)
-        {
-            return null;
-        }
-
-        return new Label(layerLabels);
-    }
-    public override FilterWidget<ThingAlike> GetFilterWidget(IEnumerable<ThingAlike> tableRecords)
-    {
-        return Make.MTMDefFilter(GetLayerDefs, tableRecords);
-    }
-    public override int Compare(ThingAlike thing1, ThingAlike thing2)
-    {
-        return GetLayersLabels(thing1).CompareTo(GetLayersLabels(thing2));
     }
 }

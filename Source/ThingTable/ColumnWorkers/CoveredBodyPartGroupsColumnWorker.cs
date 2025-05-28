@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using Stats.Widgets;
 using Verse;
 
 namespace Stats.ThingTable;
@@ -13,49 +11,13 @@ namespace Stats.ThingTable;
 // Luckily, it looks like in a definition it is allowed to only list the whole
 // groups of body parts. The resulting list is of course significantly smaller
 // and can be safely displayed in a single row/column.
-public sealed class CoveredBodyPartGroupsColumnWorker : ColumnWorker<ThingAlike>
+public sealed class CoveredBodyPartGroupsColumnWorker : DefSetColumnWorker<ThingAlike, BodyPartGroupDef>
 {
-    private static readonly Func<ThingAlike, HashSet<BodyPartGroupDef>> GetBodyPartGroupDefs =
-    FunctionExtensions.Memoized((ThingAlike thing) =>
+    public CoveredBodyPartGroupsColumnWorker(ColumnDef columnDef) : base(columnDef)
+    {
+    }
+    protected override HashSet<BodyPartGroupDef> GetValue(ThingAlike thing)
     {
         return thing.Def.apparel?.bodyPartGroups.ToHashSet() ?? [];
-    });
-    private static readonly Func<ThingAlike, string> GetBodyPartGroupLabels =
-    FunctionExtensions.Memoized((ThingAlike thing) =>
-    {
-        var bodyPartGroupDefs = GetBodyPartGroupDefs(thing);
-
-        if (bodyPartGroupDefs.Count == 0)
-        {
-            return "";
-        }
-
-        var bodyPartGroupLabels = bodyPartGroupDefs
-            .OrderBy(bodyPartGroupDef => bodyPartGroupDef.label)
-            .Select(bodyPartGroupDef => bodyPartGroupDef.LabelCap);
-
-        return string.Join("\n", bodyPartGroupLabels);
-    });
-    public CoveredBodyPartGroupsColumnWorker(ColumnDef columnDef) : base(columnDef, ColumnCellStyle.String)
-    {
-    }
-    public override Widget? GetTableCellWidget(ThingAlike thing)
-    {
-        var bodyPartGroupLabels = GetBodyPartGroupLabels(thing);
-
-        if (bodyPartGroupLabels.Length == 0)
-        {
-            return null;
-        }
-
-        return new Label(bodyPartGroupLabels);
-    }
-    public override FilterWidget<ThingAlike> GetFilterWidget(IEnumerable<ThingAlike> tableRecords)
-    {
-        return Make.MTMDefFilter(GetBodyPartGroupDefs, tableRecords);
-    }
-    public override int Compare(ThingAlike thing1, ThingAlike thing2)
-    {
-        return GetBodyPartGroupLabels(thing1).CompareTo(GetBodyPartGroupLabels(thing2));
     }
 }
