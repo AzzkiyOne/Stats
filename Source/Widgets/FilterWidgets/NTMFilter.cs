@@ -94,12 +94,12 @@ internal abstract class NTMFilter<TObject, TExprLhs, TOption> : FilterWidgetWith
         public override Vector2 InitialSize => Widget.GetSize();
         private readonly Widget Widget;
         private static readonly Color BorderColor = Verse.Widgets.SeparatorLineColor;
-        private const float BorderThickness = 1f;
         private static readonly Color BackgroundColor = Verse.Widgets.WindowBGFillColor;
         private const float OptionHoverHorShiftAmount = 4f;
         private static readonly Color OptionHoverBackgroundColor = FloatMenuOption.ColorBGActiveMouseover;
-        private const float OptionHorPad = Globals.GUI.PadSm;
+        private const float OptionHorPad = Globals.GUI.Pad;
         private const float OptionVerPad = Globals.GUI.PadXs;
+        private const int ColumnCapacity = 15;
         public OptionsWindowWidget(
             List<NTMFilterOption<TOption>> options,
             NTMFilter<TObject, TExprLhs, TOption> parent
@@ -109,10 +109,19 @@ internal abstract class NTMFilter<TObject, TExprLhs, TOption> : FilterWidgetWith
             drawShadow = false;
             closeOnClickedOutside = true;
 
-            var optionWidgets = new List<Widget>();
+            var columns = new List<List<Widget>>()
+            {
+                new(ColumnCapacity)
+            };
+            var currentColumn = columns[0];
 
             foreach (var option in options)
             {
+                if (currentColumn.Count - ColumnCapacity == 0)
+                {
+                    columns.Add(currentColumn = new(ColumnCapacity));
+                }
+
                 Widget optionWidget = option
                     .ToWidget()
                     .PaddingAbs(OptionHorPad, OptionVerPad)
@@ -126,25 +135,33 @@ internal abstract class NTMFilter<TObject, TExprLhs, TOption> : FilterWidgetWith
                         }
                     })
                     .HoverBackground(OptionHoverBackgroundColor)
-                    .OnClick(() => parent.HandleOptionClick(option.Value));
+                    .OnClick(() => parent.HandleOptionClick(option.Value))
+                    .BorderBottom(BorderColor);
 
                 if (option.Tooltip?.Length > 0)
                 {
                     optionWidget = optionWidget.Tooltip(option.Tooltip);
                 }
 
-                if (optionWidgets.Count > 0)
+                currentColumn.Add(optionWidget);
+            }
+            var columnWidgets = new List<Widget>(columns.Count);
+
+            for (int i = 0; i < columns.Count; i++)
+            {
+                var column = columns[i];
+                Widget columnWidget = new VerticalContainer(column)
+                    .Background(BackgroundColor)
+                    .BorderRight(BorderColor);
+
+                if (i == 0)
                 {
-                    optionWidget = optionWidget.BorderTop(BorderThickness, BorderColor);
+                    columnWidget = columnWidget.BorderLeft(BorderColor);
                 }
 
-                optionWidgets.Add(optionWidget);
+                columnWidgets.Add(columnWidget);
             }
 
-            var optionsList = new VerticalContainer(optionWidgets)
-                .OverflowScroll()
-                .SizeRel(1f)
-                .BorderTop(BorderThickness, BorderColor);
             var clearSelectionButton = new Label("Clear selection")
                 .PaddingAbs(OptionHorPad, OptionVerPad)
                 .WidthRel(1f)
@@ -154,9 +171,13 @@ internal abstract class NTMFilter<TObject, TExprLhs, TOption> : FilterWidgetWith
                     parent.NotifyChanged();
                 });
 
-            Widget = new VerticalContainer([clearSelectionButton, optionsList], shareFreeSpace: true)
-                .Background(BackgroundColor)
-                .Border(BorderThickness, BorderColor);
+            Widget = new VerticalContainer(
+                [
+                    clearSelectionButton,
+                    new HorizontalContainer(columnWidgets, stretchItems: true).WidthRel(1f),
+                ],
+                shareFreeSpace: true
+            );
         }
         public override void DoWindowContents(Rect rect)
         {
@@ -198,14 +219,6 @@ internal abstract class NTMFilter<TObject, TExprLhs, TOption> : FilterWidgetWith
         {
             var position = UI.MousePositionOnUIInverted;
             var size = InitialSize;
-            // Has to be dynamic because the user can change screen size in game.
-            var maxHeight = UI.screenHeight / 2.5f;
-
-            if (size.y > maxHeight)
-            {
-                size.y = maxHeight;
-                size.x += GenUI.ScrollBarWidth;
-            }
 
             if (position.x + size.x > UI.screenWidth)
             {
