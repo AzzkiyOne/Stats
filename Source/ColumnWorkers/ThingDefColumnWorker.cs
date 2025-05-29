@@ -23,7 +23,7 @@ public abstract class ThingDefColumnWorker<TObject, TValue> : DefColumnWorker<TO
                 new ThingIcon(thingDef).ToButtonGhostly(() => Draw.DefInfoDialog(thingDef)),
                 new Label(thingDef.LabelCap),
             ],
-            Globals.GUI.Pad
+            Globals.GUI.PadSm
         );
     }
     public sealed override FilterWidget<TObject> GetFilterWidget(IEnumerable<TObject> tableRecords)
