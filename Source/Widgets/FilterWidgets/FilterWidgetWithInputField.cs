@@ -77,6 +77,9 @@ internal abstract class FilterWidgetWithInputField<TObject, TExprLhs, TExprRhs> 
     {
         GUIDebugger.DebugRect(this, rect);
 
+        var origTextAnchor = Text.Anchor;
+        Text.Anchor = TextAnchor.LowerLeft;
+
         if (IsActive)
         {
             if (Operators.Count() > 1)
@@ -117,6 +120,8 @@ internal abstract class FilterWidgetWithInputField<TObject, TExprLhs, TExprRhs> 
                 }
             }
         }
+
+        Text.Anchor = origTextAnchor;
     }
     private Vector2 CalcOperatorButtonSize()
     {
