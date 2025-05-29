@@ -569,19 +569,23 @@
     <Stats.ColumnDef>
         <defName>PlantProductType_ThingTableColumn</defName>
         <label>product type</label>
+        <labelShort>Type</labelShort>
+        <iconPath>UI/Commands/SetPlantToGrow</iconPath>
         <workerClass>Stats.ThingTable.PlantProductTypeColumnWorker</workerClass>
     </Stats.ColumnDef>
 
     <Stats.ColumnDef>
         <defName>IsPlantSowable_ThingTableColumn</defName>
-        <label>sowable</label>
+        <label>Can be cultivated</label>
+        <iconPath>UI/Designators/ZoneCreate_Growing</iconPath>
+        <labelFormat>Stats.ColumnLabelFormat.IconOnly</labelFormat>
         <workerClass>Stats.ThingTable.IsPlantSowableColumnWorker</workerClass>
     </Stats.ColumnDef>
 
     <Stats.ColumnDef>
         <defName>CanPlantBeGrownInHydroponics_ThingTableColumn</defName>
         <label>Can be grown in hydroponics</label>
-        <iconPath>Things/Building/Production/HydroponicsBasin_east</iconPath>
+        <iconPath>StatsMod/UI/Icons/HydroponicsBasinSmall</iconPath>
         <labelFormat>Stats.ColumnLabelFormat.IconOnly</labelFormat>
         <workerClass>Stats.ThingTable.CanPlantBeGrownInHydroponicsColumnWorker</workerClass>
     </Stats.ColumnDef>
@@ -616,6 +620,38 @@
         <iconPath>UI/Designators/HarvestWood</iconPath>
         <labelFormat>Stats.ColumnLabelFormat.IconOnly</labelFormat>
         <workerClass>Stats.ThingTable.IsPlantDestroyedOnHarvestColumnWorker</workerClass>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef>
+        <defName>PlantNutritionPerHarvest_ThingTableColumn</defName>
+        <label>Nutrition per harvest</label>
+        <iconPath>UI/Designators/Harvest</iconPath>
+        <labelShort>Nutrition</labelShort>
+        <workerClass>Stats.ThingTable.PlantNutritionPerHarvestColumnWorker</workerClass>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef>
+        <defName>PlantNutritionPerHarvestPerDay_ThingTableColumn</defName>
+        <label>Nutrition per harvest per day</label>
+        <iconPath>UI/Designators/Harvest</iconPath>
+        <labelShort>Nutrition/d</labelShort>
+        <workerClass>Stats.ThingTable.PlantNutritionPerHarvestPerDayColumnWorker</workerClass>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef Class="Stats.ThingTable.StatColumnDef">
+        <defName>PlantRawNutrition_ThingTableColumn</defName>
+        <stat>Nutrition</stat>
+        <description>Raw nutrition value of a plant itself, not its product.</description>
+        <iconPath>Things/Mote/Sow</iconPath>
+        <workerClass>Stats.ThingTable.StatColumnWorker</workerClass>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef>
+        <defName>PlantRawNutritionPerDay_ThingTableColumn</defName>
+        <label>Nutrition/d</label>
+        <description>Raw nutrition per day.</description>
+        <iconPath>Things/Mote/Sow</iconPath>
+        <workerClass>Stats.ThingTable.PlantRawNutritionPerDayColumnWorker</workerClass>
     </Stats.ColumnDef>
 
 </Defs>
