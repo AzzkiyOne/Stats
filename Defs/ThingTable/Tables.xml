@@ -139,8 +139,8 @@
             <li>PowerOutput_ThingTableColumn</li>
             <li>Size_ThingTableColumn</li>
             <li>PowerPerCell_ThingTableColumn</li>
-            <li>FuelType_ThingTableColumn</li>
             <li>FuelCapacity_ThingTableColumn</li>
+            <li>FuelType_ThingTableColumn</li>
             <li>FuelConsumptionRate_ThingTableColumn</li>
             <li>DaysOnFullTank_ThingTableColumn</li>
             <li>PowerPerFuel_ThingTableColumn</li>
