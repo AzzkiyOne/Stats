@@ -8,10 +8,15 @@ internal sealed class OTMFilter<TObject, TOption> : NTMFilter<TObject, TOption, 
     public OTMFilter(
         Func<TObject, TOption> lhs,
         IEnumerable<NTMFilterOption<TOption>> options
-    ) : base(lhs, options, [
-        Operators.IsIn.Instance,
-        Operators.IsNotIn.Instance
-    ])
+    ) : base(
+        lhs,
+        options,
+        [
+            Operators.IsIn.Instance,
+            Operators.IsNotIn.Instance
+        ],
+        Operators.IsIn.Instance
+    )
     {
     }
 

@@ -10,16 +10,21 @@ internal sealed class MTMFilter<TObject, TOption> : NTMFilter<TObject, HashSet<T
     public MTMFilter(
         Func<TObject, HashSet<TOption>> lhs,
         IEnumerable<NTMFilterOption<TOption>> options
-    ) : base(lhs, options, [
-        Operators.IntersectsWith.Instance,
-        Operators.NotIntersectsWith.Instance,
-        Operators.IsSubsetOf.Instance,
-        //Operators.IsNotSubsetOf.Instance,
-        Operators.IsSupersetOf.Instance,
-        //Operators.IsNotSupersetOf.Instance,
-        Operators.IsEqualTo.Instance,
-        Operators.IsNotEqualTo.Instance,
-    ])
+    ) : base(
+        lhs,
+        options,
+        [
+            Operators.IntersectsWith.Instance,
+            Operators.NotIntersectsWith.Instance,
+            Operators.IsSubsetOf.Instance,
+            //Operators.IsNotSubsetOf.Instance,
+            Operators.IsSupersetOf.Instance,
+            //Operators.IsNotSupersetOf.Instance,
+            Operators.IsEqualTo.Instance,
+            Operators.IsNotEqualTo.Instance,
+        ],
+        Operators.IntersectsWith.Instance
+    )
     {
     }
 

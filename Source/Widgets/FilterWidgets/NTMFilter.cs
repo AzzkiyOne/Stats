@@ -44,8 +44,9 @@ internal abstract class NTMFilter<TObject, TExprLhs, TOption> : FilterWidgetWith
     protected NTMFilter(
         Func<TObject, TExprLhs> lhs,
         IEnumerable<NTMFilterOption<TOption>> options,
-        IEnumerable<AbsOperator> operators
-    ) : base(lhs, [], operators)
+        IEnumerable<AbsOperator> operators,
+        AbsOperator? defaultOperator = null
+    ) : base(lhs, [], operators, defaultOperator)
     {
         Options = options;
     }

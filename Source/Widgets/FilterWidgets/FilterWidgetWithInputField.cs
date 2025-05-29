@@ -18,13 +18,16 @@ internal abstract class FilterWidgetWithInputField<TObject, TExprLhs, TExprRhs> 
     private readonly FloatMenu OperatorsMenu;
     private const float OperatorButtonPadding = Globals.GUI.Pad;
     private readonly IEnumerable<AbsOperator> Operators;
+    private readonly AbsOperator? DefaultOperator = null;
     protected FilterWidgetWithInputField(
         Func<TObject, TExprLhs> lhs,
         TExprRhs rhs,
-        IEnumerable<AbsOperator> operators
+        IEnumerable<AbsOperator> operators,
+        AbsOperator? defaultOperator = null
     ) : base(lhs, rhs)
     {
         Operators = operators;
+        DefaultOperator = operators.Count() == 1 ? operators.First() : defaultOperator;
         ResetButtonSize = new Vector2(Text.LineHeight, Text.LineHeight);
 
         var operatorsMenuOptions = new List<FloatMenuOption>(operators.Count());
@@ -110,9 +113,10 @@ internal abstract class FilterWidgetWithInputField<TObject, TExprLhs, TExprRhs> 
         {
             if (DrawOperatorButton(rect))
             {
-                if (Operators.Count() == 1)
+                if (DefaultOperator != null)
                 {
-                    Operator = Operators.First();
+                    Operator = DefaultOperator;
+                    FocusInputField();
                 }
                 else
                 {
