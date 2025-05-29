@@ -185,6 +185,42 @@ public static class WidgetAPI
         BorderBottom(this Widget widget) =>
         widget.BorderBottom(1f, UnityEngine.Color.white);
 
+    // --- Border: left ---
+
+    public static BorderLeftWidgetExtension
+        BorderLeft(this Widget widget, float thickness, Color color) =>
+        new(widget, thickness, color);
+
+    public static BorderLeftWidgetExtension
+        BorderLeft(this Widget widget, Color color) =>
+        widget.BorderLeft(1f, color);
+
+    public static BorderLeftWidgetExtension
+        BorderLeft(this Widget widget, float thickness) =>
+        widget.BorderLeft(thickness, UnityEngine.Color.white);
+
+    public static BorderLeftWidgetExtension
+        BorderLeft(this Widget widget) =>
+        widget.BorderLeft(1f, UnityEngine.Color.white);
+
+    // --- Border: right ---
+
+    public static BorderRightWidgetExtension
+        BorderRight(this Widget widget, float thickness, Color color) =>
+        new(widget, thickness, color);
+
+    public static BorderRightWidgetExtension
+        BorderRight(this Widget widget, Color color) =>
+        widget.BorderRight(1f, color);
+
+    public static BorderRightWidgetExtension
+        BorderRight(this Widget widget, float thickness) =>
+        widget.BorderRight(thickness, UnityEngine.Color.white);
+
+    public static BorderRightWidgetExtension
+        BorderRight(this Widget widget) =>
+        widget.BorderRight(1f, UnityEngine.Color.white);
+
     // --- Misc ---
 
     public static TextAnchorWidgetExtension
