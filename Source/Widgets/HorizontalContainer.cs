@@ -10,17 +10,20 @@ public sealed class HorizontalContainer : Widget
     private readonly float Gap;
     private readonly float TotalGapAmount;
     private readonly bool ShareFreeSpace;
+    private readonly bool StretchItems;
     private float OccupiedSpaceAmount;
     public HorizontalContainer(
         List<Widget> children,
         float gap = 0f,
-        bool shareFreeSpace = false
+        bool shareFreeSpace = false,
+        bool stretchItems = false
     )
     {
         Children = children;
         Gap = gap;
         TotalGapAmount = (Children.Count - 1) * Gap;
         ShareFreeSpace = shareFreeSpace;
+        StretchItems = stretchItems;
 
         foreach (var child in children)
         {
@@ -33,7 +36,7 @@ public sealed class HorizontalContainer : Widget
         size.x = TotalGapAmount;
         size.y = 0f;
 
-        if (ShareFreeSpace)
+        if (ShareFreeSpace || StretchItems)
         {
             OccupiedSpaceAmount = TotalGapAmount;
         }
@@ -45,7 +48,7 @@ public sealed class HorizontalContainer : Widget
             size.x += childSize.x;
             size.y = Mathf.Max(size.y, childSize.y);
 
-            if (ShareFreeSpace)
+            if (ShareFreeSpace || StretchItems)
             {
                 OccupiedSpaceAmount += child.GetFixedSize().x;
             }
@@ -60,6 +63,12 @@ public sealed class HorizontalContainer : Widget
         var xMax = rect.xMax;
         var size = rect.size;
         size.x = Mathf.Max(size.x - OccupiedSpaceAmount, 0f);
+        var additionalChildWidth = 0f;
+
+        if (StretchItems)
+        {
+            additionalChildWidth = Mathf.Floor(size.x / Children.Count);
+        }
 
         foreach (var child in Children)
         {
@@ -69,6 +78,7 @@ public sealed class HorizontalContainer : Widget
             }
 
             rect.size = child.GetSize(size);
+            rect.width += additionalChildWidth;
 
             if (rect.xMax > 0f)
             {
