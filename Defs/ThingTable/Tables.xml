@@ -232,4 +232,33 @@
         </columns>
     </Stats.TableDef>
 
+    <Stats.TableDef>
+        <defName>Plants_ThingTable</defName>
+        <label>Plants</label>
+        <iconPath>Things/Plant/CottonPlant/CottonPlantA</iconPath>
+        <workerClass>Stats.ThingTable.PlantsTableWorker</workerClass>
+        <columns>
+            <li>Label_ThingTableColumn</li>
+            <li>PlantMinGrowingSkillToSow_ThingTableColumn</li>
+            <li>PlantGrowingTime_ThingTableColumn</li>
+            <li>PlantHarvestYield_ThingTableColumn</li>
+            <li>PlantProductType_ThingTableColumn</li>
+            <li>IsPlantSowable_ThingTableColumn</li>
+            <li>CanPlantBeGrownInHydroponics_ThingTableColumn</li>
+            <li>IsPlantBlightable_ThingTableColumn</li>
+            <li>IsTree_ThingTableColumn</li>
+            <li>CanBePlantedUnderRoof_ThingTableColumn</li>
+            <li>IsPlantDestroyedOnHarvest_ThingTableColumn</li>
+            <li>PlantFertilityRequirement_ThingTableColumn</li>
+            <li>PlantFertilitySensitivity_ThingTableColumn</li>
+            <li>PlantLightRequirement_ThingTableColumn</li>
+            <li>PlantLifeSpan_ThingTableColumn</li>
+            <li>Beauty_ThingTableColumn</li>
+            <li>Nutrition_ThingTableColumn</li>
+            <li>MaxHitPoints_ThingTableColumn</li>
+            <li>Flammability_ThingTableColumn</li>
+            <li>ContentSource_ThingTableColumn</li>
+        </columns>
+    </Stats.TableDef>
+
 </Defs>

@@ -501,4 +501,121 @@
         <workerClass>Stats.ThingTable.BedFitsLargeAnimalsColumnWorker</workerClass>
     </Stats.ColumnDef>
 
+    <Stats.ColumnDef Class="Stats.ThingTable.StatColumnDef">
+        <defName>Nutrition_ThingTableColumn</defName>
+        <stat>Nutrition</stat>
+        <workerClass>Stats.ThingTable.StatColumnWorker</workerClass>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef>
+        <defName>PlantMinGrowingSkillToSow_ThingTableColumn</defName>
+        <labelKey>MinGrowingSkillToSow</labelKey>
+        <descriptionKey>Stat_Thing_Plant_MinGrowingSkillToSow_Desc</descriptionKey>
+        <labelShort>Skill</labelShort>
+        <iconPath>UI/Icons/CanGraze</iconPath>
+        <workerClass>Stats.ThingTable.PlantMinGrowingSkillToSowColumnWorker</workerClass>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef>
+        <defName>PlantGrowingTime_ThingTableColumn</defName>
+        <labelKey>GrowingTime</labelKey>
+        <descriptionKey>GrowingTimeDesc</descriptionKey>
+        <labelShort>Time</labelShort>
+        <iconPath>UI/Icons/CanGraze</iconPath>
+        <workerClass>Stats.ThingTable.PlantGrowingTimeColumnWorker</workerClass>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef>
+        <defName>PlantFertilityRequirement_ThingTableColumn</defName>
+        <labelKey>FertilityRequirement</labelKey>
+        <descriptionKey>Stat_Thing_Plant_FertilityRequirement_Desc</descriptionKey>
+        <labelShort>Fert. req.</labelShort>
+        <workerClass>Stats.ThingTable.PlantFertilityRequirementColumnWorker</workerClass>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef>
+        <defName>PlantFertilitySensitivity_ThingTableColumn</defName>
+        <labelKey>FertilitySensitivity</labelKey>
+        <descriptionKey>Stat_Thing_Plant_FertilitySensitivity_Desc</descriptionKey>
+        <labelShort>Fert. sens.</labelShort>
+        <workerClass>Stats.ThingTable.PlantFertilitySensitivityColumnWorker</workerClass>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef>
+        <defName>PlantLightRequirement_ThingTableColumn</defName>
+        <labelKey>LightRequirement</labelKey>
+        <descriptionKey>Stat_Thing_Plant_LightRequirement_Desc</descriptionKey>
+        <labelShort>Req.</labelShort>
+        <iconPath>UI/Icons/ColonistBar/Inspired</iconPath>
+        <workerClass>Stats.ThingTable.PlantLightRequirementColumnWorker</workerClass>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef>
+        <defName>PlantLifeSpan_ThingTableColumn</defName>
+        <labelKey>LifeSpan</labelKey>
+        <descriptionKey>Stat_Thing_Plant_LifeSpan_Desc</descriptionKey>
+        <workerClass>Stats.ThingTable.PlantLifeSpanColumnWorker</workerClass>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef>
+        <defName>PlantHarvestYield_ThingTableColumn</defName>
+        <labelKey>HarvestYield</labelKey>
+        <descriptionKey>Stat_Thing_Plant_HarvestYield_Desc</descriptionKey>
+        <labelShort>Yield</labelShort>
+        <iconPath>UI/Designators/Harvest</iconPath>
+        <workerClass>Stats.ThingTable.PlantHarvestYieldColumnWorker</workerClass>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef>
+        <defName>PlantProductType_ThingTableColumn</defName>
+        <label>product type</label>
+        <workerClass>Stats.ThingTable.PlantProductTypeColumnWorker</workerClass>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef>
+        <defName>IsPlantSowable_ThingTableColumn</defName>
+        <label>sowable</label>
+        <workerClass>Stats.ThingTable.IsPlantSowableColumnWorker</workerClass>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef>
+        <defName>CanPlantBeGrownInHydroponics_ThingTableColumn</defName>
+        <label>Can be grown in hydroponics</label>
+        <iconPath>Things/Building/Production/HydroponicsBasin_east</iconPath>
+        <labelFormat>Stats.ColumnLabelFormat.IconOnly</labelFormat>
+        <workerClass>Stats.ThingTable.CanPlantBeGrownInHydroponicsColumnWorker</workerClass>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef>
+        <defName>IsPlantBlightable_ThingTableColumn</defName>
+        <label>Can be infected with blight</label>
+        <iconPath>Things/Plant/Blight</iconPath>
+        <labelFormat>Stats.ColumnLabelFormat.IconOnly</labelFormat>
+        <workerClass>Stats.ThingTable.IsPlantBlightableColumnWorker</workerClass>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef>
+        <defName>IsTree_ThingTableColumn</defName>
+        <label>Is considered a tree</label>
+        <iconPath>Things/Plant/TreeOak/TreeOakA</iconPath>
+        <labelFormat>Stats.ColumnLabelFormat.IconOnly</labelFormat>
+        <workerClass>Stats.ThingTable.IsTreeColumnWorker</workerClass>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef>
+        <defName>CanBePlantedUnderRoof_ThingTableColumn</defName>
+        <label>Can be planted under roof</label>
+        <iconPath>UI/Designators/BuildRoofArea</iconPath>
+        <labelFormat>Stats.ColumnLabelFormat.IconOnly</labelFormat>
+        <workerClass>Stats.ThingTable.CanBePlantedUnderRoofColumnWorker</workerClass>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef>
+        <defName>IsPlantDestroyedOnHarvest_ThingTableColumn</defName>
+        <label>Is plant destroyed on harvest</label>
+        <iconPath>UI/Designators/HarvestWood</iconPath>
+        <labelFormat>Stats.ColumnLabelFormat.IconOnly</labelFormat>
+        <workerClass>Stats.ThingTable.IsPlantDestroyedOnHarvestColumnWorker</workerClass>
+    </Stats.ColumnDef>
+
 </Defs>
