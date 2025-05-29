@@ -40,6 +40,7 @@ internal abstract class NTMFilter<TObject, TExprLhs, TOption> : FilterWidgetWith
             return (TipSignal)(_SelectedOptionsTooltip = stringBuilder.ToString());
         }
     }
+    private static readonly TipSignal Manual = "Hold [Ctrl] to select multiple options.";
     protected NTMFilter(
         Func<TObject, TExprLhs> lhs,
         IEnumerable<NTMFilterOption<TOption>> options,
@@ -62,6 +63,7 @@ internal abstract class NTMFilter<TObject, TExprLhs, TOption> : FilterWidgetWith
         }
 
         TooltipHandler.TipRegion(rect, SelectedOptionsTooltip);
+        TooltipHandler.TipRegion(rect, Manual);
     }
     public sealed override void Reset()
     {
@@ -76,15 +78,21 @@ internal abstract class NTMFilter<TObject, TExprLhs, TOption> : FilterWidgetWith
     }
     private void HandleOptionClick(TOption option)
     {
-        var optionWasAddedOrRemoved = Rhs.Contains(option)
-            ? Rhs.Remove(option)
-            : Rhs.Add(option);
-
-        if (optionWasAddedOrRemoved)
+        if (Rhs.Contains(option))
         {
-            _SelectedOptionsTooltip = null;
+            Rhs.Remove(option);
+        }
+        else
+        {
+            if (Event.current.control == false)
+            {
+                Rhs.Clear();
+            }
+
+            Rhs.Add(option);
         }
 
+        _SelectedOptionsTooltip = null;
         NotifyChanged();
     }
 
