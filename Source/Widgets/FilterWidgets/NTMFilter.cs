@@ -69,8 +69,13 @@ internal abstract class NTMFilter<TObject, TExprLhs, TOption> : FilterWidgetWith
     {
         base.Reset();
 
+        Clear();
+    }
+    private void Clear()
+    {
         Rhs.Clear();
-        // TODO: NotifyChanged()?
+        _SelectedOptionsTooltip = null;
+        NotifyChanged();
     }
     protected override void FocusInputField()
     {
@@ -173,11 +178,7 @@ internal abstract class NTMFilter<TObject, TExprLhs, TOption> : FilterWidgetWith
             var clearSelectionButton = new Label("Clear selection")
                 .PaddingAbs(OptionHorPad, OptionVerPad)
                 .WidthRel(1f)
-                .ToButtonSubtle(() =>
-                {
-                    parent.Rhs.Clear();
-                    parent.NotifyChanged();
-                });
+                .ToButtonSubtle(parent.Clear);
 
             Widget = new VerticalContainer(
                 [
