@@ -1,3 +1,5 @@
+[Subscribe to the mod on Steam!](https://steamcommunity.com/sharedfiles/filedetails/?id=3479566439)
+
 # Naming convention
 
 The project uses standard C# naming convention for classes, namespaces, etc.
