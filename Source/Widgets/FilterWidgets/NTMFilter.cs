@@ -40,6 +40,7 @@ internal abstract class NTMFilter<TObject, TExprLhs, TOption> : FilterWidgetWith
             return (TipSignal)(_SelectedOptionsTooltip = stringBuilder.ToString());
         }
     }
+    private string SelectedOptionsCountString;
     private static readonly TipSignal Manual = "Hold [Ctrl] to select multiple options.";
     protected NTMFilter(
         Func<TObject, TExprLhs> lhs,
@@ -49,16 +50,17 @@ internal abstract class NTMFilter<TObject, TExprLhs, TOption> : FilterWidgetWith
     ) : base(lhs, [], operators, defaultOperator)
     {
         Options = options;
+        SelectedOptionsCountString = "0";
     }
     protected override Vector2 CalcInputFieldContentSize()
     {
-        return Text.CalcSize(Rhs.Count.ToString());
+        return Text.CalcSize(SelectedOptionsCountString);
     }
     protected sealed override void DrawInputField(Rect rect)
     {
         const float horPad = Globals.GUI.EstimatedInputFieldInnerPadding;
 
-        if (Widgets.Draw.ButtonTextSubtle(rect, Rhs.Count.ToString(), horPad))
+        if (Widgets.Draw.ButtonTextSubtle(rect, SelectedOptionsCountString, horPad))
         {
             Find.WindowStack.Add(OptionsWindow);
         }
@@ -75,6 +77,7 @@ internal abstract class NTMFilter<TObject, TExprLhs, TOption> : FilterWidgetWith
     private void Clear()
     {
         Rhs.Clear();
+        SelectedOptionsCountString = "0";
         _SelectedOptionsTooltip = null;
         NotifyChanged();
     }
@@ -98,6 +101,7 @@ internal abstract class NTMFilter<TObject, TExprLhs, TOption> : FilterWidgetWith
             Rhs.Add(option);
         }
 
+        SelectedOptionsCountString = Rhs.Count.ToString();
         _SelectedOptionsTooltip = null;
         NotifyChanged();
     }
