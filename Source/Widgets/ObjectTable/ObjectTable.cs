@@ -23,33 +23,38 @@ internal abstract class ObjectTable
 
 internal sealed partial class ObjectTable<TObject> : ObjectTable
 {
-    private readonly Column[] Columns;
-    private readonly List<Row> HeaderRows = [];
-    private readonly List<BodyRow> BodyRows = [];
-    public ObjectTable(List<ColumnWorker<TObject>> columnWorkers, IEnumerable<TObject> records)
+    public ObjectTable(List<ColumnWorker<TObject>> columnWorkers, IEnumerable<TObject> objects)
     {
         // Columns
         var columnsCount = columnWorkers.Count;
-        SortColumn = columnWorkers.First();
-        Columns = new Column[columnsCount];
+        var columns = new Column[columnsCount];
 
         for (int i = 0; i < columnsCount; i++)
         {
             var columnWorker = columnWorkers[i];
-            Columns[i] = new Column(columnWorker == SortColumn, (TextAnchor)columnWorker.CellStyle);
+
+            columns[i] = new Column(columnWorker, i == 0);
         }
 
-        // Column labels
-        var columnLabelsRow = new LabelsRow(Columns);
+        var sortColumn = columns[0];
+        const int sorDirection = SortDirectionAscending;
+        // TODO: Maybe the constructor should accept list from the beginning.
+        var objectArr = objects.ToArray();
+        // This is a bit of a hack. We rely on default sort direction being just what we need.
+        Array.Sort(objectArr, sortColumn.Worker.Compare);
+
+        // Headers
+        var headerRows = new RowCollection<Row>(2);
+        var columnLabelsRow = new ColumnLabelsRow(columns);
+        var filtersRow = new Row(columns);
 
         for (int i = 0; i < columnsCount; i++)
         {
-            var column = Columns[i];
-            var columnWorker = columnWorkers[i];
+            var column = columns[i];
 
             void drawSortIndicator(Rect rect)
             {
-                if (SortColumn == columnWorker)
+                if (SortColumn == column)
                 {
                     if (SortDirection == SortDirectionAscending)
                     {
@@ -72,87 +77,71 @@ internal sealed partial class ObjectTable<TObject> : ObjectTable
                 }
                 else
                 {
-                    SortRowsByColumn(columnWorker);
+                    SortAllRowsByColumn(column);
                 }
             }
 
-            var columnDef = columnWorker.ColumnDef;
+            var columnDef = column.Worker.ColumnDef;
 
+            // Label
             columnLabelsRow[i] = columnDef
-                .LabelFormat(columnDef, columnWorker.CellStyle)
-                .PaddingAbs(cellPadHor, cellPadVer)
+                .LabelFormat(columnDef, column.Worker.CellStyle)
+                .PaddingAbs(CellPadHor, CellPadVer)
                 .Background(drawSortIndicator)
                 .ToButtonGhostly(
                     handleCellClick,
                     $"<i>{columnDef.LabelCap}</i>\n\n{columnDef.Description}"
                 );
-        }
 
-        HeaderRows.Add(columnLabelsRow);
-        TotalHeaderRowsHeight += columnLabelsRow.Height;
-
-        // Body rows
-        foreach (var record in records)
-        {
-            var bodyRow = new BodyRow(Columns, record, this);
-
-            for (int i = 0; i < columnsCount; i++)
-            {
-                var columnWorker = columnWorkers[i];
-
-                try
-                {
-                    bodyRow[i] = columnWorker.GetTableCellWidget(record)
-                        ?.PaddingAbs(cellPadHor, cellPadVer);
-                }
-                catch (Exception e)
-                {
-                    bodyRow[i] = new Label("!!!")
-                        .Color(Color.red.ToTransparent(0.5f))
-                        .TextAnchor(TextAnchor.LowerCenter)
-                        .PaddingAbs(cellPadHor, cellPadVer)
-                        .Tooltip(e.Message);
-                }
-            }
-
-            BodyRows.Add(bodyRow);
-            TotalBodyRowsHeight += bodyRow.Height;
-        }
-
-        // Filters
-        var filtersRow = new Row(Columns);
-        ActiveFilters = new(columnsCount);
-        // Records enumerable can be a heavy generator.
-        // In order to not execute it twice, we pass
-        // body rows list as records to filter widget factory.
-        records = BodyRows.Select(row => row.Object);
-
-        for (int i = 0; i < columnsCount; i++)
-        {
-            var column = Columns[i];
-            var columnWorker = columnWorkers[i];
-            var filterWidget = columnWorker.GetFilterWidget(records);
+            // Filter
+            var filterWidget = column.Worker.GetFilterWidget(objectArr);
             filterWidget.OnChange += filterWidget => HandleFilterChange(filterWidget, column);
             filtersRow[i] = filterWidget;
         }
 
-        HeaderRows.Add(filtersRow);
-        TotalHeaderRowsHeight += filtersRow.Height;
+        headerRows.Add(columnLabelsRow);
+        headerRows.Add(filtersRow);
+
+        // Body rows
+        var bodyRows = new RowCollection<ObjectRow>(objectArr.Length);
+
+        foreach (var @object in objectArr)
+        {
+            var row = new ObjectRow(columns, @object);
+
+            for (int i = 0; i < columnsCount; i++)
+            {
+                var column = columns[i];
+
+                try
+                {
+                    row[i] = column.Worker.GetTableCellWidget(@object)
+                        ?.PaddingAbs(CellPadHor, CellPadVer);
+                }
+                catch (Exception e)
+                {
+                    row[i] = new Label("!!!")
+                        .Color(Color.red.ToTransparent(0.5f))
+                        .TextAnchor(TextAnchor.LowerCenter)
+                        .PaddingAbs(CellPadHor, CellPadVer)
+                        .Tooltip(e.Message);
+                }
+            }
+
+            bodyRows.Add(row);
+        }
 
         // Finalize
-        SortRowsByColumn(SortColumn);
-    }
-
-    private sealed class Column
-    {
-        public bool IsPinned;
-        public float Width;
-        public float InitialWidth;
-        public readonly TextAnchor TextAnchor;
-        public Column(bool isPinned, TextAnchor textAnchor)
-        {
-            IsPinned = isPinned;
-            TextAnchor = textAnchor;
-        }
+        Columns = columns;
+        SortColumn = sortColumn;
+        SortDirection = sorDirection;
+        HeaderRows = headerRows;
+        PinnedRows = new(10);
+        UnfilteredBodyRows = bodyRows;
+        FilteredBodyRows = new(bodyRows);
+        ActiveFilters = new HashSet<FilterWidget<TObject>>(columnsCount);
+        _FilterMode = TableFilterMode.AND;
+        ObjectMatchesFilters = ObjectFilterMatchFuncAND;
+        ShouldApplyFilters = false;
     }
 }

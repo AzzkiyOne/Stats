@@ -8,7 +8,7 @@ namespace Stats.Widgets;
 internal sealed partial class ObjectTable<TObject>
 {
     private readonly HashSet<FilterWidget<TObject>> ActiveFilters;
-    private bool ShouldApplyFilters = false;
+    private bool ShouldApplyFilters;
     private TableFilterMode _FilterMode;
     public override TableFilterMode FilterMode
     {
@@ -21,6 +21,13 @@ internal sealed partial class ObjectTable<TObject>
             }
 
             _FilterMode = value;
+            ObjectMatchesFilters = value switch
+            {
+                TableFilterMode.AND => ObjectFilterMatchFuncAND,
+                TableFilterMode.OR => ObjectFilterMatchFuncOR,
+                _ => throw new NotSupportedException("Unsupported table filtering mode.")
+            };
+
             OnFilterModeChange?.Invoke(value);
 
             if (ActiveFilters.Count > 1)
@@ -30,6 +37,11 @@ internal sealed partial class ObjectTable<TObject>
         }
     }
     public override event Action<TableFilterMode>? OnFilterModeChange;
+    private ObjectFilterMatchFunc ObjectMatchesFilters;
+    private static readonly ObjectFilterMatchFunc ObjectFilterMatchFuncAND =
+        (@object, filters) => filters.All(filter => filter.Eval(@object));
+    private static readonly ObjectFilterMatchFunc ObjectFilterMatchFuncOR =
+        (@object, filters) => filters.Any(filter => filter.Eval(@object));
     private void HandleFilterChange(FilterWidget<TObject> filter, Column column)
     {
         if (filter.IsActive)
@@ -56,18 +68,22 @@ internal sealed partial class ObjectTable<TObject>
     }
     private void ApplyFilters()
     {
-        if (FilterMode == TableFilterMode.AND)
+        if (ActiveFilters.Count == 0)
         {
-            foreach (var row in BodyRows)
-            {
-                row.IsHidden = ActiveFilters.Any(filter => filter.Eval(row.Object) == false);
-            }
+            FilteredBodyRows.ResetTo(UnfilteredBodyRows);
         }
         else
         {
-            foreach (var row in BodyRows)
+            FilteredBodyRows.Clear();
+
+            foreach (var row in UnfilteredBodyRows)
             {
-                row.IsHidden = !ActiveFilters.Any(filter => filter.Eval(row.Object));
+                var rowIsValid = ObjectMatchesFilters(row.Object, ActiveFilters);
+
+                if (rowIsValid)
+                {
+                    FilteredBodyRows.Add(row);
+                }
             }
         }
 
@@ -90,10 +106,7 @@ internal sealed partial class ObjectTable<TObject>
 
         if (ActiveFilters.Count == 0)
         {
-            foreach (var row in BodyRows)
-            {
-                row.IsHidden = false;
-            }
+            FilteredBodyRows.ResetTo(UnfilteredBodyRows);
         }
         else
         {
@@ -109,4 +122,6 @@ internal sealed partial class ObjectTable<TObject>
             _ => throw new NotSupportedException("Unsupported table filtering mode."),
         };
     }
+
+    private delegate bool ObjectFilterMatchFunc(TObject @object, HashSet<FilterWidget<TObject>> filters);
 }
