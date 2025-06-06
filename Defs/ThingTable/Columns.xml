@@ -654,4 +654,163 @@
         <workerClass>Stats.ThingTable.PlantRawNutritionPerDayColumnWorker</workerClass>
     </Stats.ColumnDef>
 
+    <Stats.ColumnDef Class="Stats.ThingTable.StatColumnDef">
+        <defName>CreatureMeatAmount_ThingTableColumn</defName>
+        <stat>MeatAmount</stat>
+        <workerClass>Stats.ThingTable.StatColumnWorker</workerClass>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef Class="Stats.ThingTable.StatColumnDef">
+        <defName>CreatureLeatherAmount_ThingTableColumn</defName>
+        <stat>LeatherAmount</stat>
+        <workerClass>Stats.ThingTable.StatColumnWorker</workerClass>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef>
+        <defName>CreatureLeatherType_ThingTableColumn</defName>
+        <label>Leather type</label>
+        <workerClass>Stats.ThingTable.CreatureLeatherTypeColumnWorker</workerClass>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef Class="Stats.ThingTable.StatColumnDef">
+        <defName>CreatureToxicResistance_ThingTableColumn</defName>
+        <stat>ToxicResistance</stat>
+        <workerClass>Stats.ThingTable.StatColumnWorker</workerClass>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef Class="Stats.ThingTable.StatColumnDef">
+        <defName>CreatureToxicEnvironmentResistance_ThingTableColumn</defName>
+        <stat>ToxicEnvironmentResistance</stat>
+        <workerClass>Stats.ThingTable.StatColumnWorker</workerClass>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef Class="Stats.ThingTable.StatColumnDef">
+        <defName>CreatureMaxNutrition_ThingTableColumn</defName>
+        <stat>MaxNutrition</stat>
+        <workerClass>Stats.ThingTable.StatColumnWorker</workerClass>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef Class="Stats.ThingTable.StatColumnDef">
+        <defName>CreatureMoveSpeed_ThingTableColumn</defName>
+        <stat>MoveSpeed</stat>
+        <workerClass>Stats.ThingTable.StatColumnWorker</workerClass>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef Class="Stats.ThingTable.StatColumnDef">
+        <defName>CreatureFilthRate_ThingTableColumn</defName>
+        <stat>FilthRate</stat>
+        <workerClass>Stats.ThingTable.StatColumnWorker</workerClass>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef Class="Stats.ThingTable.StatColumnDef">
+        <defName>CreatureCarryingCapacity_ThingTableColumn</defName>
+        <stat>CarryingCapacity</stat>
+        <workerClass>Stats.ThingTable.StatColumnWorker</workerClass>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef Class="Stats.ThingTable.StatColumnDef">
+        <defName>CreatureMinimumHandlingSkill_ThingTableColumn</defName>
+        <stat>MinimumHandlingSkill</stat>
+        <workerClass>Stats.ThingTable.StatColumnWorker</workerClass>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef Class="Stats.ThingTable.StatColumnDef">
+        <defName>CreaturePainShockThreshold_ThingTableColumn</defName>
+        <stat>PainShockThreshold</stat>
+        <workerClass>Stats.ThingTable.StatColumnWorker</workerClass>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef Class="Stats.ThingTable.StatColumnDef">
+        <defName>CreatureCaravanRidingSpeedFactor_ThingTableColumn</defName>
+        <stat>CaravanRidingSpeedFactor</stat>
+        <workerClass>Stats.ThingTable.StatColumnWorker</workerClass>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef Class="Stats.ThingTable.StatColumnDef">
+        <defName>CreatureImmunityGainSpeed_ThingTableColumn</defName>
+        <stat>ImmunityGainSpeed</stat>
+        <workerClass>Stats.ThingTable.StatColumnWorker</workerClass>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef Class="Stats.ThingTable.StatColumnDef">
+        <defName>CreatureComfyTemperatureMin_ThingTableColumn</defName>
+        <stat>ComfyTemperatureMin</stat>
+        <workerClass>Stats.ThingTable.StatColumnWorker</workerClass>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef Class="Stats.ThingTable.StatColumnDef">
+        <defName>CreatureComfyTemperatureMax_ThingTableColumn</defName>
+        <stat>ComfyTemperatureMax</stat>
+        <workerClass>Stats.ThingTable.StatColumnWorker</workerClass>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef>
+        <defName>CreatureIsPackAnimal_ThingTableColumn</defName>
+        <labelKey>PackAnimal</labelKey>
+        <descriptionKey>PackAnimalExplanation</descriptionKey>
+        <workerClass>Stats.ThingTable.CreatureIsPackAnimalColumnWorker</workerClass>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef>
+        <defName>CreatureWildness_ThingTableColumn</defName>
+        <labelKey>Wildness</labelKey>
+        <descriptionKey>WildnessExplanation</descriptionKey>
+        <workerClass>Stats.ThingTable.CreatureWildnessColumnWorker</workerClass>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef>
+        <defName>IsCreatureBlockedByFences_ThingTableColumn</defName>
+        <labelKey>StatsReport_BlockedByFences</labelKey>
+        <descriptionKey>Stat_Race_BlockedByFences_Desc</descriptionKey>
+        <workerClass>Stats.ThingTable.IsCreatureBlockedByFencesColumnWorker</workerClass>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef>
+        <defName>CreatureRoamInterval_ThingTableColumn</defName>
+        <labelKey>StatsReport_RoamInterval</labelKey>
+        <descriptionKey>Stat_Race_RoamInterval_Desc</descriptionKey>
+        <workerClass>Stats.ThingTable.CreatureRoamIntervalColumnWorker</workerClass>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef>
+        <defName>CreatureLifeExpectancy_ThingTableColumn</defName>
+        <labelKey>StatsReport_LifeExpectancy</labelKey>
+        <descriptionKey>Stat_Race_LifeExpectancy_Desc</descriptionKey>
+        <workerClass>Stats.ThingTable.CreatureLifeExpectancyColumnWorker</workerClass>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef>
+        <defName>CreatureRevengeChanceOnTameFail_ThingTableColumn</defName>
+        <labelKey>TameFailedRevengeChance</labelKey>
+        <descriptionKey>Stat_Race_Animal_TameFailedRevengeChance_Desc</descriptionKey>
+        <workerClass>Stats.ThingTable.CreatureRevengeChanceOnTameFailColumnWorker</workerClass>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef>
+        <defName>CreatureRevengeChanceOnHarm_ThingTableColumn</defName>
+        <labelKey>HarmedRevengeChance</labelKey>
+        <descriptionKey>HarmedRevengeChanceExplanation</descriptionKey>
+        <workerClass>Stats.ThingTable.CreatureRevengeChanceOnHarmColumnWorker</workerClass>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef>
+        <defName>CreatureNuzzleInterval_ThingTableColumn</defName>
+        <labelKey>NuzzleInterval</labelKey>
+        <descriptionKey>NuzzleIntervalExplanation</descriptionKey>
+        <workerClass>Stats.ThingTable.CreatureNuzzleIntervalColumnWorker</workerClass>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef>
+        <defName>CreatureTrainability_ThingTableColumn</defName>
+        <labelKey>Trainability</labelKey>
+        <descriptionKey>Stat_Race_Trainability_Desc</descriptionKey>
+        <workerClass>Stats.ThingTable.CreatureTrainabilityColumnWorker</workerClass>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef Class="Stats.ThingTable.StatColumnDef">
+        <defName>CreatureMeleeDodgeChance_ThingTableColumn</defName>
+        <stat>MeleeDodgeChance</stat>
+        <workerClass>Stats.ThingTable.StatColumnWorker</workerClass>
+    </Stats.ColumnDef>
+
 </Defs>
