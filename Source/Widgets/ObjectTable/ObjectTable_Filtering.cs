@@ -88,6 +88,7 @@ internal sealed partial class ObjectTable<TObject>
         }
 
         ShouldApplyFilters = false;
+        ScrollPosition.y = 0f;
     }
     public override void ResetFilters()
     {
@@ -107,6 +108,7 @@ internal sealed partial class ObjectTable<TObject>
         if (ActiveFilters.Count == 0)
         {
             FilteredBodyRows.ResetTo(UnfilteredBodyRows);
+            ScrollPosition.y = 0f;
         }
         else
         {
