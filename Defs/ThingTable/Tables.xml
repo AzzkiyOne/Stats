@@ -272,6 +272,23 @@
         <workerClass>Stats.ThingTable.AnimalsTableWorker</workerClass>
         <columns>
             <li>Label_ThingTableColumn</li>
+            <li>CreatureWoolAmount_ThingTableColumn</li>
+            <li>CreatureWoolType_ThingTableColumn</li>
+            <li>CreatureWoolShearingInterval_ThingTableColumn</li>
+            <li>CreatureWoolPerDay_ThingTableColumn</li>
+            <li>CreatureEggsAmount_ThingTableColumn</li>
+            <li>CreatureEggType_ThingTableColumn</li>
+            <li>CreatureEggLayingInterval_ThingTableColumn</li>
+            <li>CreatureEggsPerDay_ThingTableColumn</li>
+            <li>CreatureEggsNutritionPerDay_ThingTableColumn</li>
+            <li>CreatureMilkAmount_ThingTableColumn</li>
+            <li>CreatureMilkType_ThingTableColumn</li>
+            <li>CreatureMilkingInterval_ThingTableColumn</li>
+            <li>CreatureMilkPerDay_ThingTableColumn</li>
+            <li>CreatureMilkNutritionPerDay_ThingTableColumn</li>
+            <li>CreatureMeatNutritionPerDay_ThingTableColumn</li>
+            <li>CreatureGrowthTime_ThingTableColumn</li>
+            <li>CreatureGestationTime_ThingTableColumn</li>
             <li>CreatureMeleeDodgeChance_ThingTableColumn</li>
             <li>CreatureTrainability_ThingTableColumn</li>
             <li>SharpArmorRating_ThingTableColumn</li>
@@ -283,6 +300,7 @@
             <li>CreatureMeatAmount_ThingTableColumn</li>
             <li>CreatureLeatherAmount_ThingTableColumn</li>
             <li>CreatureLeatherType_ThingTableColumn</li>
+            <li>CreatureLeatherPerDay_ThingTableColumn</li>
             <li>CreatureToxicResistance_ThingTableColumn</li>
             <li>CreatureToxicEnvironmentResistance_ThingTableColumn</li>
             <li>CreatureMaxNutrition_ThingTableColumn</li>

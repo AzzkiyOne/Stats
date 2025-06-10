@@ -672,6 +672,12 @@
         <workerClass>Stats.ThingTable.CreatureLeatherTypeColumnWorker</workerClass>
     </Stats.ColumnDef>
 
+    <Stats.ColumnDef>
+        <defName>CreatureLeatherPerDay_ThingTableColumn</defName>
+        <label>Leather per day</label>
+        <workerClass>Stats.ThingTable.CreatureLeatherPerDayColumnWorker</workerClass>
+    </Stats.ColumnDef>
+
     <Stats.ColumnDef Class="Stats.ThingTable.StatColumnDef">
         <defName>CreatureToxicResistance_ThingTableColumn</defName>
         <stat>ToxicResistance</stat>
@@ -811,6 +817,117 @@
         <defName>CreatureMeleeDodgeChance_ThingTableColumn</defName>
         <stat>MeleeDodgeChance</stat>
         <workerClass>Stats.ThingTable.StatColumnWorker</workerClass>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef>
+        <defName>CreatureGestationTime_ThingTableColumn</defName>
+        <labelKey>Stat_Animal_GestationTime</labelKey>
+        <descriptionKey>Stat_Animal_GestationTimeDesc</descriptionKey>
+        <workerClass>Stats.ThingTable.CreatureGestationTimeColumnWorker</workerClass>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef>
+        <defName>CreatureGrowthTime_ThingTableColumn</defName>
+        <labelKey>Stat_Animal_GrowthTime</labelKey>
+        <descriptionKey>Stat_Animal_GrowthTimeDesc</descriptionKey>
+        <workerClass>Stats.ThingTable.CreatureGrowthTimeColumnWorker</workerClass>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef>
+        <defName>CreatureMeatNutritionPerDay_ThingTableColumn</defName>
+        <label>Meat nutrition per day during growth</label>
+        <workerClass>Stats.ThingTable.CreatureMeatNutritionPerDayColumnWorker</workerClass>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef>
+        <defName>CreatureMilkAmount_ThingTableColumn</defName>
+        <labelKey>Stat_Animal_MilkAmount</labelKey>
+        <descriptionKey>Stat_Animal_MilkAmountDesc</descriptionKey>
+        <workerClass>Stats.ThingTable.CreatureMilkAmountColumnWorker</workerClass>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef>
+        <defName>CreatureMilkType_ThingTableColumn</defName>
+        <labelKey>Stat_Animal_MilkType</labelKey>
+        <descriptionKey>Stat_Animal_MilkTypeDesc</descriptionKey>
+        <workerClass>Stats.ThingTable.CreatureMilkTypeColumnWorker</workerClass>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef>
+        <defName>CreatureMilkingInterval_ThingTableColumn</defName>
+        <labelKey>Stat_Animal_MilkGrowthTime</labelKey>
+        <descriptionKey>Stat_Animal_MilkGrowthTimeDesc</descriptionKey>
+        <workerClass>Stats.ThingTable.CreatureMilkingIntervalColumnWorker</workerClass>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef>
+        <defName>CreatureMilkPerDay_ThingTableColumn</defName>
+        <label>Milk per day</label>
+        <workerClass>Stats.ThingTable.CreatureMilkPerDayColumnWorker</workerClass>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef>
+        <defName>CreatureMilkNutritionPerDay_ThingTableColumn</defName>
+        <label>Milk nutrition per day</label>
+        <workerClass>Stats.ThingTable.CreatureMilkNutritionPerDayColumnWorker</workerClass>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef>
+        <defName>CreatureEggsAmount_ThingTableColumn</defName>
+        <label>Average eggs amount</label>
+        <workerClass>Stats.ThingTable.CreatureEggsAmountColumnWorker</workerClass>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef>
+        <defName>CreatureEggType_ThingTableColumn</defName>
+        <labelKey>Stat_Animal_EggType</labelKey>
+        <descriptionKey>Stat_Animal_EggTypeDesc</descriptionKey>
+        <workerClass>Stats.ThingTable.CreatureEggTypeColumnWorker</workerClass>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef>
+        <defName>CreatureEggLayingInterval_ThingTableColumn</defName>
+        <label>Egg laying interval</label>
+        <workerClass>Stats.ThingTable.CreatureEggLayingIntervalColumnWorker</workerClass>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef>
+        <defName>CreatureEggsPerDay_ThingTableColumn</defName>
+        <label>Eggs per day</label>
+        <workerClass>Stats.ThingTable.CreatureEggsPerDayColumnWorker</workerClass>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef>
+        <defName>CreatureEggsNutritionPerDay_ThingTableColumn</defName>
+        <label>Eggs nutrition per day</label>
+        <workerClass>Stats.ThingTable.CreatureEggsNutritionPerDayColumnWorker</workerClass>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef>
+        <defName>CreatureWoolAmount_ThingTableColumn</defName>
+        <labelKey>Stat_Animal_WoolAmount</labelKey>
+        <descriptionKey>Stat_Animal_WoolAmountDesc</descriptionKey>
+        <workerClass>Stats.ThingTable.CreatureWoolAmountColumnWorker</workerClass>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef>
+        <defName>CreatureWoolType_ThingTableColumn</defName>
+        <labelKey>Stat_Animal_WoolType</labelKey>
+        <descriptionKey>Stat_Animal_WoolTypeDesc</descriptionKey>
+        <workerClass>Stats.ThingTable.CreatureWoolTypeColumnWorker</workerClass>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef>
+        <defName>CreatureWoolShearingInterval_ThingTableColumn</defName>
+        <labelKey>Stat_Animal_WoolGrowthTime</labelKey>
+        <descriptionKey>Stat_Animal_WoolGrowthTimeDesc</descriptionKey>
+        <workerClass>Stats.ThingTable.CreatureWoolShearingIntervalColumnWorker</workerClass>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef>
+        <defName>CreatureWoolPerDay_ThingTableColumn</defName>
+        <label>Wool per day</label>
+        <workerClass>Stats.ThingTable.CreatureWoolPerDayColumnWorker</workerClass>
     </Stats.ColumnDef>
 
 </Defs>
