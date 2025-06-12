@@ -2,9 +2,9 @@
 
 namespace Stats.ThingTable;
 
-public sealed class CreatureWildnessColumnWorker : StatDrawEntryColumnWorker<ThingAlike>
+public sealed class Creature_WildnessColumnWorker : StatDrawEntryColumnWorker<ThingAlike>
 {
-    public CreatureWildnessColumnWorker(ColumnDef columndef) : base(columndef)
+    public Creature_WildnessColumnWorker(ColumnDef columndef) : base(columndef)
     {
     }
     protected override string GetStatDrawEntryLabel(ThingAlike thing)

@@ -2,9 +2,9 @@
 
 namespace Stats.ThingTable;
 
-public sealed class CreatureMilkNutritionPerDayColumnWorker : NumberColumnWorker<ThingAlike>
+public sealed class Creature_MilkNutritionPerDayColumnWorker : NumberColumnWorker<ThingAlike>
 {
-    public CreatureMilkNutritionPerDayColumnWorker(ColumnDef columndef) : base(columndef, formatString: "0.00/d")
+    public Creature_MilkNutritionPerDayColumnWorker(ColumnDef columndef) : base(columndef, formatString: "0.00/d")
     {
     }
     protected override decimal GetValue(ThingAlike thing)

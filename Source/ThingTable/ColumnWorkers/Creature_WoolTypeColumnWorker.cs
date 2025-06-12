@@ -3,9 +3,9 @@ using Verse;
 
 namespace Stats.ThingTable;
 
-public sealed class CreatureWoolTypeColumnWorker : ThingDefColumnWorker<ThingAlike, ThingDef?>
+public sealed class Creature_WoolTypeColumnWorker : ThingDefColumnWorker<ThingAlike, ThingDef?>
 {
-    public CreatureWoolTypeColumnWorker(ColumnDef columnDef) : base(columnDef)
+    public Creature_WoolTypeColumnWorker(ColumnDef columnDef) : base(columnDef)
     {
     }
     protected override ThingDef? GetValue(ThingAlike thing)

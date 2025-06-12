@@ -2,9 +2,9 @@
 
 namespace Stats.ThingTable;
 
-public sealed class CreatureEggsAmountColumnWorker : NumberColumnWorker<ThingAlike>
+public sealed class Creature_EggsAmountColumnWorker : NumberColumnWorker<ThingAlike>
 {
-    public CreatureEggsAmountColumnWorker(ColumnDef columndef) : base(columndef)
+    public Creature_EggsAmountColumnWorker(ColumnDef columndef) : base(columndef)
     {
     }
     protected override decimal GetValue(ThingAlike thing)

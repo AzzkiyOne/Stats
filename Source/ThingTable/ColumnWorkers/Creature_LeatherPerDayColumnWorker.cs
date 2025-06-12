@@ -2,9 +2,9 @@
 
 namespace Stats.ThingTable;
 
-public sealed class CreatureLeatherPerDayColumnWorker : NumberColumnWorker<ThingAlike>
+public sealed class Creature_LeatherPerDayColumnWorker : NumberColumnWorker<ThingAlike>
 {
-    public CreatureLeatherPerDayColumnWorker(ColumnDef columndef) : base(columndef, formatString: "0.0/d")
+    public Creature_LeatherPerDayColumnWorker(ColumnDef columndef) : base(columndef, formatString: "0.0/d")
     {
     }
     protected override decimal GetValue(ThingAlike thing)

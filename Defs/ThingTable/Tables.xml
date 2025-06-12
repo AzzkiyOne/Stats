@@ -272,52 +272,56 @@
         <workerClass>Stats.ThingTable.AnimalsTableWorker</workerClass>
         <columns>
             <li>Label_ThingTableColumn</li>
-            <li>CreatureWoolAmount_ThingTableColumn</li>
-            <li>CreatureWoolType_ThingTableColumn</li>
-            <li>CreatureWoolShearingInterval_ThingTableColumn</li>
-            <li>CreatureWoolPerDay_ThingTableColumn</li>
-            <li>CreatureEggsAmount_ThingTableColumn</li>
-            <li>CreatureEggType_ThingTableColumn</li>
-            <li>CreatureEggLayingInterval_ThingTableColumn</li>
-            <li>CreatureEggsPerDay_ThingTableColumn</li>
-            <li>CreatureEggsNutritionPerDay_ThingTableColumn</li>
-            <li>CreatureMilkAmount_ThingTableColumn</li>
-            <li>CreatureMilkType_ThingTableColumn</li>
-            <li>CreatureMilkingInterval_ThingTableColumn</li>
-            <li>CreatureMilkPerDay_ThingTableColumn</li>
-            <li>CreatureMilkNutritionPerDay_ThingTableColumn</li>
-            <li>CreatureMeatNutritionPerDay_ThingTableColumn</li>
-            <li>CreatureGrowthTime_ThingTableColumn</li>
-            <li>CreatureGestationTime_ThingTableColumn</li>
-            <li>CreatureMeleeDodgeChance_ThingTableColumn</li>
-            <li>CreatureTrainability_ThingTableColumn</li>
+            <!-- Productivity: Meat -->
+            <li>Creature_MeatAmount</li>
+            <li>Creature_MeatType</li>
+            <li>Creature_MeatNutritionPerDay</li>
+            <!-- Productivity: Leather -->
+            <li>Creature_LeatherAmount</li>
+            <li>Creature_LeatherType</li>
+            <li>Creature_LeatherPerDay</li>
+            <!-- Productivity: Wool -->
+            <li>Creature_WoolAmount</li>
+            <li>Creature_WoolType</li>
+            <li>Creature_WoolShearingInterval</li>
+            <li>Creature_WoolPerDay</li>
+            <!-- Productivity: Milk -->
+            <li>Creature_MilkAmount</li>
+            <li>Creature_MilkType</li>
+            <li>Creature_MilkingInterval</li>
+            <li>Creature_MilkPerDay</li>
+            <li>Creature_MilkNutritionPerDay</li>
+            <!-- Productivity: Eggs -->
+            <li>Creature_EggsAmount</li>
+            <li>Creature_EggType</li>
+            <li>Creature_EggLayingInterval</li>
+            <li>Creature_EggsPerDay</li>
+            <li>Creature_EggsNutritionPerDay</li>
+            <!-- Handling -->
+            <li>Creature_MinimumHandlingSkill</li>
+            <li>Creature_Trainability</li>
+            <li>Creature_Wildness</li>
+            <li>Creature_IsBlockedByFences</li>
+            <!-- TODO: Diet column -->
+            <li>Creature_MaxNutrition</li>
+            <!-- Caravan -->
+            <li>Creature_IsPackAnimal</li>
+            <li>Creature_CaravanRidingSpeedFactor</li>
+            <li>Creature_CaravanCarryingCapacity</li>
+            <!-- Reproduction -->
+            <li>Creature_GestationTime</li>
+            <li>Creature_GrowthTime</li>
+            <li>Creature_LifeExpectancy</li>
+            <!-- Physique -->
+            <li>Creature_ComfyTemperatureMin</li>
+            <li>Creature_ComfyTemperatureMax</li>
             <li>SharpArmorRating_ThingTableColumn</li>
             <li>BluntArmorRating_ThingTableColumn</li>
-            <li>CreatureRevengeChanceOnTameFail_ThingTableColumn</li>
-            <li>CreatureRevengeChanceOnHarm_ThingTableColumn</li>
-            <li>CreatureNuzzleInterval_ThingTableColumn</li>
-            <li>CreatureLifeExpectancy_ThingTableColumn</li>
-            <li>CreatureMeatAmount_ThingTableColumn</li>
-            <li>CreatureLeatherAmount_ThingTableColumn</li>
-            <li>CreatureLeatherType_ThingTableColumn</li>
-            <li>CreatureLeatherPerDay_ThingTableColumn</li>
-            <li>CreatureToxicResistance_ThingTableColumn</li>
-            <li>CreatureToxicEnvironmentResistance_ThingTableColumn</li>
-            <li>CreatureMaxNutrition_ThingTableColumn</li>
-            <li>CreatureMoveSpeed_ThingTableColumn</li>
-            <li>CreatureFilthRate_ThingTableColumn</li>
-            <li>CreatureCarryingCapacity_ThingTableColumn</li>
-            <li>CreatureMinimumHandlingSkill_ThingTableColumn</li>
-            <li>CreaturePainShockThreshold_ThingTableColumn</li>
-            <li>CreatureCaravanRidingSpeedFactor_ThingTableColumn</li>
-            <li>CreatureImmunityGainSpeed_ThingTableColumn</li>
-            <li>CreatureComfyTemperatureMin_ThingTableColumn</li>
-            <li>CreatureComfyTemperatureMax_ThingTableColumn</li>
-            <li>CreatureIsPackAnimal_ThingTableColumn</li>
-            <li>CreatureWildness_ThingTableColumn</li>
-            <li>IsCreatureBlockedByFences_ThingTableColumn</li>
-            <li>CreatureRoamInterval_ThingTableColumn</li>
-            <li>Flammability_ThingTableColumn</li>
+            <li>Creature_ToxicResistance</li>
+            <li>Creature_ToxicEnvironmentResistance</li>
+            <li>Creature_MoveSpeed</li>
+            <!-- Misc -->
+            <li>Creature_NuzzleInterval</li>
             <li>MarketValue_ThingTableColumn</li>
             <li>ContentSource_ThingTableColumn</li>
         </columns>

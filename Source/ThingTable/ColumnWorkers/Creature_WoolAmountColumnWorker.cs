@@ -2,9 +2,9 @@
 
 namespace Stats.ThingTable;
 
-public sealed class CreatureWoolShearingIntervalColumnWorker : NumberColumnWorker<ThingAlike>
+public sealed class Creature_WoolAmountColumnWorker : NumberColumnWorker<ThingAlike>
 {
-    public CreatureWoolShearingIntervalColumnWorker(ColumnDef columndef) : base(columndef)
+    public Creature_WoolAmountColumnWorker(ColumnDef columndef) : base(columndef)
     {
     }
     protected override decimal GetValue(ThingAlike thing)
@@ -13,7 +13,7 @@ public sealed class CreatureWoolShearingIntervalColumnWorker : NumberColumnWorke
 
         if (shearableCompProps != null)
         {
-            return shearableCompProps.shearIntervalDays;
+            return shearableCompProps.woolAmount;
         }
 
         return 0m;

@@ -2,9 +2,9 @@
 
 namespace Stats.ThingTable;
 
-public sealed class CreatureGestationTimeColumnWorker : NumberColumnWorker<ThingAlike>
+public sealed class Creature_GestationTimeColumnWorker : NumberColumnWorker<ThingAlike>
 {
-    public CreatureGestationTimeColumnWorker(ColumnDef columndef) : base(columndef, formatString: "0.00 d")
+    public Creature_GestationTimeColumnWorker(ColumnDef columndef) : base(columndef, formatString: "0.00 d")
     {
     }
     protected override decimal GetValue(ThingAlike thing)

@@ -1,8 +1,8 @@
 ﻿namespace Stats.ThingTable;
 
-public sealed class CreatureNuzzleIntervalColumnWorker : NumberColumnWorker<ThingAlike>
+public sealed class Creature_NuzzleIntervalColumnWorker : NumberColumnWorker<ThingAlike>
 {
-    public CreatureNuzzleIntervalColumnWorker(ColumnDef columndef) : base(columndef, formatString: "0.0 h")
+    public Creature_NuzzleIntervalColumnWorker(ColumnDef columndef) : base(columndef, formatString: "0.0 h")
     {
     }
     protected override decimal GetValue(ThingAlike thing)

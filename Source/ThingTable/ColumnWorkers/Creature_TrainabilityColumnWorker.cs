@@ -2,9 +2,9 @@
 
 namespace Stats.ThingTable;
 
-public sealed class CreatureTrainabilityColumnWorker : DefColumnWorker<ThingAlike, TrainabilityDef?>
+public sealed class Creature_TrainabilityColumnWorker : DefColumnWorker<ThingAlike, TrainabilityDef?>
 {
-    public CreatureTrainabilityColumnWorker(ColumnDef columnDef) : base(columnDef)
+    public Creature_TrainabilityColumnWorker(ColumnDef columnDef) : base(columnDef)
     {
     }
     protected override TrainabilityDef? GetValue(ThingAlike thing)

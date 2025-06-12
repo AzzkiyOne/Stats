@@ -2,9 +2,9 @@
 
 namespace Stats.ThingTable;
 
-public sealed class CreatureMilkPerDayColumnWorker : NumberColumnWorker<ThingAlike>
+public sealed class Creature_MilkingIntervalColumnWorker : NumberColumnWorker<ThingAlike>
 {
-    public CreatureMilkPerDayColumnWorker(ColumnDef columndef) : base(columndef, formatString: "0.0/d")
+    public Creature_MilkingIntervalColumnWorker(ColumnDef columndef) : base(columndef, formatString: "0 d")
     {
     }
     protected override decimal GetValue(ThingAlike thing)
@@ -13,7 +13,7 @@ public sealed class CreatureMilkPerDayColumnWorker : NumberColumnWorker<ThingAli
 
         if (milkableCompProps != null)
         {
-            return ((float)milkableCompProps.milkAmount / milkableCompProps.milkIntervalDays).ToDecimal(1);
+            return milkableCompProps.milkIntervalDays;
         }
 
         return 0m;
