@@ -141,4 +141,57 @@
         <workerClass>Stats.Compat.CE.ThingTable.BinaryStatColumnWorkerRight</workerClass>
     </Stats.ColumnDef>
 
+    <Stats.ColumnDef Class="Stats.Compat.CE.ThingTable.BinaryStatColumnDef">
+        <defName>Creature_MeleeSharpArmorPenetration</defName>
+        <labelShort>AP</labelShort>
+        <iconPath>Things/Item/Equipment/WeaponMelee/Longsword</iconPath>
+        <iconColor>(160,178,181)</iconColor>
+        <iconScale>1.4</iconScale>
+        <stat>MeleeArmorPenetration</stat>
+        <statValueExplanationType>Full</statValueExplanationType>
+        <statValueSeparator>,</statValueSeparator>
+        <workerClass>Stats.Compat.CE.ThingTable.BinaryStatColumnWorkerLeft</workerClass>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef Class="Stats.Compat.CE.ThingTable.BinaryStatColumnDef">
+        <defName>Creature_MeleeBluntArmorPenetration</defName>
+        <labelShort>AP</labelShort>
+        <iconPath>Things/Item/Equipment/WeaponMelee/Club</iconPath>
+        <iconColor>(160,178,181)</iconColor>
+        <iconScale>1.2</iconScale>
+        <stat>MeleeArmorPenetration</stat>
+        <statValueExplanationType>Full</statValueExplanationType>
+        <statValueSeparator>,</statValueSeparator>
+        <workerClass>Stats.Compat.CE.ThingTable.BinaryStatColumnWorkerRight</workerClass>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef Class="Stats.ThingTable.StatColumnDef">
+        <defName>Creature_MeleeCritChance</defName>
+        <labelShort>Crit %</labelShort>
+        <stat>MeleeCritChance</stat>
+        <workerClass>Stats.ThingTable.StatColumnWorker</workerClass>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef Class="Stats.ThingTable.StatColumnDef">
+        <defName>Creature_MeleeParryChance</defName>
+        <labelShort>Parry %</labelShort>
+        <stat>MeleeParryChance</stat>
+        <workerClass>Stats.ThingTable.StatColumnWorker</workerClass>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef Class="Stats.ThingTable.StatColumnDef">
+        <defName>Creature_AimingAccuracy</defName>
+        <stat>AimingAccuracy</stat>
+        <iconPath>Things/Mote/FeedbackShoot</iconPath>
+        <labelShort>%</labelShort>
+        <workerClass>Stats.ThingTable.StatColumnWorker</workerClass>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef Class="Stats.ThingTable.StatColumnDef">
+        <defName>Creature_NightVisionEfficiency</defName>
+        <stat>NightVisionEfficiency</stat>
+        <labelShort>NV %</labelShort>
+        <workerClass>Stats.ThingTable.StatColumnWorker</workerClass>
+    </Stats.ColumnDef>
+
 </Defs>

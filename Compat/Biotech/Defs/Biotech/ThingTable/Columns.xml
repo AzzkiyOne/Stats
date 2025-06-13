@@ -9,4 +9,56 @@
         <workerClass>Stats.Compat.Biotech.ThingTable.ValidLifeStageColumnWorker</workerClass>
     </Stats.ColumnDef>
 
+    <Stats.ColumnDef Class="Stats.ThingTable.StatColumnDef">
+        <defName>Mech_BandwidthCost</defName>
+        <stat>BandwidthCost</stat>
+        <workerClass>Stats.ThingTable.StatColumnWorker</workerClass>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef Class="Stats.ThingTable.StatColumnDef">
+        <defName>Mech_MechEnergyLossPerHP</defName>
+        <stat>MechEnergyLossPerHP</stat>
+        <workerClass>Stats.ThingTable.StatColumnWorker</workerClass>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef Class="Stats.ThingTable.StatColumnDef">
+        <defName>Mech_ControlTakingTime</defName>
+        <stat>ControlTakingTime</stat>
+        <workerClass>Stats.ThingTable.StatColumnWorker</workerClass>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef Class="Stats.ThingTable.StatColumnDef">
+        <defName>Mech_WastepacksPerRecharge</defName>
+        <stat>WastepacksPerRecharge</stat>
+        <workerClass>Stats.ThingTable.StatColumnWorker</workerClass>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef>
+        <defName>Mech_RechargerNeeded</defName>
+        <labelKey>StatsReport_RechargerNeeded</labelKey>
+        <descriptionKey>StatsReport_RechargerNeeded_Desc</descriptionKey>
+        <workerClass>Stats.Compat.Biotech.ThingTable.Mech_RechargerNeededColumnWorker</workerClass>
+    </Stats.ColumnDef>
+    
+    <Stats.ColumnDef>
+        <defName>Mech_WeightClass</defName>
+        <labelKey>MechWeightClass</labelKey>
+        <descriptionKey>MechWeightClassExplanation</descriptionKey>
+        <workerClass>Stats.Compat.Biotech.ThingTable.Mech_WeightClassColumnWorker</workerClass>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef>
+        <defName>Mech_WorkActivities</defName>
+        <labelKey>MechWorkActivities</labelKey>
+        <descriptionKey>MechWorkActivitiesExplanation</descriptionKey>
+        <workerClass>Stats.Compat.Biotech.ThingTable.Mech_WorkActivitiesColumnWorker</workerClass>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef>
+        <defName>Mech_WorkSkill</defName>
+        <labelKey>MechWorkSkill</labelKey>
+        <descriptionKey>MechWorkSkillDesc</descriptionKey>
+        <workerClass>Stats.Compat.Biotech.ThingTable.Mech_WorkSkillColumnWorker</workerClass>
+    </Stats.ColumnDef>
+
 </Defs>

@@ -953,4 +953,32 @@
         <workerClass>Stats.ThingTable.Creature_WoolPerDayColumnWorker</workerClass>
     </Stats.ColumnDef>
 
+    <Stats.ColumnDef Class="Stats.ThingTable.StatColumnDef">
+        <defName>Creature_ShootingAccuracy</defName>
+        <stat>ShootingAccuracyPawn</stat>
+        <iconPath>Things/Mote/FeedbackShoot</iconPath>
+        <labelShort>%</labelShort>
+        <workerClass>Stats.ThingTable.StatColumnWorker</workerClass>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef Class="Stats.ThingTable.StatColumnDef">
+        <defName>Creature_AimingTime</defName>
+        <stat>AimingDelayFactor</stat>
+        <labelShort>Aim t.</labelShort>
+        <workerClass>Stats.ThingTable.StatColumnWorker</workerClass>
+    </Stats.ColumnDef>
+    
+    <Stats.ColumnDef Class="Stats.ThingTable.StatColumnDef">
+        <defName>Creature_MeleeDodgeChance</defName>
+        <stat>MeleeDodgeChance</stat>
+        <labelShort>Dodge %</labelShort>
+        <workerClass>Stats.ThingTable.StatColumnWorker</workerClass>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef Class="Stats.ThingTable.StatColumnDef">
+        <defName>Creature_PsychicSensitivity</defName>
+        <stat>PsychicSensitivity</stat>
+        <workerClass>Stats.ThingTable.StatColumnWorker</workerClass>
+    </Stats.ColumnDef>
+
 </Defs>

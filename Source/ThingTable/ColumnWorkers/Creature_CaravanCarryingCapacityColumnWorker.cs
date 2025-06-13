@@ -11,7 +11,7 @@ public sealed class Creature_CaravanCarryingCapacityColumnWorker : NumberColumnW
     {
         var raceProps = thing.Def.race;
 
-        if (raceProps?.packAnimal == true)
+        if (raceProps != null)
         {
             return (raceProps.baseBodySize * MassUtility.MassCapacityPerBodySize).ToDecimal(0);
         }
