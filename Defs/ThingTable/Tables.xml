@@ -264,4 +264,125 @@
         </columns>
     </Stats.TableDef>
 
+    <Stats.TableDef>
+        <defName>Animals_ThingTable</defName>
+        <label>Creatures / Animals</label>
+        <iconPath>Things/Pawn/Animal/Cow/Bull_east</iconPath>
+        <iconColor>(170,170,170)</iconColor>
+        <workerClass>Stats.ThingTable.AnimalsTableWorker</workerClass>
+        <columns>
+            <li>Label_ThingTableColumn</li>
+            <!-- Productivity: Meat -->
+            <li>Creature_MeatAmount</li>
+            <li>Creature_MeatType</li>
+            <li>Creature_MeatNutritionPerDay</li>
+            <!-- Productivity: Leather -->
+            <li>Creature_LeatherAmount</li>
+            <li>Creature_LeatherType</li>
+            <li>Creature_LeatherPerDay</li>
+            <!-- Productivity: Wool -->
+            <li>Creature_WoolAmount</li>
+            <li>Creature_WoolType</li>
+            <li>Creature_WoolShearingInterval</li>
+            <li>Creature_WoolPerDay</li>
+            <!-- Productivity: Milk -->
+            <li>Creature_MilkAmount</li>
+            <li>Creature_MilkType</li>
+            <li>Creature_MilkingInterval</li>
+            <li>Creature_MilkPerDay</li>
+            <li>Creature_MilkNutritionPerDay</li>
+            <!-- Productivity: Eggs -->
+            <li>Creature_EggsAmount</li>
+            <li>Creature_EggType</li>
+            <li>Creature_EggLayingInterval</li>
+            <li>Creature_EggsPerDay</li>
+            <li>Creature_EggsNutritionPerDay</li>
+            <!-- Handling -->
+            <li>Creature_MinimumHandlingSkill</li>
+            <li>Creature_Trainability</li>
+            <li>Creature_Wildness</li>
+            <li>Creature_IsBlockedByFences</li>
+            <!-- TODO: Diet column -->
+            <li>Creature_MaxNutrition</li>
+            <!-- Caravan -->
+            <li>Creature_IsPackAnimal</li>
+            <li>Creature_CaravanRidingSpeedFactor</li>
+            <li>Creature_CaravanCarryingCapacity</li>
+            <!-- Reproduction -->
+            <li>Creature_GestationTime</li>
+            <li>Creature_GrowthTime</li>
+            <li>Creature_LifeExpectancy</li>
+            <!-- Combat: Offense -->
+            <li MayRequire="CETeam.CombatExtended">Creature_NightVisionEfficiency</li>
+            <li MayRequire="CETeam.CombatExtended">Creature_MeleeSharpArmorPenetration</li>
+            <li MayRequire="CETeam.CombatExtended">Creature_MeleeBluntArmorPenetration</li>
+            <li MayRequire="CETeam.CombatExtended">Creature_MeleeCritChance</li>
+            <!-- Combat: Defense -->
+            <li>Creature_MeleeDodgeChance</li>
+            <li MayRequire="CETeam.CombatExtended">Creature_MeleeParryChance</li>
+            <li>SharpArmorRating_ThingTableColumn</li>
+            <li>BluntArmorRating_ThingTableColumn</li>
+            <li>HeatArmorRating_ThingTableColumn</li>
+            <li MayRequire="CETeam.CombatExtended">CE_ElectricArmorRating_ThingTableColumn</li>
+            <!-- Physique -->
+            <li>Creature_ComfyTemperatureMin</li>
+            <li>Creature_ComfyTemperatureMax</li>
+            <li>Creature_ToxicResistance</li>
+            <li>Creature_ToxicEnvironmentResistance</li>
+            <li>Creature_PsychicSensitivity</li>
+            <li>Creature_MoveSpeed</li>
+            <!-- Misc -->
+            <li>Creature_NuzzleInterval</li>
+            <li>MarketValue_ThingTableColumn</li>
+            <li>ContentSource_ThingTableColumn</li>
+        </columns>
+    </Stats.TableDef>
+
+    <Stats.TableDef>
+        <defName>Mechanoids_ThingTable</defName>
+        <label>Creatures / Mechanoids</label>
+        <iconPath>Things/Pawn/Mechanoid/Centipede_east</iconPath>
+        <workerClass>Stats.ThingTable.MechanoidsTableWorker</workerClass>
+        <columns>
+            <li>Label_ThingTableColumn</li>
+            <!-- General -->
+            <li MayRequire="Ludeon.RimWorld.Biotech">Mech_WeightClass</li>
+            <li MayRequire="Ludeon.RimWorld.Biotech">Mech_BandwidthCost</li>
+            <li MayRequire="Ludeon.RimWorld.Biotech">Mech_MechEnergyLossPerHP</li>
+            <li MayRequire="Ludeon.RimWorld.Biotech">Mech_ControlTakingTime</li>
+            <li MayRequire="Ludeon.RimWorld.Biotech">Mech_WastepacksPerRecharge</li>
+            <li MayRequire="Ludeon.RimWorld.Biotech">Mech_RechargerNeeded</li>
+            <li>CreatedAt_ThingTableColumn</li>
+            <!-- Labor -->
+            <li MayRequire="Ludeon.RimWorld.Biotech">Mech_WorkActivities</li>
+            <li MayRequire="Ludeon.RimWorld.Biotech">Mech_WorkSkill</li>
+            <!-- Combat: Offense -->
+            <li>Creature_ShootingAccuracy</li>
+            <li MayRequire="CETeam.CombatExtended">Creature_AimingAccuracy</li>
+            <li>Creature_AimingTime</li>
+            <li MayRequire="CETeam.CombatExtended">Creature_NightVisionEfficiency</li>
+            <li MayRequire="CETeam.CombatExtended">Creature_MeleeSharpArmorPenetration</li>
+            <li MayRequire="CETeam.CombatExtended">Creature_MeleeBluntArmorPenetration</li>
+            <li MayRequire="CETeam.CombatExtended">Creature_MeleeCritChance</li>
+            <!-- Combat: Defense -->
+            <li>Creature_MeleeDodgeChance</li>
+            <li MayRequire="CETeam.CombatExtended">Creature_MeleeParryChance</li>
+            <li>SharpArmorRating_ThingTableColumn</li>
+            <li>BluntArmorRating_ThingTableColumn</li>
+            <li>HeatArmorRating_ThingTableColumn</li>
+            <li MayRequire="CETeam.CombatExtended">CE_ElectricArmorRating_ThingTableColumn</li>
+            <li MayRequire="Ludeon.RimWorld.Biotech">Mech_EMPResistance</li>
+            <li>EnergyShieldCapacity_ThingTableColumn</li>
+            <li>EnergyShieldRechargeRate_ThingTableColumn</li>
+            <!-- Caravan -->
+            <li>Creature_CaravanRidingSpeedFactor</li>
+            <!-- TODO: VE compat -->
+            <li>Creature_CaravanCarryingCapacity</li>
+            <!-- Misc -->
+            <li>Creature_PsychicSensitivity</li>
+            <li>Creature_MoveSpeed</li>
+            <li>ContentSource_ThingTableColumn</li>
+        </columns>
+    </Stats.TableDef>
+
 </Defs>

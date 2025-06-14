@@ -27,8 +27,8 @@ public abstract class DefSetColumnWorker<TObject, TValue> : ColumnWorker<TObject
             }
 
             var defLabels = defs
-                .OrderBy(def => def.label)
-                .Select(def => def.LabelCap);
+                .OrderBy(GetDefLabel)
+                .Select(GetDefLabel);
 
             return string.Join("\n", defLabels);
         });
@@ -36,6 +36,10 @@ public abstract class DefSetColumnWorker<TObject, TValue> : ColumnWorker<TObject
     protected readonly Func<TObject, HashSet<TValue>> GetCachedValue;
     protected abstract HashSet<TValue> GetValue(TObject @object);
     private readonly Func<TObject, string> GetDefLabels;
+    protected virtual string GetDefLabel(TValue def)
+    {
+        return def.LabelCap;
+    }
     public override Widget? GetTableCellWidget(TObject @object)
     {
         var defLabels = GetDefLabels(@object);
@@ -49,7 +53,15 @@ public abstract class DefSetColumnWorker<TObject, TValue> : ColumnWorker<TObject
     }
     public override FilterWidget<TObject> GetFilterWidget(IEnumerable<TObject> tableRecords)
     {
-        return Make.MTMDefFilter(GetCachedValue, tableRecords);
+        var filterOptions = tableRecords
+            .SelectMany(GetCachedValue)
+            .Distinct()
+            .OrderBy(GetDefLabel)
+            .Select<TValue, NTMFilterOption<TValue>>(
+                def => def == null ? new() : new(def, GetDefLabel(def))
+            );
+
+        return Make.MTMFilter(GetCachedValue, filterOptions);
     }
     public sealed override int Compare(TObject object1, TObject object2)
     {

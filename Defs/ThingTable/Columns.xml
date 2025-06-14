@@ -654,4 +654,337 @@
         <workerClass>Stats.ThingTable.PlantRawNutritionPerDayColumnWorker</workerClass>
     </Stats.ColumnDef>
 
+    <Stats.ColumnDef Class="Stats.ThingTable.StatColumnDef">
+        <defName>Creature_MeatAmount</defName>
+        <stat>MeatAmount</stat>
+        <iconPath>Things/Item/Resource/MeatFoodRaw/Meat_Big/Meat_Big_c</iconPath>
+        <labelShort>Amount</labelShort>
+        <workerClass>Stats.ThingTable.StatColumnWorker</workerClass>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef>
+        <defName>Creature_MeatType</defName>
+        <label>meat type</label>
+        <iconPath>Things/Item/Resource/MeatFoodRaw/Meat_Big/Meat_Big_c</iconPath>
+        <labelShort>Amount</labelShort>
+        <workerClass>Stats.ThingTable.Creature_MeatTypeColumnWorker</workerClass>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef>
+        <defName>Creature_MeatNutritionPerDay</defName>
+        <label>Meat nutrition per day during growth</label>
+        <iconPath>Things/Item/Resource/MeatFoodRaw/Meat_Big/Meat_Big_c</iconPath>
+        <labelShort>Nutrition/d</labelShort>
+        <workerClass>Stats.ThingTable.Creature_MeatNutritionPerDayColumnWorker</workerClass>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef Class="Stats.ThingTable.StatColumnDef">
+        <defName>Creature_LeatherAmount</defName>
+        <stat>LeatherAmount</stat>
+        <iconPath>Things/Item/Resource/Leather/Leather_b</iconPath>
+        <iconColor>(162,106,57)</iconColor>
+        <labelShort>Amount</labelShort>
+        <workerClass>Stats.ThingTable.StatColumnWorker</workerClass>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef>
+        <defName>Creature_LeatherType</defName>
+        <label>Leather type</label>
+        <iconPath>Things/Item/Resource/Leather/Leather_b</iconPath>
+        <iconColor>(162,106,57)</iconColor>
+        <labelShort>Type</labelShort>
+        <workerClass>Stats.ThingTable.Creature_LeatherTypeColumnWorker</workerClass>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef>
+        <defName>Creature_LeatherPerDay</defName>
+        <label>Leather per day</label>
+        <iconPath>Things/Item/Resource/Leather/Leather_b</iconPath>
+        <iconColor>(162,106,57)</iconColor>
+        <labelShort>/d</labelShort>
+        <workerClass>Stats.ThingTable.Creature_LeatherPerDayColumnWorker</workerClass>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef Class="Stats.ThingTable.StatColumnDef">
+        <defName>Creature_ToxicResistance</defName>
+        <stat>ToxicResistance</stat>
+        <workerClass>Stats.ThingTable.StatColumnWorker</workerClass>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef Class="Stats.ThingTable.StatColumnDef">
+        <defName>Creature_ToxicEnvironmentResistance</defName>
+        <stat>ToxicEnvironmentResistance</stat>
+        <workerClass>Stats.ThingTable.StatColumnWorker</workerClass>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef Class="Stats.ThingTable.StatColumnDef">
+        <defName>Creature_MaxNutrition</defName>
+        <stat>MaxNutrition</stat>
+        <workerClass>Stats.ThingTable.StatColumnWorker</workerClass>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef Class="Stats.ThingTable.StatColumnDef">
+        <defName>Creature_MoveSpeed</defName>
+        <stat>MoveSpeed</stat>
+        <workerClass>Stats.ThingTable.StatColumnWorker</workerClass>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef>
+        <defName>Creature_CaravanCarryingCapacity</defName>
+        <label>caravan carrying capacity</label>
+        <iconPath>UI/Commands/FormCaravan</iconPath>
+        <labelShort>kg</labelShort>
+        <workerClass>Stats.ThingTable.Creature_CaravanCarryingCapacityColumnWorker</workerClass>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef Class="Stats.ThingTable.StatColumnDef">
+        <defName>Creature_MinimumHandlingSkill</defName>
+        <stat>MinimumHandlingSkill</stat>
+        <workerClass>Stats.ThingTable.StatColumnWorker</workerClass>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef Class="Stats.ThingTable.StatColumnDef">
+        <defName>Creature_CaravanRidingSpeedFactor</defName>
+        <stat>CaravanRidingSpeedFactor</stat>
+        <iconPath>UI/Commands/FormCaravan</iconPath>
+        <labelShort>Speed *%</labelShort>
+        <workerClass>Stats.ThingTable.StatColumnWorker</workerClass>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef Class="Stats.ThingTable.StatColumnDef">
+        <defName>Creature_ComfyTemperatureMin</defName>
+        <stat>ComfyTemperatureMin</stat>
+        <iconPath>UI/Buttons/ToggleHeatOverlay</iconPath>
+        <iconColor>(0.04,0.66,1)</iconColor>
+        <labelFormat>Stats.ColumnLabelFormat.IconOnly</labelFormat>
+        <workerClass>Stats.ThingTable.StatColumnWorker</workerClass>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef Class="Stats.ThingTable.StatColumnDef">
+        <defName>Creature_ComfyTemperatureMax</defName>
+        <stat>ComfyTemperatureMax</stat>
+        <iconPath>UI/Buttons/ToggleHeatOverlay</iconPath>
+        <iconColor>(1,0.25,0.04)</iconColor>
+        <labelFormat>Stats.ColumnLabelFormat.IconOnly</labelFormat>
+        <workerClass>Stats.ThingTable.StatColumnWorker</workerClass>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef>
+        <defName>Creature_IsPackAnimal</defName>
+        <labelKey>PackAnimal</labelKey>
+        <descriptionKey>PackAnimalExplanation</descriptionKey>
+        <iconPath>UI/Commands/FormCaravan</iconPath>
+        <labelFormat>Stats.ColumnLabelFormat.IconOnly</labelFormat>
+        <workerClass>Stats.ThingTable.Creature_IsPackAnimalColumnWorker</workerClass>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef>
+        <defName>Creature_Wildness</defName>
+        <labelKey>Wildness</labelKey>
+        <descriptionKey>WildnessExplanation</descriptionKey>
+        <workerClass>Stats.ThingTable.Creature_WildnessColumnWorker</workerClass>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef>
+        <defName>Creature_IsBlockedByFences</defName>
+        <labelKey>StatsReport_BlockedByFences</labelKey>
+        <descriptionKey>Stat_Race_BlockedByFences_Desc</descriptionKey>
+        <iconPath>Things/Building/Linked/Fence_MenuIcon</iconPath>
+        <iconColor>(133,97,67)</iconColor>
+        <labelFormat>Stats.ColumnLabelFormat.IconOnly</labelFormat>
+        <workerClass>Stats.ThingTable.IsCreatureBlockedByFencesColumnWorker</workerClass>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef>
+        <defName>Creature_LifeExpectancy</defName>
+        <labelKey>StatsReport_LifeExpectancy</labelKey>
+        <descriptionKey>Stat_Race_LifeExpectancy_Desc</descriptionKey>
+        <workerClass>Stats.ThingTable.Creature_LifeExpectancyColumnWorker</workerClass>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef>
+        <defName>Creature_NuzzleInterval</defName>
+        <labelKey>NuzzleInterval</labelKey>
+        <descriptionKey>NuzzleIntervalExplanation</descriptionKey>
+        <workerClass>Stats.ThingTable.Creature_NuzzleIntervalColumnWorker</workerClass>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef>
+        <defName>Creature_Trainability</defName>
+        <labelKey>Trainability</labelKey>
+        <descriptionKey>Stat_Race_Trainability_Desc</descriptionKey>
+        <workerClass>Stats.ThingTable.Creature_TrainabilityColumnWorker</workerClass>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef>
+        <defName>Creature_GestationTime</defName>
+        <labelKey>Stat_Animal_GestationTime</labelKey>
+        <descriptionKey>Stat_Animal_GestationTimeDesc</descriptionKey>
+        <workerClass>Stats.ThingTable.Creature_GestationTimeColumnWorker</workerClass>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef>
+        <defName>Creature_GrowthTime</defName>
+        <labelKey>Stat_Animal_GrowthTime</labelKey>
+        <descriptionKey>Stat_Animal_GrowthTimeDesc</descriptionKey>
+        <workerClass>Stats.ThingTable.Creature_GrowthTimeColumnWorker</workerClass>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef>
+        <defName>Creature_MilkAmount</defName>
+        <labelKey>Stat_Animal_MilkAmount</labelKey>
+        <descriptionKey>Stat_Animal_MilkAmountDesc</descriptionKey>
+        <iconPath>Things/Item/Resource/Milk</iconPath>
+        <labelShort>Amount</labelShort>
+        <workerClass>Stats.ThingTable.Creature_MilkAmountColumnWorker</workerClass>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef>
+        <defName>Creature_MilkType</defName>
+        <labelKey>Stat_Animal_MilkType</labelKey>
+        <descriptionKey>Stat_Animal_MilkTypeDesc</descriptionKey>
+        <iconPath>Things/Item/Resource/Milk</iconPath>
+        <labelShort>Type</labelShort>
+        <workerClass>Stats.ThingTable.Creature_MilkTypeColumnWorker</workerClass>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef>
+        <defName>Creature_MilkingInterval</defName>
+        <labelKey>Stat_Animal_MilkGrowthTime</labelKey>
+        <descriptionKey>Stat_Animal_MilkGrowthTimeDesc</descriptionKey>
+        <iconPath>Things/Item/Resource/Milk</iconPath>
+        <labelShort>Interval</labelShort>
+        <workerClass>Stats.ThingTable.Creature_MilkingIntervalColumnWorker</workerClass>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef>
+        <defName>Creature_MilkPerDay</defName>
+        <label>Milk per day</label>
+        <iconPath>Things/Item/Resource/Milk</iconPath>
+        <labelShort>/d</labelShort>
+        <workerClass>Stats.ThingTable.Creature_MilkPerDayColumnWorker</workerClass>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef>
+        <defName>Creature_MilkNutritionPerDay</defName>
+        <label>Milk nutrition per day</label>
+        <iconPath>Things/Item/Resource/Milk</iconPath>
+        <labelShort>Nutrition/d</labelShort>
+        <workerClass>Stats.ThingTable.Creature_MilkNutritionPerDayColumnWorker</workerClass>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef>
+        <defName>Creature_EggsAmount</defName>
+        <label>Average eggs amount</label>
+        <iconPath>Things/Item/Resource/AnimalProductRaw/EggBirdSmall/EggSmall_b</iconPath>
+        <labelShort>Amount</labelShort>
+        <workerClass>Stats.ThingTable.Creature_EggsAmountColumnWorker</workerClass>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef>
+        <defName>Creature_EggType</defName>
+        <labelKey>Stat_Animal_EggType</labelKey>
+        <descriptionKey>Stat_Animal_EggTypeDesc</descriptionKey>
+        <iconPath>Things/Item/Resource/AnimalProductRaw/EggBirdSmall/EggSmall_b</iconPath>
+        <labelShort>Type</labelShort>
+        <workerClass>Stats.ThingTable.Creature_EggTypeColumnWorker</workerClass>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef>
+        <defName>Creature_EggLayingInterval</defName>
+        <label>Egg laying interval</label>
+        <iconPath>Things/Item/Resource/AnimalProductRaw/EggBirdSmall/EggSmall_b</iconPath>
+        <labelShort>Interval</labelShort>
+        <workerClass>Stats.ThingTable.Creature_EggLayingIntervalColumnWorker</workerClass>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef>
+        <defName>Creature_EggsPerDay</defName>
+        <label>Eggs per day</label>
+        <iconPath>Things/Item/Resource/AnimalProductRaw/EggBirdSmall/EggSmall_b</iconPath>
+        <labelShort>/d</labelShort>
+        <workerClass>Stats.ThingTable.Creature_EggsPerDayColumnWorker</workerClass>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef>
+        <defName>Creature_EggsNutritionPerDay</defName>
+        <label>Eggs nutrition per day</label>
+        <iconPath>Things/Item/Resource/AnimalProductRaw/EggBirdSmall/EggSmall_b</iconPath>
+        <labelShort>Nutrition/d</labelShort>
+        <workerClass>Stats.ThingTable.Creature_EggsNutritionPerDayColumnWorker</workerClass>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef>
+        <defName>Creature_WoolAmount</defName>
+        <labelKey>Stat_Animal_WoolAmount</labelKey>
+        <descriptionKey>Stat_Animal_WoolAmountDesc</descriptionKey>
+        <iconPath>Things/Item/Resource/Wool</iconPath>
+        <iconColor>(189,161,116)</iconColor>
+        <labelShort>Amount</labelShort>
+        <workerClass>Stats.ThingTable.Creature_WoolAmountColumnWorker</workerClass>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef>
+        <defName>Creature_WoolType</defName>
+        <labelKey>Stat_Animal_WoolType</labelKey>
+        <descriptionKey>Stat_Animal_WoolTypeDesc</descriptionKey>
+        <iconPath>Things/Item/Resource/Wool</iconPath>
+        <iconColor>(189,161,116)</iconColor>
+        <labelShort>Type</labelShort>
+        <workerClass>Stats.ThingTable.Creature_WoolTypeColumnWorker</workerClass>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef>
+        <defName>Creature_WoolShearingInterval</defName>
+        <labelKey>Stat_Animal_WoolGrowthTime</labelKey>
+        <descriptionKey>Stat_Animal_WoolGrowthTimeDesc</descriptionKey>
+        <iconPath>Things/Item/Resource/Wool</iconPath>
+        <iconColor>(189,161,116)</iconColor>
+        <labelShort>Shear interval</labelShort>
+        <workerClass>Stats.ThingTable.Creature_WoolShearingIntervalColumnWorker</workerClass>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef>
+        <defName>Creature_WoolPerDay</defName>
+        <label>Wool per day</label>
+        <iconPath>Things/Item/Resource/Wool</iconPath>
+        <iconColor>(189,161,116)</iconColor>
+        <labelShort>/d</labelShort>
+        <workerClass>Stats.ThingTable.Creature_WoolPerDayColumnWorker</workerClass>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef Class="Stats.ThingTable.StatColumnDef">
+        <defName>Creature_ShootingAccuracy</defName>
+        <stat>ShootingAccuracyPawn</stat>
+        <iconPath>Things/Mote/FeedbackShoot</iconPath>
+        <labelShort>%</labelShort>
+        <workerClass>Stats.ThingTable.StatColumnWorker</workerClass>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef Class="Stats.ThingTable.StatColumnDef">
+        <defName>Creature_AimingTime</defName>
+        <stat>AimingDelayFactor</stat>
+        <labelShort>Aim t.</labelShort>
+        <workerClass>Stats.ThingTable.StatColumnWorker</workerClass>
+    </Stats.ColumnDef>
+    
+    <Stats.ColumnDef Class="Stats.ThingTable.StatColumnDef">
+        <defName>Creature_MeleeDodgeChance</defName>
+        <stat>MeleeDodgeChance</stat>
+        <labelShort>Dodge %</labelShort>
+        <workerClass>Stats.ThingTable.StatColumnWorker</workerClass>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef Class="Stats.ThingTable.StatColumnDef">
+        <defName>Creature_PsychicSensitivity</defName>
+        <stat>PsychicSensitivity</stat>
+        <workerClass>Stats.ThingTable.StatColumnWorker</workerClass>
+    </Stats.ColumnDef>
+
+    <Stats.ColumnDef Class="Stats.ThingTable.StatColumnDef" MayRequireAnyOf="Ludeon.RimWorld.Biotech,Ludeon.RimWorld.Anomaly">
+        <defName>Mech_EMPResistance</defName>
+        <stat>EMPResistance</stat>
+        <workerClass>Stats.ThingTable.StatColumnWorker</workerClass>
+    </Stats.ColumnDef>
+
 </Defs>

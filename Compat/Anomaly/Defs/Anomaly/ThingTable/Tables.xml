@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<Defs>
+
+    <Stats.TableDef>
+        <defName>AnomalyEntities_ThingTable</defName>
+        <label>Creatures / Entites</label>
+        <iconPath>Things/Pawn/Noctol/Noctol_east</iconPath>
+        <workerClass>Stats.ThingTable.AnomalyEntitiesTableWorker</workerClass>
+        <columns>
+            <li>Label_ThingTableColumn</li>
+            <!-- Combat: Offense -->
+            <li MayRequire="CETeam.CombatExtended">Creature_NightVisionEfficiency</li>
+            <li MayRequire="CETeam.CombatExtended">Creature_MeleeSharpArmorPenetration</li>
+            <li MayRequire="CETeam.CombatExtended">Creature_MeleeBluntArmorPenetration</li>
+            <li MayRequire="CETeam.CombatExtended">Creature_MeleeCritChance</li>
+            <!-- Combat: Defense -->
+            <li>Creature_MeleeDodgeChance</li>
+            <li MayRequire="CETeam.CombatExtended">Creature_MeleeParryChance</li>
+            <li>SharpArmorRating_ThingTableColumn</li>
+            <li>BluntArmorRating_ThingTableColumn</li>
+            <li>HeatArmorRating_ThingTableColumn</li>
+            <li MayRequire="CETeam.CombatExtended">CE_ElectricArmorRating_ThingTableColumn</li>
+            <li>Mech_EMPResistance</li>
+            <!-- Physique -->
+            <li>Creature_ComfyTemperatureMin</li>
+            <li>Creature_ComfyTemperatureMax</li>
+            <li>Creature_ToxicResistance</li>
+            <li>Creature_ToxicEnvironmentResistance</li>
+            <li>Creature_PsychicSensitivity</li>
+            <li>Creature_MoveSpeed</li>
+            <!-- Productivity: Meat -->
+            <li>Creature_MeatAmount</li>
+            <li>Creature_MeatType</li>
+            <!-- Productivity: Leather -->
+            <li>Creature_LeatherAmount</li>
+            <li>Creature_LeatherType</li>
+            <!-- Misc -->
+            <li>ContentSource_ThingTableColumn</li>
+        </columns>
+    </Stats.TableDef>
+
+</Defs>
