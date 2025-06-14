@@ -352,15 +352,10 @@
             <li MayRequire="Ludeon.RimWorld.Biotech">Mech_ControlTakingTime</li>
             <li MayRequire="Ludeon.RimWorld.Biotech">Mech_WastepacksPerRecharge</li>
             <li MayRequire="Ludeon.RimWorld.Biotech">Mech_RechargerNeeded</li>
-            <li MayRequire="Ludeon.RimWorld.Biotech">CreatedAt_ThingTableColumn</li>
+            <li>CreatedAt_ThingTableColumn</li>
             <!-- Labor -->
             <li MayRequire="Ludeon.RimWorld.Biotech">Mech_WorkActivities</li>
             <li MayRequire="Ludeon.RimWorld.Biotech">Mech_WorkSkill</li>
-            <!-- Caravan -->
-            <li>Creature_CaravanRidingSpeedFactor</li>
-            <!-- TODO: VE compat -->
-            <li>Creature_CaravanCarryingCapacity</li>
-            <li>Creature_foobar</li>
             <!-- Combat: Offense -->
             <li>Creature_ShootingAccuracy</li>
             <li MayRequire="CETeam.CombatExtended">Creature_AimingAccuracy</li>
@@ -376,8 +371,13 @@
             <li>BluntArmorRating_ThingTableColumn</li>
             <li>HeatArmorRating_ThingTableColumn</li>
             <li MayRequire="CETeam.CombatExtended">CE_ElectricArmorRating_ThingTableColumn</li>
+            <li MayRequire="Ludeon.RimWorld.Biotech">Mech_EMPResistance</li>
             <li>EnergyShieldCapacity_ThingTableColumn</li>
             <li>EnergyShieldRechargeRate_ThingTableColumn</li>
+            <!-- Caravan -->
+            <li>Creature_CaravanRidingSpeedFactor</li>
+            <!-- TODO: VE compat -->
+            <li>Creature_CaravanCarryingCapacity</li>
             <!-- Misc -->
             <li>Creature_PsychicSensitivity</li>
             <li>Creature_MoveSpeed</li>

@@ -981,4 +981,10 @@
         <workerClass>Stats.ThingTable.StatColumnWorker</workerClass>
     </Stats.ColumnDef>
 
+    <Stats.ColumnDef Class="Stats.ThingTable.StatColumnDef" MayRequireAnyOf="Ludeon.RimWorld.Biotech,Ludeon.RimWorld.Anomaly">
+        <defName>Mech_EMPResistance</defName>
+        <stat>EMPResistance</stat>
+        <workerClass>Stats.ThingTable.StatColumnWorker</workerClass>
+    </Stats.ColumnDef>
+
 </Defs>
