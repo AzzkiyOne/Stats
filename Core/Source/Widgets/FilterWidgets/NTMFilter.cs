@@ -151,16 +151,20 @@ internal abstract class NTMFilter<TObject, TObjectValue, TOption> : FilterWidget
     private sealed class OptionsWindowWidget : Window
     {
         protected override float Margin => 0f;
-        public override Vector2 InitialSize => Widget.GetSize();
-        private readonly Widget Widget;
+        private readonly Widget OptionsList;
+        private readonly Vector2 OptionsListSize;
+        private readonly Widget Toolbar;
+        private readonly Vector2 ToolbarSize;
         private static readonly Color BorderColor = Verse.Widgets.SeparatorLineColor;
         private static readonly Color BackgroundColor = Verse.Widgets.WindowBGFillColor;
         private const float OptionHoverHorShiftAmount = 4f;
         private static readonly Color OptionHoverBackgroundColor = FloatMenuOption.ColorBGActiveMouseover;
         private const float OptionPadHor = Globals.GUI.Pad;
         private const float OptionPadVer = Globals.GUI.PadXs;
-        private const int ColumnCapacity = 18;
         private const float OperatorButtonSize = 28f;
+        private bool WillScrollHor = false;
+        private Vector2 ScrollPosition;
+        private static readonly float OptionWidgetHeight = Text.LineHeight + OptionPadVer * 2f;
         public OptionsWindowWidget(
             List<NTMFilterOption<TOption>> options,
             NTMFilter<TObject, TObjectValue, TOption> parent,
@@ -170,61 +174,7 @@ internal abstract class NTMFilter<TObject, TObjectValue, TOption> : FilterWidget
             doWindowBackground = false;
             drawShadow = false;
             closeOnClickedOutside = true;
-
-            var columns = new List<List<Widget>>()
-            {
-                new(ColumnCapacity)
-            };
-            var currentColumn = columns[0];
-
-            foreach (var option in options)
-            {
-                if (currentColumn.Count - ColumnCapacity == 0)
-                {
-                    columns.Add(currentColumn = new(ColumnCapacity));
-                }
-
-                Widget optionWidget = option
-                .ToWidget()
-                .PaddingAbs(OptionPadHor, OptionPadVer)
-                .WidthRel(1f)
-                .HoverShiftHor(OptionHoverHorShiftAmount)
-                .Background(rect =>
-                {
-                    if (parent.SelectedOptions.Contains(option.Value))
-                    {
-                        Verse.Widgets.DrawHighlightSelected(rect);
-                    }
-                })
-                .HoverBackground(OptionHoverBackgroundColor)
-                .OnClick(() => parent.HandleOptionClick(option.Value))
-                .BorderBottom(BorderColor);
-
-                if (option.Tooltip?.Length > 0)
-                {
-                    optionWidget = optionWidget.Tooltip(option.Tooltip);
-                }
-
-                currentColumn.Add(optionWidget);
-            }
-            var columnWidgets = new List<Widget>(columns.Count);
-
-            for (int i = 0; i < columns.Count; i++)
-            {
-                var column = columns[i];
-                Widget columnWidget = new VerticalContainer(column)
-                .Background(BackgroundColor)
-                .BorderRight(BorderColor);
-
-                if (i == 0)
-                {
-                    columnWidget = columnWidget.BorderLeft(BorderColor);
-                }
-
-                columnWidgets.Add(columnWidget);
-            }
-
-            Widget = new VerticalContainer([
+            Toolbar = new VerticalContainer([
                 new HorizontalContainer([
                     ..operators.Select(@operator =>
                         new Label(@operator.Symbol)
@@ -252,13 +202,78 @@ internal abstract class NTMFilter<TObject, TObjectValue, TOption> : FilterWidget
 
                 new Label("<i>Hold [Ctrl] to select multiple options.</i>")
                 .PaddingAbs(Globals.GUI.PadSm, 0f)
-                .Background(BackgroundColor)
-                .BorderLeft(BorderColor).BorderRight(BorderColor).BorderBottom(BorderColor)
-                .WidthRel(1f),
-
-                new HorizontalContainer(columnWidgets, stretchItems: true)
+                .BorderLeft(BorderColor)
+                .BorderRight(BorderColor)
                 .WidthRel(1f),
             ]);
+            ToolbarSize = Toolbar.GetSize();
+
+            var optionsListMaxHeight = UI.screenHeight * 0.6f - ToolbarSize.y;
+            var columns = new List<List<Widget>>()
+            {
+                new()
+            };
+            var currentColumn = columns[0];
+            var currentColumnHeight = 0f;
+
+            foreach (var option in options)
+            {
+                Widget optionWidget = option
+                .ToWidget()
+                .PaddingAbs(OptionPadHor, OptionPadVer)
+                .WidthRel(1f)
+                .HoverShiftHor(OptionHoverHorShiftAmount)
+                .Background(rect =>
+                {
+                    if (parent.SelectedOptions.Contains(option.Value))
+                    {
+                        Verse.Widgets.DrawHighlightSelected(rect);
+                    }
+                })
+                .HoverBackground(OptionHoverBackgroundColor)
+                .OnClick(() => parent.HandleOptionClick(option.Value));
+
+                if (option.Tooltip?.Length > 0)
+                {
+                    optionWidget = optionWidget.Tooltip(option.Tooltip);
+                }
+
+                var optionWidgetHeight = optionWidget.GetSize().y;
+                currentColumnHeight += optionWidgetHeight;
+
+                if (currentColumnHeight > optionsListMaxHeight)
+                {
+                    currentColumn = [];
+                    currentColumnHeight = optionWidgetHeight;
+                    columns.Add(currentColumn);
+                }
+
+                if (currentColumn.Count > 0)
+                {
+                    optionWidget = optionWidget.PaddingAbs(0f, 0f, 1f, 0f);
+                }
+
+                currentColumn.Add(optionWidget);
+            }
+
+            var columnWidgets = new List<Widget>(columns.Count);
+
+            for (int i = 0; i < columns.Count; i++)
+            {
+                var column = columns[i];
+                Widget columnWidget = new VerticalContainer(column);
+
+                if (i < columns.Count - 1)
+                {
+                    columnWidget = columnWidget.BorderRight(BorderColor);
+                }
+
+                columnWidgets.Add(columnWidget);
+            }
+
+            OptionsList = new HorizontalContainer(columnWidgets, stretchItems: true)
+            .WidthRel(1f);
+            OptionsListSize = OptionsList.GetSize();
         }
         public override void DoWindowContents(Rect rect)
         {
@@ -267,7 +282,57 @@ internal abstract class NTMFilter<TObject, TObjectValue, TOption> : FilterWidget
 
             DoFadeEffect(rect);
 
-            Widget.Draw(rect, rect.size);
+            Verse.Widgets.DrawBoxSolid(rect, BackgroundColor.AdjustedForGUIOpacity());
+
+            var rectSize = rect.size;
+
+            Toolbar.Draw(rect.CutByY(Toolbar.GetSize().y), rectSize);
+
+            var borderColor = BorderColor.AdjustedForGUIOpacity();
+            if (Event.current.type == EventType.Repaint)
+            {
+                // Hor:
+                // - Top
+                var horRect = rect with { height = 1f };
+                Verse.Widgets.DrawBoxSolid(horRect, borderColor);
+                // - Bottom
+                horRect.y = rect.yMax - 1f;
+                Verse.Widgets.DrawBoxSolid(horRect, borderColor);
+                // Ver:
+                // - Left
+                var verRect = rect with { width = 1f };
+                Verse.Widgets.DrawBoxSolid(verRect, borderColor);
+                // - Right
+                verRect.x = rect.xMax - 1f;
+                Verse.Widgets.DrawBoxSolid(verRect, borderColor);
+            }
+
+            rect = rect.ContractedBy(1f);
+
+            if (WillScrollHor)
+            {
+                var viewRect = new Rect(0f, 0f, OptionsListSize.x, OptionsListSize.y);
+
+                if (Event.current.type == EventType.ScrollWheel && Mouse.IsOver(rect))
+                {
+                    ScrollPosition.x = Mathf.Max(ScrollPosition.x + Event.current.delta.y * 20f, 0f);
+                    Event.current.Use();
+                }
+
+                Verse.Widgets.BeginScrollView(rect, ref ScrollPosition, viewRect);
+
+                OptionsList.Draw(viewRect, rectSize);
+
+                Verse.Widgets.EndScrollView();
+
+                Verse.Widgets.DrawLineHorizontal(rect.x, rect.yMax - GenUI.ScrollBarWidth - 1f, rect.width, borderColor);
+            }
+            else
+            {
+                OptionsList.Draw(rect, rectSize);
+            }
+
+            DrawRowSeparators(rect, borderColor);
 
             Globals.GUI.Opacity = origGUIOpacity;
             GUI.color = origGUIColor;
@@ -299,19 +364,42 @@ internal abstract class NTMFilter<TObject, TObjectValue, TOption> : FilterWidget
         protected override void SetInitialSizeAndPosition()
         {
             var position = UI.MousePositionOnUIInverted;
-            var size = InitialSize;
+            var size = new Vector2(
+                Mathf.Max(ToolbarSize.x, OptionsListSize.x + 2f),
+                ToolbarSize.y + OptionsListSize.y + 2f
+            );
+            var maxWidth = UI.screenWidth * 0.9f;
+
+            if (size.x > maxWidth)
+            {
+                WillScrollHor = true;
+                size.x = maxWidth;
+                size.y += GenUI.ScrollBarWidth + 1f;
+            }
 
             if (position.x + size.x > UI.screenWidth)
             {
-                position.x = UI.screenWidth - size.x;
+                position.x = UI.screenWidth - size.x - Globals.GUI.Pad;
             }
 
             if (position.y + size.y > UI.screenHeight)
             {
-                position.y = UI.screenHeight - size.y;
+                position.y = UI.screenHeight - size.y - Globals.GUI.Pad;
             }
 
             windowRect = new Rect(position, size);
+        }
+        private static void DrawRowSeparators(Rect rect, Color color)
+        {
+            var y = rect.y + OptionWidgetHeight;
+
+            if (Event.current.type != EventType.Repaint) return;
+
+            while (y < rect.yMax)
+            {
+                Verse.Widgets.DrawLineHorizontal(rect.x, y, rect.width, color);
+                y += OptionWidgetHeight + 1f;
+            }
         }
     }
 }
