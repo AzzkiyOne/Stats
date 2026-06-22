@@ -11,7 +11,7 @@
     <Stats.ColumnDef>
         <defName>Building_Size</defName>
         <label>size</label>
-        <workerClass>Stats.ColumnWorkers.ThingDef.SizeColumnWorker</workerClass>
+        <workerClass>Stats.ColumnWorkers.ThingDef.SizeColumnWorker`1</workerClass>
         <tags>
             <li>Thing_IsBuilding</li>
         </tags>
@@ -21,7 +21,7 @@
         <defName>Building_JoyGainFactor</defName>
         <title><Recreation/>Power</title>
         <stat>JoyGainFactor</stat>
-        <workerClass>Stats.ColumnWorkers.BuildableDef.StatColumnWorker</workerClass>
+        <workerClass>Stats.ColumnWorkers.BuildableDef.StatColumnWorker`1</workerClass>
         <tags>
             <li>Thing_GivesJoy</li>
         </tags>
@@ -32,7 +32,7 @@
         <labelKey>StatsReport_JoyKind</labelKey>
         <descriptionKey>Stat_RecreationType_Desc</descriptionKey>
         <title><Recreation/>Type</title>
-        <workerClass>Stats.ColumnWorkers.ThingDef.Building.RecreationTypeColumnWorker</workerClass>
+        <workerClass>Stats.ColumnWorkers.BuildingDef.RecreationTypeColumnWorker`1</workerClass>
         <tags>
             <li>Thing_IsBuilding</li>
             <li>Thing_GivesJoy</li>
@@ -42,7 +42,7 @@
     <Stats.ColumnDef Class="Stats.StatColumnDef">
         <defName>Building_Comfort</defName>
         <stat>Comfort</stat>
-        <workerClass>Stats.ColumnWorkers.BuildableDef.StatColumnWorker</workerClass>
+        <workerClass>Stats.ColumnWorkers.BuildableDef.StatColumnWorker`1</workerClass>
         <tags>
             <li>Thing_GivesComfort</li>
         </tags>
@@ -52,7 +52,7 @@
         <defName>Building_ImmunityGainSpeedFactor</defName>
         <title>Immunity *%</title>
         <stat>ImmunityGainSpeedFactor</stat>
-        <workerClass>Stats.ColumnWorkers.BuildableDef.StatColumnWorker</workerClass>
+        <workerClass>Stats.ColumnWorkers.BuildableDef.StatColumnWorker`1</workerClass>
         <tags>
             <li>Thing_IsMedical</li>
         </tags>
@@ -62,7 +62,7 @@
         <defName>Building_MedicalTendQualityOffset</defName>
         <title>Tend +%</title>
         <stat>MedicalTendQualityOffset</stat>
-        <workerClass>Stats.ColumnWorkers.BuildableDef.StatColumnWorker</workerClass>
+        <workerClass>Stats.ColumnWorkers.BuildableDef.StatColumnWorker`1</workerClass>
         <tags>
             <li>Thing_IsMedical</li>
         </tags>
@@ -72,7 +72,7 @@
         <defName>Building_SurgerySuccessChanceFactor</defName>
         <title>Surgery *%</title>
         <stat>SurgerySuccessChanceFactor</stat>
-        <workerClass>Stats.ColumnWorkers.BuildableDef.StatColumnWorker</workerClass>
+        <workerClass>Stats.ColumnWorkers.BuildableDef.StatColumnWorker`1</workerClass>
         <tags>
             <li>Thing_IsMedical</li>
         </tags>
@@ -82,7 +82,7 @@
         <defName>Building_PowerOutput</defName>
         <label>power output</label>
         <title><Electricity/></title>
-        <workerClass>Stats.ColumnWorkers.ThingDef.PowerTrader.PowerOutputColumnWorker</workerClass>
+        <workerClass>Stats.ColumnWorkers.PowerTraderDef.PowerOutputColumnWorker`1</workerClass>
         <tags>
             <li>Thing_IsPowerGenerator</li>
         </tags>
@@ -92,7 +92,7 @@
         <defName>Building_PowerOutputPerCell</defName>
         <label>power per cell</label>
         <title><Electricity/><Per/>Cell</title>
-        <workerClass>Stats.ColumnWorkers.ThingDef.PowerTrader.PowerOutputPerCellColumnWorker</workerClass>
+        <workerClass>Stats.ColumnWorkers.PowerTraderDef.PowerOutputPerCellColumnWorker`1</workerClass>
         <tags>
             <li>Thing_IsPowerGenerator</li>
         </tags>
@@ -103,7 +103,7 @@
         <label>power per fuel</label>
         <description>Measured in watts/unit.</description>
         <title><Electricity/><Per/><Fuel/></title>
-        <workerClass>Stats.ColumnWorkers.ThingDef.PowerTrader.PowerOutputPerFuelColumnWorker</workerClass>
+        <workerClass>Stats.ColumnWorkers.PowerTraderDef.PowerOutputPerFuelColumnWorker`1</workerClass>
         <tags>
             <li>Thing_IsPowerGenerator</li>
         </tags>
@@ -113,7 +113,7 @@
         <defName>Building_PowerConsumption</defName>
         <label>power consumption</label>
         <title><Electricity/><Decrease/></title>
-        <workerClass>Stats.ColumnWorkers.ThingDef.PowerTrader.PowerConsumptionColumnWorker</workerClass>
+        <workerClass>Stats.ColumnWorkers.PowerTraderDef.PowerConsumptionColumnWorker`1</workerClass>
         <tags>
             <li>Thing_IsPowerConsumer</li>
         </tags>
@@ -123,7 +123,7 @@
         <defName>Building_FuelCapacity</defName>
         <label>fuel capacity</label>
         <title><Fuel/></title>
-        <workerClass>Stats.ColumnWorkers.ThingDef.Refuelable.FuelCapacityColumnWorker</workerClass>
+        <workerClass>Stats.ColumnWorkers.RefuelableDef.FuelCapacityColumnWorker`1</workerClass>
         <tags>
             <li>Thing_IsRefuelable</li>
         </tags>
@@ -134,7 +134,7 @@
         <label>fuel consumption rate</label>
         <description>Measured in amount/day.</description>
         <title><Fuel/><Decrease/><Per/>D</title>
-        <workerClass>Stats.ColumnWorkers.ThingDef.Refuelable.FuelConsumptionRateColumnWorker</workerClass>
+        <workerClass>Stats.ColumnWorkers.RefuelableDef.FuelConsumptionRateColumnWorker`1</workerClass>
         <tags>
             <li>Thing_IsRefuelable</li>
         </tags>
@@ -144,7 +144,7 @@
         <defName>Building_DaysPerRefuel</defName>
         <label>days per refuel</label>
         <title>Days<Per/><Reload/></title>
-        <workerClass>Stats.ColumnWorkers.ThingDef.Refuelable.DaysPerRefuelColumnWorker</workerClass>
+        <workerClass>Stats.ColumnWorkers.RefuelableDef.DaysPerRefuelColumnWorker`1</workerClass>
         <tags>
             <li>Thing_IsRefuelable</li>
         </tags>
@@ -154,7 +154,7 @@
         <defName>Building_IsReinstallable</defName>
         <label>is reinstallable</label>
         <title><IsBuildingReinstallable/></title>
-        <workerClass>Stats.ColumnWorkers.ThingDef.IsMinifiableColumnWorker</workerClass>
+        <workerClass>Stats.ColumnWorkers.ThingDef.IsMinifiableColumnWorker`1</workerClass>
         <tags>
             <li>Thing_IsBuilding</li>
         </tags>

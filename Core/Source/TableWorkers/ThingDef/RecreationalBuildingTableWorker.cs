@@ -1,14 +1,18 @@
 ﻿using RimWorld;
-using Stats.Utils.Extensions;
 
 namespace Stats.TableWorkers.ThingDef;
 
-public sealed class RecreationalBuildingTableWorker(TableDef tableDef) : ThingDefTableWorker(tableDef)
+public sealed class RecreationalBuildingTableWorker :
+    BuildingDefTableWorker
 {
-    protected override bool IsValidThingDef(Verse.ThingDef thingDef)
+    public RecreationalBuildingTableWorker(TableDef tableDef) : base(tableDef)
     {
-        return thingDef.building != null
-            && thingDef.IsBuildingObtainableByPlayer()
-            && thingDef.statBases?.GetStatValueFromList(StatDefOf.JoyGainFactor, 0f) > 0f;
+    }
+
+    protected override bool IsValidThingDef(Verse.ThingDef thingDef, BuildingProperties buildingProperties)
+    {
+        float? joyGainFactor = thingDef.statBases?.GetStatValueFromList(StatDefOf.JoyGainFactor, 0f);
+
+        return joyGainFactor > 0f;
     }
 }

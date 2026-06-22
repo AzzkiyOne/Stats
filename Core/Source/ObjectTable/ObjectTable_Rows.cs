@@ -3,7 +3,7 @@ using System.Runtime.CompilerServices;
 
 namespace Stats;
 
-internal sealed partial class ObjectTable<TObject>
+internal sealed partial class ObjectTable<TRecord>
 {
     [MethodImpl(MethodImplOptions.NoInlining)]
     private void PinRow(int index)

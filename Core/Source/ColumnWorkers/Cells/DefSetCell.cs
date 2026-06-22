@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Stats.Utils;
+using Stats.Utils.Extensions;
 using UnityEngine;
 
 namespace Stats.ColumnWorkers.Cells;
@@ -24,20 +25,34 @@ public readonly struct DefSetCell : IDefSetCell
         Value = value;
         if (value.Count > 0)
         {
-            Text = string.Join("\n", Value.Select(def => def.LabelCap).OrderBy(text => text));
-            Width = Verse.Text.CalcSize(Text).x;
+            Text = string.Join(", ", value.Distinct().Select(def => def.LabelCap.ToString()).OrderBy(text => text));
+            Width = Text.CalcSize(GUIStyles.TableCell.StringNoPad).x;
         }
     }
 
     public void Draw(Rect rect)
     {
-        if (Text != null)
+        if (Value?.Count > 0)
         {
-            // TODO:
-            // Because table rows now have a constant height, only the first row of text is visible.
-            // One solution is to show the first row and an indicator if there's more.
-            // And if there's more rows, use tooltip to show all rows.
-            rect.Label(Text, GUIStyles.TableCell.String);
+            rect = rect.ContractedByObjectTableCellPadding();
+
+            // TODO: It's a draft. Not ready for production.
+            foreach (var def in Value.Distinct().OrderBy(def => def.label))
+            {
+                if (def != null)
+                {
+                    string label = def.LabelCap;
+                    rect = rect.CutLeft(out Rect labelRect, label.CalcSize(_tagStyle).x);
+                    labelRect.Highlight();
+                    labelRect.Label(label, _tagStyle);
+                    rect = rect.CutLeft(GUIStyles.TableCell.ContentSpacing);
+                }
+            }
         }
     }
+
+    private static readonly GUIStyle _tagStyle = new(GUIStyles.TableCell.StringNoPad)
+    {
+        padding = new(GUIStyles.TableCell.String.padding.top, GUIStyles.TableCell.String.padding.top, 0, 0)
+    };
 }

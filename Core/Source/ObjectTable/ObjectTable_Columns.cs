@@ -14,7 +14,7 @@ using static Stats.GUIStyles.Table;
 
 namespace Stats;
 
-internal sealed partial class ObjectTable<TObject>
+internal sealed partial class ObjectTable<TRecord>
 {
     private void PinColumn(int index)
     {
@@ -38,12 +38,15 @@ internal sealed partial class ObjectTable<TObject>
 
     private void AddColumn(ColumnDef columnDef)
     {
-        Type workerClass = columnDef.workerClass;
-        ColumnWorker<TObject> columnWorker = (ColumnWorker<TObject>)Activator.CreateInstance(workerClass, columnDef);
-        Column column = new(columnWorker, _tableWorker, this);
-        _columns.Add(column);
-        columnWorker.NotifyRowAdded(_objects);
-        _toolbar.NotifyColumnAdded(column);
+        ColumnWorker<TRecord>? columnWorker = columnDef.TryMakeColumnWorkerInstance<TRecord>();
+
+        if (columnWorker != null)
+        {
+            Column column = new(columnWorker, _tableWorker, this);
+            _columns.Add(column);
+            _objects.ForEach(columnWorker.NotifyRecordAdded);
+            _toolbar.NotifyColumnAdded(column);
+        }
     }
 
     private void RemoveColumn(int index)
@@ -76,13 +79,13 @@ internal sealed partial class ObjectTable<TObject>
         public bool IsManuallyResized { get; private set; }
         public bool IsResized { get; private set; }
 
-        private readonly ColumnWorker<TObject> _worker;
+        private readonly ColumnWorker<TRecord> _worker;
         private readonly Widget _titleWidget;
         private readonly TipSignal _tooltip;
-        private readonly ObjectTable<TObject> _parent;
+        private readonly ObjectTable<TRecord> _parent;
         private readonly FloatMenu _menu;
 
-        public Column(ColumnWorker<TObject> worker, TableWorker tableWorker, ObjectTable<TObject> parent)
+        public Column(ColumnWorker<TRecord> worker, TableWorker tableWorker, ObjectTable<TRecord> parent)
         {
             ColumnDef def = worker.Def;
             Widget titleWidget = def.TitleWidget;
@@ -138,7 +141,7 @@ internal sealed partial class ObjectTable<TObject>
         private void DrawHeaderCell(Rect rect, bool mouseXIsInVisibleArea)
         {
             Event @event = Event.current;
-            ObjectTable<TObject> parent = _parent;
+            ObjectTable<TRecord> parent = _parent;
             ColumnType columnType = _worker.Type;
             const float SideControlMargin = 1f;
             rect.CutLeft(out Rect sortControlRect, GUIStyles.TableCell.PadHor - SideControlMargin)
@@ -191,7 +194,7 @@ internal sealed partial class ObjectTable<TObject>
 
         private void DrawCells(Rect rect, Span<int> rows)
         {
-            ColumnWorker<TObject> worker = _worker;
+            ColumnWorker<TRecord> worker = _worker;
             ref Rect cellRect = ref rect;
             cellRect.height = RowHeight;
             int rowsCount = rows.Length;
@@ -215,7 +218,7 @@ internal sealed partial class ObjectTable<TObject>
         private void DoMainControl(Rect rect, Rect cellRect, bool mouseXIsInVisibleArea)
         {
             Event @event = Event.current;
-            ObjectTable<TObject> parent = _parent;
+            ObjectTable<TRecord> parent = _parent;
             bool mouseIsOverRect = Mouse.IsOver(rect);
 
             if (@event is { type: EventType.MouseDown, button: 0, modifiers: EventModifiers.None } && mouseIsOverRect)
@@ -247,7 +250,7 @@ internal sealed partial class ObjectTable<TObject>
 
         private void DoSortControl(Rect rect)
         {
-            ObjectTable<TObject> parent = _parent;
+            ObjectTable<TRecord> parent = _parent;
             Event @event = Event.current;
             const float IconPadding = 3f;
 
@@ -339,7 +342,7 @@ internal sealed partial class ObjectTable<TObject>
         private void DoReorder(Rect rect, Column reorderedColumn, bool mouseXIsInVisibleArea)
         {
             Event @event = Event.current;
-            ObjectTable<TObject> parent = _parent;
+            ObjectTable<TRecord> parent = _parent;
 
             if (OriginalEventUtility.EventType == EventType.MouseDrag
                 && parent._reorderedColumn != this
@@ -395,7 +398,7 @@ internal sealed partial class ObjectTable<TObject>
         [MethodImpl(MethodImplOptions.NoInlining)]
         private void HandlePin()
         {
-            ObjectTable<TObject> parent = _parent;
+            ObjectTable<TRecord> parent = _parent;
             int index = parent._columns.IndexOf(this);
             if (index > parent._leftColumnsCount - 1)
             {

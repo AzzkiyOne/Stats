@@ -1,5 +1,5 @@
 ﻿using CombatExtended;
-using Stats.Objects.ThingDef;
+using Stats.TableRecords.ThingDef;
 
 namespace Stats.Compat.CE;
 

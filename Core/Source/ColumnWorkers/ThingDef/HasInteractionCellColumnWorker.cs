@@ -1,16 +1,14 @@
-﻿namespace Stats.ColumnWorkers.ThingDef;
+﻿using Stats.TableRecords;
 
-public sealed class HasInteractionCellColumnWorker(ColumnDef columnDef) : BooleanColumnWorker<DefBasedObject>
+namespace Stats.ColumnWorkers.ThingDef;
+
+public sealed class HasInteractionCellColumnWorker<TRecord>(ColumnDef columnDef) :
+    BooleanColumnWorker<TRecord>(columnDef)
+        where TRecord :
+            IThingDefTableRecord
 {
-    public override ColumnDef Def => columnDef;
-
-    protected override bool GetValue(DefBasedObject @object)
+    protected override bool GetValue(TRecord record)
     {
-        if (@object.Def is Verse.ThingDef thingDef)
-        {
-            return thingDef.hasInteractionCell;
-        }
-
-        return default;
+        return record.ThingDef.hasInteractionCell;
     }
 }

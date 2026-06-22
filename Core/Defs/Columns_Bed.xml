@@ -6,7 +6,7 @@
         <defName>Bed_RestEffectiveness</defName>
         <title>Rest *%</title>
         <stat>BedRestEffectiveness</stat>
-        <workerClass>Stats.ColumnWorkers.BuildableDef.StatColumnWorker</workerClass>
+        <workerClass>Stats.ColumnWorkers.BuildableDef.StatColumnWorker`1</workerClass>
         <tags>
             <li>Thing_IsBed</li>
         </tags>
@@ -16,7 +16,7 @@
         <defName>Bed_FitsSmallAnimals</defName>
         <label>for small animals</label>
         <title><Animal_Small/></title>
-        <workerClass>Stats.ColumnWorkers.ThingDef.Bed.FitsSmallAnimalsColumnWorker</workerClass>
+        <workerClass>Stats.ColumnWorkers.BedDef.FitsSmallAnimalsColumnWorker`1</workerClass>
         <tags>
             <li>Thing_IsBed</li>
         </tags>
@@ -26,7 +26,7 @@
         <defName>Bed_FitsLargeAnimals</defName>
         <label>for large animals</label>
         <title><Animal_Large/></title>
-        <workerClass>Stats.ColumnWorkers.ThingDef.Bed.FitsLargeAnimalsColumnWorker</workerClass>
+        <workerClass>Stats.ColumnWorkers.BedDef.FitsLargeAnimalsColumnWorker`1</workerClass>
         <tags>
             <li>Thing_IsBed</li>
         </tags>

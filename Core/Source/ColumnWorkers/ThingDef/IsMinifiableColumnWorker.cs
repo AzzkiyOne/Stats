@@ -1,16 +1,14 @@
-﻿namespace Stats.ColumnWorkers.ThingDef;
+﻿using Stats.TableRecords;
 
-public sealed class IsMinifiableColumnWorker(ColumnDef columnDef) : BooleanColumnWorker<DefBasedObject>
+namespace Stats.ColumnWorkers.ThingDef;
+
+public sealed class IsMinifiableColumnWorker<TRecord>(ColumnDef columnDef) :
+    BooleanColumnWorker<TRecord>(columnDef)
+        where TRecord :
+            IThingDefTableRecord
 {
-    public override ColumnDef Def => columnDef;
-
-    protected override bool GetValue(DefBasedObject @object)
+    protected override bool GetValue(TRecord record)
     {
-        if (@object.Def is Verse.ThingDef thingDef)
-        {
-            return thingDef.Minifiable;
-        }
-
-        return default;
+        return record.ThingDef.Minifiable;
     }
 }

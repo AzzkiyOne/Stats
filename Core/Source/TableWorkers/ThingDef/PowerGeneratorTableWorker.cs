@@ -1,19 +1,19 @@
 ﻿using RimWorld;
-using Stats.Utils.Extensions;
 
 namespace Stats.TableWorkers.ThingDef;
 
-public sealed class PowerGeneratorTableWorker(TableDef tableDef) : ThingDefTableWorker(tableDef)
+// TODO: Not every power generator is a building (mods).
+public sealed class PowerGeneratorTableWorker :
+    BuildingDefTableWorker
 {
-    protected override bool IsValidThingDef(Verse.ThingDef thingDef)
+    public PowerGeneratorTableWorker(TableDef tableDef) : base(tableDef)
     {
-        // Why not just "return thingDef.HasComp<CompPowerPlant>();"?
-        //
-        // For better compatibility.
-        // For example, nuclear reactor in VFE-Power uses custom comp class,
-        // that derives from CompPowerTrader and not from CompPowerPlant.
-        return thingDef.building != null
-            && thingDef.IsBuildingObtainableByPlayer()
-            && thingDef.GetCompProperties<CompProperties_Power>()?.PowerConsumption < 0f;
+    }
+
+    protected override bool IsValidThingDef(Verse.ThingDef thingDef, BuildingProperties buildingProperties)
+    {
+        CompProperties_Power? powerCompProperties = thingDef.GetCompProperties<CompProperties_Power>();
+
+        return powerCompProperties?.PowerConsumption < 0f;
     }
 }

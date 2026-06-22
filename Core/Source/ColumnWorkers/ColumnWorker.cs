@@ -6,29 +6,37 @@ using UnityEngine;
 
 namespace Stats.ColumnWorkers;
 
-public abstract class ColumnWorker<TObject>
+public abstract class ColumnWorker<TRecord>
 {
-    public abstract ColumnDef Def { get; }
-    public abstract ColumnType Type { get; }
+    public ColumnDef Def { get; }
+    public ColumnType Type { get; }
     public abstract bool IsRefreshable { get; }
     public virtual bool ShouldDrawCellsNow => Event.current.type == EventType.Repaint;
 
-    public abstract void DrawCell(Rect rect, int row);
+    protected ColumnWorker(ColumnDef def, ColumnType type)
+    {
+        Def = def;
+        Type = type;
+    }
 
-    public abstract float GetWidth(List<int> rows);
+    public abstract void DrawCell(Rect rect, int recordIndex);
 
-    public abstract void NotifyRowAdded(List<TObject> rows);
+    public abstract float GetWidth(List<int> recordIndexes);
 
-    public abstract void NotifyRowAdded(TObject row);
+    public abstract void NotifyRecordAdded(TRecord record);
 
-    public abstract void NotifyRowRemoved(int row);
+    public abstract void NotifyRecordRemoved(int recordIndex);
 
     public abstract void RefreshCells();
 
     public abstract ICollection<CellField> GetCellFields(TableWorker tableWorker);
 }
 
-public abstract class ColumnWorker<TObject, TCell> : ColumnWorker<TObject> where TCell : struct, ICell
+public abstract class ColumnWorker<TRecord, TCell>(ColumnDef def, ColumnType type) :
+    ColumnWorker<TRecord>(def, type)
+        where TCell :
+            struct,
+            ICell
 {
     public override bool IsRefreshable => _refreshableCellsCount > 0;
 
@@ -37,21 +45,21 @@ public abstract class ColumnWorker<TObject, TCell> : ColumnWorker<TObject> where
 
     protected TCell this[int index] => _cells[index];
 
-    protected abstract TCell MakeCell(TObject @object);
+    protected abstract TCell MakeCell(TRecord record);
 
-    public override void DrawCell(Rect rect, int row)
+    public override void DrawCell(Rect rect, int recordIndex)
     {
-        _cells[row].Draw(rect);
+        _cells[recordIndex].Draw(rect);
     }
 
-    public override float GetWidth(List<int> rows)
+    public override float GetWidth(List<int> recordIndexes)
     {
         float width = 0f;
-        int rowsCount = rows.Count;
-        for (int i = 0; i < rowsCount; i++)
+        int recordsCount = recordIndexes.Count;
+        for (int i = 0; i < recordsCount; i++)
         {
-            int rowIndex = rows[i];
-            float cellWidth = _cells[rowIndex].Width;
+            int recordIndex = recordIndexes[i];
+            float cellWidth = _cells[recordIndex].Width;
             if (width < cellWidth)
             {
                 width = cellWidth;
@@ -61,21 +69,12 @@ public abstract class ColumnWorker<TObject, TCell> : ColumnWorker<TObject> where
         return width;
     }
 
-    public override void NotifyRowAdded(List<TObject> rows)
-    {
-        int rowsCount = rows.Count;
-        for (int i = 0; i < rowsCount; i++)
-        {
-            NotifyRowAdded(rows[i]);
-        }
-    }
-
-    public override void NotifyRowAdded(TObject row)
+    public override void NotifyRecordAdded(TRecord record)
     {
         TCell cell;
         try
         {
-            cell = MakeCell(row);
+            cell = MakeCell(record);
         }
         catch
         {
@@ -89,13 +88,13 @@ public abstract class ColumnWorker<TObject, TCell> : ColumnWorker<TObject> where
         }
     }
 
-    public override void NotifyRowRemoved(int row)
+    public override void NotifyRecordRemoved(int recordIndex)
     {
-        if (_cells[row].IsRefreshable)
+        if (_cells[recordIndex].IsRefreshable)
         {
             _refreshableCellsCount--;
         }
-        _cells.ReplaceWithLast(row);
+        _cells.ReplaceWithLast(recordIndex);
     }
 
     protected virtual TCell RefreshCell(TCell cell, out bool wasStale)

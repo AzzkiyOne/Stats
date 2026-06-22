@@ -9,17 +9,17 @@ using Style = Stats.GUIStyles.TableToolbar;
 
 namespace Stats;
 
-internal sealed partial class ObjectTable<TObject>
+internal sealed partial class ObjectTable<TRecord>
 {
     private sealed class Toolbar
     {
-        private readonly ObjectTable<TObject> _parent;
+        private readonly ObjectTable<TRecord> _parent;
         private readonly Button _filtersButton;
         private readonly Button _columnsMenuButton;
         private readonly Button _columnPresetsButton;
         private ColumnsFloatMenu ColumnsMenu => field ??= MakeColumnsMenu();
 
-        public Toolbar(ObjectTable<TObject> parent)
+        public Toolbar(ObjectTable<TRecord> parent)
         {
             _parent = parent;
             _filtersButton = new Button(Assets.TableFiltersTabIcon, "Filters");
@@ -164,7 +164,7 @@ internal sealed partial class ObjectTable<TObject>
         {
             public readonly ColumnDef ColumnDef;
 
-            public ColumnsFloatMenuOption(ColumnDef columnDef, ObjectTable<TObject> parent)
+            public ColumnsFloatMenuOption(ColumnDef columnDef, ObjectTable<TRecord> parent)
                 : base(columnDef.LabelCap, null, Verse.Widgets.CheckboxOnTex, Color.white)
             {
                 ColumnDef = columnDef;

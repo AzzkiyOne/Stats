@@ -4,7 +4,7 @@ using static Stats.GUIStyles.Table;
 
 namespace Stats;
 
-internal sealed partial class ObjectTable<TObject>
+internal sealed partial class ObjectTable<TRecord>
 {
     private void RecalcLayout()
     {

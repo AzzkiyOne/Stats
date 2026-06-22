@@ -1,9 +1,16 @@
-﻿namespace Stats.TableWorkers.ThingDef;
+﻿using Verse;
 
-public sealed class MechanoidTableWorker(TableDef tableDef) : ThingDefTableWorker(tableDef)
+namespace Stats.TableWorkers.ThingDef;
+
+public sealed class MechanoidTableWorker :
+    PawnDefTableWorker
 {
-    protected override bool IsValidThingDef(Verse.ThingDef thingDef)
+    public MechanoidTableWorker(TableDef tableDef) : base(tableDef)
     {
-        return thingDef is { race.IsMechanoid: true, IsCorpse: false };
+    }
+
+    protected override bool IsValidThingDef(Verse.ThingDef thingDef, RaceProperties raceProperties)
+    {
+        return raceProperties.IsMechanoid && thingDef.IsCorpse == false;
     }
 }

@@ -17,14 +17,15 @@ public abstract class TableWorker
     }
 }
 
-public abstract class TableWorker<TObject> : TableWorker
+public abstract class TableWorker<TRecord> :
+    TableWorker
 {
-    internal sealed override ObjectTable TableWidget => new ObjectTable<TObject>(this);
+    internal sealed override ObjectTable TableWidget => field ??= new ObjectTable<TRecord>(this);
     internal readonly List<ColumnDef> CompatibleColumns;
-    public abstract List<TObject> InitialObjects { get; }
+    public abstract List<TRecord> InitialRecords { get; }
 
-    public abstract event Action<TObject> OnObjectAdded;
-    public abstract event Action<TObject> OnObjectRemoved;
+    public abstract event Action<TRecord> OnRecordAdded;
+    public abstract event Action<TRecord> OnRecordRemoved;
 
     protected TableWorker(TableDef def) : base(def)
     {
@@ -35,11 +36,9 @@ public abstract class TableWorker<TObject> : TableWorker
         {
             ColumnDef columnDef = columnDefs[i];
             Type workerClass = columnDef.workerClass;
-            if (
-                typeof(ColumnWorker<TObject>).IsAssignableFrom(workerClass)
+            if ((workerClass.IsGenericTypeDefinition || typeof(ColumnWorker<TRecord>).IsAssignableFrom(workerClass))
                 && columnDef.tags.Count != 0
-                && columnDef.tags.All(Def.columnTags.Contains)// Is table's column tags is superset of column's tags.
-            )
+                && columnDef.tags.All(def.columnTags.Contains))// Is table's column tags is superset of column's tags.
             {
                 compatibleColumns.Add(columnDef);
             }

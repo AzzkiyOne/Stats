@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Xml;
 using RimWorld;
+using Stats.ColumnWorkers;
 using Stats.Utils.Widgets;
 using Verse;
 
@@ -18,6 +19,30 @@ public class ColumnDef : Def
     public Type workerClass;
 #pragma warning restore CS8618
     public List<string> tags = [];
+
+    internal ColumnWorker<TObject>? TryMakeColumnWorkerInstance<TObject>()
+    {
+        Type workerType = workerClass;
+
+        if (workerType.IsGenericTypeDefinition)
+        {
+            try
+            {
+                workerType = workerType.MakeGenericType(typeof(TObject));
+            }
+            catch
+            {
+                // TODO?
+            }
+        }
+
+        if (typeof(ColumnWorker<TObject>).IsAssignableFrom(workerType))
+        {
+            return (ColumnWorker<TObject>)Activator.CreateInstance(workerType, this);
+        }
+
+        return null;
+    }
 
     public override void ResolveReferences()
     {

@@ -7,7 +7,7 @@
         <labelKey>MinGrowingSkillToSow</labelKey>
         <descriptionKey>Stat_Thing_Plant_MinGrowingSkillToSow_Desc</descriptionKey>
         <title>LVL<PlantGrow/></title>
-        <workerClass>Stats.ColumnWorkers.ThingDef.Plant.MinGrowingSkillToSowColumnWorker</workerClass>
+        <workerClass>Stats.ColumnWorkers.PlantDef.MinGrowingSkillToSowColumnWorker`1</workerClass>
         <tags>
             <li>Thing_IsPlant</li>
         </tags>
@@ -18,7 +18,7 @@
         <label>actual growing time</label>
         <description>Estimated actual plant growing time.</description>
         <title><Time/><PlantGrow/></title>
-        <workerClass>Stats.ColumnWorkers.ThingDef.Plant.GrowingTimeActualColumnWorker</workerClass>
+        <workerClass>Stats.ColumnWorkers.PlantDef.GrowingTimeActualColumnWorker`1</workerClass>
         <tags>
             <li>Thing_IsPlant</li>
         </tags>
@@ -29,7 +29,7 @@
         <labelKey>FertilityRequirement</labelKey>
         <descriptionKey>Stat_Thing_Plant_FertilityRequirement_Desc</descriptionKey>
         <title>Fert. req.</title>
-        <workerClass>Stats.ColumnWorkers.ThingDef.Plant.FertilityRequirementColumnWorker</workerClass>
+        <workerClass>Stats.ColumnWorkers.PlantDef.FertilityRequirementColumnWorker`1</workerClass>
         <tags>
             <li>Thing_IsPlant</li>
         </tags>
@@ -40,7 +40,7 @@
         <labelKey>FertilitySensitivity</labelKey>
         <descriptionKey>Stat_Thing_Plant_FertilitySensitivity_Desc</descriptionKey>
         <title>Fert. sens.</title>
-        <workerClass>Stats.ColumnWorkers.ThingDef.Plant.FertilitySensitivityColumnWorker</workerClass>
+        <workerClass>Stats.ColumnWorkers.PlantDef.FertilitySensitivityColumnWorker`1</workerClass>
         <tags>
             <li>Thing_IsPlant</li>
         </tags>
@@ -51,7 +51,7 @@
         <labelKey>LightRequirement</labelKey>
         <descriptionKey>Stat_Thing_Plant_LightRequirement_Desc</descriptionKey>
         <title><Light/>Req.</title>
-        <workerClass>Stats.ColumnWorkers.ThingDef.Plant.LightRequirementColumnWorker</workerClass>
+        <workerClass>Stats.ColumnWorkers.PlantDef.LightRequirementColumnWorker`1</workerClass>
         <tags>
             <li>Thing_IsPlant</li>
         </tags>
@@ -62,7 +62,7 @@
         <labelKey>LifeSpan</labelKey>
         <descriptionKey>Stat_Thing_Plant_LifeSpan_Desc</descriptionKey>
         <title><Time/>Life</title>
-        <workerClass>Stats.ColumnWorkers.ThingDef.Plant.LifeSpanColumnWorker</workerClass>
+        <workerClass>Stats.ColumnWorkers.PlantDef.LifeSpanColumnWorker`1</workerClass>
         <tags>
             <li>Thing_IsPlant</li>
         </tags>
@@ -73,7 +73,7 @@
         <labelKey>HarvestYield</labelKey>
         <descriptionKey>Stat_Thing_Plant_HarvestYield_Desc</descriptionKey>
         <title><PlantHarvest/><PlantHarvestProduct/></title>
-        <workerClass>Stats.ColumnWorkers.ThingDef.Plant.HarvestYieldColumnWorker</workerClass>
+        <workerClass>Stats.ColumnWorkers.PlantDef.HarvestYieldColumnWorker`1</workerClass>
         <tags>
             <li>Thing_IsPlant</li>
         </tags>
@@ -83,7 +83,7 @@
         <defName>Plant_ProductPerDay</defName>
         <label>product per day</label>
         <title><PlantHarvest/><PlantHarvestProduct/><Per/>D</title>
-        <workerClass>Stats.ColumnWorkers.ThingDef.Plant.ProductPerDayColumnWorker</workerClass>
+        <workerClass>Stats.ColumnWorkers.PlantDef.ProductPerDayColumnWorker`1</workerClass>
         <tags>
             <li>Thing_IsPlant</li>
         </tags>
@@ -93,7 +93,7 @@
         <defName>Plant_IsSowable</defName>
         <label>Can be cultivated</label>
         <title><PlantCanBeCultivated/></title>
-        <workerClass>Stats.ColumnWorkers.ThingDef.Plant.IsSowableColumnWorker</workerClass>
+        <workerClass>Stats.ColumnWorkers.PlantDef.IsSowableColumnWorker`1</workerClass>
         <tags>
             <li>Thing_IsPlant</li>
         </tags>
@@ -103,7 +103,7 @@
         <defName>Plant_CanBeGrownInHydroponics</defName>
         <label>Can be grown in hydroponics</label>
         <title><Hydroponics/></title>
-        <workerClass>Stats.ColumnWorkers.ThingDef.Plant.CanBeGrownInHydroponicsColumnWorker</workerClass>
+        <workerClass>Stats.ColumnWorkers.PlantDef.CanBeGrownInHydroponicsColumnWorker`1</workerClass>
         <tags>
             <li>Thing_IsPlant</li>
         </tags>
@@ -113,7 +113,7 @@
         <defName>Plant_IsBlightable</defName>
         <label>Can be infected with blight</label>
         <title><Blight/></title>
-        <workerClass>Stats.ColumnWorkers.ThingDef.Plant.IsBlightableColumnWorker</workerClass>
+        <workerClass>Stats.ColumnWorkers.PlantDef.IsBlightableColumnWorker`1</workerClass>
         <tags>
             <li>Thing_IsPlant</li>
         </tags>
@@ -123,7 +123,7 @@
         <defName>Plant_IsTree</defName>
         <label>Is considered a tree</label>
         <title><Tree/></title>
-        <workerClass>Stats.ColumnWorkers.ThingDef.Plant.IsTreeColumnWorker</workerClass>
+        <workerClass>Stats.ColumnWorkers.PlantDef.IsTreeColumnWorker`1</workerClass>
         <tags>
             <li>Thing_IsPlant</li>
         </tags>
@@ -133,7 +133,7 @@
         <defName>Plant_CanBePlantedUnderRoof</defName>
         <label>Can be planted under roof</label>
         <title><UnderRoof/></title>
-        <workerClass>Stats.ColumnWorkers.ThingDef.Plant.CanBePlantedUnderRoofColumnWorker</workerClass>
+        <workerClass>Stats.ColumnWorkers.PlantDef.CanBePlantedUnderRoofColumnWorker`1</workerClass>
         <tags>
             <li>Thing_IsPlant</li>
         </tags>
@@ -143,7 +143,7 @@
         <defName>Plant_IsDestroyedOnHarvest</defName>
         <label>Is plant destroyed on harvest</label>
         <title><PlantHarvestDestructive/></title>
-        <workerClass>Stats.ColumnWorkers.ThingDef.Plant.IsDestroyedOnHarvestColumnWorker</workerClass>
+        <workerClass>Stats.ColumnWorkers.PlantDef.IsDestroyedOnHarvestColumnWorker`1</workerClass>
         <tags>
             <li>Thing_IsPlant</li>
         </tags>
@@ -153,7 +153,7 @@
         <defName>Plant_NutritionPerHarvest</defName>
         <label>Nutrition per harvest</label>
         <title><PlantHarvest/><Nutrition/></title>
-        <workerClass>Stats.ColumnWorkers.ThingDef.Plant.NutritionPerHarvestColumnWorker</workerClass>
+        <workerClass>Stats.ColumnWorkers.PlantDef.NutritionPerHarvestColumnWorker`1</workerClass>
         <tags>
             <li>Thing_IsPlant</li>
         </tags>
@@ -163,7 +163,7 @@
         <defName>Plant_NutritionPerHarvestPerDay</defName>
         <label>Nutrition per harvest per day</label>
         <title><PlantHarvest/><Nutrition/><Per/>D</title>
-        <workerClass>Stats.ColumnWorkers.ThingDef.Plant.NutritionPerHarvestPerDayColumnWorker</workerClass>
+        <workerClass>Stats.ColumnWorkers.PlantDef.NutritionPerHarvestPerDayColumnWorker`1</workerClass>
         <tags>
             <li>Thing_IsPlant</li>
         </tags>
@@ -174,7 +174,7 @@
         <description>Raw nutrition value of a plant itself, not its product.</description>
         <title><Nutrition/><PlantRaw/></title>
         <stat>Nutrition</stat>
-        <workerClass>Stats.ColumnWorkers.BuildableDef.StatColumnWorker</workerClass>
+        <workerClass>Stats.ColumnWorkers.BuildableDef.StatColumnWorker`1</workerClass>
         <tags>
             <li>Thing_IsPlant</li>
         </tags>
@@ -184,7 +184,7 @@
         <defName>Plant_RawNutritionPerDay</defName>
         <label>Raw nutrition per day</label>
         <title><Nutrition/><PlantRaw/><Per/>D</title>
-        <workerClass>Stats.ColumnWorkers.ThingDef.Plant.RawNutritionPerDayColumnWorker</workerClass>
+        <workerClass>Stats.ColumnWorkers.PlantDef.RawNutritionPerDayColumnWorker`1</workerClass>
         <tags>
             <li>Thing_IsPlant</li>
         </tags>

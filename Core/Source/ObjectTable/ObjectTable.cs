@@ -18,7 +18,7 @@ internal abstract class ObjectTable
 
 // Lack of abstraction/leaking abstractions is (almost) intentional here.
 // Because abstractions are not free.
-internal sealed partial class ObjectTable<TObject> : ObjectTable
+internal sealed partial class ObjectTable<TRecord> : ObjectTable
 {
     private static readonly TipSignal _manual =
         "- Hold (LMB) and move mouse cursor to scroll horizontally.\n" +
@@ -72,7 +72,7 @@ internal sealed partial class ObjectTable<TObject> : ObjectTable
     // Filters tab
 
     // Rows
-    private readonly List<TObject> _objects;
+    private readonly List<TRecord> _objects;
     private readonly List<int> _rows;
     private int _topRowsCount;
     private int BottomRowsCount => _rows.Count - _topRowsCount;
@@ -103,15 +103,15 @@ internal sealed partial class ObjectTable<TObject> : ObjectTable
     private readonly Toolbar _toolbar;
 
     // Misc
-    private readonly TableWorker<TObject> _tableWorker;
+    private readonly TableWorker<TRecord> _tableWorker;
 
-    public ObjectTable(TableWorker<TObject> tableWorker)
+    public ObjectTable(TableWorker<TRecord> tableWorker)
     {
         //tableWorker.OnObjectAdded += AddObject;
         //tableWorker.OnObjectRemoved += RemoveObject;
 
         // Rows
-        List<TObject> objects = tableWorker.InitialObjects;
+        List<TRecord> objects = tableWorker.InitialRecords;
         int objectsCount = objects.Count;
         List<int> rows = new(objectsCount);
         for (int i = 0; i < objectsCount; i++)
@@ -126,13 +126,13 @@ internal sealed partial class ObjectTable<TObject> : ObjectTable
         for (int i = 0; i < columnDefsCount; i++)
         {
             ColumnDef columnDef = columnDefs[i];
-            Type workerClass = columnDef.workerClass;
-            if (typeof(ColumnWorker<TObject>).IsAssignableFrom(workerClass))
+            ColumnWorker<TRecord>? columnWorker = columnDef.TryMakeColumnWorkerInstance<TRecord>();
+
+            if (columnWorker != null)
             {
-                ColumnWorker<TObject> columnWorker = (ColumnWorker<TObject>)Activator.CreateInstance(workerClass, columnDef);
                 Column column = new(columnWorker, tableWorker, this);
                 columns.Add(column);
-                columnWorker.NotifyRowAdded(objects);
+                objects.ForEach(columnWorker.NotifyRecordAdded);
             }
             else
             {
@@ -156,7 +156,7 @@ internal sealed partial class ObjectTable<TObject> : ObjectTable
     [MethodImpl(MethodImplOptions.NoInlining)]
     private static void WarnIncompatibleColumn(string columnName, string tableName)
     {
-        Log.Warning($"Column \"${columnName}\" is not compatible with table \"${tableName}\", because it does not implement \"${typeof(ColumnWorker<TObject>).Name}\".");
+        Log.Warning($"Column \"${columnName}\" is not compatible with table \"${tableName}\", because it does not implement \"${typeof(ColumnWorker<TRecord>).Name}\".");
     }
 
     internal override void NotifyParentWindowClosed()

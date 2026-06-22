@@ -1,13 +1,16 @@
-﻿using Stats.Utils.Extensions;
+﻿using RimWorld;
 
 namespace Stats.TableWorkers.ThingDef;
 
-public sealed class ArtBuildingTableWorker(TableDef tableDef) : ThingDefTableWorker(tableDef)
+public sealed class ArtBuildingTableWorker :
+    BuildingDefTableWorker
 {
-    protected override bool IsValidThingDef(Verse.ThingDef thingDef)
+    public ArtBuildingTableWorker(TableDef tableDef) : base(tableDef)
     {
-        return thingDef.building != null
-            && thingDef.IsBuildingObtainableByPlayer()
-            && thingDef.IsArt;
+    }
+
+    protected override bool IsValidThingDef(Verse.ThingDef thingDef, BuildingProperties buildingProperties)
+    {
+        return thingDef.IsArt;
     }
 }

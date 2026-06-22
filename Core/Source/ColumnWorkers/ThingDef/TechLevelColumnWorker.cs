@@ -3,6 +3,7 @@ using System.Linq;
 using RimWorld;
 using Stats.ColumnWorkers.Cells;
 using Stats.Filters;
+using Stats.TableRecords;
 using Stats.TableWorkers;
 using Stats.Utils;
 using UnityEngine;
@@ -10,19 +11,14 @@ using Verse;
 
 namespace Stats.ColumnWorkers.ThingDef;
 
-public sealed class TechLevelColumnWorker(ColumnDef columnDef) : ColumnWorker<DefBasedObject, TechLevelColumnWorker.TechLevelCell>
+public sealed class TechLevelColumnWorker<TRecord>(ColumnDef columnDef) :
+    ColumnWorker<TRecord, TechLevelColumnWorker<TRecord>.TechLevelCell>(columnDef, ColumnType.String)
+        where TRecord :
+            IThingDefTableRecord
 {
-    public override ColumnType Type => ColumnType.String;
-    public override ColumnDef Def => columnDef;
-
-    protected override TechLevelCell MakeCell(DefBasedObject @object)
+    protected override TechLevelCell MakeCell(TRecord record)
     {
-        if (@object.Def is Verse.ThingDef thingDef)
-        {
-            return new TechLevelCell(thingDef.techLevel);
-        }
-
-        return default;
+        return new TechLevelCell(record.ThingDef.techLevel);
     }
 
     public override ICollection<CellField> GetCellFields(TableWorker tableWorker)
@@ -36,7 +32,7 @@ public sealed class TechLevelColumnWorker(ColumnDef columnDef) : ColumnWorker<De
             );
         Filter valueFieldFilter = new OTMFilter<TechLevel>((int row) => this[row].Value, valueFieldFilterOptions);
         int Compare(int row1, int row2) => this[row1].Value.CompareTo(this[row2].Value);
-        CellField valueField = new(Def.TitleWidget, valueFieldFilter, Compare);
+        CellField valueField = new(null, valueFieldFilter, Compare);
 
         return [valueField];
     }

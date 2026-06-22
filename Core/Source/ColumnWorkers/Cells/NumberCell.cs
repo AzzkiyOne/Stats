@@ -1,4 +1,5 @@
 ﻿using Stats.Utils;
+using Stats.Utils.Extensions;
 using UnityEngine;
 
 namespace Stats.ColumnWorkers.Cells;
@@ -15,6 +16,8 @@ public readonly struct NumberCell : INumberCell
     public decimal Value { get; }
 
     private readonly string? _text;
+
+    public NumberCell(float value, string formatString = "") : this(value.ToDecimal(0), formatString) { }
 
     public NumberCell(decimal value, string formatString = "")
     {

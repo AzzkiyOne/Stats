@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Stats.ColumnWorkers.Cells;
 using Stats.Filters;
+using Stats.TableRecords;
 using Stats.TableWorkers;
 using Stats.Utils;
 using UnityEngine;
@@ -10,21 +11,16 @@ using Verse;
 
 namespace Stats.ColumnWorkers.ThingDef;
 
-public sealed class SizeColumnWorker(ColumnDef columnDef) : ColumnWorker<DefBasedObject, SizeColumnWorker.SizeCell>
+public sealed class SizeColumnWorker<TRecord>(ColumnDef columnDef) :
+    ColumnWorker<TRecord, SizeColumnWorker<TRecord>.SizeCell>(columnDef, ColumnType.Number)
+        where TRecord :
+            IThingDefTableRecord
 {
-    public override ColumnType Type => ColumnType.Number;
-    public override ColumnDef Def => columnDef;
-
-    protected override SizeCell MakeCell(DefBasedObject @object)
+    protected override SizeCell MakeCell(TRecord record)
     {
-        if (@object.Def is Verse.ThingDef thingDef)
-        {
-            IntVec2 size = GetSize(thingDef);
+        IntVec2 size = GetSize(record.ThingDef);
 
-            return new SizeCell(size);
-        }
-
-        return default;
+        return new SizeCell(size);
     }
 
     private static IntVec2 GetSize(Verse.ThingDef thingDef)
@@ -44,7 +40,7 @@ public sealed class SizeColumnWorker(ColumnDef columnDef) : ColumnWorker<DefBase
             .Select(size => new NTMFilterOption<decimal>(size.Area, size.ToStringCross()));
         Filter valueFieldFilter = new OTMFilter<decimal>((int row) => this[row].Area, valueFieldFilterOptions);
         int Compare(int row1, int row2) => this[row1].Area.CompareTo(this[row2].Area);
-        CellField valueField = new(Def.TitleWidget, valueFieldFilter, Compare);
+        CellField valueField = new(null, valueFieldFilter, Compare);
 
         return [valueField];
     }

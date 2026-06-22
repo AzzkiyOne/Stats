@@ -1,11 +1,16 @@
-﻿using Stats.Utils.Extensions;
+﻿using RimWorld;
 
 namespace Stats.TableWorkers.ThingDef;
 
-public sealed class ChairTableWorker(TableDef tableDef) : ThingDefTableWorker(tableDef)
+public sealed class ChairTableWorker :
+    BuildingDefTableWorker
 {
-    protected override bool IsValidThingDef(Verse.ThingDef thingDef)
+    public ChairTableWorker(TableDef tableDef) : base(tableDef)
     {
-        return thingDef.building?.isSittable == true && thingDef.IsBuildingObtainableByPlayer();
+    }
+
+    protected override bool IsValidThingDef(Verse.ThingDef thingDef, BuildingProperties buildingProperties)
+    {
+        return buildingProperties.isSittable;
     }
 }

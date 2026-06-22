@@ -108,16 +108,10 @@
             <li>Apparel_CoveredBodyPartGroups</li>
             <!-- <li>Thing_EquippedStatOffsets</li> -->
             <li>Thing_MaxHitPoints</li>
-            <li>Thing_Flammability</li>
             <li>Thing_Mass</li>
             <li MayRequire="CETeam.CombatExtended">Apparel_WornBulk</li>
+            <li>Thing_Flammability</li>
             <!-- <li>Thing_Recipes</li> -->
-            <li>Thing_MarketValue</li>
-            <li>Apparel_CountsAsClothingForNudity</li>
-            <li>Apparel_EquipDelay</li>
-            <li MayRequire="Ludeon.RimWorld.Biotech">Apparel_ValidLifeStage</li>
-            <li>Thing_TechLevel</li>
-            <li>Thing_ContentSource</li>
         </columns>
     </Stats.TableDef>
 

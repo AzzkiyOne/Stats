@@ -4,6 +4,7 @@ using System.Text.RegularExpressions;
 using RimWorld;
 using Stats.ColumnWorkers.Cells;
 using Stats.Filters;
+using Stats.TableRecords;
 using Stats.TableWorkers;
 using Stats.Utils;
 using UnityEngine;
@@ -11,31 +12,24 @@ using Verse;
 
 namespace Stats.ColumnWorkers.BuildableDef;
 
-public class StatColumnWorker(StatColumnDef columnDef) : ColumnWorker<DefBasedObject, StatColumnWorker.StatCell>
+public class StatColumnWorker<TRecord>(StatColumnDef columnDef) :
+    ColumnWorker<TRecord, StatColumnWorker<TRecord>.StatCell>(columnDef, ColumnType.Number)
+        where TRecord :
+            IBuildableDefTableRecord
 {
-    public override ColumnType Type => ColumnType.Number;
-    public override ColumnDef Def => columnDef;
-
     private static readonly Regex _numberRegex = new(@"(-?[0-9]+\.?[0-9]*).*", RegexOptions.Compiled);
     private const ToStringNumberSense _ToStringNumberSense = ToStringNumberSense.Absolute;
     private readonly StatDef _stat = columnDef.stat;
 
-    protected override StatCell MakeCell(DefBasedObject @object)
+    protected override StatCell MakeCell(TRecord record)
     {
-        StatRequest statRequest;
-        if (@object.Thing != null)
-        {
-            statRequest = StatRequest.For(@object.Thing);
-        }
-        else if (@object.Def is Verse.BuildableDef buildableDef)
-        {
-            statRequest = StatRequest.For(buildableDef, @object.StuffDef);
-        }
-        else
-        {
-            return default;
-        }
+        StatRequest statRequest = record.StatRequest;
 
+        return MakeCell(statRequest);
+    }
+
+    protected virtual StatCell MakeCell(StatRequest statRequest)
+    {
         if (_stat.Worker.ShouldShowFor(statRequest))
         {
             float statValue = _stat.Worker.GetValue(statRequest);
@@ -69,12 +63,12 @@ public class StatColumnWorker(StatColumnDef columnDef) : ColumnWorker<DefBasedOb
     {
         Filter valueFieldFilter = new NumberFilter((int row) => this[row].Value);
         int Compare(int row1, int row2) => this[row1].Value.CompareTo(this[row2].Value);
-        CellField valueField = new(Def.TitleWidget, valueFieldFilter, Compare);
+        CellField valueField = new(null, valueFieldFilter, Compare);
 
         return [valueField];
     }
 
-    public override void NotifyRowRemoved(int row)
+    public override void NotifyRecordRemoved(int row)
     {
         _cellTooltipOwner = default;
         // TODO:
@@ -83,7 +77,7 @@ public class StatColumnWorker(StatColumnDef columnDef) : ColumnWorker<DefBasedOb
         // Although cell removal code is already a bit heavier than i wanted it to be,
         // and i don't think a single string, that just hangs around in memory, is that big of an issue.
 
-        base.NotifyRowRemoved(row);
+        base.NotifyRecordRemoved(row);
     }
 
     // TODO:
@@ -104,9 +98,9 @@ public class StatColumnWorker(StatColumnDef columnDef) : ColumnWorker<DefBasedOb
 
         private readonly StatDef? _stat;
         private readonly string? _text;
-        private readonly StatColumnWorker _column;
+        private readonly StatColumnWorker<TRecord> _column;
 
-        public StatCell(float statValue, StatRequest statRequest, StatDef stat, StatColumnWorker column)
+        public StatCell(float statValue, StatRequest statRequest, StatDef stat, StatColumnWorker<TRecord> column)
         {
             _column = column;
             _stat = stat;

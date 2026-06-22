@@ -6,10 +6,12 @@ using Stats.TableWorkers;
 
 namespace Stats.ColumnWorkers;
 
-public abstract class DefSetColumnWorker<TObject, TCell> : ColumnWorker<TObject, TCell> where TCell : struct, IDefSetCell
+public abstract class DefSetColumnWorker<TRecord, TCell>(ColumnDef def) :
+    ColumnWorker<TRecord, TCell>(def, ColumnType.String)
+        where TCell :
+            struct,
+            IDefSetCell
 {
-    public override ColumnType Type => ColumnType.String;
-
     protected abstract IEnumerable<Verse.Def?> GetValueFieldFilterOptions(TableWorker tableWorker);
 
     private static readonly HashSet<Verse.Def> _emptyDefHashSet = [];
@@ -23,7 +25,7 @@ public abstract class DefSetColumnWorker<TObject, TCell> : ColumnWorker<TObject,
             );
         Filter valueFieldFilter = new MTMFilter<Verse.Def?>((int row) => this[row].Value ?? _emptyDefHashSet, valueFieldFilterOptions);
         int CompareByCellText(int row1, int row2) => Comparer<string?>.Default.Compare(this[row1].Text, this[row2].Text);
-        CellField valueField = new(Def.TitleWidget, valueFieldFilter, CompareByCellText);
+        CellField valueField = new(null, valueFieldFilter, CompareByCellText);
 
         return [valueField];
     }

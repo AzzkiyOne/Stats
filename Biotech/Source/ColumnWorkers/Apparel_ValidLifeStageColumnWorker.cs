@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Stats.Objects.ThingDef;
+using Stats.TableRecords.ThingDef;
 using Stats.Widgets_Legacy;
 using Verse;
 

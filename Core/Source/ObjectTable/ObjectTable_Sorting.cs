@@ -1,6 +1,6 @@
 ﻿namespace Stats;
 
-internal sealed partial class ObjectTable<TObject>
+internal sealed partial class ObjectTable<TRecord>
 {
     // Note: Use row's index for stable sort (when two rows have the same cell values)?
 

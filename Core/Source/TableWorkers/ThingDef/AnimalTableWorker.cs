@@ -1,9 +1,16 @@
-﻿namespace Stats.TableWorkers.ThingDef;
+﻿using Verse;
 
-public sealed class AnimalTableWorker(TableDef tableDef) : ThingDefTableWorker(tableDef)
+namespace Stats.TableWorkers.ThingDef;
+
+public sealed class AnimalTableWorker :
+    PawnDefTableWorker
 {
-    protected override bool IsValidThingDef(Verse.ThingDef thingDef)
+    public AnimalTableWorker(TableDef tableDef) : base(tableDef)
     {
-        return thingDef is { race.Animal: true, IsCorpse: false };
+    }
+
+    protected override bool IsValidThingDef(Verse.ThingDef thingDef, RaceProperties raceProperties)
+    {
+        return raceProperties.Animal && thingDef.IsCorpse == false;
     }
 }

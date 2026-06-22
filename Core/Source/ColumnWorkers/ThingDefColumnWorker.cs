@@ -3,15 +3,17 @@ using System.Linq;
 using Stats.ColumnWorkers.Cells;
 using Stats.Filters;
 using Stats.TableWorkers;
-using Stats.Utils.Extensions;
 using UnityEngine;
 
 namespace Stats.ColumnWorkers;
 
-public abstract class ThingDefColumnWorker<TObject, TCell> : ColumnWorker<TObject, TCell> where TCell : struct, IThingDefCell
+public abstract class ThingDefColumnWorker<TRecord, TCell>(ColumnDef def) :
+    ColumnWorker<TRecord, TCell>(def, ColumnType.String)
+        where TCell :
+            struct,
+            IThingDefCell
 {
-    public override ColumnType Type => ColumnType.String;
-    public override bool ShouldDrawCellsNow => Event.current.type == EventType.Repaint || Event.current.IsLMB();
+    public override bool ShouldDrawCellsNow => Event.current is { type: EventType.Repaint or EventType.MouseDown or EventType.MouseUp };
 
     protected abstract IEnumerable<Verse.ThingDef?> GetValueFieldFilterOptions(TableWorker tableWorker);
 
@@ -24,7 +26,7 @@ public abstract class ThingDefColumnWorker<TObject, TCell> : ColumnWorker<TObjec
             );
         Filter valueFieldFilter = new OTMFilter<Verse.ThingDef?>((int row) => this[row].Value, valueFieldFilterOptions);
         int CompareByCellText(int row1, int row2) => Comparer<string?>.Default.Compare(this[row1].Text, this[row2].Text);
-        CellField valueField = new(Def.TitleWidget, valueFieldFilter, CompareByCellText);
+        CellField valueField = new(null, valueFieldFilter, CompareByCellText);
 
         return [valueField];
     }

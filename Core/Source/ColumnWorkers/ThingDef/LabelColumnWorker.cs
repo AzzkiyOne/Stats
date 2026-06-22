@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using Stats.ColumnWorkers.Cells;
 using Stats.Filters;
+using Stats.TableRecords;
 using Stats.TableWorkers;
 using Stats.Utils;
 using Stats.Utils.Extensions;
@@ -15,27 +16,23 @@ namespace Stats.ColumnWorkers.ThingDef;
 // modded stuffs may have the same color as vanilla ones or other modded stuffs.
 // Replacing label with icon won't do, because ex. all of the leathers have the same
 // icon but of different color.
-public sealed class LabelColumnWorker(ColumnDef columnDef) : ColumnWorker<DefBasedObject, LabelColumnWorker.LabelCell>
+public sealed class LabelColumnWorker<TRecord>(ColumnDef columnDef) :
+    ColumnWorker<TRecord, LabelColumnWorker<TRecord>.LabelCell>(columnDef, ColumnType.String)
+        where TRecord :
+            IThingDefTableRecord
 {
-    public override ColumnType Type => ColumnType.String;
-    public override ColumnDef Def => columnDef;
-    public override bool ShouldDrawCellsNow => Event.current.type == EventType.Repaint || Event.current.IsLMB();
+    public override bool ShouldDrawCellsNow => Event.current is { type: EventType.Repaint or EventType.MouseDown or EventType.MouseUp };
 
-    protected override LabelCell MakeCell(DefBasedObject @object)
+    protected override LabelCell MakeCell(TRecord record)
     {
-        if (@object.Def is Verse.ThingDef thingDef)
-        {
-            return new LabelCell(thingDef, @object.StuffDef);
-        }
-
-        return default;
+        return new LabelCell(record.ThingDef, record.StatRequest.StuffDef);
     }
 
     public override ICollection<CellField> GetCellFields(TableWorker tableWorker)
     {
         Filter textFieldFilter = new StringFilter((int row) => this[row].Text ?? "");
         int Compare(int row1, int row2) => Comparer<string?>.Default.Compare(this[row1].Text, this[row2].Text);
-        CellField textField = new(Def.TitleWidget, textFieldFilter, Compare);
+        CellField textField = new(null, textFieldFilter, Compare);
 
         return [textField];
     }

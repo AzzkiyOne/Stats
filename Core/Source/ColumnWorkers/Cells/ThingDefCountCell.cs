@@ -27,6 +27,8 @@ public readonly struct ThingDefCountCell : IThingDefCountCell
     private readonly float _iconWidth;
     private readonly TipSignal _tooltip;
 
+    public ThingDefCountCell(Verse.ThingDef thingDef, float count) : this(thingDef, count.ToDecimal(0)) { }
+
     public ThingDefCountCell(Verse.ThingDef thingDef, decimal count)
     {
         ThingDef = thingDef;

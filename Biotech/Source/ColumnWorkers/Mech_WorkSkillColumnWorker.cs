@@ -1,4 +1,4 @@
-﻿using Stats.Objects.ThingDef;
+﻿using Stats.TableRecords.ThingDef;
 using Stats.ObjectTable.ColumnWorkers;
 
 namespace Stats.Compat.Biotech;
