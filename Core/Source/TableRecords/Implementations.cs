@@ -97,7 +97,6 @@ public readonly record struct BuildingDefTableRecord :
     private readonly Lazy<CompProperties_Refuelable?> _refuelableCompProperties;
     public CompProperties_Refuelable? RefuelableCompProperties => _refuelableCompProperties.Value;
 
-
     public BuildingDefTableRecord(ThingDef thingDef, BuildingProperties buildingProperties, ThingDef? stuffDef = null)
     {
         ThingDef = thingDef;
@@ -127,7 +126,9 @@ public readonly record struct RangedWeaponDefTableRecord :
 }
 
 public readonly record struct TurretDefTableRecord :
-    ITurretDefTableRecord
+    ITurretDefTableRecord,
+    IPowerTraderDefTableRecord,
+    IRefuelableDefTableRecord
 {
     public Def Def => ThingDef;
     public BuildableDef BuildableDef => ThingDef;
@@ -136,6 +137,10 @@ public readonly record struct TurretDefTableRecord :
     public StatRequest RangedWeaponStatRequest { get; }
     public BuildingProperties BuildingProperties { get; }
     public VerbProperties PrimaryVerbProperties { get; }
+    private readonly Lazy<CompProperties_Power?> _powerCompProperties;
+    public CompProperties_Power? PowerCompProperties => _powerCompProperties.Value;
+    private readonly Lazy<CompProperties_Refuelable?> _refuelableCompProperties;
+    public CompProperties_Refuelable? RefuelableCompProperties => _refuelableCompProperties.Value;
 
     public TurretDefTableRecord(
         ThingDef thingDef,
@@ -149,6 +154,8 @@ public readonly record struct TurretDefTableRecord :
         RangedWeaponStatRequest = StatRequest.For(gunDef, null);
         BuildingProperties = buildingProperties;
         PrimaryVerbProperties = verbProperties;
+        _powerCompProperties = new Lazy<CompProperties_Power?>(thingDef.GetCompProperties<CompProperties_Power>);
+        _refuelableCompProperties = new Lazy<CompProperties_Refuelable?>(thingDef.GetCompProperties<CompProperties_Refuelable>);
     }
 }
 

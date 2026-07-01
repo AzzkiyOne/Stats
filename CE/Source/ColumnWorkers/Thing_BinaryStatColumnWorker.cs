@@ -1,12 +1,12 @@
 ﻿using System.Linq;
 using System.Text.RegularExpressions;
 using RimWorld;
-using Stats.ColumnWorkers.BuildableDef;
+using Stats.Columns.BuildableDef;
 using Verse;
 
 namespace Stats.Compat.CE;
 
-public abstract class Thing_BinaryStatColumnWorker : StatColumnWorker
+public abstract class Thing_BinaryStatColumnWorker : StatColumn
 {
     protected static readonly Regex NonZeroNumberRegex = new(@"[1-9]{1}", RegexOptions.Compiled);
     protected readonly char Separator;

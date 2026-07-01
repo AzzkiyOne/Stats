@@ -7,7 +7,7 @@
         <label>Weapons / Ranged</label>
         <iconPath>Things/Item/Equipment/WeaponRanged/Revolver</iconPath>
         <iconScale>1.5</iconScale>
-        <workerClass>Stats.TableWorkers.ThingDef.RangedWeaponTableWorker</workerClass>
+        <factory>Stats.Tables.RangedWeaponDefTable.Make</factory>
         <columnTags>
             <li>Thing_IsRangedWeapon</li>
             <li>Thing_IsMeleeWeapon</li>
@@ -55,7 +55,7 @@
         <label>Weapons / Melee</label>
         <iconPath>Things/Item/Equipment/WeaponMelee/Club</iconPath>
         <iconColor>(105,95,97)</iconColor>
-        <workerClass>Stats.TableWorkers.ThingDef.MeleeWeaponTableWorker</workerClass>
+        <factory>Stats.Tables.MeleeWeaponDefTable.Make</factory>
         <columnTags>
             <li>Thing_IsMeleeWeapon</li>
             <li>Thing</li>
@@ -86,7 +86,7 @@
         <label>Apparel</label>
         <iconPath>Things/Pawn/Humanlike/Apparel/Duster/Duster</iconPath>
         <iconColor>(112,82,65)</iconColor>
-        <workerClass>Stats.TableWorkers.ThingDef.ApparelTableWorker</workerClass>
+        <factory>Stats.Tables.ApparelDefTable.Make</factory>
         <columnTags>
             <li>Thing_IsApparel</li>
             <li>Thing_HasArmor</li>
@@ -119,7 +119,7 @@
         <defName>PowerGenerators</defName>
         <label>Buildings / Power / Generators</label>
         <iconPath>Things/Building/Power/ChemfuelPoweredGenerator</iconPath>
-        <workerClass>Stats.TableWorkers.ThingDef.PowerGeneratorTableWorker</workerClass>
+        <factory>Stats.Tables.PowerGeneratorDefTable.Make</factory>
         <columnTags>
             <li>Thing_IsPowerGenerator</li>
             <li>Thing_IsRefuelable</li>
@@ -148,7 +148,7 @@
         <label>Buildings / Recreation</label>
         <iconPath>Things/Building/Joy/BilliardsTable_east</iconPath>
         <iconColor>(133,97,67)</iconColor>
-        <workerClass>Stats.TableWorkers.ThingDef.RecreationalBuildingTableWorker</workerClass>
+        <factory>Stats.Tables.RecreationalBuildingDefTable.Make</factory>
         <columnTags>
             <li>Thing_IsBuilding</li>
             <li>Thing_GivesJoy</li>
@@ -175,7 +175,7 @@
         <label>Buildings / Furniture / Beds</label>
         <iconPath>Things/Building/Furniture/Bed/Bed_south</iconPath>
         <iconColor>(133,97,67)</iconColor>
-        <workerClass>Stats.TableWorkers.ThingDef.BedTableWorker</workerClass>
+        <factory>Stats.Tables.BedDefTable.Make</factory>
         <columnTags>
             <li>Thing_IsBed</li>
             <li>Thing_IsBuilding</li>
@@ -209,7 +209,7 @@
         <label>Buildings / Furniture / Chairs</label>
         <iconPath>Things/Building/Furniture/DiningChair_south</iconPath>
         <iconColor>(133,97,67)</iconColor>
-        <workerClass>Stats.TableWorkers.ThingDef.ChairTableWorker</workerClass>
+        <factory>Stats.Tables.ChairDefTable.Make</factory>
         <columnTags>
             <li>Thing_IsBuilding</li>
             <li>Thing_GivesComfort</li>
@@ -234,7 +234,7 @@
         <label>Buildings / Art</label>
         <iconPath>StatsMod/UI/Icons/Art</iconPath>
         <iconColor>(132,135,132)</iconColor>
-        <workerClass>Stats.TableWorkers.ThingDef.ArtBuildingTableWorker</workerClass>
+        <factory>Stats.Tables.ArtBuildingDefTable.Make</factory>
         <columnTags>
             <li>Thing_IsBuilding</li>
             <li>Thing_IsPowerConsumer</li>
@@ -256,7 +256,7 @@
         <defName>Plants</defName>
         <label>Plants</label>
         <iconPath>Things/Plant/CottonPlant/CottonPlantA</iconPath>
-        <workerClass>Stats.TableWorkers.ThingDef.PlantTableWorker</workerClass>
+        <factory>Stats.Tables.PlantDefTable.Make</factory>
         <columnTags>
             <li>Thing_IsPlant</li>
             <li>Thing</li>
@@ -290,7 +290,7 @@
         <label>Creatures / Animals</label>
         <iconPath>Things/Pawn/Animal/Thrumbo/Thrumbo_east</iconPath>
         <iconScale>1.2</iconScale>
-        <workerClass>Stats.TableWorkers.ThingDef.AnimalTableWorker</workerClass>
+        <factory>Stats.Tables.AnimalDefTable.Make</factory>
         <columnTags>
             <li>Thing_IsAnimal</li>
             <li>Thing_IsPawn</li>
@@ -315,7 +315,7 @@
         <defName>Mechanoids</defName>
         <label>Creatures / Mechanoids</label>
         <iconPath>Things/Pawn/Mechanoid/Centipede_east</iconPath>
-        <workerClass>Stats.TableWorkers.ThingDef.MechanoidTableWorker</workerClass>
+        <factory>Stats.Tables.MechanoidDefTable.Make</factory>
         <columnTags>
             <li>Thing_IsMech</li>
             <li>Thing_IsPawn</li>
@@ -360,7 +360,7 @@
         <defName>Turrets</defName>
         <label>Buildings / Turrets</label>
         <iconPath>Things/Building/Security/TurretMini_MenuIcon</iconPath>
-        <workerClass>Stats.TableWorkers.ThingDef.TurretTableWorker</workerClass>
+        <factory>Stats.Tables.TurretDefTable.Make</factory>
         <columnTags>
             <li>Thing_IsTurret</li>
             <li>Thing_IsRangedWeapon</li>

@@ -6,7 +6,7 @@
         <defName>Mech_EMPResistance</defName>
         <title><Resistance/><Electricity/></title>
         <stat>EMPResistance</stat>
-        <workerClass>Stats.ColumnWorkers.BuildableDef.StatColumnWorker`1</workerClass>
+        <columnClass>Stats.Columns.BuildableDef.StatColumn`1</columnClass>
         <tags>
             <li>Thing_IsMech</li>
         </tags>

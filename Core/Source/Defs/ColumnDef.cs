@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Xml;
 using RimWorld;
-using Stats.ColumnWorkers;
+using Stats.Columns;
 using Stats.Utils.Widgets;
 using Verse;
 
@@ -16,32 +16,27 @@ public class ColumnDef : Def
     public ColumnTitleXmlNode? title;
     internal Widget TitleWidget => field ??= title?.ToWidget() ?? new Label(LabelCap);
 #pragma warning disable CS8618
-    public Type workerClass;
+    public Type columnClass;
 #pragma warning restore CS8618
     public List<string> tags = [];
 
-    internal ColumnWorker<TObject>? TryMakeColumnWorkerInstance<TObject>()
+    internal Column<TRecord> MakeColumnInstance<TRecord>()
     {
-        Type workerType = workerClass;
+        Type columnType = columnClass;
 
-        if (workerType.IsGenericTypeDefinition)
+        if (columnType.IsGenericTypeDefinition)
         {
-            try
-            {
-                workerType = workerType.MakeGenericType(typeof(TObject));
-            }
-            catch
-            {
-                // TODO?
-            }
+            columnType = columnType.MakeGenericType(typeof(TRecord));
         }
 
-        if (typeof(ColumnWorker<TObject>).IsAssignableFrom(workerType))
+        if (typeof(Column<TRecord>).IsAssignableFrom(columnType))
         {
-            return (ColumnWorker<TObject>)Activator.CreateInstance(workerType, this);
+            return (Column<TRecord>)Activator.CreateInstance(columnType, this);
         }
-
-        return null;
+        else
+        {
+            throw new InvalidCastException($"Column \"${defName}\" does not implement \"${typeof(Column<TRecord>).Name}\".");
+        }
     }
 
     public override void ResolveReferences()

@@ -1,37 +1,30 @@
 ﻿using System;
 using System.Collections.Generic;
-using Stats.TableWorkers;
+using System.Linq;
+using System.Security.Cryptography;
+using Stats.Tables;
 using UnityEngine;
 using Verse;
 
 namespace Stats;
 
-public class TableDef : Def
+public class TableDef : TabDef
 {
-    public string? iconPath;
-    public Texture2D Icon { get; private set; } = BaseContent.BadTex;
-    public Color iconColor = Color.white;
-    public float iconScale = 1f;
 #pragma warning disable CS8618
     public List<ColumnDef> columns;
-    public Type workerClass;
-    public TableWorker Worker => field ??= (TableWorker)Activator.CreateInstance(workerClass, this);
+    internal List<ColumnDef> CompatibleColumns => field ??=
+        DefDatabase<ColumnDef>
+        .AllDefsListForReading
+        // Is table's column tags is superset of column's tags.
+        .Where(columnDef => columnDef.tags.Count != 0 && columnDef.tags.All(columnTags.Contains))
+        .ToList();
+    public Func<TableDef, MainTabWindowTab> factory;
 #pragma warning restore CS8618
     public List<string> columnTags = [];
 
-    public override void ResolveReferences()
+    public override MainTabWindowTab MakeTab()
     {
-        base.ResolveReferences();
-
-        LongEventHandler.ExecuteWhenFinished(ResolveIcon);
-    }
-
-    private void ResolveIcon()
-    {
-        if (iconPath?.Length > 0)
-        {
-            Icon = ContentFinder<Texture2D>.Get(iconPath);
-        }
+        return factory(this);
     }
 
     public override IEnumerable<string> ConfigErrors()
