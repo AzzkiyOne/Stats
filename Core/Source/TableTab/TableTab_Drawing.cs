@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Runtime.CompilerServices;
+using Stats.Columns;
 using Stats.Utils;
 using Stats.Utils.Extensions;
 using Stats.Utils.GUIScopes;
@@ -21,12 +22,20 @@ public sealed partial class TableTab<TRecord>
 
         if (Event.current.type == EventType.Layout)
         {
+            foreach (Column<TRecord> column in _columns)
+            {
+                column.RefreshCells();
+            }
+
+            // Run filters here
+
             RecalcLayout();
+
+            // Sort
         }
 
         // Layout
-        rect
-            .CutTop(out Rect toolbarRect, GUIStyles.TableToolbar.Height)
+        rect.CutTop(out Rect toolbarRect, GUIStyles.TableToolbar.Height)
             .TakeRest(out Rect tableRect);
 
         // Toolbar
@@ -58,6 +67,7 @@ public sealed partial class TableTab<TRecord>
         DrawVisibleContent(viewportRect);
     }
 
+    // TODO: We don't need 2 Draw() methods
     private void DrawVisibleContent(Rect rect)
     {
         Event @event = Event.current;
@@ -90,8 +100,7 @@ public sealed partial class TableTab<TRecord>
         _rows.CopyTo(topRows);
 
         // Layout
-        rect
-            .CutLeft(out Rect leftColumnsRect, _leftColumnsWidth)
+        rect.CutLeft(out Rect leftColumnsRect, _leftColumnsWidth)
             .TakeRest(out Rect rightColumnsRect)
             .CutTop(HeadersRowHeight)// Register mouse-drag only below headers to not interfere with them.
             .TakeRest(out Rect mouseDragScrollAreaRect);
@@ -122,29 +131,29 @@ public sealed partial class TableTab<TRecord>
         DoHorScrollControl(mouseDragScrollAreaRect);
     }
 
-    private void DrawColumns(Rect rect, Vector2 scrollPosition, ReadOnlyListSegment<ColumnWidget> columns, Span<int> topRows, Span<int> bottomRows, float bottomRowsY)
+    private void DrawColumns(Rect rect, Vector2 scrollPosition, ReadOnlyListSegment<Column<TRecord>> columns, Span<int> topRows, Span<int> bottomRows, float bottomRowsY)
     {
         Event @event = Event.current;
         float scrollX = scrollPosition.x;
         float xMin = rect.xMin + scrollX;
         float xMax = rect.xMax + scrollX;
-        float mouseX = @event.mousePosition.x;
-        bool mouseXIsInVisibleArea = xMin < mouseX && mouseX < xMax;
         ref Rect columnRect = ref rect;
         int columnsCount = columns.Length;
+
         for (int i = 0; i < columnsCount; i++)
         {
-            ColumnWidget column = columns[i];
+            Column<TRecord> column = columns[i];
             columnRect.width = column.Width;
             float columnRectXmax = columnRect.xMax;
 
-            if (xMin < columnRectXmax && columnRect.xMin < xMax)
+            if (columnRectXmax > xMin)
             {
-                column.Draw(columnRect, topRows, bottomRows, bottomRowsY, mouseXIsInVisibleArea);
+                column.Draw(columnRect, topRows, bottomRows, bottomRowsY, _dragManager);
             }
-            else if (column.IsResized)
+
+            if (columnRectXmax > xMax)
             {
-                column.DoResize();
+                break;
             }
 
             columnRect.x = columnRectXmax;
@@ -156,17 +165,15 @@ public sealed partial class TableTab<TRecord>
         bool isRepaint = Event.current.type == EventType.Repaint;
 
         // Layout
-        rect
-            .CutTop(out Rect headersRowRect, HeadersRowHeight)
+        rect.CutTop(out Rect headersRowRect, HeadersRowHeight)
             .CutTop(out Rect topRowsRect, _topRowsHeight)
             .TakeRest(out Rect bottomRowsRect);
 
         // Headers row
         if (isRepaint)
         {
-            headersRowRect
-                .Fill(HeadersRowBGColor)
-                .DrawBorderBottom(ColumnSeparatorLineColor);
+            headersRowRect.Fill(HeadersRowBGColor)
+                          .DrawBorderBottom(ColumnSeparatorLineColor);
         }
 
         // Pinned rows
@@ -190,14 +197,14 @@ public sealed partial class TableTab<TRecord>
         // Unpinned rows
         // 
         // This part uses manual clipping.
-        // - No need to use GUI.BeginClip/EndClip.
-        // - Top row's "click" event will never collide with bottom row.
+        // Why? Because i can.
         if (bottomRowsCount > 0)
         {
             float rectYmax = rect.yMax;
             float firstRowHeight = RowHeight + bottomRowsY;
             int bottomRowsEnd = bottomRowsCount + bottomRowsStart;// Exclusive
             Rect rowRect = bottomRowsRect with { height = firstRowHeight };
+
             for (int i = bottomRowsStart; i < bottomRowsEnd; i++)
             {
                 DrawRow(rowRect, i);
@@ -232,9 +239,9 @@ public sealed partial class TableTab<TRecord>
 
         if (mouseIsOverRect && @event is { type: EventType.MouseUp, button: 0, modifiers: EventModifiers.Control })
         {
-            HandleRowPin(index);
+            ToggleRowPin(index);
             GUIUtils.ReleaseMouseControl();
-            @event.Use();
+            //@event.Use();
         }
     }
 
@@ -277,12 +284,12 @@ public sealed partial class TableTab<TRecord>
             {
                 _rightPartIsPanned = false;
                 GUIUtils.ReleaseMouseControl();
-                @event.Use();
+                //@event.Use();
             }
         }
 
         // This button is here to capture control from whatever
         // eats the events above horizontal scroll code.
-        GUI.Button(rect, GUIContent.none, GUIStyle.none);
+        rect.EmptyButton();
     }
 }

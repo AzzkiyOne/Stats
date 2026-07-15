@@ -13,7 +13,7 @@ public abstract class BooleanColumn<TRecord, TCell>(ColumnDef def) :
             struct,
             IBooleanCell
 {
-    public override float GetWidth(List<int> rows)
+    protected override float GetMaxCellWidth(List<int> rows)
     {
         return Verse.Text.LineHeight;
     }
@@ -31,18 +31,16 @@ public abstract class BooleanColumn<TRecord, TCell>(ColumnDef def) :
 public abstract class BooleanColumn<TRecord>(ColumnDef def) :
     Column<TRecord>(def, ColumnType.Boolean)
 {
-    public override bool IsRefreshable => false;
-
     private readonly List<bool> _values = new(250);
 
     protected abstract bool GetValue(TRecord @object);
 
-    public override void DrawCell(Rect rect, int row)
+    protected override void DrawCell(Rect rect, int row)
     {
         BooleanCell.Draw(rect, _values[row]);
     }
 
-    public override float GetWidth(List<int> rows)
+    protected override float GetMaxCellWidth(List<int> rows)
     {
         return Verse.Text.LineHeight;
     }

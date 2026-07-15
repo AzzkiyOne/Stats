@@ -28,14 +28,14 @@ public static class TurretDefTable
                 {
                     foreach (ThingDef stuffDef in stuffDefs)
                     {
-                        TurretDefTableRecord tableRecord = new(thingDef, buildingProperties, turretGunDef, primaryVerbProperties, stuffDef);
-                        records.Add(tableRecord);
+                        TurretDefTableRecord record = new(thingDef, buildingProperties, turretGunDef, primaryVerbProperties, stuffDef);
+                        records.Add(record);
                     }
                 }
                 else
                 {
-                    TurretDefTableRecord tableRecord = new(thingDef, buildingProperties, turretGunDef, primaryVerbProperties);
-                    records.Add(tableRecord);
+                    TurretDefTableRecord record = new(thingDef, buildingProperties, turretGunDef, primaryVerbProperties);
+                    records.Add(record);
                 }
             }
         }

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using RimWorld;
 using Stats.Utils;
 using Stats.Utils.Extensions;
@@ -23,6 +24,8 @@ public sealed partial class MainTabWindow : RimWorld.MainTabWindow
     private bool _isResized;
     private float _resizeYOffset;
     private float _yMax;
+    private readonly DragManager<MainTabWindowTab> _tabDragManager;
+    private Action? _beforeDraw;
 
     public MainTabWindow()
     {
@@ -46,24 +49,35 @@ public sealed partial class MainTabWindow : RimWorld.MainTabWindow
 
         _tabDefsMenu = new FloatMenu(tabDefsMenuOptions);
         _tabs = new(tabDefsCount);
+        _tabDragManager = new VerDragManager<MainTabWindowTab>();
+        _tabDragManager.OnDragBefore += (MainTabWindowTab draggedTab, MainTabWindowTab tab) =>
+            _beforeDraw = () => _tabs.MoveBeforeElem(draggedTab, tab);
+        _tabDragManager.OnDragAfter += (MainTabWindowTab draggedTab, MainTabWindowTab tab) =>
+            _beforeDraw = () => _tabs.MoveAfterElem(draggedTab, tab);
     }
 
     public override void DoWindowContents(Rect rect)
     {
         Event @event = Event.current;
 
+        if (_beforeDraw != null)
+        {
+            _beforeDraw();
+            _beforeDraw = null;
+        }
+
         // TODO: Remove this after you'll explixitly set word wrap for every inner widget.
         bool wordWrap = Text.WordWrap;
         Text.WordWrap = false;
 
         // Layout
-        rect
-            .CutLeft(out Rect toolbarRect, ToolbarWidth)
+        rect.CutLeft(out Rect toolbarRect, ToolbarWidth)
             .TakeRest(out Rect tableRect);
-        toolbarRect
-            .CutTop(out Rect openTabButtonRect, ToolbarWidth)
-            .TakeRest(out Rect tabListRect);
-        tableRect.CutTop(out Rect expandButtonRect, GUIStyles.TableToolbar.Height);
+
+        toolbarRect.CutTop(out Rect openTabButtonRect, ToolbarWidth)
+                   .TakeRest(out Rect tabListRect);
+
+        tableRect.CutTop(out Rect resizeControlRect, GUIStyles.TableToolbar.Height);
 
         // Border
         if (@event.type == EventType.Repaint)
@@ -77,7 +91,6 @@ public sealed partial class MainTabWindow : RimWorld.MainTabWindow
         // Tab list
         // TODO:
         // - Add culling.
-        // - Add reordering.
         Rect tabListContentRect = new(0f, 0f, ToolbarWidth, _tabs.Count * ToolbarWidth);
         using (new GUIScrollScope(tabListRect, ref _tabListScrollPosition, tabListContentRect, false))
         {
@@ -86,7 +99,7 @@ public sealed partial class MainTabWindow : RimWorld.MainTabWindow
             for (int i = 0; i < tabsCount; i++)
             {
                 MainTabWindowTab tab = _tabs[i];
-                tab.DrawTabTitle(tabButtonRect, _activeTab == tab);
+                tab.DrawTabTitle(tabButtonRect, _tabDragManager, _activeTab == tab);
                 tabButtonRect.y = tabButtonRect.yMax;
             }
         }
@@ -96,15 +109,14 @@ public sealed partial class MainTabWindow : RimWorld.MainTabWindow
 
         Text.WordWrap = wordWrap;
 
-        DoResizeControl(expandButtonRect);
+        DoResizeControl(resizeControlRect);
     }
 
     private void DrawOpenTabButton(Rect rect)
     {
         if (Event.current.type == EventType.Repaint)
         {
-            rect
-                .HighlightLight()
+            rect.HighlightLight()
                 .DrawBorderBottom(BorderColor)
                 .ContractedBy(IconPadding)
                 .DrawTextureFitted(TexButton.Plus)
@@ -149,7 +161,7 @@ public sealed partial class MainTabWindow : RimWorld.MainTabWindow
             }
         }
 
-        GUI.Button(rect, GUIContent.none, GUIStyle.none);
+        rect.EmptyButton();
     }
 
     private void OpenTab(TabDef tabDef)

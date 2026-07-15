@@ -4,6 +4,7 @@ using System.Runtime.CompilerServices;
 using Stats.Columns;
 using Stats.Tables;
 using Stats.Utils;
+using Stats.Utils.Extensions;
 using UnityEngine;
 using Verse;
 
@@ -60,7 +61,7 @@ public sealed partial class TableTab<TRecord> :
     //};
 
     // Sorting
-    private ColumnWidget? _sortColumn;
+    private Column<TRecord>? _sortColumn;
     private int _sortDirection = SortDirectionAscending;
     private const int SortDirectionAscending = 1;
     private const int SortDirectionDescending = -1;
@@ -75,12 +76,11 @@ public sealed partial class TableTab<TRecord> :
 
     // Columns
     private readonly List<ColumnDef> _columnDefs;
-    private readonly List<ColumnWidget> _columns;
+    private readonly List<Column<TRecord>> _columns;
     private int _leftColumnsCount;
     private int RightColumnsCount => _columns.Count - _leftColumnsCount;
-    private ReadOnlyListSegment<ColumnWidget> LeftColumns => new(_columns, 0, _leftColumnsCount);
-    private ReadOnlyListSegment<ColumnWidget> RightColumns => new(_columns, _leftColumnsCount, RightColumnsCount);
-    private ColumnWidget? _reorderedColumn;
+    private ReadOnlyListSegment<Column<TRecord>> LeftColumns => new(_columns, 0, _leftColumnsCount);
+    private ReadOnlyListSegment<Column<TRecord>> RightColumns => new(_columns, _leftColumnsCount, RightColumnsCount);
 
     // Layout
     private float _topRowsHeight;
@@ -99,6 +99,9 @@ public sealed partial class TableTab<TRecord> :
     // Toolbar
     private readonly Toolbar _toolbar;
 
+    // Misc
+    private readonly DragManager<Column<TRecord>> _dragManager;
+
     public TableTab(TableDef def, List<TRecord> records) : base(def)
     {
         // Rows
@@ -112,22 +115,27 @@ public sealed partial class TableTab<TRecord> :
         // Columns
         List<ColumnDef> initialColumnDefs = def.columns;
         int initialColumnDefsCount = initialColumnDefs.Count;
-        List<ColumnWidget> columns = new(initialColumnDefsCount);
+        List<Column<TRecord>> columns = new(initialColumnDefsCount);
+
         for (int i = 0; i < initialColumnDefsCount; i++)
         {
             ColumnDef columnDef = initialColumnDefs[i];
             try
             {
-                Column<TRecord> column = columnDef.MakeColumnInstance<TRecord>();
-                ColumnWidget columnWrapper = new(column, this);
-                columns.Add(columnWrapper);
-                records.ForEach(column.NotifyRecordAdded);
+                AddColumn(columnDef, columns, records);
             }
             catch (Exception error)
             {
                 Log.Error(error.Message);
             }
         }
+
+        // Misc
+        HorDragManager<Column<TRecord>> dragManager = new();
+        dragManager.OnDragBefore += (Column<TRecord> draggedColumn, Column<TRecord> column) =>
+            _beforeDraw ??= () => HandleColumnDrag(draggedColumn, column, true);
+        dragManager.OnDragAfter += (Column<TRecord> draggedColumn, Column<TRecord> column) =>
+            _beforeDraw ??= () => HandleColumnDrag(draggedColumn, column, false);
 
         // Finalize
         _records = records;
@@ -140,6 +148,7 @@ public sealed partial class TableTab<TRecord> :
             _sortColumn = columns[0];
         }
         _toolbar = new Toolbar(this);
+        _dragManager = dragManager;
     }
 
     public override void Focus()
@@ -150,10 +159,10 @@ public sealed partial class TableTab<TRecord> :
     public override void Unfocus()
     {
         _rightPartIsPanned = false;
-        _reorderedColumn = null;
+        _dragManager.EndDrag();
         for (int i = 0; i < _columns.Count; i++)
         {
-            ColumnWidget column = _columns[i];
+            Column<TRecord> column = _columns[i];
             column.Unfocus();
         }
     }

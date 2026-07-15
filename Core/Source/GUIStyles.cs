@@ -17,6 +17,7 @@ public static class GUIStyles
         internal const float PadXs = 3f;
         internal const float EstimatedInputFieldInnerPadding = 2f;
         internal const float ButtonSubtleContentHoverOffset = 2f;
+        internal static readonly Color HighlightDraggedColor = Verse.Widgets.HighlightStrongBgColor.ToTransparent(0.5f);
     }
 
     internal static class MainTabWindow

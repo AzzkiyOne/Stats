@@ -21,8 +21,6 @@ public sealed class LabelColumn<TRecord>(ColumnDef columnDef) :
         where TRecord :
             IThingDefTableRecord
 {
-    public override bool ShouldDrawCellsNow => Event.current is { type: EventType.Repaint or EventType.MouseDown or EventType.MouseUp };
-
     protected override LabelCell MakeCell(TRecord record)
     {
         return new LabelCell(record.ThingDef, record.StatRequest.StuffDef);

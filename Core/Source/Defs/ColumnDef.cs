@@ -13,8 +13,9 @@ public class ColumnDef : Def
 {
     public string? labelKey;
     public string? descriptionKey;
-    public ColumnTitleXmlNode? title;
-    internal Widget TitleWidget => field ??= title?.ToWidget() ?? new Label(LabelCap);
+    // TODO: Rename to "label something"
+    public ColumnLabelXmlNode? title;
+    internal Widget LabelWidget => field ??= title?.ToWidget() ?? new Label(LabelCap);
 #pragma warning disable CS8618
     public Type columnClass;
 #pragma warning restore CS8618
@@ -68,7 +69,7 @@ public class ColumnDef : Def
     }
 }
 
-public sealed class ColumnTitleXmlNode
+public sealed class ColumnLabelXmlNode
 {
     private readonly List<Element> _elements = [];
 

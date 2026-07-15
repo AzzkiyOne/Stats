@@ -22,6 +22,9 @@ public static class System_Collections_Generic_List
 
     internal static void CopyTo<T>(this List<T> list, Span<T> span) => list.CopyTo(span, 0);
 
+    internal static void MoveBeforeElem<T>(this List<T> list, T target, T elem) =>
+        list.MoveBeforeElemAt(list.IndexOf(target), list.IndexOf(elem));
+
     internal static void MoveBeforeElemAt<T>(this List<T> list, int targetIndex, int elemIndex)
     {
         T item = list[targetIndex];
@@ -29,6 +32,9 @@ public static class System_Collections_Generic_List
         if (targetIndex < elemIndex) elemIndex--;
         list.Insert(elemIndex, item);
     }
+
+    internal static void MoveAfterElem<T>(this List<T> list, T target, T elem) =>
+        list.MoveAfterElemAt(list.IndexOf(target), list.IndexOf(elem));
 
     internal static void MoveAfterElemAt<T>(this List<T> list, int targetIndex, int elemIndex)
         => list.MoveBeforeElemAt(targetIndex, elemIndex + 1);

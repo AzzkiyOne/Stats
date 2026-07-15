@@ -12,6 +12,14 @@ public interface IBuildableDefTableRecord :
     IDefTableRecord
 {
     BuildableDef BuildableDef { get; }
+    // TODO:
+    //
+    // Normally, Things don't change their stuff or quality,
+    // but, mods exist, so we may have to define stuff and quality
+    // as separate properties, so then columns can check if they've changed
+    // and update their cells. For stuffable ThingDefs, the values will be set
+    // in the constructor. For Things, we'll just have getters that return the values
+    // from the Thing.
     StatRequest StatRequest { get; }
 }
 

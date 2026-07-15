@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Runtime.CompilerServices;
+using Stats.Columns;
 using Stats.Utils;
 using Stats.Utils.Extensions;
 using UnityEngine;
@@ -28,12 +29,12 @@ public sealed partial class TableTab<TRecord>
             _columnPresetsButton = new Button(Verse.TexButton.Paste, "Apply Preset");
         }
 
-        public void NotifyColumnAdded(ColumnWidget column)
+        public void NotifyColumnAdded(Column<TRecord> column)
         {
             ColumnsMenu.NotifyColumnAdded(column);
         }
 
-        public void NotifyColumnRemoved(ColumnWidget column)
+        public void NotifyColumnRemoved(Column<TRecord> column)
         {
             ColumnsMenu.NotifyColumnRemoved(column);
         }
@@ -129,7 +130,7 @@ public sealed partial class TableTab<TRecord>
         {
             public ColumnsFloatMenu(List<FloatMenuOption> options) : base(options) { }
 
-            public void NotifyColumnAdded(ColumnWidget column)
+            public void NotifyColumnAdded(Column<TRecord> column)
             {
                 ColumnDef columnDef = column.Def;
                 int optionsCount = options.Count;
@@ -144,7 +145,7 @@ public sealed partial class TableTab<TRecord>
                 }
             }
 
-            public void NotifyColumnRemoved(ColumnWidget column)
+            public void NotifyColumnRemoved(Column<TRecord> column)
             {
                 ColumnDef columnDef = column.Def;
                 int optionsCount = options.Count;
@@ -188,11 +189,11 @@ public sealed partial class TableTab<TRecord>
                 {
                     extraPartOnGUI = rect =>
                     {
-                        rect = rect.ContractedBy(0f, (rect.height - columnDef.TitleWidget.Size.y) / 2f);
-                        columnDef.TitleWidget.Draw(rect);
+                        rect = rect.ContractedBy(0f, (rect.height - columnDef.LabelWidget.Size.y) / 2f);
+                        columnDef.LabelWidget.Draw(rect);
                         return false;
                     };
-                    extraPartWidth = columnDef.TitleWidget.Size.x + GUIStyles.Global.PadSm;
+                    extraPartWidth = columnDef.LabelWidget.Size.x + GUIStyles.Global.PadSm;
                     extraPartRightJustified = true;
                 }
             }

@@ -142,6 +142,11 @@ public static class GUIUtils
         return rect.DrawTexture(TexUI.HighlightSelectedTex);
     }
 
+    internal static Rect HighlightDragged(this Rect rect)
+    {
+        return rect.Fill(GUIStyles.Global.HighlightDraggedColor);
+    }
+
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     internal static Rect Tip(this Rect rect, TipSignal tip)
     {
@@ -159,7 +164,7 @@ public static class GUIUtils
             rect.Highlight();
         }
 
-        return GUI.Button(rect, GUIContent.none, GUIStyle.none);
+        return rect.EmptyButton();
     }
 
     internal static bool ButtonTextSubtle(this Rect rect, string text, Color textColor, float padHor = 0f)
@@ -222,5 +227,10 @@ public static class GUIUtils
         GUI.color = origGUIColor;
 
         return wasClicked;
+    }
+
+    internal static bool EmptyButton(this Rect rect)
+    {
+        return GUI.Button(rect, GUIContent.none, GUIStyle.none);
     }
 }

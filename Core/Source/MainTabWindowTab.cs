@@ -37,24 +37,27 @@ public abstract class MainTabWindowTab
         _menu = new FloatMenu(menuOptions);
     }
 
-    internal void DrawTabTitle(Rect rect, bool isSelected)
+    internal void DrawTabTitle(Rect rect, DragManager<MainTabWindowTab> dragManager, bool isSelected)
     {
         Event @event = Event.current;
 
         if (@event.type == EventType.Repaint)
         {
-            if (isSelected)
+            if (dragManager.IsDragged(this))
+            {
+                rect.HighlightDragged();
+            }
+            else if (isSelected)
             {
                 rect.HighlightSelected();
             }
 
-            rect
-                .Tip(_tooltip)
+            rect.Tip(_tooltip)
                 .ContractedBy(GUIStyles.MainTabWindow.IconPadding)
                 .DrawTextureFitted(_icon, _iconColor, _iconScale);
         }
 
-        if (rect.ButtonGhostly() && @event.modifiers == EventModifiers.None)
+        if (@event is { type: EventType.MouseUp, modifiers: EventModifiers.None } && Mouse.IsOver(rect))
         {
             if (@event.button == 0)
             {
@@ -65,6 +68,10 @@ public abstract class MainTabWindowTab
                 _menu.Open();
             }
         }
+
+        dragManager.OnGUI(rect, this);
+
+        rect.ButtonGhostly();
     }
 
     public abstract void Draw(Rect rect);

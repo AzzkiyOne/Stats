@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Stats.Columns;
 using UnityEngine;
 using static Stats.GUIStyles.Table;
 
@@ -8,18 +9,15 @@ public sealed partial class TableTab<TRecord>
 {
     private void RecalcLayout()
     {
-        List<ColumnWidget> columns = _columns;
+        List<Column<TRecord>> columns = _columns;
         int columnsCount = _columns.Count;
         int leftColumnsCount = _leftColumnsCount;
         float leftColumnsWidth = 0f;
         float rightColumnsWidth = 0f;
         for (int i = 0; i < columnsCount; i++)
         {
-            ColumnWidget column = columns[i];
-            if (column.IsManuallyResized == false)
-            {
-                column.RecalcWidth(_rows);
-            }
+            Column<TRecord> column = columns[i];
+            column.UpdateLayout(_rows);
 
             if (i < leftColumnsCount)
             {

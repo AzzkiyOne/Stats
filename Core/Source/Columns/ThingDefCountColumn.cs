@@ -13,8 +13,6 @@ public abstract class ThingDefCountColumn<TRecord, TCell>(ColumnDef def) :
             struct,
             IThingDefCountCell
 {
-    public override bool ShouldDrawCellsNow => Event.current is { type: EventType.Repaint or EventType.MouseDown or EventType.MouseUp };
-
     protected abstract IEnumerable<Verse.ThingDef?> GetTypeFieldFilterOptions(Table tableWorker);
 
     public override ICollection<CellField> GetCellFields(Table tableWorker)

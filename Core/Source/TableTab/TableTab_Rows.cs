@@ -30,7 +30,7 @@ public sealed partial class TableTab<TRecord>
     }
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    private void HandleRowPin(int index)
+    private void ToggleRowPin(int index)
     {
         if (index < _topRowsCount)
         {
